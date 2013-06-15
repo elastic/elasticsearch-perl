@@ -99,10 +99,11 @@ sub ping_nodes {
 
     while ( time < $end_time ) {
         for my $socket ( $write->can_write(0) ) {
-            $socket->connected or next;
             $write->remove($socket);
-            $read->add($socket);
-            $socket->send($request);
+            if ( $socket->connected ) {
+                $read->add($socket);
+                $socket->send($request);
+            }
         }
 
         for my $socket ( $read->can_read(0) ) {
