@@ -3,7 +3,7 @@ package Elasticsearch::Connection::HTTPTiny;
 use strict;
 use warnings;
 use namespace::autoclean;
-use parent 'Elasticsearch::Connection';
+use parent 'Elasticsearch::Connection::HTTP';
 use HTTP::Tiny();
 use Elasticsearch::Error qw(throw);
 use Elasticsearch::Util qw(code_to_error);
