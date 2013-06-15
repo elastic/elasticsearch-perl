@@ -29,7 +29,7 @@ sub new {
 
     for my $name (@Load_Order) {
         my ( $base, $default ) = @{ $Default_Plugins{$name} };
-        my $sub_class = $params->{name} || $default;
+        my $sub_class = $params->{$name} || $default;
         my $plugin = load_plugin( $base, $sub_class, $params );
         $params->{$name} = $plugin;
     }
