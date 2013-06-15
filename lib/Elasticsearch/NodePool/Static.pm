@@ -9,7 +9,6 @@ use Elasticsearch::Error qw(throw);
 use URI();
 use List::Util qw(shuffle min);
 use Try::Tiny;
-use Carp;
 use IO::Socket;
 use IO::Select;
 use Time::HiRes qw(time sleep);

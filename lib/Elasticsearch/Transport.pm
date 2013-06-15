@@ -9,7 +9,6 @@ use Elasticsearch::Error qw(throw upgrade_error);
 use URI();
 use List::Util qw(shuffle min);
 use Try::Tiny;
-use Carp;
 
 my @Required_Params = qw(serializer logger tracer connection node_pool);
 my $Version_RE      = qr/: version conflict, current \[(\d+)\]/;
@@ -76,7 +75,7 @@ sub perform_request {
                 # warn $error
             }
             else {
-                croak $error;
+                die $error;
             }
             return;
         }

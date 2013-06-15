@@ -3,7 +3,6 @@ package Elasticsearch::Serializer;
 use strict;
 use warnings;
 use namespace::autoclean;
-use Carp;
 use JSON;
 use Try::Tiny;
 use Elasticsearch::Error qw(throw);

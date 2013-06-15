@@ -1,5 +1,7 @@
 package Elasticsearch::Error;
 
+our $DEBUG = 1;
+
 @Elasticsearch::Error::Internal::ISA       = __PACKAGE__;
 @Elasticsearch::Error::Param::ISA          = __PACKAGE__;
 @Elasticsearch::Error::NoNodes::ISA        = __PACKAGE__;
@@ -26,7 +28,6 @@ use overload (
 );
 
 use Data::Dumper();
-use Carp();
 
 require Exporter;
 our @ISA       = qw(Exporter);
@@ -36,7 +37,7 @@ our @EXPORT_OK = qw(throw upgrade_error);
 sub throw {
 #===================================
     my ( $type, $msg, $vars ) = @_;
-    Carp::croak __PACKAGE__->new( $type, $msg, $vars, 1 );
+    die __PACKAGE__->new( $type, $msg, $vars, 1 );
 }
 
 #===================================
@@ -63,14 +64,16 @@ sub new {
     $msg =~ s/\n/\n    /g;
 
     my ( undef, $file, $line ) = caller($caller);
-    my $error_params = {
+    my $self = bless {
         text => $msg,
         line => $line,
         file => $file,
         vars => $vars,
-    };
-    return bless $error_params, $error_class;
+    }, $error_class;
 
+    $self->{stacktrace} = $self->stacktrace( $caller + 1 )
+        if $DEBUG;
+    return $self;
 }
 
 #===================================
@@ -90,14 +93,22 @@ sub _stringify {
     local $Data::Dumper::Terse  = 1;
     local $Data::Dumper::Indent = 1;
 
-    return $self->{msg} ||= sprintf( "[ERROR] ** %s at %s line %d\n%s\n",
-        ref $self, $self->{file}, $self->{line},
-        $self->{text} || 'Missing error message' )
-        . (
-        $self->{vars}
-        ? sprintf( "With vars: %s\n", Data::Dumper::Dumper $self->{vars} )
-        : ''
-        );
+    unless ( $self->{msg} ) {
+        $self->{msg} = sprintf( "[ERROR] ** %s at %s line %d\n%s\n",
+            ref $self, @{$self}{ 'file', 'line', 'text' } );
+
+        if ( $self->{vars} ) {
+            $self->{msg} .= sprintf( "With vars: %s\n",
+                Data::Dumper::Dumper $self->{vars} );
+        }
+
+        if ( $self->{stacktrace} ) {
+            $self->{msg}
+                .= sprintf( "Stacktrace:\n%s\n", $self->{stacktrace} );
+        }
+    }
+    return $self->{msg};
+
 }
 
 #===================================
@@ -107,6 +118,23 @@ sub _compare {
     $self .= '';
     ( $self, $other ) = ( $other, $self ) if $swap;
     return $self cmp $other;
+}
+
+#===================================
+sub stacktrace {
+#===================================
+    my $self = shift;
+    my $caller = shift() || 1;
+
+    my $o = sprintf "%s\n%-4s %-30s %-5s %s\n%s\n",
+        '-' x 60, '#', 'Package', 'Line', 'Sub-routine', '-' x 60;
+
+    my $i = 1;
+    while ( my @caller = caller( ++$caller ) ) {
+        next if $caller[0] eq 'Try::Tiny' and $caller[3] eq '(eval)';
+        $o .= sprintf "%-4d %-30s %4d  %s\n", $i++, @caller[ 0, 2, 3 ];
+    }
+    return $o .= ( '-' x 60 ) . "\n";
 }
 
 =head1 NAME

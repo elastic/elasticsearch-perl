@@ -2,7 +2,6 @@ package Elasticsearch::API::Raw;
 
 use strict;
 use warnings;
-use Carp;
 use Elasticsearch::Util qw(parse_params init_instance);
 
 my @Required_Params = qw(logger transport);
