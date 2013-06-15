@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 use JSON;
+use Encode qw(encode_utf8 decode_utf8 is_utf8);
 use Try::Tiny;
 use Elasticsearch::Error qw(throw);
 
@@ -25,15 +26,18 @@ sub new {
 sub encode {
 #===================================
     my $var = $_[1];
-    my $json;
 
-    try {
-        $json = $JSON->encode($var);
+    if ( !ref $_[1] ) {
+        return $_[1] unless is_utf8 $_[1];
+        return encode_utf8( $_[1] );
+    }
+
+    return try {
+        $JSON->encode($var);
     }
     catch {
         throw( "Serializer", $_, { var => $var } );
     };
-    return $json;
 }
 
 #===================================
@@ -43,17 +47,15 @@ sub decode {
 
     return unless defined $json;
 
-    return $json
+    return decode_utf8($json)
         unless substr( $json, 0, 1 ) =~ /^[\[{]/;
 
-    my $var;
-    try {
-        $var = $JSON->decode($json);
+    return try {
+        $JSON->decode($json);
     }
     catch {
         throw( "Serializer", $_, { json => $json } );
     };
-    return $var;
 }
 
 1;
