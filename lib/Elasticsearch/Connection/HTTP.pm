@@ -57,7 +57,6 @@ sub http_uri {
 #===================================
     my ( $self, $node, $path, $qs ) = @_;
     my $protocol = $self->https ? 'https' : 'http';
-    $path = $self->path_prefix . $path;
     my $uri = URI->new( $protocol . '://' . $node . $path );
     $uri->query_form($qs);
     return $uri;

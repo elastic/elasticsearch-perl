@@ -20,10 +20,13 @@ sub new {
     my $self = bless {
         retry_connection   => 1,
         retry_timeout      => 1,
-        max_content_length => 104_857_600,
+        path_prefix        => '',
+        mime_type          => $params->{serializer}->mime_type,
+        max_content_length => 104_857_600,                        # TODO
     }, $class;
 
     init_instance( $self, \@Required_Params, $params );
+    $self->{path_prefix} =~ s{/$}{};
 
     return $self;
 
@@ -34,80 +37,67 @@ sub perform_request {
 #===================================
     my ( $self, $params ) = parse_params(@_);
 
-    my $request = $self->prepare_request($params);
+    my $pool   = $self->node_pool;
 
-    # trace request
-    my $pool = $self->node_pool;
+    my $method = $params->{method} ||= 'GET';
+    my $path   = $params->{path}   ||= '/';
+    $params->{qs}        ||= {};
+    $params->{mime_type} ||= $self->mime_type;
+    $params->{data}      ||= $self->serialize( $params->{body} );
+    $params->{prefix} = $self->path_prefix;
 
-    my ( $response, $node );
+    my ( $response, $node, $retry, $took );
+    try {
+        $node = $pool->next_node;
 
-    while (1) {
-        try {
-            $node = $pool->next_node;
-            my $raw = $self->cxn->perform_request( $node, $request );
-            $response = $self->deserialize($raw);
-            1;
-        }
-        catch {
-            my $error = upgrade_error($_);
+        my $raw = $self->connection->perform_request( $node, $params );
+        $response = $self->deserialize($raw);
+        $logger->trace_response( $node, $response, $end, $took );
+    }
+    catch {
+        my $error = upgrade_error($_);
+        $retry = $self->handle_error( $node, $params, $error );
+    };
 
-            $pool->mark_dead($node)
-                if $error->is( 'Connection', 'Timeout' );
-
-            my $vars = $error->{vars};
-            $vars->{request} = $request;
-            $vars->{node} = $node if $node;
-
-            if ( $error->is('Request') ) {
-                try { $vars->{body} = $self->deserialize( $vars->{body} ) };
-
-                $vars->{current_version} = $1
-                    if $error->is('Conflict')
-                    and $vars->{error} =~ /$Version_RE/;
-
-                if ( $error->is('Missing') ) {
-                    return 1 if $params->{ignore_missing};
-                }
-            }
-
-            if ( $self->should_retry( $node, $error, $request ) ) {
-
-                # warn $error
-            }
-            else {
-                die $error;
-            }
-            return;
-        }
-            and last;
+    if ($retry) {
+        return $self->perform_request($params);
     }
     return $response;
 }
 
 #===================================
-sub prepare_request {
+sub handle_error {
 #===================================
-    my ( $self, $params ) = @_;
+    my ( $self, $node, $params, $error ) = @_;
 
-    my $body = $params->{body};
+    my $logger = $self->logger;
+    my $vars   = $error->{vars};
+    $vars->{request} = $params;
+    $vars->{node} = $node if $node;
 
-    my $request = {
-        method => $params->{method} || 'GET',
-        path   => $params->{path}   || '/',
-        qs     => $params->{qs}     || {},
-    };
-
-    if ( defined $body ) {
-        if ( ref $body ) {
-            $body = $self->serialize($body)
-                if ref $body;
-        }
-        else {
-            #encode utf8?
-        }
-        $request->{body} = $body;
+    if ( $error->is( 'Connection', 'Timeout' ) ) {
+        $logger->warn($error);
+        $self->node_pool->mark_dead($node);
+        return 1 if $self->should_retry( $node, $error, $params );
     }
-    return $request;
+
+    if ( $error->is('Request') ) {
+        return
+            if $error->is('Missing')
+            and $params->{ignore_missing};
+
+        my $body = $self->deserialize( $vars->{body} );
+
+        $error->{text}
+            = !ref $body     ? delete $vars->{body}
+            : $body->{error} ? "[$vars->{code}] $body->{error}"
+            :                  $error->{text};
+
+        $vars->{current_version} = $1
+            if $error->is('Conflict')
+            and $vars->{text} =~ /$Version_RE/;
+    }
+
 }
 
 #===================================
@@ -121,10 +111,12 @@ sub should_retry {
 #===================================
 sub node_pool        { $_[0]->{node_pool} }
 sub connection       { $_[0]->{connection} }
-sub cxn              { $_[0]->{connection} }
+sub logger           { $_[0]->{logger} }
 sub serializer       { $_[0]->{serializer} }
 sub retry_connection { $_[0]->{retry_connection} }
 sub retry_timeout    { $_[0]->{retry_timeout} }
+sub path_prefix      { $_[0]->{path_prefix} }
+sub mime_type        { $_[0]->{mime_type} }
 sub serialize        { shift()->serializer->encode(@_) }
 sub deserialize      { shift()->serializer->decode(@_) }
 #===================================

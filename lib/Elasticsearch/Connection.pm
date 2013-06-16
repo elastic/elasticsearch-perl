@@ -15,7 +15,6 @@ sub new {
     my $self    = bless {
         path_prefix   => '',
         handle_params => {},
-        mime_type     => $params->{serializer}->mime_type,
         timeout       => 30,
         %default,
     }, $class;
@@ -65,7 +64,6 @@ sub open_socket {
 
 #===================================
 sub handle_params { $_[0]->{handle_params} }
-sub mime_type     { $_[0]->{mime_type} }
 sub deflate       { $_[0]->{deflate} }
 sub path_prefix   { $_[0]->{path_prefix} }
 sub timeout       { $_[0]->{timeout} }

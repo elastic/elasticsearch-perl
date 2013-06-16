@@ -21,12 +21,13 @@ sub perform_request {
     my ( $self, $node, $params ) = @_;
 
     my $method = $params->{method};
-    my $uri = $self->http_uri( $node, $params->{path}, $params->{qs} );
+    my $uri    = $self->http_uri( $node, $params->{prefix} . $params->{path},
+        $params->{qs} );
 
     my %args;
-    if ( exists $params->{body} ) {
-        $args{content} = $self->serializer->encode( $params->{body} );
-        $args{headers}{'Content-Type'} = $self->mime_type;
+    if ( defined $params->{data} ) {
+        $args{content} = $params->{data};
+        $args{headers}{'Content-Type'} = $params->{mime_type},;
     }
 
     my $response = $self->handle($node)->request( $method, "$uri", \%args );
