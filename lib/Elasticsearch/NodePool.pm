@@ -72,6 +72,7 @@ sub set_nodes {
     my $self = shift;
     @{ $self->{nodes} } = shuffle @_;
     $self->{current_node_num} = 0;
+    $self->logger->debugf( "Set live nodes: %s", $self->{nodes} );
     return;
 }
 
@@ -79,6 +80,10 @@ sub set_nodes {
 sub ping_nodes {
 #===================================
     my ( $self, @nodes ) = @_;
+
+    my $logger = $self->logger;
+    $logger->debugf( "Pinging nodes: %s", \@nodes );
+
     my $poll_delay = 0.01;
     my $end_time   = time() + $self->ping_timeout;
     my $cxn        = $self->connection;
@@ -87,14 +92,18 @@ sub ping_nodes {
     my $write      = IO::Select->new;
     my $read       = IO::Select->new;
 
-    my ( %sockets, @success );
+    my (%sockets);
     for my $node (@nodes) {
+        local $!;
         my $socket = $cxn->open_socket($node);
         if ($socket) {
             $sockets{"$socket"} = $node;
             $write->add($socket);
         }
-        else { $self->ping_fail($node) }
+        else {
+            $logger->warn("Couldn't open a socket to node ($node): $!");
+            $self->ping_fail($node);
+        }
     }
 
     while ( time < $end_time ) {
@@ -109,15 +118,18 @@ sub ping_nodes {
         for my $socket ( $read->can_read(0) ) {
             my $data;
             $socket->read( $data, length($response) );
+            my $node = $sockets{"$socket"};
             if ( $data eq $response ) {
-                my $node = $sockets{"$socket"};
+                $logger->debug("Successful response from node ($node)");
 
-                # abort if ping_success returns true
-                $self->ping_success($node)
-                    and return 1;
-
-                # otherwise keep gathering successful nodes
-                push @success, $node;
+                if ( $self->ping_success($node) ) {
+                    $logger->debug("Ending ping");
+                    return $node;
+                }
+            }
+            else {
+                $logger->debugf( "Node ($node) responded incorrectly: %s",
+                    $data );
             }
             $read->remove($socket);
             delete $sockets{$socket};
@@ -126,20 +138,24 @@ sub ping_nodes {
         sleep $poll_delay;
     }
     $self->ping_fail( values %sockets );
-    return @success;
+    return;
 }
 
 #===================================
 sub next_ping {
 #===================================
     my $self = shift;
-    $self->{next_ping} = time() + shift() if @_;
+    if (@_) {
+        my $time = $self->{next_ping} = time() + shift();
+        $self->logger->debug( "Next ping time: " . localtime($time) );
+    }
     return $self->{next_ping};
 }
 
 #===================================
 sub nodes             { $_[0]->{nodes} }
 sub connection        { $_[0]->{connection} }
+sub logger            { $_[0]->{logger} }
 sub current_node_num  { $_[0]->{current_node_num} }
 sub ping_timeout      { $_[0]->{ping_timeout} }
 sub ping_interval     { $_[0]->{ping_interval} }

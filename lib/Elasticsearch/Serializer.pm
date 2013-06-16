@@ -27,17 +27,35 @@ sub encode {
 #===================================
     my $var = $_[1];
 
-    if ( !ref $_[1] ) {
-        return $_[1] unless is_utf8 $_[1];
-        return encode_utf8( $_[1] );
+    unless ( ref $var ) {
+        return is_utf8($var)
+            ? encode_utf8($var)
+            : $var;
     }
 
-    return try {
-        $JSON->encode($var);
+    return try { $JSON->encode($var) }
+    catch { throw( "Serializer", $_, { var => $var } ) };
+}
+
+#===================================
+sub encode_pretty {
+#===================================
+    my ( $self, $var ) = @_;
+
+    $JSON->pretty(1);
+
+    my $json;
+    try {
+        $json = $self->encode($var);
     }
     catch {
-        throw( "Serializer", $_, { var => $var } );
+        die "$_";
+    }
+    finally {
+        $JSON->pretty(0);
     };
+
+    return $json;
 }
 
 #===================================

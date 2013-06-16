@@ -1,6 +1,6 @@
 package Elasticsearch::Error;
 
-our $DEBUG = 1;
+our $DEBUG = 0;
 
 @Elasticsearch::Error::Internal::ISA       = __PACKAGE__;
 @Elasticsearch::Error::Param::ISA          = __PACKAGE__;
@@ -52,19 +52,16 @@ sub upgrade_error {
 #===================================
 sub new {
 #===================================
-    my $class  = shift;
-    my $type   = shift;
-    my $msg    = shift;
-    my $vars   = shift;
-    my $caller = shift || 0;
+    my ($class,$type,$msg,$vars,$caller ) = @_;
+    return $type if ref $type;
+    $caller||= 0;
 
     my $error_class = 'Elasticsearch::Error::' . $type;
-
     $msg = 'Unknown error' unless defined $msg;
-    $msg =~ s/\n/\n    /g;
 
     my ( undef, $file, $line ) = caller($caller);
     my $self = bless {
+        type => $type,
         text => $msg,
         line => $line,
         file => $file,
@@ -94,8 +91,8 @@ sub _stringify {
     local $Data::Dumper::Indent = 1;
 
     unless ( $self->{msg} ) {
-        $self->{msg} = sprintf( "[ERROR] ** %s at %s line %d\n%s\n",
-            ref $self, @{$self}{ 'file', 'line', 'text' } );
+        $self->{msg} = sprintf( "[%s] ** %s, at %s line %d.\n",
+            @{$self}{'type', 'text','file', 'line' } );
 
         if ( $self->{vars} ) {
             $self->{msg} .= sprintf( "With vars: %s\n",

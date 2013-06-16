@@ -19,9 +19,11 @@ sub new {
     my $self = shift()->SUPER::new(@_);
 
     if ( $self->auth ) {
+
         require MIME::Base64;
         my $auth = MIME::Base64::encode_base64( $self->auth );
         $self->{default_headers}{Authorization} = "Basic $auth";
+
         $self->{ping_request}
             = "GET / HTTP/1.1"
             . $CRLF

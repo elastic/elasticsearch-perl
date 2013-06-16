@@ -6,6 +6,7 @@ use parent 'Elasticsearch::NodePool';
 use namespace::autoclean;
 
 use Elasticsearch::Error qw(throw);
+use List::Util qw(min);
 use Try::Tiny;
 
 #===================================
@@ -13,8 +14,10 @@ sub new {
 #===================================
     my $self = shift()->SUPER::new(@_);
 
-    $self->ping_fail( @{ $self->nodes } )
-        if $self->ping_on_first_use;
+    if ( $self->ping_on_first_use ) {
+        $self->logger->debug("Force sniff on first request");
+        $self->ping_fail( @{ $self->nodes } );
+    }
 
     return $self;
 }
@@ -23,11 +26,12 @@ sub new {
 sub default_args {
 #===================================
     return (
-        ping_timeout     => 1.0,
-        ping_interval    => 30,
-        ping_on_failure  => 1,
-        dead_timeout     => 60,
-        max_dead_timeout => 3600,
+        ping_on_first_use => 0,
+        ping_timeout      => 1.0,
+        ping_interval     => 30,
+        ping_on_failure   => 1,
+        dead_timeout      => 60,
+        max_dead_timeout  => 3600,
     );
 }
 
@@ -36,36 +40,44 @@ sub next_node {
 #===================================
     my ( $self, $check_all ) = @_;
 
-    my $nodes = $self->nodes;
-    my $dead  = $self->dead_nodes;
-    my $now   = time();
-    my $total = @$nodes;
+    my $nodes  = $self->nodes;
+    my $dead   = $self->dead_nodes;
+    my $now    = time();
+    my $total  = @$nodes;
+    my $logger = $self->logger;
 
     my @check;
-    if ($check_all) {
+    if ( $check_all or keys(%$dead) == $total ) {
+        $logger->debug("Forced ping - no live nodes");
         @check = @$nodes;
+        $self->next_ping( $self->ping_interval );
     }
     elsif ( $self->next_ping < $now ) {
+        $logger->debug("Scheduled ping - checking for dead nodes");
         @check = grep { $dead->{$_} and $dead->{$_}[1] < $now } @$nodes;
+        $self->next_ping( $self->ping_interval );
     }
 
     if (@check) {
         $self->ping_nodes(@check);
-        $self->next_ping( $self->ping_interval );
         $check_all++ if @check == $total;
     }
 
     while ( $total-- > 0 ) {
         my $next = $self->next_node_num;
         my $node = $nodes->[$next];
-        next if $dead->{$node};
+        if ( $dead->{$node} ) {
+            $logger->debug( "Skipping dead node ($node) until "
+                    . localtime( $dead->{$node}[1] ) );
+            next;
+        }
         return $node;
     }
 
     my $node = $self->next_node(1)
         unless $check_all;
 
-    return $node || throw(
+    return $node || $logger->throw_critical(
         "NoNodes",
         "No nodes are available: ",
         { nodes => $self->nodes }
@@ -84,22 +96,37 @@ sub set_nodes {
 #===================================
 sub mark_dead {
 #===================================
-    my $self = shift;
-    $self->ping_fail(@_);
-    $self->ping_nodes( @{ $self->nodes } )
-        if $self->ping_on_failure;
+    my ( $self, $node ) = @_;
+    $self->logger->debug("Marking node ($node) as dead");
+    $self->ping_fail($node);
+    if ( $self->ping_on_failure ) {
+        $self->logger->debug("Forced ping - failed node");
+        $self->ping_nodes( @{ $self->nodes } );
+    }
 }
 
 #===================================
 sub ping_fail {
 #===================================
-    my $self = shift;
+    my $self   = shift;
+    my $logger = $self->logger;
     for my $node (@_) {
         my $wait = $self->{dead_nodes}{$node} ||= [ 0, 0 ];
-        my $timeout = min( $self->dead_timeout * 2**$wait->[0]++,
-            $self->max_dead_timeout );
-        $wait->[1] = time + $timeout;
+
+        my $timeout = min( $self->max_dead_timeout,
+            $self->dead_timeout * 2**$wait->[0]++ );
+        my $time = $wait->[1] = time + $timeout;
+        $logger->debug(
+            "Node ($node) marked dead until: " . localtime $time );
     }
+}
+
+#===================================
+sub ping_success {
+#===================================
+    my ( $self, $node ) = @_;
+    delete $self->dead_nodes->{$node};
+    return;
 }
 
 #===================================

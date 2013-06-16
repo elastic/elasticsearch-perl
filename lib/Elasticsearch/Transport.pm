@@ -8,9 +8,10 @@ use Elasticsearch::Util qw(parse_params init_instance);
 use Elasticsearch::Error qw(throw upgrade_error);
 use URI();
 use List::Util qw(shuffle min);
+use Time::HiRes qw(time);
 use Try::Tiny;
 
-my @Required_Params = qw(serializer logger tracer connection node_pool);
+my @Required_Params = qw(serializer logger connection node_pool);
 my $Version_RE      = qr/: version conflict, current \[(\d+)\]/;
 
 #===================================
@@ -38,6 +39,7 @@ sub perform_request {
     my ( $self, $params ) = parse_params(@_);
 
     my $pool   = $self->node_pool;
+    my $logger = $self->logger;
 
     my $method = $params->{method} ||= 'GET';
     my $path   = $params->{path}   ||= '/';
@@ -49,9 +51,15 @@ sub perform_request {
     my ( $response, $node, $retry, $took );
     try {
         $node = $pool->next_node;
+        my $start = time();
+        $logger->infof( "%s %s%s", $method, $node, $path );
+        $logger->trace_request( $node, $params, $start );
 
         my $raw = $self->connection->perform_request( $node, $params );
         $response = $self->deserialize($raw);
+
+        my $end = time();
+        $took = $end - $start;
         $logger->trace_response( $node, $response, $end, $took );
     }
     catch {
@@ -60,8 +68,11 @@ sub perform_request {
     };
 
     if ($retry) {
+        $logger->debug('Retrying request on a new node');
         return $self->perform_request($params);
     }
+
+    $logger->infof( "Took: %dms", $took * 1000 );
     return $response;
 }
 
@@ -80,6 +91,7 @@ sub handle_error {
         $self->node_pool->mark_dead($node);
         return 1 if $self->should_retry( $node, $error, $params );
     }
+    $logger->trace_error( $error, time() );
 
     if ( $error->is('Request') ) {
         return
@@ -97,6 +109,8 @@ sub handle_error {
             if $error->is('Conflict')
             and $vars->{text} =~ /$Version_RE/;
     }
+
+    $logger->throw_error($error);
 
 }
 

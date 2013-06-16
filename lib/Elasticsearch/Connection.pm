@@ -23,7 +23,6 @@ sub new {
     $self->{path_prefix} =~ s{/$}{};
 
     return $self;
-
 }
 
 #===================================

@@ -13,14 +13,10 @@ my %Default_Plugins = (
     logger     => [ 'Logger',     '' ],
     node_pool  => [ 'NodePool',   '+Static' ],
     serializer => [ 'Serializer', '' ],
-    tracer     => [ 'Tracer',     '' ],
     transport  => [ 'Transport',  '' ],
 );
 
-my @Load_Order = qw(
-    serializer logger tracer
-    connection node_pool transport api
-);
+my @Load_Order = qw(serializer logger connection node_pool transport api);
 
 #===================================
 sub new {

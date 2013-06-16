@@ -16,8 +16,10 @@ sub new {
     my $self = shift()->SUPER::new(@_);
     $self->{original_nodes} = [ @{ $self->nodes } ];
 
-    $self->set_nodes()
-        if $self->ping_on_first_use;
+    if ( $self->ping_on_first_use ) {
+        $self->logger->debug("Force sniff on first request");
+        $self->set_nodes();
+    }
 
     return $self;
 }
@@ -37,19 +39,23 @@ sub next_node {
 #===================================
     my $self = shift;
 
-    my $nodes = $self->nodes;
-    my $now   = time();
+    my $nodes  = $self->nodes;
+    my $now    = time();
+    my $logger = $self->logger;
+    my $debug  = $logger->is_debug;
 
     if ( @$nodes and $self->next_ping < $now ) {
+        $logger->debug("Starting scheduled ping");
         $self->ping_nodes(@$nodes);
         $self->next_ping( $self->ping_interval );
     }
 
     if ( @$nodes == 0 ) {
+        $logger->debug("Forced ping - no live nodes");
         $self->ping_nodes( @$nodes, @{ $self->original_nodes } );
 
         if ( @$nodes == 0 ) {
-            throw(
+            $logger->throw_critical(
                 "NoNodes",
                 "No nodes are available: ",
                 { nodes => $self->original_nodes }
@@ -57,7 +63,6 @@ sub next_node {
         }
         $self->next_ping( $self->ping_interval );
     }
-
     return $nodes->[ $self->next_node_num ];
 }
 
@@ -65,18 +70,25 @@ sub next_node {
 sub mark_dead {
 #===================================
     my ( $self, $node ) = @_;
+    $self->logger->debug("Marking node ($node) as dead");
     $self->set_nodes( grep { $_ ne $node } @{ $self->nodes } );
     $self->next_ping( $self->ping_interval_after_failure );
 }
 
 #===================================
-sub ping_fail { }
+sub ping_fail {
 #===================================
+    my ( $self, @nodes ) = @_;
+    $self->logger->debugf( "Ping failed for nodes: %s", \@nodes );
+}
 
 #===================================
 sub ping_success {
 #===================================
     my ( $self, $node ) = @_;
+    my $logger = $self->logger;
+    $logger->debug("Retrieving live node list from node ($node)");
+
     my $cxn   = $self->connection;
     my $nodes = try {
         my $raw = $cxn->perform_request(
@@ -89,7 +101,7 @@ sub ping_success {
         return $self->serializer->decode($raw)->{nodes};
     }
     catch {
-        warn "$_";
+        $logger->warn("$_");
         0;
     } or return;
 
@@ -104,7 +116,10 @@ sub ping_success {
         push @live_nodes, $host;
     }
 
-    return unless @live_nodes;
+    unless (@live_nodes) {
+        $logger->warn("No live nodes returned from node ($node)");
+        return;
+    }
 
     $self->set_nodes(@live_nodes);
     return 1;
