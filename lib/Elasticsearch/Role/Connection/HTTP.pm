@@ -1,12 +1,20 @@
-package Elasticsearch::Connection::HTTP;
+package Elasticsearch::Role::Connection::HTTP;
 
-use strict;
-use warnings;
+use Moo::Role;
+with 'Elasticsearch::Role::Connection';
 use namespace::autoclean;
-use URI;
-use parent 'Elasticsearch::Connection';
+use URI();
 
 my $CRLF = "\015\012";
+
+has 'deflate'       => ( is => 'ro' );
+has 'https'         => ( is => 'ro' );
+has 'auth'          => ( is => 'ro' );
+has 'default_headers' => (
+    is      => 'ro',
+    default => sub { +{} }
+);
+
 
 #===================================
 sub protocol     {'http'}
@@ -14,29 +22,18 @@ sub default_port {9200}
 #===================================
 
 #===================================
-sub new {
+sub BUILD {
 #===================================
-    my $self = shift()->SUPER::new(@_);
+    my $self = shift;
 
     if ( $self->auth ) {
-
         require MIME::Base64;
         my $auth = MIME::Base64::encode_base64( $self->auth );
-        $self->{default_headers}{Authorization} = "Basic $auth";
-
-        $self->{ping_request}
-            = "GET / HTTP/1.1"
-            . $CRLF
-            . "Authorization: Basic $auth"
-            . $CRLF
-            . $CRLF;
-    }
-    else {
-        $self->{ping_request} = "GET / HTTP/1.1" . $CRLF . $CRLF;
+        $self->default_headers->{Authorization} = "Basic $auth";
     }
 
     if ( $self->deflate ) {
-        $self->{default_headers}{'Accept-Encoding'} = 'deflate';
+        $self->default_headers->{'Accept-Encoding'} = 'deflate';
     }
 
     return $self;
@@ -44,15 +41,22 @@ sub new {
 }
 
 #===================================
-sub default_args {
+sub _build_ping_request {
 #===================================
-    return (
-        default_headers => {},
-        deflate         => 0,
-        https           => '',
-        auth            => ''
-    );
+    my $self = shift;
+    if ( $self->auth ) {
+        my $header = $self->default_headers->{Authorization};
+        return
+              "GET / HTTP/1.1${CRLF}"
+            . "Authorization: $header${CRLF}"
+            . $CRLF;
+    }
+    return "GET / HTTP/1.1${CRLF}" . $CRLF;
 }
+
+#===================================
+sub _build_ping_response {"HTTP/1.1 200 OK"}
+#===================================
 
 #===================================
 sub http_uri {
@@ -65,8 +69,9 @@ sub http_uri {
 }
 
 #===================================
-sub open_socket {
+around 'open_socket' => sub {
 #===================================
+    my $orig = shift;
     my ( $self, $node ) = @_;
     if ( $self->https ) {
         require IO::Socket::SSL;
@@ -77,15 +82,7 @@ sub open_socket {
             SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE(),
         );
     }
-    return $self->SUPER::open_socket($node);
-}
-
-#===================================
-sub deflate         { $_[0]->{deflate} }
-sub https           { $_[0]->{https} }
-sub default_headers { $_[0]->{default_headers} }
-sub auth            { $_[0]->{auth} }
-sub ping_response   {"HTTP/1.1 200 OK"}
-#===================================
+    return $orig->(@_);
+};
 
 1;

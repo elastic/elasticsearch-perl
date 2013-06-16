@@ -1,18 +1,17 @@
 package Elasticsearch;
 
-use strict;
-use warnings;
+use Moo;
+with 'Elasticsearch::Role::Error';
 use namespace::autoclean;
 
 use Elasticsearch::Util qw(parse_params load_plugin);
-use Elasticsearch::Error qw(throw);
 
 my %Default_Plugins = (
     api        => [ 'API',        '+Raw' ],
     connection => [ 'Connection', '+HTTPTiny' ],
     logger     => [ 'Logger',     '' ],
     node_pool  => [ 'NodePool',   '+Static' ],
-    serializer => [ 'Serializer', '' ],
+    serializer => [ 'Serializer', '+JSON' ],
     transport  => [ 'Transport',  '' ],
 );
 

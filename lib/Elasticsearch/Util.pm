@@ -1,10 +1,9 @@
 package Elasticsearch::Util;
 
-use strict;
-use warnings;
+use Moo;
+with 'Elasticsearch::Role::Error';
 use namespace::autoclean;
 
-use Elasticsearch::Error('throw');
 use Module::Runtime qw(compose_module_name is_module_name use_module);
 use Scalar::Util qw(blessed);
 
@@ -54,22 +53,6 @@ sub load_plugin {
     return $class->new($params);
 }
 
-#===================================
-sub init_instance {
-#===================================
-    my ( $obj, $required, $params ) = @_;
-
-    for ( keys %$obj ) {
-        $obj->{$_} = $params->{$_}
-            if exists $params->{$_};
-    }
-
-    for (@$required) {
-        $obj->{$_} = $params->{$_}
-            or throw( "Param", "Missing required arg: $_" );
-    }
-    return $obj;
-}
 
 my %Code_To_Error = (
     409 => 'Conflict',

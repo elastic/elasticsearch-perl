@@ -1,60 +1,66 @@
-package Elasticsearch::NodePool;
+package Elasticsearch::Role::NodePool;
 
-use strict;
-use warnings;
+use Moo::Role;
+with 'Elasticsearch::Role::Error';
 use namespace::autoclean;
 
-use Elasticsearch::Util qw(parse_params init_instance);
-use Elasticsearch::Error qw(throw);
 use List::Util qw(shuffle);
 use IO::Select();
 use Time::HiRes qw(time sleep);
 
-my @Required_Params = qw(logger connection serializer);
+requires qw(next_node mark_dead ping_fail ping_success);
+
+has 'logger'            => ( is => 'ro',  required => 1 );
+has 'connection'        => ( is => 'ro',  required => 1 );
+has 'serializer'        => ( is => 'ro',  required => 1 );
+has 'ping_timeout'      => ( is => 'ro',  default  => 1.0 );
+has 'ping_interval'     => ( is => 'ro',  default  => 300 );
+has 'ping_on_first_use' => ( is => 'ro',  default  => 1 );
+has 'current_node_num'  => ( is => 'rwp', default  => 0 );
+
+has 'next_ping' => (
+    is      => 'rw',
+    default => 0,
+    coerce  => sub { shift() + time() },
+    trigger => 1
+);
+
+has 'seed_nodes' => (
+    is       => 'ro',
+    init_arg => 'nodes',
+    default  => sub { [] },
+    coerce   => sub { ref $_[0] eq 'ARRAY' ? $_[0] : [ $_[0] ] }
+);
+
+has 'nodes' => (
+    is       => 'ro',
+    default  => sub { [] },
+    init_arg => undef
+);
 
 #===================================
-sub new {
+sub BUILD {
 #===================================
-    my ( $class, $params ) = parse_params(@_);
-    my %defaults = $class->default_args;
-    my $self     = bless {
-        ping_timeout      => 1.0,
-        ping_interval     => 300,
-        ping_on_first_use => 1,
-        %defaults,
-    }, $class;
-
-    init_instance( $self, \@Required_Params, $params );
-    $self->{next_ping} = 0;
-    $self->{nodes}     = [];
-    $self->set_initial_nodes( $params->{nodes} );
+    my $self = shift;
+    $self->_init_nodes();
     return $self;
 }
-
-#===================================
-sub next_node    { throw( "Internal", "Must be overridden in subclass" ) }
-sub mark_dead    { throw( "Internal", "Must be overridden in subclass" ) }
-sub ping_fail    { throw( "Internal", "Must be overridden in subclass" ) }
-sub ping_success { throw( "Internal", "Must be overridden in subclass" ) }
-#===================================
 
 #===================================
 sub next_node_num {
 #===================================
     my $self    = shift;
     my $nodes   = $self->nodes;
-    my $current = $self->{current_node_num};
-    $self->{current_node_num}
-        = @$nodes
-        ? ++$current % @$nodes
-        : 0;
+    my $current = $self->current_node_num;
+    $self->_set_current_node_num( @$nodes ? ++$current % @$nodes : 0 );
 }
 
 #===================================
-sub set_initial_nodes {
+sub _init_nodes {
 #===================================
-    my $self = shift;
-    my @nodes = grep {$_} ref $_[0] ? @{ shift() } : @_;
+    my $self  = shift;
+    my $seed  = $self->seed_nodes;
+    my @nodes = grep {$_} @$seed;
     @nodes = 'localhost' unless @nodes;
 
     my $port = $self->connection->default_port;
@@ -63,6 +69,7 @@ sub set_initial_nodes {
         s{/.*$}{};
         $_ .= ":$port" unless m{:\d+$};
     }
+    @$seed = @nodes;
     $self->set_nodes(@nodes);
 }
 
@@ -70,8 +77,8 @@ sub set_initial_nodes {
 sub set_nodes {
 #===================================
     my $self = shift;
-    @{ $self->{nodes} } = shuffle @_;
-    $self->{current_node_num} = 0;
+    @{ $self->nodes } = shuffle @_;
+    $self->_set_current_node_num(0);
     $self->logger->debugf( "Set live nodes: %s", $self->{nodes} );
     return;
 }
@@ -142,26 +149,10 @@ sub ping_nodes {
 }
 
 #===================================
-sub next_ping {
+sub _trigger_next_ping {
 #===================================
     my $self = shift;
-    if (@_) {
-        my $time = $self->{next_ping} = time() + shift();
-        $self->logger->debug( "Next ping time: " . localtime($time) );
-    }
-    return $self->{next_ping};
+    $self->logger->debug( "Next ping time: " . localtime $self->next_ping );
 }
-
-#===================================
-sub nodes             { $_[0]->{nodes} }
-sub connection        { $_[0]->{connection} }
-sub logger            { $_[0]->{logger} }
-sub current_node_num  { $_[0]->{current_node_num} }
-sub ping_timeout      { $_[0]->{ping_timeout} }
-sub ping_interval     { $_[0]->{ping_interval} }
-sub ping_on_first_use { $_[0]->{ping_on_first_use} }
-sub serializer        { $_[0]->{serializer} }
-sub default_args      { }
-#===================================
 
 1;

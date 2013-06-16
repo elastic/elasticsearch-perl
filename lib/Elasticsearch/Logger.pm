@@ -1,51 +1,43 @@
 package Elasticsearch::Logger;
 
-use strict;
-use warnings;
-use Elasticsearch::Util qw(parse_params init_instance);
+use Moo;
 use namespace::autoclean;
 use Log::Any();
 use Elasticsearch::Util qw(parse_params init_instance);
 use URI();
 
-#===================================
-sub new {
-#===================================
-    my ( $class, $params ) = parse_params(@_);
-    my $self = bless {}, $class;
+has 'serializer' => ( is => 'ro', required => 1 );
+has 'logger' => (
+    is      => 'ro',
+    default => sub { Log::Any->get_logger( category => 'elasticsearch' ) },
+    handles => [
+        qw(debug debugf info infof warn warnf error errorf
+           critical criticalf is_debug is_info)
+    ]
+);
+has 'tracer' => ( is => 'ro' );
 
-    init_instance( $self, ['serializer'], $params );
+#===================================
+sub BUILDARGS {
+#===================================
+    my $class = shift;
+    my %params = ref $_[0] ? %{shift()}: @_;
 
-    if ( my $args = $params->{logger} ) {
+    if ( my $args = delete $params{logger} ) {
         $args = [$args] unless ref $args eq 'ARRAY';
         Log::Any::Adapter->set( { category => 'elasticsearch' }, @$args );
     }
-    $self->{logger} = Log::Any->get_logger( category => 'elasticsearch' );
 
-    if ( my $args = $params->{tracer} ) {
+    if ( my $args = $params{tracer} ) {
         $args = [$args] unless ref $args eq 'ARRAY';
         Log::Any::Adapter->set( { category => 'elasticsearch.trace' },
             @$args );
-        $self->{tracer}
+        $params{tracer}
             = Log::Any->get_logger( category => 'elasticsearch.trace' );
     }
-    return $self;
+    return \%params;
 }
 
-#===================================
-sub debug     { shift->{logger}->debug(@_) }
-sub debugf    { shift->{logger}->debugf(@_) }
-sub info      { shift->{logger}->info(@_) }
-sub infof     { shift->{logger}->infof(@_) }
-sub warn      { shift->{logger}->warn(@_) }
-sub warnf     { shift->{logger}->warnf(@_) }
-sub error     { shift->{logger}->error(@_) }
-sub errorf    { shift->{logger}->errorf(@_) }
-sub critical  { shift->{logger}->critical(@_) }
-sub criticalf { shift->{logger}->criticalf(@_) }
-sub is_debug  { shift->{logger}->is_debug }
-sub is_info   { shift->{logger}->is_debug }
-#===================================
 
 #===================================
 sub throw_error {
@@ -126,7 +118,7 @@ sub trace_error {
     my $msg = sprintf(
         "# [%s] ERROR: %s\n%s\n",
         scalar localtime($time),
-        $error->{text}, $body
+        $error->{text}, ( $body || '' )
     );
     $tracer->trace($msg);
 }
@@ -140,9 +132,5 @@ sub trace_comment {
     $tracer->trace($comment);
 
 }
-
-#===================================
-sub serializer { $_[0]->{serializer} }
-#===================================
 
 1;

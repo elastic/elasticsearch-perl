@@ -1,39 +1,31 @@
 package Elasticsearch::NodePool::Static;
 
-use strict;
-use warnings;
-use parent 'Elasticsearch::NodePool';
+use Moo;
+with 'Elasticsearch::Role::NodePool';
 use namespace::autoclean;
 
-use Elasticsearch::Error qw(throw);
 use List::Util qw(min);
 use Try::Tiny;
 
-#===================================
-sub new {
-#===================================
-    my $self = shift()->SUPER::new(@_);
+has '+ping_interval'   => ( default => 60 );
+has 'ping_on_failure'  => ( is      => 'ro', default => 1 );
+has 'dead_timeout'     => ( is      => 'ro', default => 60 );
+has 'max_dead_timeout' => ( is      => 'ro', default => 3600 );
+has 'dead_nodes' => (
+    is       => 'ro',
+    default  => sub { +{} },
+    init_arg => undef
+);
 
+#===================================
+after 'BUILD ' => sub {
+#===================================
+    my $self = shift;
     if ( $self->ping_on_first_use ) {
         $self->logger->debug("Force sniff on first request");
         $self->ping_fail( @{ $self->nodes } );
     }
-
-    return $self;
-}
-
-#===================================
-sub default_args {
-#===================================
-    return (
-        ping_on_first_use => 0,
-        ping_timeout      => 1.0,
-        ping_interval     => 30,
-        ping_on_failure   => 1,
-        dead_timeout      => 60,
-        max_dead_timeout  => 3600,
-    );
-}
+};
 
 #===================================
 sub next_node {
@@ -85,13 +77,8 @@ sub next_node {
 }
 
 #===================================
-sub set_nodes {
+after ' set_nodes ' => sub { %{ shift()->{dead_nodes} } = () };
 #===================================
-    my $self = shift;
-    $self->SUPER::set_nodes(@_);
-    %{ $self->{dead_nodes} } = ();
-    return;
-}
 
 #===================================
 sub mark_dead {
@@ -128,13 +115,4 @@ sub ping_success {
     delete $self->dead_nodes->{$node};
     return;
 }
-
-#===================================
-sub dead_timeout      { $_[0]->{dead_timeout} }
-sub max_dead_timeout  { $_[0]->{max_dead_timeout} }
-sub dead_nodes        { $_[0]->{dead_nodes} }
-sub ping_on_failure   { $_[0]->{ping_on_failure} }
-sub ping_on_first_use { $_[0]->{ping_on_first_use} }
-#===================================
-
 1;

@@ -1,38 +1,26 @@
-package Elasticsearch::Serializer;
+package Elasticsearch::Serializer::JSON;
 
-use strict;
-use warnings;
+use Moo;
+
 use namespace::autoclean;
-use JSON;
-use Encode qw(encode_utf8 decode_utf8 is_utf8);
+use JSON();
 use Try::Tiny;
-use Elasticsearch::Error qw(throw);
 
-our $JSON;
+our $JSON = JSON->new->utf8;
 
-#===================================
-sub mime_type {'application/json'}
-#===================================
+has 'mime_type' => ( is => 'ro', default => 'application/json' );
 
-#===================================
-sub new {
-#===================================
-    my $class = shift;
-    $JSON = JSON->new->utf8;
-    return bless {}, $class;
-}
+with 'Elasticsearch::Role::Serializer';
 
 #===================================
 sub encode {
 #===================================
-    my $var = $_[1];
-
+    my ( $self, $var ) = @_;
     unless ( ref $var ) {
         return is_utf8($var)
             ? encode_utf8($var)
             : $var;
     }
-
     return try { $JSON->encode($var) }
     catch { throw( "Serializer", $_, { var => $var } ) };
 }
@@ -41,7 +29,6 @@ sub encode {
 sub encode_pretty {
 #===================================
     my ( $self, $var ) = @_;
-
     $JSON->pretty(1);
 
     my $json;

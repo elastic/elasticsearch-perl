@@ -1,38 +1,30 @@
 package Elasticsearch::NodePool::Sniff;
 
-use strict;
-use warnings;
-use parent 'Elasticsearch::NodePool';
+use Moo;
+with 'Elasticsearch::Role::NodePool';
 use namespace::autoclean;
 
-use Elasticsearch::Error qw(throw);
 use Try::Tiny;
+
+has 'ping_interval_after_failure' => ( is => 'ro', default => 120 );
+has 'should_accept_node' => (
+    is      => 'ro',
+    default => sub {
+        sub {1}
+    }
+);
 
 # add max content?
 
 #===================================
-sub new {
+after 'BUILD' => sub {
 #===================================
-    my $self = shift()->SUPER::new(@_);
-    $self->{original_nodes} = [ @{ $self->nodes } ];
-
+    my $self = shift;
     if ( $self->ping_on_first_use ) {
         $self->logger->debug("Force sniff on first request");
         $self->set_nodes();
     }
-
-    return $self;
-}
-
-#===================================
-sub default_args {
-#===================================
-    return (
-        ping_interval_after_failure => 120,
-        ping_on_first_use           => 1,
-        should_accept_node          => sub {1}
-    );
-}
+};
 
 #===================================
 sub next_node {
@@ -52,13 +44,13 @@ sub next_node {
 
     if ( @$nodes == 0 ) {
         $logger->debug("Forced ping - no live nodes");
-        $self->ping_nodes( @$nodes, @{ $self->original_nodes } );
+        $self->ping_nodes( @$nodes, @{ $self->seed_nodes } );
 
         if ( @$nodes == 0 ) {
-            $logger->throw_critical(
+            throw(
                 "NoNodes",
                 "No nodes are available: ",
-                { nodes => $self->original_nodes }
+                { nodes => $self->seed_nodes }
             );
         }
         $self->next_ping( $self->ping_interval );
@@ -95,7 +87,8 @@ sub ping_success {
             $node,
             {   method => 'GET',
                 path   => '/_cluster/nodes',
-                qs     => { timeout => 300 }
+                qs     => { timeout => 300 },
+                prefix => '',
             }
         );
         return $self->serializer->decode($raw)->{nodes};
@@ -112,7 +105,7 @@ sub ping_success {
         my $data = $nodes->{$node_id};
         my $host = $data->{$protocol_key} or next;
         $host =~ s{^inet\[/([^\]]+)\]}{$1} or next;
-        $self->should_accept_node( $host, $node_id, $data ) or next;
+        $self->should_accept_node->( $host, $node_id, $data ) or next;
         push @live_nodes, $host;
     }
 
@@ -125,9 +118,4 @@ sub ping_success {
     return 1;
 }
 
-#===================================
-sub ping_interval_after_failure { $_[0]->{ping_interval_after_failure} }
-sub original_nodes              { $_[0]->{original_nodes} }
-sub should_accept_node          { shift()->{should_accept_node}->(@_) }
-#===================================
 1;
