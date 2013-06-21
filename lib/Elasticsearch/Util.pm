@@ -9,7 +9,7 @@ use Scalar::Util qw(blessed);
 
 require Exporter;
 our @ISA       = qw(Exporter);
-our @EXPORT_OK = qw(parse_params load_plugin init_instance code_to_error);
+our @EXPORT_OK = qw(parse_params load_plugin);
 
 #===================================
 sub parse_params {
@@ -53,16 +53,5 @@ sub load_plugin {
     return $class->new($params);
 }
 
-
-my %Code_To_Error = (
-    409 => 'Conflict',
-    404 => 'Missing',
-    403 => 'ClusterBlocked',
-    503 => 'NotReady'
-);
-
-#===================================
-sub code_to_error { $Code_To_Error{ shift() || '' } }
-#===================================
 
 1;

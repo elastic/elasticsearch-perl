@@ -6,7 +6,6 @@ with 'Elasticsearch::Role::Connection::HTTP';
 use namespace::autoclean;
 use HTTP::Tiny();
 
-use Elasticsearch::Util qw(code_to_error);
 
 my $Connection_Error = qr/ Connection.(?:timed.out|re(?:set|fused))
                        | connect:.timeout
@@ -45,7 +44,7 @@ sub perform_request {
         $body = '';
     }
 
-    my $type = code_to_error($code)
+    my $type = $self->code_to_error($code)
         || (
           $msg =~ /Timed out/         ? 'Timeout'
         : $msg =~ /$Connection_Error/ ? 'Connection'
