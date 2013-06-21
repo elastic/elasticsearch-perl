@@ -4,8 +4,7 @@ use Moo;
 with 'Elasticsearch::Role::Connection::HTTP';
 
 use namespace::autoclean;
-use HTTP::Tiny();
-
+use HTTP::Tiny v0.33 ();
 
 my $Connection_Error = qr/ Connection.(?:timed.out|re(?:set|fused))
                        | connect:.timeout
@@ -70,6 +69,7 @@ sub handle {
             $args{SSL_options}
                 = { SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE() };
         }
+
         my $tiny = HTTP::Tiny->new( %args, %{ $self->handle_params } );
         $self->{_handle} = { $$ => $tiny };
     }
