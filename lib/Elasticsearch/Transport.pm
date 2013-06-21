@@ -5,17 +5,11 @@ with 'Elasticsearch::Role::Error';
 use namespace::autoclean;
 
 use URI();
-use List::Util qw(shuffle min);
 use Time::HiRes qw(time);
 use Try::Tiny;
 use Elasticsearch::Util qw(parse_params);
 
-has 'serializer' => (
-    is       => 'ro',
-    required => 1,
-    handles  => { serialize => 'encode', deserialize => 'decode' }
-);
-
+has 'serializer'       => ( is => 'ro', required => 1 );
 has 'logger'           => ( is => 'ro', required => 1 );
 has 'connection'       => ( is => 'ro', required => 1 );
 has 'node_pool'        => ( is => 'ro', required => 1 );
@@ -44,28 +38,23 @@ sub _build_mime_type { shift->serializer->mime_type }
 #===================================
 sub perform_request {
 #===================================
-    my ( $self, $params ) = parse_params(@_);
+    my $self   = shift;
+    my $params = $self->tidy_request(@_);
 
     my $pool   = $self->node_pool;
     my $logger = $self->logger;
 
-    my $method = $params->{method} ||= 'GET';
-    my $path   = $params->{path}   ||= '/';
-    $params->{qs}        ||= {};
-    $params->{mime_type} ||= $self->mime_type;
-    $params->{data}      ||= $self->serialize( $params->{body} );
-    $params->{prefix} = $self->path_prefix;
-
-    my ( $response, $node, $retry, $took );
+    my ( $response, $node, $retry, $start, $took );
     try {
         $node = $pool->next_node;
 
-        my $start = time();
-        $logger->infof( "%s %s%s", $method, $node, $path );
+        $start = time();
+        $logger->infof( "%s %s%s", $params->{method}, $node,
+            $params->{prefix} . $params->{path} );
         $logger->trace_request( $node, $params, $start );
 
         my $raw = $self->connection->perform_request( $node, $params );
-        $response = $self->deserialize($raw);
+        $response = $self->serializer->decode($raw);
 
         my $end = time();
         $took = $end - $start;
@@ -74,6 +63,7 @@ sub perform_request {
     catch {
         my $error = upgrade_error($_);
         $retry = $self->handle_error( $node, $params, $error );
+        $took = time() - $start;
     };
 
     if ($retry) {
@@ -88,18 +78,19 @@ sub perform_request {
 #===================================
 sub handle_error {
 #===================================
-    my ( $self, $node, $params, $error ) = @_;
+    my ( $self, $node, $request, $error ) = @_;
 
+    # log different errors at different levels?
     my $logger = $self->logger;
     my $vars   = $error->{vars};
 
-    $vars->{request} = $params;
+    $vars->{request} = $request;
     $vars->{node} = $node if $node;
 
     if ( $error->is( 'Connection', 'Timeout' ) ) {
         $logger->warn($error);
         $self->node_pool->mark_dead($node);
-        return 1 if $self->should_retry( $node, $error, $params );
+        return 1 if $self->should_retry( $node, $error, $request );
     }
 
     $logger->trace_error( $error, time() );
@@ -107,9 +98,9 @@ sub handle_error {
     if ( $error->is('Request') ) {
         return
             if $error->is('Missing')
-            and $params->{ignore_missing};
+            and $request->{ignore_missing} || $request->{method} eq 'HEAD';
 
-        my $body = $self->deserialize( $vars->{body} );
+        my $body = $self->serializer->decode( $vars->{body} );
 
         $error->{text}
             = !ref $body     ? delete $vars->{body}
@@ -118,10 +109,33 @@ sub handle_error {
 
         $vars->{current_version} = $1
             if $error->is('Conflict')
-            and $vars->{text} =~ /$Version_RE/;
+            and $vars->{body} =~ /$Version_RE/;
     }
 
     $logger->throw_error($error);
+
+}
+
+#===================================
+sub tidy_request {
+#===================================
+    my ( $self, $params ) = parse_params(@_);
+    return $params if $params->{data};
+    $params->{method}     ||= 'GET';
+    $params->{path}       ||= '/';
+    $params->{qs}         ||= {};
+    $params->{mime_type}  ||= $self->mime_type;
+    $params->{serializer} ||= 'std';
+    $params->{prefix} = $self->path_prefix;
+
+    my $body = $params->{body};
+    return $params unless defined $body;
+    $params->{data}
+        = ( $params->{serializer} ||= 'std' )
+        ? $self->serializer->encode($body)
+        : $self->serializer->encode_bulk($body);
+
+    return $params;
 
 }
 

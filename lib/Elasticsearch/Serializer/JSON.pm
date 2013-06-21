@@ -26,6 +26,28 @@ sub encode {
 }
 
 #===================================
+sub encode_bulk {
+#===================================
+    my ( $self, $var ) = @_;
+    unless ( ref $var ) {
+        return is_utf8($var)
+            ? encode_utf8($var)
+            : $var;
+    }
+
+    my $json = '';
+    throw( "Param", "Var must be an array ref" )
+        unless ref $var eq 'ARRAY';
+    return try {
+        for (@$var) {
+            $json .= $JSON->encode($var) . "\n";
+        }
+        return $json;
+    }
+    catch { throw( "Serializer", $_, { var => $var } ) };
+}
+
+#===================================
 sub encode_pretty {
 #===================================
     my ( $self, $var ) = @_;
