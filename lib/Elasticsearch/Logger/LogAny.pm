@@ -1,67 +1,39 @@
-package Elasticsearch::Logger;
+package Elasticsearch::Logger::LogAny;
 
 use Moo;
 use namespace::autoclean;
 use Log::Any();
-use Elasticsearch::Util qw(parse_params init_instance);
+use Log::Any::Adapter();
 use URI();
 
-has 'serializer' => ( is => 'ro', required => 1 );
-has 'logger' => (
-    is      => 'ro',
-    default => sub { Log::Any->get_logger( category => 'elasticsearch' ) },
-    handles => [
-        qw(debug debugf info infof warn warnf error errorf
-           critical criticalf is_debug is_info)
-    ]
-);
-has 'tracer' => ( is => 'ro' );
+with 'Elasticsearch::Role::Logger';
 
 #===================================
 sub BUILDARGS {
 #===================================
     my $class = shift;
-    my %params = ref $_[0] ? %{shift()}: @_;
-
-    if ( my $args = delete $params{logger} ) {
+    my %params = ref $_[0] ? %{ shift() } : @_;
+    if ( my $args = delete $params{log_to} ) {
         $args = [$args] unless ref $args eq 'ARRAY';
         Log::Any::Adapter->set( { category => 'elasticsearch' }, @$args );
     }
+    $params{log_to} = Log::Any->get_logger( category => 'elasticsearch' );
 
-    if ( my $args = $params{tracer} ) {
+    if ( my $args = $params{trace_to} ) {
         $args = [$args] unless ref $args eq 'ARRAY';
         Log::Any::Adapter->set( { category => 'elasticsearch.trace' },
             @$args );
-        $params{tracer}
+        $params{trace_to}
             = Log::Any->get_logger( category => 'elasticsearch.trace' );
     }
     return \%params;
-}
-
-
-#===================================
-sub throw_error {
-#===================================
-    my ( $self, $type, $msg, $vars ) = @_;
-    my $error = Elasticsearch::Error->new( $type, $msg, $vars, 1 );
-    $self->error($error);
-    die $error;
-}
-
-#===================================
-sub throw_critical {
-#===================================
-    my ( $self, $type, $msg, $vars ) = @_;
-    my $error = Elasticsearch::Error->new( $type, $msg, $vars, 1 );
-    $self->critical($error);
-    die $error;
 }
 
 #===================================
 sub trace_request {
 #===================================
     my ( $self, $node, $request, $time ) = @_;
-    my $tracer = $self->{tracer} or return;
+    my $tracer = $self->trace_to or return;
 
     my $uri = URI->new();
     $uri->query_form( %{ $request->{qs} }, pretty => 1 );
@@ -91,10 +63,10 @@ sub trace_request {
 sub trace_response {
 #===================================
     my ( $self, $node, $response, $time, $took ) = @_;
-    my $tracer = $self->{tracer} or return;
+    my $tracer = $self->trace_to or return;
 
     my $body = $self->serializer->encode_pretty($response)
-        || '<NO BODY>';
+        || '<NO BODY>';    ## log 200/404 for exists?
     $body =~ s/^/# /mg;
 
     my $msg = sprintf(
@@ -110,7 +82,7 @@ sub trace_response {
 sub trace_error {
 #===================================
     my ( $self, $error, $time ) = @_;
-    my $tracer = $self->{tracer} or return;
+    my $tracer = $self->trace_to or return;
     my $var    = $self->serializer->decode( $error->{vars}{body} );
     my $body   = $self->serializer->encode_pretty($var);
     $body =~ s/^/# /mg if defined $body;
@@ -127,10 +99,25 @@ sub trace_error {
 sub trace_comment {
 #===================================
     my ( $self, $comment ) = @_;
-    my $tracer = $self->{tracer} or return;
+    my $tracer = $self->trace_to or return;
     $comment =~ s/^/# /mg;
     $tracer->trace($comment);
 
 }
+
+#===================================
+sub debug     { shift->log_to->debug(@_) }
+sub debugf    { shift->log_to->debugf(@_) }
+sub info      { shift->log_to->info(@_) }
+sub infof     { shift->log_to->infof(@_) }
+sub warn      { shift->log_to->warn(@_) }
+sub warnf     { shift->log_to->warnf(@_) }
+sub error     { shift->log_to->error(@_) }
+sub errorf    { shift->log_to->errorf(@_) }
+sub critical  { shift->log_to->critical(@_) }
+sub criticalf { shift->log_to->criticalf(@_) }
+sub is_debug  { shift->log_to->is_debug(@_) }
+sub is_info   { shift->log_to->is_info(@_) }
+#===================================
 
 1;

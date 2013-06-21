@@ -9,7 +9,7 @@ use Elasticsearch::Util qw(parse_params load_plugin);
 my %Default_Plugins = (
     api        => [ 'API',        '+Raw' ],
     connection => [ 'Connection', '+HTTPTiny' ],
-    logger     => [ 'Logger',     '' ],
+    logger     => [ 'Logger',     '+LogAny' ],
     node_pool  => [ 'NodePool',   '+Static' ],
     serializer => [ 'Serializer', '+JSON' ],
     transport  => [ 'Transport',  '' ],
