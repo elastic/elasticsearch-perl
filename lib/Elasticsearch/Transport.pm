@@ -80,17 +80,18 @@ sub handle_error {
 #===================================
     my ( $self, $node, $request, $error ) = @_;
 
-    # log different errors at different levels?
     my $logger = $self->logger;
-    my $vars   = $error->{vars};
+    my $vars = $error->{vars} ||= {};
 
     $vars->{request} = $request;
     $vars->{node} = $node if $node;
 
     if ( $error->is( 'Connection', 'Timeout' ) ) {
-        $logger->warn($error);
         $self->node_pool->mark_dead($node);
-        return 1 if $self->should_retry( $node, $error, $request );
+        if ( $self->should_retry( $node, $error, $request ) ) {
+            $logger->warn($error);
+            return 1;
+        }
     }
 
     $logger->trace_error( $error, time() );
@@ -101,7 +102,6 @@ sub handle_error {
             and $request->{ignore_missing} || $request->{method} eq 'HEAD';
 
         my $body = $self->serializer->decode( $vars->{body} );
-
         $error->{text}
             = !ref $body     ? delete $vars->{body}
             : $body->{error} ? "[$vars->{code}] $body->{error}"
@@ -110,9 +110,14 @@ sub handle_error {
         $vars->{current_version} = $1
             if $error->is('Conflict')
             and $vars->{body} =~ /$Version_RE/;
+
+        $logger->info($error);
+        throw($error);
     }
 
-    $logger->throw_error($error);
+    $error->is('NoNodes')
+        ? $logger->throw_critical($error)
+        : $logger->throw_error($error);
 
 }
 

@@ -47,11 +47,10 @@ sub next_node {
         $self->ping_nodes( @$nodes, @{ $self->seed_nodes } );
 
         if ( @$nodes == 0 ) {
-            throw(
-                "NoNodes",
-                "No nodes are available: ",
-                { nodes => $self->seed_nodes }
-            );
+            throw( "NoNodes",
+                      "No nodes are available: ["
+                    . join( ', ', @{ $self->seed_nodes } )
+                    . ']' );
         }
         $self->next_ping( $self->ping_interval );
     }

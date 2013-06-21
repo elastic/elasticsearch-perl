@@ -69,11 +69,9 @@ sub next_node {
     my $node = $self->next_node(1)
         unless $check_all;
 
-    return $node || $logger->throw_critical(
-        "NoNodes",
-        "No nodes are available: ",
-        { nodes => $self->nodes }
-    );
+    return $node
+        || throw( "NoNodes",
+        "No nodes are available: [" . join( ', ', @{ $self->nodes } ) . ']' );
 }
 
 #===================================

@@ -30,4 +30,5 @@ sub throw_critical {
     $self->critical($error);
     die $error;
 }
+
 1;

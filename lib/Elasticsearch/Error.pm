@@ -39,17 +39,17 @@ sub new {
     my $error_class = 'Elasticsearch::Error::' . $type;
     $msg = 'Unknown error' unless defined $msg;
 
-    my ( undef, $file, $line ) = caller($caller);
+    local $DEBUG = 2 if $type eq 'Internal';
+
+    my $stack = $class->_stack;
+
     my $self = bless {
-        type => $type,
-        text => $msg,
-        line => $line,
-        file => $file,
-        vars => $vars,
+        type  => $type,
+        text  => $msg,
+        vars  => $vars,
+        stack => $stack,
     }, $error_class;
 
-    $self->{stacktrace} = $self->stacktrace( $caller + 1 )
-        if $DEBUG > 1;
     return $self;
 }
 
@@ -67,21 +67,24 @@ sub is {
 sub _stringify {
 #===================================
     my $self = shift;
-    local $Data::Dumper::Terse = 1;
-    $DEBUG and local $Data::Dumper::Indent = 1;
+    local $Data::Dumper::Terse  = 1;
+    local $Data::Dumper::Indent = !!$DEBUG;
 
     unless ( $self->{msg} ) {
-        $self->{msg} = sprintf( "[%s] ** %s, at %s line %d.\n",
-            @{$self}{ 'type', 'text', 'file', 'line' } );
+        my $stack  = $self->{stack};
+        my $caller = $stack->[0];
+        $self->{msg}
+            = sprintf( "[%s] ** %s, called from sub %s at %s line %d.",
+            $self->{type}, $self->{text}, @{$caller}[ 3, 1, 2 ] );
 
         if ( $self->{vars} ) {
-            $self->{msg} .= sprintf( "With vars: %s\n",
+            $self->{msg} .= sprintf( " With vars: %s\n",
                 Data::Dumper::Dumper $self->{vars} );
         }
 
-        if ( $self->{stacktrace} ) {
+        if ( @$stack > 1 ) {
             $self->{msg}
-                .= sprintf( "Stacktrace:\n%s\n", $self->{stacktrace} );
+                .= sprintf( "Stacktrace:\n%s\n", $self->stacktrace($stack) );
         }
     }
     return $self->{msg};
@@ -98,19 +101,42 @@ sub _compare {
 }
 
 #===================================
+sub _stack {
+#===================================
+    my $self = shift;
+    my $caller = shift() || 2;
+
+    my @stack;
+    while ( my @caller = caller( ++$caller ) ) {
+        if ( $caller[0] eq 'Try::Tiny' or $caller[0] eq 'main' ) {
+            next if $caller[3] eq '(eval)';
+            if ( $caller[3] =~ /^(.+)::__ANON__\[(.+):(\d+)\]$/ ) {
+                @caller = ( $1, $2, $3, '(ANON)' );
+            }
+        }
+        next
+            if $caller[0] =~ /^Elasticsearch/
+            and $DEBUG < 2 || $caller[3] eq 'Try::Tiny::try';
+        push @stack, [ @caller[ 0, 1, 2, 3 ] ];
+        last unless $DEBUG > 1;
+    }
+    return \@stack;
+}
+
+#===================================
 sub stacktrace {
 #===================================
     my $self = shift;
-    my $caller = shift() || 1;
+    my $stack = shift || $self->_stack();
 
-    my $o = sprintf "%s\n%-4s %-30s %-5s %s\n%s\n",
+    my $o = sprintf "%s\n%-4s %-40s %-5s %s\n%s\n",
         '-' x 60, '#', 'Package', 'Line', 'Sub-routine', '-' x 60;
 
     my $i = 1;
-    while ( my @caller = caller( ++$caller ) ) {
-        next if $caller[0] eq 'Try::Tiny' and $caller[3] eq '(eval)';
-        $o .= sprintf "%-4d %-30s %4d  %s\n", $i++, @caller[ 0, 2, 3 ];
+    for (@$stack) {
+        $o .= sprintf "%-4d %-40s %4d  %s\n", $i++, @{$_}[ 0, 2, 3 ];
     }
+
     return $o .= ( '-' x 60 ) . "\n";
 }
 1;
