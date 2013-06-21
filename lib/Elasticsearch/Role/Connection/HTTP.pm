@@ -7,18 +7,18 @@ use URI();
 
 my $CRLF = "\015\012";
 
-has 'deflate'       => ( is => 'ro' );
-has 'https'         => ( is => 'ro' );
-has 'auth'          => ( is => 'ro' );
+has 'deflate' => ( is => 'ro' );
+has 'https'   => ( is => 'ro' );
+has 'auth'    => ( is => 'ro' );
 has 'default_headers' => (
     is      => 'ro',
     default => sub { +{} }
 );
 
-
 #===================================
-sub protocol     {'http'}
-sub default_port {9200}
+sub protocol             {'http'}
+sub default_port         {9200}
+sub ping_response_length {15}
 #===================================
 
 #===================================
@@ -29,6 +29,7 @@ sub BUILD {
     if ( $self->auth ) {
         require MIME::Base64;
         my $auth = MIME::Base64::encode_base64( $self->auth );
+        chomp $auth;
         $self->default_headers->{Authorization} = "Basic $auth";
     }
 
@@ -41,22 +42,28 @@ sub BUILD {
 }
 
 #===================================
-sub _build_ping_request {
+sub ping_request {
 #===================================
-    my $self = shift;
+    my ( $self, $node ) = @_;
+    my ($host) = split /:/, $node;
+
+    my $request = "HEAD / HTTP/1.1" . $CRLF . "Host: $host" . $CRLF;
+
     if ( $self->auth ) {
-        my $header = $self->default_headers->{Authorization};
-        return
-              "GET / HTTP/1.1${CRLF}"
-            . "Authorization: $header${CRLF}"
+        $request
+            .= "Authorization: "
+            . $self->default_headers->{Authorization}
             . $CRLF;
     }
-    return "GET / HTTP/1.1${CRLF}" . $CRLF;
+    return $request . $CRLF;
 }
 
 #===================================
-sub _build_ping_response {"HTTP/1.1 200 OK"}
+sub valid_ping_response {
 #===================================
+    my ( $self, $response ) = @_;
+    return $response =~ m{HTTP/1.1 200 OK};
+}
 
 #===================================
 sub http_uri {

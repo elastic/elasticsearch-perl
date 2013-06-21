@@ -7,7 +7,7 @@ use namespace::autoclean;
 use IO::Socket();
 use URI();
 
-requires qw(    protocol default_port handle );
+requires qw(protocol default_port handle ping_request valid_ping_response);
 
 has 'timeout' => (
     is      => 'ro',
@@ -18,9 +18,6 @@ has 'handle_params' => (
     is      => 'ro',
     default => sub { +{} }
 );
-
-has 'ping_request'  => ( is => 'lazy' );
-has 'ping_response' => ( is => 'lazy' );
 
 #===================================
 sub inflate {

@@ -94,8 +94,6 @@ sub ping_nodes {
     my $poll_delay = 0.01;
     my $end_time   = time() + $self->ping_timeout;
     my $cxn        = $self->connection;
-    my $request    = $cxn->ping_request;
-    my $response   = $cxn->ping_response;
     my $write      = IO::Select->new;
     my $read       = IO::Select->new;
 
@@ -115,26 +113,34 @@ sub ping_nodes {
 
     while ( time < $end_time ) {
         for my $socket ( $write->can_write(0) ) {
+            my $node = $sockets{"$socket"};
             $write->remove($socket);
+
             if ( $socket->connected ) {
+                $logger->debug("Sending request to node ($node)");
                 $read->add($socket);
-                $socket->send($request);
+                $socket->print( $cxn->ping_request($node) );
+            }
+            else {
+                $logger->debug("Node ($node) not contactable");
             }
         }
 
         for my $socket ( $read->can_read(0) ) {
-            my $data;
-            $socket->read( $data, length($response) );
+            my $data = '';
+            $socket->read( $data, $cxn->ping_response_length );
+
             my $node = $sockets{"$socket"};
-            if ( $data eq $response ) {
+            if ( $cxn->valid_ping_response($data) ) {
                 $logger->debug("Successful response from node ($node)");
 
                 if ( $self->ping_success($node) ) {
-                    $logger->debug("Ending ping");
+                    $logger->debug("Ping completed successfully");
                     return $node;
                 }
             }
             else {
+                $data =~ s/[\r\n]/[NL]/g;
                 $logger->debugf( "Node ($node) responded incorrectly: %s",
                     $data );
             }
