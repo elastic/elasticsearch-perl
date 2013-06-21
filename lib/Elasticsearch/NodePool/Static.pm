@@ -18,7 +18,7 @@ has 'dead_nodes' => (
 );
 
 #===================================
-after 'BUILD ' => sub {
+after 'BUILD' => sub {
 #===================================
     my $self = shift;
     if ( $self->ping_on_first_use ) {
@@ -77,7 +77,7 @@ sub next_node {
 }
 
 #===================================
-after ' set_nodes ' => sub { %{ shift()->{dead_nodes} } = () };
+after 'set_nodes' => sub { %{ shift()->{dead_nodes} } = () };
 #===================================
 
 #===================================
