@@ -7,15 +7,19 @@ use namespace::autoclean;
 use Elasticsearch::Util qw(parse_params load_plugin);
 
 my %Default_Plugins = (
-    api        => [ 'API',        '+Raw' ],
-    connection => [ 'Connection', '+HTTPTiny' ],
-    logger     => [ 'Logger',     '+LogAny' ],
-    node_pool  => [ 'NodePool',   '+Static' ],
-    serializer => [ 'Serializer', '+JSON' ],
+    client     => [ 'Client',     'Raw' ],
+    connection => [ 'Connection', 'HTTPTiny' ],
+    logger     => [ 'Logger',     'LogAny' ],
+    node_pool  => [ 'NodePool',   'Static' ],
+    serializer => [ 'Serializer', 'JSON' ],
     transport  => [ 'Transport',  '' ],
 );
 
-my @Load_Order = qw(serializer logger connection node_pool transport api);
+my @Load_Order = qw(
+    serializer logger
+    connection node_pool
+    transport  client
+);
 
 #===================================
 sub new {
@@ -25,10 +29,10 @@ sub new {
     for my $name (@Load_Order) {
         my ( $base, $default ) = @{ $Default_Plugins{$name} };
         my $sub_class = $params->{$name} || $default;
-        my $plugin = load_plugin( $base, $sub_class, $params );
-        $params->{$name} = $plugin;
+        my $plugin_class = load_plugin( $base, $sub_class );
+        $params->{$name} = $plugin_class->new($params);
     }
-    return $params->{api};
+    return $params->{client};
 }
 
 1;

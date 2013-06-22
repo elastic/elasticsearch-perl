@@ -2,14 +2,11 @@ package Elasticsearch::Util;
 
 use Moo;
 with 'Elasticsearch::Role::Error';
-use namespace::autoclean;
 
-use Module::Runtime qw(compose_module_name is_module_name use_module);
 use Scalar::Util qw(blessed);
-
-require Exporter;
-our @ISA       = qw(Exporter);
-our @EXPORT_OK = qw(parse_params load_plugin);
+use Module::Runtime qw(compose_module_name is_module_name use_module);
+use Sub::Exporter -setup =>
+    { exports => [qw(parse_params load_plugin install_actions)] };
 
 #===================================
 sub parse_params {
@@ -33,9 +30,9 @@ sub parse_params {
 #===================================
 sub load_plugin {
 #===================================
-    my ( $base, $spec, $params ) = @_;
+    my ( $base, $spec ) = @_;
     $base = 'Elasticsearch::' . $base;
-    $spec ||= $base;
+    $spec ||= "+$base";
     return $spec if blessed $spec;
 
     my ( $class, $version );
@@ -46,12 +43,36 @@ sub load_plugin {
         $class = $spec;
     }
 
-    if ( $class =~ s/\A\+// ) {
+    unless ( $class =~ s/\A\+// ) {
         $class = compose_module_name( $base, $class );
     }
     use_module( $class, $version );
-    return $class->new($params);
+    return $class;
 }
 
+#===================================
+sub install_actions {
+#===================================
+    my $group = shift() || '';
+    my ($class) = caller;
+
+    my $defns = $class->api;
+    my $stash = Package::Stash->new($class);
+
+    for my $action ( keys %$defns ) {
+        my ( $prefix, $name ) = ( $action =~ /^(?:([^.]*)\.)?([^.]+)$/ );
+        $prefix ||= '';
+        next unless $prefix eq $group;
+
+        next if $stash->has_symbol( '&' . $name );
+
+        my $defn = $defns->{$action};
+        $stash->add_symbol(
+            '&' . $name => sub {
+                shift->perform_request( $action, $defn, @_ );
+            }
+        );
+    }
+}
 
 1;
