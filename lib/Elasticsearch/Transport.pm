@@ -21,7 +21,7 @@ has 'path_prefix' => (
     is      => 'ro',
     default => sub {''},
     coerce  => sub {
-        $_ = shift();
+        local $_ = shift();
         s{^/?}{/};
         s{/$}{};
         $_;
@@ -85,11 +85,13 @@ sub handle_error {
     my $logger = $self->logger;
     my $vars = $error->{vars} ||= {};
 
+    delete $request->{data};
     $vars->{request} = $request;
     $vars->{node} = $node if $node;
 
     if ( $error->is( 'Connection', 'Timeout' ) ) {
         $self->node_pool->mark_dead($node);
+
         if ( $self->should_retry( $node, $error, $request ) ) {
             $logger->warn($error);
             return 1;
