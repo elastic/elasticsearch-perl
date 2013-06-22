@@ -9,11 +9,8 @@ use URI();
 
 requires qw(protocol default_port handle ping_request valid_ping_response);
 
-has 'timeout' => (
-    is      => 'ro',
-    default => 30
-);
-
+has 'max_content_length' => ( is => 'rw' );
+has 'timeout' => ( is => 'ro', default => 30 );
 has 'handle_params' => (
     is      => 'ro',
     default => sub { +{} }

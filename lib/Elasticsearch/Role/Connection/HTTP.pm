@@ -7,9 +7,11 @@ use URI();
 
 my $CRLF = "\015\012";
 
-has 'deflate' => ( is => 'ro' );
-has 'https'   => ( is => 'ro' );
-has 'auth'    => ( is => 'ro' );
+has 'deflate'             => ( is => 'ro' );
+has 'https'               => ( is => 'ro' );
+has 'auth'                => ( is => 'ro' );
+has '+max_content_length' => ( is => 'rw', default => 104_857_600 );
+
 has 'default_headers' => (
     is      => 'ro',
     default => sub { +{} }

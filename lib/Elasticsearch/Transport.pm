@@ -16,7 +16,6 @@ has 'node_pool'        => ( is => 'ro', required => 1 );
 has 'retry_connection' => ( is => 'ro', default  => 1 );
 has 'retry_timeout'    => ( is => 'ro', default  => 1 );
 has 'mime_type'        => ( is => 'lazy' );
-has 'max_content_length' => ( is => 'ro' );
 
 has 'path_prefix' => (
     is      => 'ro',
@@ -45,8 +44,11 @@ sub perform_request {
     my $logger = $self->logger;
 
     my ( $response, $node, $retry, $start, $took );
+
     try {
         $node = $pool->next_node;
+
+        $self->check_max_content_length($params);
 
         $start = time();
         $logger->infof( "%s %s%s", $params->{method}, $node,
@@ -135,6 +137,7 @@ sub tidy_request {
 
     my $body = $params->{body};
     return $params unless defined $body;
+
     $params->{data}
         = ( $params->{serializer} ||= 'std' )
         ? $self->serializer->encode($body)
@@ -142,6 +145,22 @@ sub tidy_request {
 
     return $params;
 
+}
+
+#===================================
+sub check_max_content_length {
+#===================================
+    my ( $self, $params ) = @_;
+    return unless defined $params->{data};
+
+    my $max = $self->connection->max_content_length
+        or return;
+
+    return if length( $params->{data} ) < $max;
+
+    $self->logger->throw_error( 'Param',
+        "Body is longer than max_content_length ($max)",
+    );
 }
 
 #===================================

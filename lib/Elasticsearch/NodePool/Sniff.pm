@@ -4,17 +4,19 @@ use Moo;
 with 'Elasticsearch::Role::NodePool';
 use namespace::autoclean;
 
+use Elasticsearch::Util qw(parse_params);
+use List::Util qw(min);
 use Try::Tiny;
 
 has 'ping_interval_after_failure' => ( is => 'ro', default => 120 );
+has 'dynamic_max_content_length'  => ( is => 'ro', default => 0 );
+
 has 'should_accept_node' => (
     is      => 'ro',
     default => sub {
         sub {1}
     }
 );
-
-# add max content?
 
 #===================================
 after 'BUILD' => sub {
@@ -24,6 +26,14 @@ after 'BUILD' => sub {
         $self->logger->debug("Force sniff on first request");
         $self->set_nodes();
     }
+
+#===================================
+around 'BUILDARGS' => sub {
+#===================================
+    my $orig = shift;
+    my ( $class, $params ) = parse_params(@_);
+    $params->{dynamic_max_content_length} = !$params->{max_content_length};
+    $orig->( $class, $params );
 };
 
 #===================================
@@ -80,13 +90,15 @@ sub ping_success {
     my $logger = $self->logger;
     $logger->debug("Retrieving live node list from node ($node)");
 
-    my $cxn   = $self->connection;
+    my $cxn      = $self->connection;
+    my $protocol = $cxn->protocol;
+
     my $nodes = try {
         my $raw = $cxn->perform_request(
             $node,
             {   method => 'GET',
                 path   => '/_cluster/nodes',
-                qs     => { timeout => 300 },
+                qs     => { timeout => 300, $protocol => 1 },
                 prefix => '',
             }
         );
@@ -97,15 +109,23 @@ sub ping_success {
         0;
     } or return;
 
-    my $protocol_key = $cxn->protocol . '_address';
+    my $protocol_key = $protocol . '_address';
+    my $max_content;
 
     my @live_nodes;
     for my $node_id ( keys %$nodes ) {
         my $data = $nodes->{$node_id};
+
         my $host = $data->{$protocol_key} or next;
         $host =~ s{^inet\[/([^\]]+)\]}{$1} or next;
-        $self->should_accept_node->( $host, $node_id, $data ) or next;
+
+        $self->should_accept_node->( $host, $node_id, $data )
+            or next;
+
         push @live_nodes, $host;
+        if ( my $max = $data->{$protocol}{max_content_length_in_bytes} ) {
+            $max_content = min( $data->{$protocol}, $max );
+        }
     }
 
     unless (@live_nodes) {
@@ -114,6 +134,9 @@ sub ping_success {
     }
 
     $self->set_nodes(@live_nodes);
+    $cxn->max_content_length($max_content)
+        if $max_content
+        and $self->dynamic_max_content_length();
     return 1;
 }
 
