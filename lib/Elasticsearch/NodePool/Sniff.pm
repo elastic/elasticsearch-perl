@@ -19,13 +19,14 @@ has 'should_accept_node' => (
 );
 
 #===================================
-after 'BUILD' => sub {
+sub BUILD {
 #===================================
     my $self = shift;
     if ( $self->ping_on_first_use ) {
         $self->logger->debug("Force sniff on first request");
         $self->set_nodes();
     }
+}
 
 #===================================
 around 'BUILDARGS' => sub {

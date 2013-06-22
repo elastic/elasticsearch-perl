@@ -24,7 +24,7 @@ sub ping_response_length {15}
 #===================================
 
 #===================================
-sub BUILD {
+before 'BUILD' => sub {
 #===================================
     my $self = shift;
 
@@ -41,7 +41,7 @@ sub BUILD {
 
     return $self;
 
-}
+};
 
 #===================================
 sub ping_request {

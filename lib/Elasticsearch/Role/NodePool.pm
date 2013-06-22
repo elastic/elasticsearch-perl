@@ -39,12 +39,12 @@ has 'nodes' => (
 );
 
 #===================================
-sub BUILD {
+before 'BUILD' => sub {
 #===================================
     my $self = shift;
     $self->_init_nodes();
     return $self;
-}
+};
 
 #===================================
 sub next_node_num {

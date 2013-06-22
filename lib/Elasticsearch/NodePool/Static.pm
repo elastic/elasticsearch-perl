@@ -18,14 +18,14 @@ has 'dead_nodes' => (
 );
 
 #===================================
-after 'BUILD' => sub {
+sub BUILD {
 #===================================
     my $self = shift;
     if ( $self->ping_on_first_use ) {
         $self->logger->debug("Force sniff on first request");
         $self->ping_fail( @{ $self->nodes } );
     }
-};
+}
 
 #===================================
 sub next_node {
