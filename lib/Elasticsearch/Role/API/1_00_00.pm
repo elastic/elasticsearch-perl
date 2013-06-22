@@ -54,7 +54,7 @@ sub api {
         method => 'DELETE',
         path   => '{indices|all-type}/{types}/_query',
         qs     => qs_init qw(
-            consistency ignore_indices
+            analyzer consistency default_operator df ignore_indices q
             replication routing source timeout),
     },
 
@@ -130,7 +130,8 @@ sub api {
 
     'msearch' => {
         body => {
-            desc => 'The request definitions (metadata-search '
+            required => 1,
+            desc     => 'The request definitions (metadata-search '
                 . 'request definition pairs), separated by newlines'
         },
         doc       => '/api/multi-search/',
@@ -141,7 +142,8 @@ sub api {
 
     'percolate' => {
         body => {
-                  desc => 'The document (`doc`) to percolate against '
+            required => 1,
+            desc     => 'The document (`doc`) to percolate against '
                 . 'registered queries; optionally also a '
                 . '`query` to limit the percolation to '
                 . 'specific registered queries'
