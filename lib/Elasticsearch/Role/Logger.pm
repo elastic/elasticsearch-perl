@@ -3,6 +3,7 @@ package Elasticsearch::Role::Logger;
 use Moo::Role;
 use namespace::autoclean;
 
+use URI();
 use Try::Tiny;
 
 has 'serializer' => ( is => 'ro', required => 1 );

@@ -7,7 +7,6 @@ use namespace::autoclean;
 
 use Log::Any();
 use Log::Any::Adapter();
-use URI();
 
 #===================================
 sub BUILDARGS {
