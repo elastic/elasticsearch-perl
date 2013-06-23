@@ -9,11 +9,14 @@ our %Handler = (
     string => sub {"$_[0]"},
     list   => sub {
         ref $_[0]
-            ? join( ',', shift() )
+            ? join( ',', @{ shift() } )
             : shift();
     },
     bool => sub { $_[0] ? 1 : 0 },
     enum => sub {"$_[0]"},
+    number   => sub { 0 + $_[0] },
+    datetime => sub {"$_[0]"},
+    duration => sub {"$_[0]"},
 );
 
 our %Params = (
