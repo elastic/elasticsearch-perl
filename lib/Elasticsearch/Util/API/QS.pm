@@ -54,7 +54,7 @@ our %Params = (
     },
     delay => {
         desc => 'Set the delay for the operation (default: 1s)',
-        type => 'time'
+        type => 'duration'
     },
     df => {
         desc => 'The default field for query string query (default: _all)',
@@ -215,7 +215,7 @@ our %Params = (
     },
     interval => {
         desc => 'The interval for the second sampling of threads',
-        type => 'time'
+        type => 'duration'
     },
     jvm => {
         desc => 'Return information about the JVM',
@@ -247,7 +247,7 @@ our %Params = (
     },
     master_timeout => {
         desc => 'Explicit operation timeout for connection to master node',
-        type => 'time'
+        type => 'duration'
     },
     max_doc_freq => {
         desc => 'The word occurrence frequency as count:'
@@ -527,11 +527,11 @@ our %Params = (
     },
     timeout => {
         desc => 'Explicit operation timeout',
-        type => 'time'
+        type => 'duration'
     },
     timestamp => {
         desc => 'Explicit timestamp for the document',
-        type => 'time'
+        type => 'datetime'
     },
     tokenizer => {
         desc => 'The name of the tokenizer to use for the analysis',
@@ -542,7 +542,7 @@ our %Params = (
         type => 'bool'
     },
     ttl => {
-        desc => 'Expiration time for the document',
+        desc => 'Time-to-live duration for the document',
         type => 'duration'
     },
     type => {
@@ -554,8 +554,9 @@ our %Params = (
         type => 'number'
     },
     version_type => {
-        desc => 'Explicit version number for concurrency control',
-        type => 'number'
+        desc    => 'Explicit version number for concurrency control',
+        type    => 'enum',
+        options => [ 'internal', 'external' ]
     },
     wait_for_active_shards => {
         desc => 'Wait until the specified number of shards is active',

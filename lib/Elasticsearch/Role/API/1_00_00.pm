@@ -319,7 +319,7 @@ sub api {
         doc    => '/api/admin-indices-delete-index/',
         method => 'DELETE',
         path   => '{indices}',
-        qs     => qs_init qw(timeout),
+        qs     => qs_init qw(ignore_missing timeout),
     },
 
     'indices.delete_alias' => {
