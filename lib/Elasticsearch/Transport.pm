@@ -56,7 +56,11 @@ sub perform_request {
         $logger->trace_request( $node, $params, $start );
 
         my $raw = $self->connection->perform_request( $node, $params );
-        $response = $self->serializer->decode($raw);
+        $response
+            = length $raw
+            ? $self->serializer->decode($raw)
+            : $params->{method} eq 'HEAD'
+            and 1;
 
         my $end = time();
         $took = $end - $start;
