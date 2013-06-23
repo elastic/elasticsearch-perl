@@ -45,9 +45,10 @@ sub perform_request {
 
     my $type = $self->code_to_error($code)
         || (
-          $msg =~ /Timed out/         ? 'Timeout'
-        : $msg =~ /$Connection_Error/ ? 'Connection'
-        :                               'Request'
+          $msg =~ /Timed out/                ? 'Timeout'
+        : $msg =~ /Unexpected end of stream/ ? 'ContentLength'
+        : $msg =~ /$Connection_Error/        ? 'Connection'
+        :                                      'Request'
         );
 
     chomp $msg;

@@ -160,7 +160,7 @@ sub check_max_content_length {
 
     return if length( $params->{data} ) < $max;
 
-    $self->logger->throw_error( 'Param',
+    $self->logger->throw_error( 'ContentLength',
         "Body is longer than max_content_length ($max)",
     );
 }

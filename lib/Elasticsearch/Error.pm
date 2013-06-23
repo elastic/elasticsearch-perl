@@ -22,6 +22,9 @@ our $DEBUG = 0;
 @Elasticsearch::Error::NotReady::ISA
     = ( 'Elasticsearch::Error::Connection', __PACKAGE__ );
 
+@Elasticsearch::Error::ContentLength::ISA
+    = ( __PACKAGE__, 'Elasticsearch::Error::Request' );
+
 use overload (
     '""'  => '_stringify',
     'cmp' => '_compare',
