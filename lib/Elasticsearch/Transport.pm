@@ -57,10 +57,9 @@ sub perform_request {
 
         my $raw = $self->connection->perform_request( $node, $params );
         $response
-            = length $raw
-            ? $self->serializer->decode($raw)
-            : $params->{method} eq 'HEAD'
-            and 1;
+            = length $raw                 ? $self->serializer->decode($raw)
+            : $params->{method} eq 'HEAD' ? 1
+            :                               $raw;
 
         my $end = time();
         $took = $end - $start;

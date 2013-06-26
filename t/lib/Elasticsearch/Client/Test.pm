@@ -110,20 +110,12 @@ sub run_tests {
         my ( $type, $test ) = key_val($_);
 
         if ( $type eq 'do' ) {
-            my $error = delete $test->{catch};
-            eval {
-                $test = populate_vars( $test, \%stash );
-                $val = run_cmd($test);
-                pass($test_name);
-            } or do {
-                if ($error) {
-                    test_error( $@, $error, $test_name );
-                }
-                else {
-                    fail($test_name);
-                    diag $@;
-                }
-                }
+            my $catch = delete $test->{catch};
+            $test = populate_vars( $test, \%stash );
+            my $ok = eval { $val = run_cmd($test); 1 };
+                  $catch ? test_error( $@, $catch, $test_name )
+                : $ok    ? pass($test_name)
+                :          fail($test_name) && diag($@);
         }
         else {
             my ( $field, $expect );
