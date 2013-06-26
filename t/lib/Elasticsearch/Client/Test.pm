@@ -9,11 +9,11 @@ use Test::More;
 use Test::Deep;
 use Data::Dump qw(pp);
 use File::Spec::Functions qw(rel2abs);
-use File::BaseName;
+use File::Basename;
 
 require Exporter;
 our @ISA    = 'Exporter';
-our @EXPORT = 'test_dir';
+our @EXPORT = 'test_files';
 
 our %Test_Types = (
     ok => sub {
@@ -47,27 +47,13 @@ our %Errors = (
 my $es = Elasticsearch->new;
 
 #===================================
-sub test_dir {
+sub test_files {
 #===================================
-    my ($path) = @_;
-    $path = rel2abs($path);
-    my $name = File::Basename::basename($path);
-
-    my @files = grep {/.yaml$/} <"$path/*">;
-
-    if (@files) {
-        plan tests => 0 + @files;
-        for my $file (@files) {
-            my $title
-                = $name . "/" . File::Basename::basename( $file, '.yaml' );
-            subtest $name => sub { test_file( $title, $file ) }
-        }
+    my @files = map {<"$_">} @_;
+    for my $file (@files) {
+        my $name = File::Basename::basename( $file, '.yml' );
+        subtest $file => sub { test_file( $name, $file ) };
     }
-    else {
-        plan tests => 1;
-        fail "No YAML test files found in $path";
-    }
-    done_testing;
 }
 
 #===================================
@@ -91,6 +77,7 @@ sub test_file {
         reset_es();
         run_tests( $title, $tests );
     }
+    done_testing;
 }
 
 #===================================
