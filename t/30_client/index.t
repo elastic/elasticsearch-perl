@@ -1,4 +1,7 @@
 use lib 't/lib';
+use Test::More;
 use Elasticsearch::Client::Test;
 
-test_dir('spec/test/index');
+test_files('spec/test/index/*.yaml');
+
+done_testing;
