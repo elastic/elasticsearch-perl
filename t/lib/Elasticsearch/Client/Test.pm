@@ -22,7 +22,8 @@ our %Test_Types = (
     },
     not_ok => sub {
         my ( $got, undef, $name ) = @_;
-        not_ok( $got, $name );
+        no warnings 'uninitialized';
+        ok( !$got, $name );
     },
     lt => sub {
         my ( $got, $expect, $name ) = @_;
