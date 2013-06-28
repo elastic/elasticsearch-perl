@@ -392,7 +392,8 @@ our %Params = (
     },
     script => {
         desc => 'The URL-encoded script definition'
-            . ' (instead of using request body)'
+            . ' (instead of using request body)',
+        type => 'string',
     },
     scroll => {
         desc => 'Specify how long a consistent view of the index'
@@ -586,12 +587,14 @@ our %Params = (
 #===================================
 sub qs_handler {
 #===================================
+    no warnings 'uninitialized';
     $Handler{ $_[0] } or die "Unknown query string handler ($_[0])\n";
 }
 
 #===================================
 sub qs_init {
 #===================================
+    no warnings 'uninitialized';
     return {
         map { $_ => $Params{$_} || die("Unknown query-string param ($_)\n") }
             @_
