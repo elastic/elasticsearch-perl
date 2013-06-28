@@ -60,27 +60,34 @@ sub trace_file {
 }
 
 #===================================
-sub test_file {
+sub test_files {
 #===================================
-    my ( $name, $file ) = @_;
-    my @ast = eval { LoadFile($file) } or do {
-        plan tests => 1;
-        fail "Error parsing test file ($file): $@";
-        return;
-    };
+    my @files = map {<"$_">} @_;
 
-    my $total = 0;
-    map { $total += @$_ } map { values %$_ } @ast;
+    for my $file (@files) {
+        my $name = File::Basename::basename( $file, '.yml' );
+        my ($ast) = eval { LoadFile($file) } or do {
+            fail "Error parsing test file ($file): $@";
+            next;
+        };
 
-    plan tests => $total;
+        my ( $title, $tests ) = key_val($ast);
 
-    for my $pair (@ast) {
-        my ( $title, $tests ) = key_val($pair);
-        $title = $name . '/' . $title;
-        reset_es();
-        run_tests( $title, $tests );
+        if ( $tests->[0]{skip} ) {
+            my $skip = check_skip( $tests->[0]{skip} );
+            shift @$tests;
+            if ($skip) {
+            SKIP: { skip $skip, 1 }
+                next;
+            }
+        }
+
+        subtest $name => sub {
+            plan tests => 0 + @$tests;
+            reset_es();
+            run_tests( $title, $tests );
+        };
     }
-    done_testing;
 }
 
 #===================================
@@ -240,4 +247,22 @@ sub test_error {
     }
 }
 
+#===================================
+sub check_skip {
+#===================================
+    my $skip = shift;
+    my ( $min, $max ) = split( /\s*-\s*/, $skip->{version} );
+    my $current = $es->info->{version}{number};
+
+    return "Version $current - " . $skip->{reason}
+        if str_version($min) le str_version($current)
+        and str_version($max) ge str_version($current);
+}
+
+#===================================
+sub str_version {
+#===================================
+    no warnings 'uninitialized';
+    return sprintf "%03d-%03d-%03d", ( split /\./, shift() )[ 0 .. 2 ];
+}
 1;
