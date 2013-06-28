@@ -11,9 +11,11 @@ use Data::Dump qw(pp);
 use File::Spec::Functions qw(rel2abs);
 use File::Basename;
 
+my $es = Elasticsearch->new;
+
 require Exporter;
-our @ISA    = 'Exporter';
-our @EXPORT = 'test_files';
+our @ISA = 'Exporter';
+our @EXPORT = ( 'test_files', 'trace', 'trace_file' );
 
 our %Test_Types = (
     ok => sub {
@@ -45,16 +47,16 @@ our %Errors = (
     request  => 'Elasticsearch::Error::Request',
 );
 
-my $es = Elasticsearch->new;
+#===================================
+sub trace {
+#===================================
+    $es = Elasticsearch->new( trace_to => 'Stderr' );
+}
 
 #===================================
-sub test_files {
+sub trace_file {
 #===================================
-    my @files = map {<"$_">} @_;
-    for my $file (@files) {
-        my $name = File::Basename::basename( $file, '.yml' );
-        subtest $file => sub { test_file( $name, $file ) };
-    }
+    $es = Elasticsearch->new( trace_to => [ 'File', 'log' ] );
 }
 
 #===================================
