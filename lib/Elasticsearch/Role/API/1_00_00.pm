@@ -44,8 +44,8 @@ sub api {
         method => 'DELETE',
         path   => '{index}/{type}/{id}',
         qs     => qs_init qw(
-            consistency parent refresh replication
-            routing timeout version version_type),
+            consistency ignore_missing parent replication
+            refresh routing timeout version version_type),
     },
 
     'delete_by_query' => {
@@ -62,7 +62,7 @@ sub api {
         doc    => '/api/get/',
         method => 'HEAD',
         path   => '{index}/{type}/{id}',
-        qs     => qs_init qw(parent preference realtime refresh routing),
+        qs     => qs_init qw(parent preference routing),
     },
 
     'explain' => {
@@ -81,7 +81,7 @@ sub api {
     'get' => {
         doc  => '/api/get/',
         path => '{index}/{type}/{id}',
-        qs   => qs_init qw(fields parent preference realtime refresh routing),
+        qs   => qs_init qw(fields ignore_missing parent preference routing),
     },
 
     'index' => {
@@ -112,7 +112,7 @@ sub api {
         },
         doc  => '/api/multi-get/',
         path => '{index|blank}/{type|blank}/_mget}',
-        qs   => qs_init qw(fields parent preference realtime refresh routing),
+        qs   => qs_init qw(fields parent preference routing),
     },
 
     'mlt' => {
