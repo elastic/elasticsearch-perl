@@ -197,7 +197,7 @@ sub api {
         method => 'POST',
         path   => '{index}/{type}/{id}/_update',
         qs     => qs_init qw(
-            consistency fields lang parent percolate
+            consistency fields ignore_missing lang parent percolate
             refresh replication retry_on_conflict routing
             script timeout timestamp ttl version version_type),
     },
