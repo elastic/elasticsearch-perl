@@ -61,7 +61,7 @@ sub api {
     'exists' => {
         doc    => '/api/get/',
         method => 'HEAD',
-        path   => '{index}/{type}/{id}',
+        path   => '{index}/{type|all}/{id}',
         qs     => qs_init qw(parent preference realtime refresh routing),
     },
 
@@ -80,11 +80,18 @@ sub api {
 
     'get' => {
         doc  => '/api/get/',
-        path => '{index}/{type}/{id}',
+        path => '{index}/{type|all}/{id}',
         qs   => qs_init qw(
             fields ignore_missing parent preference
             realtime refresh routing),
     },
+
+    'get_source' => {
+        doc  => '/api/get/',
+        path => '{index}/{type|all}/{id}/_source',
+        qs   => qs_init qw(
+            ignore_missing parent preference
+            realtime refresh routing),
     },
 
     'index' => {
@@ -114,7 +121,7 @@ sub api {
                 . '`ids` (when index and type is provided in the URL.'
         },
         doc  => '/api/multi-get/',
-        path => '{index|blank}/{type|blank}/_mget}',
+        path => '{index|blank}/{type|blank}/_mget',
         qs   => qs_init qw(fields preference realtime refresh),
     },
 

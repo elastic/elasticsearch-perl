@@ -18,11 +18,11 @@ our @ISA = 'Exporter';
 our @EXPORT = ( 'test_files', 'trace', 'trace_file' );
 
 our %Test_Types = (
-    ok => sub {
+    is_true => sub {
         my ( $got, undef, $name ) = @_;
         ok( $got, $name );
     },
-    not_ok => sub {
+    is_false => sub {
         my ( $got, undef, $name ) = @_;
         no warnings 'uninitialized';
         ok( !$got, $name );
@@ -99,20 +99,21 @@ sub run_tests {
         unless ref $tests eq 'ARRAY';
 
     my $val;
-    my $counter = 1;
+    my $i = 0;
     my %stash;
 
     for (@$tests) {
-        my $test_name = "$title - " . ( $counter++ );
+        my $test_name = "$title " . $i++;
         my ( $type, $test ) = key_val($_);
 
         if ( $type eq 'do' ) {
             my $catch = delete $test->{catch};
+            $test_name .= ": ".( $catch ? 'catch ' . $catch : 'do' );
             $test = populate_vars( $test, \%stash );
             my $ok = eval { $val = run_cmd($test); 1 };
                   $catch ? test_error( $@, $catch, $test_name )
                 : $ok    ? pass($test_name)
-                :          fail($test_name) && diag($@);
+                :          fail($test_name) || diag($@);
         }
         else {
             my ( $field, $expect );
@@ -125,11 +126,12 @@ sub run_tests {
             my $got = get_val( $val, $field );
             if ( $type eq 'set' ) {
                 $stash{$expect} = $got;
-                pass($test_name);
+                pass("$test_name: set $expect");
                 next;
             }
             $expect = populate_vars( $expect, \%stash );
-            run_test( $test_name, $type, $expect, $got );
+            $field ||= 'response';
+            run_test( "$test_name: $field $type", $type, $expect, $got );
         }
     }
 }
@@ -243,7 +245,7 @@ sub test_error {
     else {
         my $class = $Errors{$expect}
             or die "Unknown error type ($expect)";
-        is( ref($got) || $got, $class, $name );
+        is( ref($got) || $got, $class, $name ) || diag($got);
     }
 }
 
