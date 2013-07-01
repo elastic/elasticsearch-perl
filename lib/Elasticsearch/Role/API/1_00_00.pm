@@ -62,7 +62,7 @@ sub api {
         doc    => '/api/get/',
         method => 'HEAD',
         path   => '{index}/{type}/{id}',
-        qs     => qs_init qw(parent preference routing),
+        qs     => qs_init qw(parent preference realtime refresh routing),
     },
 
     'explain' => {
@@ -81,7 +81,10 @@ sub api {
     'get' => {
         doc  => '/api/get/',
         path => '{index}/{type}/{id}',
-        qs   => qs_init qw(fields ignore_missing parent preference routing),
+        qs   => qs_init qw(
+            fields ignore_missing parent preference
+            realtime refresh routing),
+    },
     },
 
     'index' => {
@@ -112,7 +115,7 @@ sub api {
         },
         doc  => '/api/multi-get/',
         path => '{index|blank}/{type|blank}/_mget}',
-        qs   => qs_init qw(fields parent preference routing),
+        qs   => qs_init qw(fields preference realtime refresh),
     },
 
     'mlt' => {
@@ -198,7 +201,7 @@ sub api {
         path   => '{index}/{type}/{id}/_update',
         qs     => qs_init qw(
             consistency fields ignore_missing lang parent percolate
-            refresh replication retry_on_conflict routing
+            realtime refresh replication retry_on_conflict routing
             script timeout timestamp ttl version version_type),
     },
 

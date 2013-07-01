@@ -363,6 +363,10 @@ our %Params = (
         desc => 'Query in the Lucene query string syntax',
         type => 'string'
     },
+    realtime => {
+        desc => '"Specify whether to perform the operation in realtime or search mode"',
+        type => 'bool'
+    },
     recovery => {
         desc => 'Return information about shard recovery',
         type => 'bool'
@@ -372,7 +376,7 @@ our %Params = (
         type => 'bool'
     },
     refresh => {
-        desc => 'Refresh the shard after performing the operation',
+        desc => 'Refresh the shard before/after performing the operation',
         type => 'bool'
     },
     replication => {
