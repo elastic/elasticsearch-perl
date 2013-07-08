@@ -20,6 +20,18 @@ our %Handler = (
 );
 
 our %Params = (
+    _source => {
+        desc => 'Indicates whether to return the _source, can a boolean or a string that will interpreted as an include rule',
+        type => 'string'
+    },
+    _source_includes => {
+        desc => 'Indicates to return the _source, filtered to the specified fields.',
+        type => 'string'
+    },
+    _source_excludes => {
+        desc => 'Indicates to return the _source, with the specified fields removed.',
+        type => 'string'
+    },
     all => {
         desc => 'Return all available information',
         type => 'bool'
@@ -67,6 +79,10 @@ our %Params = (
     dry_run => {
         desc => 'Simulate the operation only and return the resulting state',
         type => 'bool'
+    },
+    exclude => {
+        desc => 'An exclude list for what ever you are getting',
+        type => 'string'
     },
     exit => {
         desc => 'Exit the JVM as well (default: true)',
@@ -196,6 +212,10 @@ our %Params = (
         type => 'bool',
         desc => 'Specify whether to supress the error when a resource '
             . 'is missing',
+    },
+    include => {
+        desc => 'An include list for what ever you are getting',
+        type => 'string'
     },
     index => {
         desc => 'A comma-separated list of index names to filter aliases',
