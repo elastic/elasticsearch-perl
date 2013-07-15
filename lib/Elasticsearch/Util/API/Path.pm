@@ -2,7 +2,7 @@ package Elasticsearch::Util::API::Path;
 
 use strict;
 use warnings;
-use URI::Escape qw(uri_escape);
+use URI::Escape qw(uri_escape_utf8);
 
 use Sub::Exporter -setup => { exports => ['path_handler'] };
 
@@ -38,7 +38,7 @@ sub path_handler {
         if ( my $handler = $Handler{$_} ) {
             my $val = $handler->($params);
             next unless defined $val and length $val;
-            push @parts, uri_escape($val);
+            push @parts, uri_escape_utf8($val);
         }
         else {
             push @parts, $_;
