@@ -24,11 +24,11 @@ our %Params = (
         desc => 'Indicates whether to return the _source, can a boolean or a string that will interpreted as an include rule',
         type => 'string'
     },
-    _source_includes => {
+    _source_include => {
         desc => 'Indicates to return the _source, filtered to the specified fields.',
         type => 'string'
     },
-    _source_excludes => {
+    _source_exclude => {
         desc => 'Indicates to return the _source, with the specified fields removed.',
         type => 'string'
     },

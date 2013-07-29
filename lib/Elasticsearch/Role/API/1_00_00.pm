@@ -73,7 +73,7 @@ sub api {
         doc  => '/api/explain/',
         path => '{indices|all-type}/{types}/{id}/_explain',
         qs   => qs_init qw(
-            _source _source_includes _source_excludes analyze_wildcard analyzer default_operator
+            _source _source_include _source_exclude analyze_wildcard analyzer default_operator
             df fields lenient lowercase_expanded_terms
             parent preference q routing source),
     },
@@ -82,7 +82,7 @@ sub api {
         doc  => '/api/get/',
         path => '{index}/{type|all}/{id}',
         qs   => qs_init qw(
-            _source _source_includes _source_excludes fields ignore_missing parent preference
+            _source _source_include _source_exclude fields ignore_missing parent preference
             realtime refresh routing),
     },
 
@@ -122,7 +122,7 @@ sub api {
         },
         doc  => '/api/multi-get/',
         path => '{index|blank}/{type|blank}/_mget',
-        qs   => qs_init qw(_source _source_includes _source_excludes fields preference realtime refresh),
+        qs   => qs_init qw(_source _source_include _source_exclude fields preference realtime refresh),
     },
 
     'mlt' => {
@@ -188,7 +188,7 @@ sub api {
             lenient lowercase_expanded_terms preference
             q routing scroll search_type size sort source
             stats suggest_field suggest_mode suggest_size
-            suggest_text timeout version _source _source_includes _source_excludes),
+            suggest_text timeout version _source _source_include _source_exclude),
     },
 
     'suggest' => {
