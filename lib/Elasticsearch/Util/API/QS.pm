@@ -192,10 +192,9 @@ our %Params = (
         options => [ 'none', 'missing' ],
         type    => 'enum'
     },
-    ignore_missing => {
-        type => 'bool',
-        desc => 'Specify whether to supress the error when a resource '
-            . 'is missing',
+    ignore => {
+        type => 'list',
+        desc => 'Specify one or more HTTP error response codes to supress',
     },
     index => {
         desc => 'A comma-separated list of index names to filter aliases',

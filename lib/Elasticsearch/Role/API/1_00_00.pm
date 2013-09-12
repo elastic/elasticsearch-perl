@@ -44,7 +44,7 @@ sub api {
         method => 'DELETE',
         path   => '{index}/{type}/{id}',
         qs     => qs_init qw(
-            consistency ignore_missing parent replication
+            consistency ignore parent replication
             refresh routing timeout version version_type),
     },
 
@@ -82,7 +82,7 @@ sub api {
         doc  => '/api/get/',
         path => '{index}/{type|all}/{id}',
         qs   => qs_init qw(
-            fields ignore_missing parent preference
+            fields ignore parent preference
             realtime refresh routing),
     },
 
@@ -90,7 +90,7 @@ sub api {
         doc  => '/api/get/',
         path => '{index}/{type|all}/{id}/_source',
         qs   => qs_init qw(
-            ignore_missing parent preference
+            ignore parent preference
             realtime refresh routing),
     },
 
@@ -207,7 +207,7 @@ sub api {
         method => 'POST',
         path   => '{index}/{type}/{id}/_update',
         qs     => qs_init qw(
-            consistency fields ignore_missing lang parent percolate
+            consistency fields ignore lang parent percolate
             realtime refresh replication retry_on_conflict routing
             script timeout timestamp ttl version version_type),
     },
@@ -243,7 +243,7 @@ sub api {
     'cluster.shutdown' => {
         doc    => '/api/admin-cluster-nodes-shutdown/',
         method => 'POST',
-        path   => '_cluster/_nodes/{nodes}/_shutdown',
+        path   => '_cluster/nodes/{nodes}/_shutdown',
         qs     => qs_init qw(delay exit),
     },
 
@@ -329,7 +329,7 @@ sub api {
         doc    => '/api/admin-indices-delete-index/',
         method => 'DELETE',
         path   => '{indices}',
-        qs     => qs_init qw(ignore_missing timeout),
+        qs     => qs_init qw(ignore timeout),
     },
 
     'indices.delete_alias' => {
@@ -387,13 +387,13 @@ sub api {
 
     'indices.get_alias' => {
         doc  => '/api/admin-indices-aliases/',
-        path => '{indices}/_aliases',
+        path => '{indices}/_aliases/{aliases}',
         qs   => qs_init qw(ignore_indices),
     },
 
     'indices.get_aliases' => {
         doc  => '/api/admin-indices-aliases/',
-        path => '{indices}/_aliases/{aliases}',
+        path => '{indices}/_aliases',
         qs   => qs_init qw(timeout),
     },
 

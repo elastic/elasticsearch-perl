@@ -7,8 +7,42 @@ use URI();
 use Try::Tiny;
 
 has 'serializer' => ( is => 'ro', required => 1 );
-has 'trace_to'   => ( is => 'ro' );
+has 'log_as'     => ( is => 'ro', default  => 'elasticsearch.event' );
+has 'trace_as'   => ( is => 'ro', default  => 'elasticsearch.trace' );
 has 'log_to'     => ( is => 'ro' );
+has 'trace_to'   => ( is => 'ro' );
+has 'trace_handle' => (
+    is      => 'lazy',
+    handles => [qw( trace       tracef      is_trace)]
+);
+
+has 'log_handle' => (
+    is      => 'lazy',
+    handles => [ qw(
+            debug       debugf      is_debug
+            info        infof       is_info
+            warning     warningf    is_warning
+            error       errorf      is_error
+            critical    criticalf   is_critical
+            )
+    ]
+);
+
+#before debug => sub {
+#    print  Elasticsearch::Error->new('Request')->stacktrace."\n";
+#};
+#
+#before debugf => sub {
+#    print  Elasticsearch::Error->new('Request')->stacktrace."\n";
+#};
+#
+#before info => sub {
+#    print  Elasticsearch::Error->new('Request')->stacktrace."\n";
+#};
+#
+#before infof => sub {
+#    print  Elasticsearch::Error->new('Request')->stacktrace."\n";
+#};
 
 #===================================
 sub throw_error {
@@ -31,26 +65,24 @@ sub throw_critical {
 #===================================
 sub trace_request {
 #===================================
-    my ( $self, $node, $request, $time ) = @_;
+    my ( $self, $cxn, $params ) = @_;
     return unless $self->is_trace;
 
-    my $uri = URI->new();
-    $uri->query_form( %{ $request->{qs} }, pretty => 1 );
+    my $uri = URI->new( 'http://localhost:9200' . $params->{path} );
+    $uri->query_form( { %{ $params->{qs} }, pretty => 1 } );
 
-    my $body = $self->serializer->encode_pretty( $request->{body} );
+    my $body = $self->serializer->encode_pretty( $params->{body} );
     if ( defined $body ) {
         $body =~ s/'/\u0027/g;
-        $body = " -d '\n$body'";
+        $body = " -d '\n$body'\n";
     }
-    else { $body = '' }
+    else { $body = "\n" }
 
     my $msg = sprintf(
-        "# [%s] Node: %s\n"                             #
-            . "curl -X%s 'localhost:9200%s%s' %s\n",    #
-        localtime($time) . '',
-        $node,
-        $request->{method},
-        $request->{path},
+        "# Request to: %s\n"          #
+            . "curl -X%s '%s' %s",    #
+        $cxn->stringify,
+        $params->{method},
         $uri,
         $body
     );
@@ -61,17 +93,15 @@ sub trace_request {
 #===================================
 sub trace_response {
 #===================================
-    my ( $self, $node, $response, $time, $took ) = @_;
+    my ( $self, $cxn, $code, $response, $took ) = @_;
     return unless $self->is_trace;
 
-    my $body = $self->serializer->encode_pretty($response)
-        || '<NO BODY>';    ## log 200/404 for exists?
+    my $body = $self->serializer->encode_pretty($response) || '';
     $body =~ s/^/# /mg;
 
     my $msg = sprintf(
-        "# [%s] Took:%dms\n%s",
-        scalar localtime($time),
-        $took * 1000, $body
+        "# Response: %s, Took:%dms\n%s",    #
+        $code, $took * 1000, $body
     );
 
     $self->trace($msg);
@@ -80,24 +110,13 @@ sub trace_response {
 #===================================
 sub trace_error {
 #===================================
-    my ( $self, $error, $time ) = @_;
+    my ( $self, $cxn, $error ) = @_;
     return unless $self->is_trace;
-    my $body;
-    try {
-        my $var = $self->serializer->decode( $error->{vars}{body} );
-        $body = $self->serializer->encode_pretty($var);
-    }
-    catch {
-        $body = $error->{vars}{body};
-    };
 
-    $body =~ s/^/# /mg if defined $body;
+    my $body = $self->serializer->encode_pretty( $error->{vars}{body} || '' );
+    $body =~ s/^/# /mg;
 
-    my $msg = sprintf(
-        "# [%s] ERROR: %s\n%s\n",
-        scalar localtime($time),
-        $error->{text}, ( $body || '' )
-    );
+    my $msg = sprintf( "# ERROR: %s\n%s\n", $error->{text}, $body );
     $self->trace($msg);
 }
 
@@ -110,25 +129,5 @@ sub trace_comment {
     $comment =~ s/^/# /mg;
     $self->trace($comment);
 }
-
-#===================================
-sub debug       { ( shift->log_to   || return )->debug(@_) }
-sub debugf      { ( shift->log_to   || return )->debugf(@_) }
-sub info        { ( shift->log_to   || return )->info(@_) }
-sub infof       { ( shift->log_to   || return )->infof(@_) }
-sub warn        { ( shift->log_to   || return )->warn(@_) }
-sub warnf       { ( shift->log_to   || return )->warnf(@_) }
-sub error       { ( shift->log_to   || return )->error(@_) }
-sub errorf      { ( shift->log_to   || return )->errorf(@_) }
-sub critical    { ( shift->log_to   || return )->critical(@_) }
-sub trace       { ( shift->trace_to || return )->trace(@_) }
-sub tracef      { ( shift->trace_to || return )->tracef(@_) }
-sub is_debug    { ( shift->log_to   || return )->is_debug(@_) }
-sub is_info     { ( shift->log_to   || return )->is_info(@_) }
-sub is_warn     { ( shift->log_to   || return )->is_warn(@_) }
-sub is_error    { ( shift->log_to   || return )->is_error(@_) }
-sub is_critical { ( shift->log_to   || return )->is_critical(@_) }
-sub is_trace    { ( shift->trace_to || return )->is_trace(@_) }
-#===================================
 
 1;

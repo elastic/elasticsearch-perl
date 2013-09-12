@@ -35,8 +35,7 @@ sub parse_request {
             body => $self->parse_body( $defn->{body}, $params ),
             qs   => $self->parse_qs( $defn->{qs},     $params ),
         };
-        $request->{ignore_missing} = delete $request->{qs}{ignore_missing}
-            if $request->{qs}{ignore_missing};
+        $request->{ignore} = delete $request->{qs}{ignore};
     }
     catch {
         chomp $_;

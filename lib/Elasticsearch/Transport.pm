@@ -9,123 +9,55 @@ use Time::HiRes qw(time);
 use Try::Tiny;
 use Elasticsearch::Util qw(parse_params);
 
-has 'serializer'       => ( is => 'ro', required => 1 );
-has 'logger'           => ( is => 'ro', required => 1 );
-has 'connection'       => ( is => 'ro', required => 1 );
-has 'node_pool'        => ( is => 'ro', required => 1 );
-has 'retry_connection' => ( is => 'ro', default  => 1 );
-has 'retry_timeout'    => ( is => 'ro', default  => 1 );
-has 'mime_type'        => ( is => 'lazy' );
-
-has 'path_prefix' => (
-    is      => 'ro',
-    default => sub {''},
-    coerce  => sub {
-        local $_ = shift();
-        s{^/?}{/};
-        s{/$}{};
-        $_;
-    },
-);
+has 'serializer' => ( is => 'ro', required => 1 );
+has 'logger'     => ( is => 'ro', required => 1 );
+has 'cxn_pool'   => ( is => 'ro', required => 1 );
 
 my $Version_RE = qr/: version conflict, current \[(\d+)\]/;
-
-#===================================
-sub _build_mime_type { shift->serializer->mime_type }
-#===================================
 
 #===================================
 sub perform_request {
 #===================================
     my $self   = shift;
     my $params = $self->tidy_request(@_);
-
-    my $pool   = $self->node_pool;
+    my $pool   = $self->cxn_pool;
     my $logger = $self->logger;
 
-    my ( $response, $node, $retry, $start, $took );
+    my ( $response, $cxn, $retry, $error );
 
     try {
-        $node = $pool->next_node;
+        $cxn = $pool->next_cxn;
+        my $start = time();
+        $logger->trace_request( $cxn, $params );
 
-        $self->check_max_content_length($params);
-
-        $start = time();
-        $logger->infof( "%s %s%s", $params->{method}, $node,
-            $params->{prefix} . $params->{path} );
-        $logger->trace_request( $node, $params, $start );
-
-        my $raw = $self->connection->perform_request( $node, $params );
-        $response
-            = length $raw                 ? $self->serializer->decode($raw)
-            : $params->{method} eq 'HEAD' ? 1
-            :                               $raw;
-
-        my $end = time();
-        $took = $end - $start;
-        $logger->trace_response( $node, $response, $end, $took );
+        ( my $code, $response ) = $cxn->perform_request($params);
+        $logger->trace_response( $cxn, $code, $response, time() - $start );
     }
     catch {
-        my $error = upgrade_error($_);
-        $retry = $self->handle_error( $node, $params, $error );
-        $took = time() - $start;
+        $error = upgrade_error($_);
+        if ( $error->is('Cxn') ) {
+            $cxn->mark_dead();
+            $pool->schedule_check;
+            $retry = $self->should_retry( $params, $cxn, $error );
+        }
+        elsif ( $error->is('Timeout') ) {
+            $pool->schedule_check;
+        }
     };
 
     if ($retry) {
-        $logger->debug('Retrying request on a new node');
+        $logger->debugf( "[%s] %s", $cxn->stringify, "$error" );
+        $logger->info('Retrying request on a new cxn');
         return $self->perform_request($params);
     }
-
-    $logger->infof( "Took: %dms", $took * 1000 );
+    if ($error) {
+        $logger->trace_error( $cxn, $error );
+        delete $error->{vars}{body};
+        $error->is('NoNodes')
+            ? $logger->throw_critical($error)
+            : $logger->throw_error($error);
+    }
     return $response;
-}
-
-#===================================
-sub handle_error {
-#===================================
-    my ( $self, $node, $request, $error ) = @_;
-
-    my $logger = $self->logger;
-    my $vars = $error->{vars} ||= {};
-
-    delete $request->{data};
-    $vars->{request} = $request;
-    $vars->{node} = $node if $node;
-
-    if ( $error->is( 'Connection', 'Timeout' ) ) {
-        $self->node_pool->mark_dead($node);
-
-        if ( $self->should_retry( $node, $error, $request ) ) {
-            $logger->warn($error);
-            return 1;
-        }
-    }
-
-    $logger->trace_error( $error, time() );
-
-    if ( $error->is('Request') ) {
-        return
-            if $error->is('Missing')
-            and $request->{ignore_missing} || $request->{method} eq 'HEAD';
-
-        my $body = $self->serializer->decode( $vars->{body} );
-        $error->{text}
-            = !ref $body     ? delete $vars->{body}
-            : $body->{error} ? "[$vars->{code}] $body->{error}"
-            :                  $error->{text};
-
-        $vars->{current_version} = $1
-            if $error->is('Conflict')
-            and $vars->{body} =~ /$Version_RE/;
-
-        $logger->info($error);
-        throw($error);
-    }
-
-    $error->is('NoNodes')
-        ? $logger->throw_critical($error)
-        : $logger->throw_error($error);
-
 }
 
 #===================================
@@ -133,13 +65,9 @@ sub tidy_request {
 #===================================
     my ( $self, $params ) = parse_params(@_);
     return $params if $params->{data};
-    $params->{method}     ||= 'GET';
-    $params->{path}       ||= '/';
-    $params->{qs}         ||= {};
-    $params->{mime_type}  ||= $self->mime_type;
-    $params->{serializer} ||= 'std';
-    $params->{prefix} = $self->path_prefix;
-
+    $params->{method} ||= 'GET';
+    $params->{path}   ||= '/';
+    $params->{qs}     ||= {};
     my $body = $params->{body};
     return $params unless defined $body;
 
@@ -153,27 +81,10 @@ sub tidy_request {
 }
 
 #===================================
-sub check_max_content_length {
-#===================================
-    my ( $self, $params ) = @_;
-    return unless defined $params->{data};
-
-    my $max = $self->connection->max_content_length
-        or return;
-
-    return if length( $params->{data} ) < $max;
-
-    $self->logger->throw_error( 'ContentLength',
-        "Body is longer than max_content_length ($max)",
-    );
-}
-
-#===================================
 sub should_retry {
 #===================================
-    my ( $self, $node, $error ) = @_;
-    return $error->is('Connection') && $self->retry_connection
-        || $error->is('Timeout') && $self->retry_timeout;
+    my ( $self, $request, $cxn, $error ) = @_;
+    return $error->is('Cxn');
 }
 
 1;

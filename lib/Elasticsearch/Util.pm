@@ -5,8 +5,21 @@ with 'Elasticsearch::Role::Error';
 
 use Scalar::Util qw(blessed);
 use Module::Runtime qw(compose_module_name is_module_name use_module);
-use Sub::Exporter -setup =>
-    { exports => [qw(parse_params load_plugin install_actions)] };
+use Sub::Exporter -setup => {
+    exports => [ qw(
+            parse_params
+            to_list
+            load_plugin
+            install_actions
+            )
+    ]
+};
+
+#===================================
+sub to_list {
+#===================================
+    grep {defined} ref $_[0] eq 'ARRAY' ? @{ $_[0] } : @_;
+}
 
 #===================================
 sub parse_params {

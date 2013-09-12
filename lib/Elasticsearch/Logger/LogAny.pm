@@ -3,30 +3,30 @@ package Elasticsearch::Logger::LogAny;
 use Moo;
 with 'Elasticsearch::Role::Error';
 with 'Elasticsearch::Role::Logger';
+use Elasticsearch::Util qw(parse_params to_list);
 use namespace::autoclean;
 
 use Log::Any();
 use Log::Any::Adapter();
 
 #===================================
-sub BUILDARGS {
+sub _build_log_handle {
 #===================================
-    my $class = shift;
-    my %params = ref $_[0] ? %{ shift() } : @_;
-    if ( my $args = delete $params{log_to} ) {
-        Log::Any::Adapter->set( { category => 'elasticsearch' },
-            ref $args ? @$args : $args );
+    my $self = shift;
+    if ( my @args = to_list( $self->log_to ) ) {
+        Log::Any::Adapter->set( { category => $self->log_as }, @args );
     }
-    $params{log_to} = Log::Any->get_logger( category => 'elasticsearch' );
+    Log::Any->get_logger( category => $self->log_as );
+}
 
-    if ( my $args = $params{trace_to} ) {
-        Log::Any::Adapter->set( { category => 'elasticsearch.trace' },
-            ref $args ? @$args : $args );
+#===================================
+sub _build_trace_handle {
+#===================================
+    my $self = shift;
+    if ( my @args = to_list( $self->trace_to ) ) {
+        Log::Any::Adapter->set( { category => $self->trace_as }, @args );
     }
-    $params{trace_to}
-        = Log::Any->get_logger( category => 'elasticsearch.trace' );
-
-    return \%params;
+    Log::Any->get_logger( category => $self->trace_as );
 }
 
 1;
