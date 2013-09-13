@@ -132,12 +132,14 @@ sub process_response {
 
     my @ignore = to_list( $params->{ignore} );
     push @ignore, 404 if $params->{method} eq 'HEAD';
-    return if grep { $_ eq $code } @ignore;
+    return ($code) if grep { $_ eq $code } @ignore;
 
     my $error_type = $Code_To_Error{$code};
     unless ($error_type) {
-        $msg        = $body;
-        $body       = undef;
+        if ( defined $body ) {
+            $msg  = $body;
+            $body = undef;
+        }
         $error_type = $self->error_from_text( $code, $msg );
     }
 
