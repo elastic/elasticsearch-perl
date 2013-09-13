@@ -28,22 +28,6 @@ has 'log_handle' => (
     ]
 );
 
-#before debug => sub {
-#    print  Elasticsearch::Error->new('Request')->stacktrace."\n";
-#};
-#
-#before debugf => sub {
-#    print  Elasticsearch::Error->new('Request')->stacktrace."\n";
-#};
-#
-#before info => sub {
-#    print  Elasticsearch::Error->new('Request')->stacktrace."\n";
-#};
-#
-#before infof => sub {
-#    print  Elasticsearch::Error->new('Request')->stacktrace."\n";
-#};
-
 #===================================
 sub throw_error {
 #===================================
@@ -71,7 +55,11 @@ sub trace_request {
     my $uri = URI->new( 'http://localhost:9200' . $params->{path} );
     $uri->query_form( { %{ $params->{qs} }, pretty => 1 } );
 
-    my $body = $self->serializer->encode_pretty( $params->{body} );
+    my $body
+        = $params->{serialize} eq 'std'
+        ? $self->serializer->encode_pretty( $params->{body} )
+        : $params->{data};
+
     if ( defined $body ) {
         $body =~ s/'/\u0027/g;
         $body = " -d '\n$body'\n";
