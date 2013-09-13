@@ -19,8 +19,9 @@ sub parse_request {
     my $request;
     try {
         $request = {
-            ignore => delete $params->{ignore} || [],
-            method => $defn->{method}          || 'GET',
+            ignore    => delete $params->{ignore} || [],
+            method    => $defn->{method}          || 'GET',
+            serialize => $defn->{serialize}       || 'std',
             path => $self->_parse_path( $defn->{path}, $params ),
             body => $self->_parse_body( $defn->{body}, $params ),
             qs   => $self->_parse_qs( $defn->{qs},     $params ),

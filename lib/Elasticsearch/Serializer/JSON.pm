@@ -40,7 +40,7 @@ sub encode_bulk {
         unless ref $var eq 'ARRAY';
     return try {
         for (@$var) {
-            $json .= $JSON->encode($var) . "\n";
+            $json .= $JSON->encode($_) . "\n";
         }
         return $json;
     }

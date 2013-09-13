@@ -65,15 +65,15 @@ sub perform_request {
 sub tidy_request {
 #===================================
     my ( $self, $params ) = parse_params(@_);
-    return $params if $params->{data};
     $params->{method} ||= 'GET';
     $params->{path}   ||= '/';
     $params->{qs}     ||= {};
     my $body = $params->{body};
     return $params unless defined $body;
 
+    $params->{serialize} ||= 'std';
     $params->{data}
-        = ( $params->{serializer} ||= 'std' )
+        = $params->{serialize} eq 'std'
         ? $self->serializer->encode($body)
         : $self->serializer->encode_bulk($body);
 
