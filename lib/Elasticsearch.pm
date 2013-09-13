@@ -7,18 +7,21 @@ use namespace::autoclean;
 use Elasticsearch::Util qw(parse_params load_plugin);
 
 my %Default_Plugins = (
-    client      => [ 'Client',       'Raw' ],
-    logger      => [ 'Logger',       'LogAny' ],
+    client      => [ 'Client',       'Direct' ],
     cxn_factory => [ 'Cxn::Factory', '' ],
     cxn_pool    => [ 'CxnPool',      'Static' ],
+    logger      => [ 'Logger',       'LogAny' ],
     serializer  => [ 'Serializer',   'JSON' ],
     transport   => [ 'Transport',    '' ],
 );
 
 my @Load_Order = qw(
-    serializer logger
-    cxn_factory cxn_pool
-    transport client
+    serializer
+    logger
+    cxn_factory
+    cxn_pool
+    transport
+    client
 );
 
 #===================================

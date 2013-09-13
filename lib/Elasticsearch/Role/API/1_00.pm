@@ -1,4 +1,4 @@
-package Elasticsearch::Role::API::1_00_00;
+package Elasticsearch::Role::API::1_00;
 
 use Moo::Role;
 with 'Elasticsearch::Role::API';
@@ -44,7 +44,7 @@ sub api {
         method => 'DELETE',
         path   => '{index}/{type}/{id}',
         qs     => qs_init qw(
-            consistency ignore parent replication
+            consistency parent replication
             refresh routing timeout version version_type),
     },
 
@@ -82,7 +82,7 @@ sub api {
         doc  => '/api/get/',
         path => '{index}/{type|all}/{id}',
         qs   => qs_init qw(
-            fields ignore parent preference
+            fields parent preference
             realtime refresh routing),
     },
 
@@ -90,7 +90,7 @@ sub api {
         doc  => '/api/get/',
         path => '{index}/{type|all}/{id}/_source',
         qs   => qs_init qw(
-            ignore parent preference
+            parent preference
             realtime refresh routing),
     },
 
@@ -207,7 +207,7 @@ sub api {
         method => 'POST',
         path   => '{index}/{type}/{id}/_update',
         qs     => qs_init qw(
-            consistency fields ignore lang parent percolate
+            consistency fields lang parent percolate
             realtime refresh replication retry_on_conflict routing
             script timeout timestamp ttl version version_type),
     },
@@ -329,7 +329,7 @@ sub api {
         doc    => '/api/admin-indices-delete-index/',
         method => 'DELETE',
         path   => '{indices}',
-        qs     => qs_init qw(ignore timeout),
+        qs     => qs_init qw(timeout),
     },
 
     'indices.delete_alias' => {

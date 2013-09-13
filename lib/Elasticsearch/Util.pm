@@ -5,15 +5,8 @@ with 'Elasticsearch::Role::Error';
 
 use Scalar::Util qw(blessed);
 use Module::Runtime qw(compose_module_name is_module_name use_module);
-use Sub::Exporter -setup => {
-    exports => [ qw(
-            parse_params
-            to_list
-            load_plugin
-            install_actions
-            )
-    ]
-};
+use Sub::Exporter -setup =>
+    { exports => [qw(parse_params to_list load_plugin)] };
 
 #===================================
 sub to_list {
@@ -61,31 +54,6 @@ sub load_plugin {
     }
     use_module( $class, $version );
     return $class;
-}
-
-#===================================
-sub install_actions {
-#===================================
-    my $group = shift() || '';
-    my ($class) = caller;
-
-    my $defns = $class->api;
-    my $stash = Package::Stash->new($class);
-
-    for my $action ( keys %$defns ) {
-        my ( $prefix, $name ) = ( $action =~ /^(?:([^.]*)\.)?([^.]+)$/ );
-        $prefix ||= '';
-        next unless $prefix eq $group;
-
-        next if $stash->has_symbol( '&' . $name );
-
-        my $defn = $defns->{$action};
-        $stash->add_symbol(
-            '&' . $name => sub {
-                shift->perform_request( $action, $defn, @_ );
-            }
-        );
-    }
 }
 
 1;
