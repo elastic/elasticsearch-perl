@@ -7,26 +7,27 @@ use URI::Escape qw(uri_escape_utf8);
 use Sub::Exporter -setup => { exports => ['path_handler'] };
 
 our %Handler = (
-    '{aliases}'            => sub { multi_opt( 'alias',   @_, '*' ) },
-    '{alias}'              => sub { one_req( 'alias',     @_ ) },
-    '{id}'                 => sub { one_req( 'id',        @_ ) },
-    '{id|blank}'           => sub { one_opt( 'id',        @_ ) },
-    '{index}'              => sub { one_req( 'index',     @_ ) },
-    '{index|blank}'        => sub { one_opt( 'index',     @_ ) },
-    '{indices}'            => sub { multi_opt( 'index',   @_ ) },
-    '{indices|all}'        => sub { multi_opt( 'index',   @_, '_all' ) },
-    '{req_indices}'        => sub { multi_req( 'index',   @_ ) },
-    '{type}'               => sub { one_req( 'type',      @_ ) },
-    '{type|all}'           => sub { one_opt( 'type',      @_, '_all' ) },
-    '{type|blank}'         => sub { one_opt( 'type',      @_ ) },
-    '{types}'              => sub { multi_opt( 'type',    @_ ) },
-    '{req_types}'          => sub { multi_req( 'type',    @_ ) },
-    '{nodes}'              => sub { multi_opt( 'node',    @_ ) },
-    '{template}'           => sub { one_req( 'template',  @_ ) },
-    '{warmer}'             => sub { one_req( 'warmer',    @_ ) },
-    '{warmer|blank}'       => sub { one_opt( 'warmer',    @_ ) },
-    '{indices|all-type}'   => sub { index_plus( 'type',   @_ ) },
-    '{indices|all-warmer}' => sub { index_plus( 'warmer', @_ ) },
+    '{aliases}'            => sub { multi_opt( 'alias',     @_, '*' ) },
+    '{alias}'              => sub { one_req( 'alias',       @_ ) },
+    '{id}'                 => sub { one_req( 'id',          @_ ) },
+    '{id|blank}'           => sub { one_opt( 'id',          @_ ) },
+    '{index}'              => sub { one_req( 'index',       @_ ) },
+    '{index|blank}'        => sub { one_opt( 'index',       @_ ) },
+    '{index-when-type}'    => sub { index_plus( 'type',     @_ ) },
+    '{indices}'            => sub { multi_opt( 'index',     @_ ) },
+    '{indices|all}'        => sub { multi_opt( 'index',     @_, '_all' ) },
+    '{req_indices}'        => sub { multi_req( 'index',     @_ ) },
+    '{type}'               => sub { one_req( 'type',        @_ ) },
+    '{type|all}'           => sub { one_opt( 'type',        @_, '_all' ) },
+    '{type|blank}'         => sub { one_opt( 'type',        @_ ) },
+    '{types}'              => sub { multi_opt( 'type',      @_ ) },
+    '{req_types}'          => sub { multi_req( 'type',      @_ ) },
+    '{nodes}'              => sub { multi_opt( 'node',      @_ ) },
+    '{template}'           => sub { one_req( 'template',    @_ ) },
+    '{warmer}'             => sub { one_req( 'warmer',      @_ ) },
+    '{warmers}'            => sub { multi_opt( 'warmer',    @_ ) },
+    '{indices|all-type}'   => sub { indices_plus( 'type',   @_ ) },
+    '{indices|all-warmer}' => sub { indices_plus( 'warmer', @_ ) },
 );
 
 #===================================
@@ -49,6 +50,15 @@ sub path_handler {
 
 #===================================
 sub index_plus {
+#===================================
+    my ( $plus, $params ) = @_;
+    return $params->{$plus}
+        ? one_req( 'index', $params )
+        : one_opt( 'index', $params );
+}
+
+#===================================
+sub indices_plus {
 #===================================
     my ( $plus, $params ) = @_;
     return $params->{$plus}

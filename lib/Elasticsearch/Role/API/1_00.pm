@@ -27,7 +27,7 @@ sub api {
         },
         doc       => '/api/bulk/',
         method    => 'POST',
-        path      => '{index}/{type}/_bulk',
+        path      => '{index-when-type}/{type|blank}/_bulk',
         serialize => 'bulk',
         qs        => qs_init qw(consistency refresh replication type),
     },
@@ -121,14 +121,14 @@ sub api {
                 . '`ids` (when index and type is provided in the URL.'
         },
         doc  => '/api/multi-get/',
-        path => '{index|blank}/{type|blank}/_mget',
+        path => '{index-when-type}/{type|blank}/_mget',
         qs   => qs_init qw(fields preference realtime refresh),
     },
 
     'mlt' => {
         body => { desc => 'A specific search request definition' },
         doc  => '/api/more-like-this/',
-        path => '{index}/{type|all}/{id}_mlt',
+        path => '{index}/{type|all}/{id}/_mlt',
         qs   => qs_init qw(
             boost_terms max_doc_freq max_query_terms
             max_word_len min_doc_freq min_term_freq
@@ -310,8 +310,8 @@ sub api {
     'indices.close' => {
         doc    => '/api/admin-indices-open-close/',
         method => 'POST',
-        path   => '{index}/_close',
-        qs     => qs_init qw(timeout),
+        path   => '{req_indices}/_close',
+        qs     => qs_init qw(timeout master_timeout),
     },
 
     'indices.create' => {
@@ -322,40 +322,42 @@ sub api {
         doc    => '/api/admin-indices-create-index/',
         method => 'PUT',
         path   => '{index}',
-        qs     => qs_init qw(timeout),
+        qs     => qs_init qw(timeout master_timeout),
     },
 
     'indices.delete' => {
         doc    => '/api/admin-indices-delete-index/',
         method => 'DELETE',
-        path   => '{indices}',
-        qs     => qs_init qw(timeout),
+        path   => '{req_indices}',
+        qs     => qs_init qw(timeout master_timeout),
     },
 
     'indices.delete_alias' => {
         doc    => '/api/admin-indices-aliases/',
         method => 'DELETE',
         path   => '{index}/_alias/{alias}',
-        qs     => qs_init qw(timeout),
+        qs     => qs_init qw(timeout master_timeout),
     },
 
     'indices.delete_mapping' => {
         doc    => '/api/admin-indices-delete-mapping/',
         method => 'DELETE',
-        path   => '{indices|all}/{type}',
+        path   => '{req_indices}/{type}',
+        qs     => qs_init qw( master_timeout),
     },
 
     'indices.delete_template' => {
         doc    => '/api/admin-indices-templates/',
         method => 'DELETE',
         path   => '_template/{template}',
-        qs     => qs_init qw(timeout),
+        qs     => qs_init qw(timeout master_timeout),
     },
 
     'indices.delete_warmer' => {
         doc    => '/api/admin-indices-warmers/',
         method => 'DELETE',
-        path   => '_warmer/{warmer}',
+        path   => '{req_indices}/_warmer/{warmers}',
+        qs     => qs_init qw( master_timeout),
     },
 
     'indices.exists' => {
@@ -387,7 +389,7 @@ sub api {
 
     'indices.get_alias' => {
         doc  => '/api/admin-indices-aliases/',
-        path => '{indices}/_aliases/{aliases}',
+        path => '{indices}/_alias/{aliases}',
         qs   => qs_init qw(ignore_indices),
     },
 
@@ -414,14 +416,14 @@ sub api {
 
     'indices.get_warmer' => {
         doc  => '/api/admin-indices-warmers/',
-        path => '{indices|all-warmer}/_warmer/{warmer|blank}',
+        path => '{indices|all-warmer}/_warmer/{warmers}',
     },
 
     'indices.open' => {
         doc    => '/api/admin-indices-open-close/',
         method => 'POST',
-        path   => '{index}/_open',
-        qs     => qs_init qw(timeout),
+        path   => '{indices|all}/_open',
+        qs     => qs_init qw(timeout master_timeout),
     },
 
     'indices.optimize' => {
@@ -442,7 +444,7 @@ sub api {
         doc    => '/api/admin-indices-aliases/',
         method => 'PUT',
         path   => '{index}/_alias/{alias}',
-        qs     => qs_init qw(timeout),
+        qs     => qs_init qw(timeout master_timeout),
     },
 
     'indices.put_mapping' => {
@@ -453,7 +455,7 @@ sub api {
         doc    => '/api/admin-indices-put-mapping/',
         method => 'PUT',
         path   => '{indices|all}/{type}/_mapping',
-        qs     => qs_init qw(ignore_conflicts timeout),
+        qs     => qs_init qw(ignore_conflicts timeout master_timeout),
     },
 
     'indices.put_settings' => {
@@ -464,6 +466,7 @@ sub api {
         doc    => '/api/admin-indices-update-settings/',
         method => 'PUT',
         path   => '{indices}/_settings',
+        qs     => qs_init qw( master_timeout),
     },
 
     'indices.put_template' => {
@@ -474,7 +477,7 @@ sub api {
         doc    => '/api/admin-indices-templates/',
         method => 'PUT',
         path   => '_template/{template}',
-        qs     => qs_init qw(order timeout),
+        qs     => qs_init qw(order timeout master_timeout),
     },
 
     'indices.put_warmer' => {
@@ -485,7 +488,8 @@ sub api {
         },
         doc    => '/api/admin-indices-warmers/',
         method => 'PUT',
-        path   => '_warmer/{warmer}',
+        path   => '{indices|all}/_warmer/{warmer}',
+        qs     => qs_init qw( master_timeout),
     },
 
     'indices.refresh' => {
@@ -524,7 +528,7 @@ sub api {
         doc    => '/api/admin-indices-aliases/',
         method => 'POST',
         path   => '_aliases',
-        qs     => qs_init qw(timeout),
+        qs     => qs_init qw(timeout master_timeout),
     },
 
     'indices.validate_query' => {

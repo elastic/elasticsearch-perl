@@ -363,7 +363,8 @@ our %Params = (
         type => 'string'
     },
     realtime => {
-        desc => '"Specify whether to perform the operation in realtime or search mode"',
+        desc =>
+            '"Specify whether to perform the operation in realtime or search mode"',
         type => 'bool'
     },
     recovery => {
