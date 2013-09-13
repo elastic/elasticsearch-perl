@@ -31,12 +31,13 @@ sub perform_request {
         $logger->trace_request( $cxn, $params );
 
         ( my $code, $response ) = $cxn->perform_request($params);
+        $cxn->mark_live;
         $logger->trace_response( $cxn, $code, $response, time() - $start );
     }
     catch {
         $error = upgrade_error($_);
         if ( $error->is('Cxn') ) {
-            $cxn->mark_dead();
+            $cxn->mark_dead;
             $pool->schedule_check;
             $retry = $self->should_retry( $params, $cxn, $error );
         }
