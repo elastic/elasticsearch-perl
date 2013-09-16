@@ -147,7 +147,11 @@ sub process_response {
 
     if ( $body = $self->serializer->decode($body) ) {
         $error_args{body} = $body;
-        $msg = ref $body ? $body->{error} : $body;
+        if (ref $body) {
+            $msg = $body->{error} || $msg;
+        } else {
+            $msg = $body
+        }
 
         $error_args{current_version} = $1
             if $error_type eq 'Conflict'
