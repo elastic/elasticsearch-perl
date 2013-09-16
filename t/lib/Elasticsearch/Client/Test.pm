@@ -64,29 +64,42 @@ sub test_files {
 #===================================
     my @files = map {<"$_">} @_;
 
+    reset_es();
+
     for my $file (@files) {
         my $name = File::Basename::basename( $file, '.yml' );
-        my ($ast) = eval { LoadFile($file) } or do {
+        my (@asts) = eval { LoadFile($file) } or do {
             fail "Error parsing test file ($file): $@";
             next;
         };
 
-        my ( $title, $tests ) = key_val($ast);
-
-        if ( $tests->[0]{skip} ) {
-            my $skip = check_skip( $tests->[0]{skip} );
-            shift @$tests;
-            if ($skip) {
-            SKIP: { skip $skip, 1 }
-                next;
-            }
+        my $setup;
+        if ( $setup = $asts[0]{setup} ) {
+            shift @asts;
         }
+        for my $ast (@asts) {
+            if ($setup) {
+                for (@$setup) {
+                    run_cmd( $_->{do} );
+                }
+            }
+            my ( $title, $tests ) = key_val($ast);
 
-        subtest $name => sub {
-            plan tests => 0 + @$tests;
-            reset_es();
-            run_tests( $title, $tests );
-        };
+            if ( $tests->[0]{skip} ) {
+                my $skip = check_skip( $tests->[0]{skip} );
+                shift @$tests;
+                if ($skip) {
+                SKIP: { skip $skip, 1 }
+                    next;
+                }
+            }
+
+            subtest $name => sub {
+                plan tests => 0 + @$tests;
+                reset_es();
+                run_tests( $title, $tests );
+            };
+        }
     }
 }
 
@@ -108,7 +121,7 @@ sub run_tests {
 
         if ( $type eq 'do' ) {
             my $catch = delete $test->{catch};
-            $test_name .= ": ".( $catch ? 'catch ' . $catch : 'do' );
+            $test_name .= ": " . ( $catch ? 'catch ' . $catch : 'do' );
             $test = populate_vars( $test, \%stash );
             my $ok = eval { $val = run_cmd($test); 1 };
                   $catch ? test_error( $@, $catch, $test_name )
@@ -170,7 +183,8 @@ sub get_val {
     return undef unless defined $val;
     return $val  unless defined $field;
 
-    for my $next ( split /\./, $field ) {
+    for my $next ( split /(?<!\\)\./, $field ) {
+        $next =~ s/\\//g;
         if ( ref $val eq 'ARRAY' ) {
             return undef
                 unless $next =~ /^\d+$/;
@@ -204,7 +218,7 @@ sub run_cmd {
 #===================================
 sub reset_es {
 #===================================
-    $es->indices->delete( index => 'test*', ignore_missing => 1 );
+    $es->indices->delete( index => 'test*', ignore => 404 );
 }
 
 #===================================
