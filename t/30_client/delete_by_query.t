@@ -2,7 +2,6 @@ use lib 't/lib';
 use Test::More;
 use Elasticsearch::Client::Test;
 
-trace_file;
-test_files('spec/test/indices.analyze/*.yaml');
+test_files('spec/test/delete_by_query/*.yaml');
 
 done_testing;
