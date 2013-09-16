@@ -71,7 +71,7 @@ sub api {
             required => 1
         },
         doc  => '/api/explain/',
-        path => '{indices|all-type}/{types}/_explain',
+        path => '{index}/{type}/{id}/_explain',
         qs   => qs_init qw(
             analyze_wildcard analyzer default_operator
             df fields lenient lowercase_expanded_terms
