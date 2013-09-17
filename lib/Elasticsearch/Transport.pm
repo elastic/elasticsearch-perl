@@ -44,6 +44,9 @@ sub perform_request {
         elsif ( $error->is('Timeout') ) {
             $pool->schedule_check;
         }
+        else {
+            $cxn->mark_live if $cxn;
+        }
     };
 
     if ($retry) {

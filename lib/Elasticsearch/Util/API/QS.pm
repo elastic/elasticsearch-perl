@@ -3,7 +3,7 @@ package Elasticsearch::Util::API::QS;
 use strict;
 use warnings;
 
-use Sub::Exporter -setup => { exports => [ 'qs_init', 'qs_handler' ] };
+use Sub::Exporter -setup => { exports => ['qs_init'] };
 
 our %Handler = (
     string => sub {"$_[0]"},
@@ -509,7 +509,7 @@ our %Params = (
     suggest_text => {
         desc =>
             'The source text for which the suggestions should be returned',
-        type => 'text'
+        type => 'string'
     },
     text => {
         desc => 'The text on which the analysis should be'
@@ -589,21 +589,17 @@ our %Params = (
 );
 
 #===================================
-sub qs_handler {
-#===================================
-    no warnings 'uninitialized';
-    $Handler{ $_[0] } or die "Unknown query string handler ($_[0])\n";
-}
-
-#===================================
 sub qs_init {
 #===================================
     no warnings 'uninitialized';
-    return {
-        map { $_ => $Params{$_} || die("Unknown query-string param ($_)\n") }
-            @_
-    };
-
+    my %qs;
+    for (@_) {
+        my $defn = $Params{$_} || die("Unknown query-string param ($_)\n");
+        $defn->{handler} ||= $Handler{ $defn->{type} }
+            || die "Unknown query-string parameter type ($defn->{type})\n";
+        $qs{$_} = $defn;
+    }
+    return \%qs;
 }
 
 1;

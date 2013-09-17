@@ -3,9 +3,6 @@ package Elasticsearch::Role::Client::Direct;
 use Moo::Role;
 with 'Elasticsearch::Role::Client';
 use namespace::autoclean;
-
-use Elasticsearch::Util::API::Path qw(path_handler);
-use Elasticsearch::Util::API::QS qw(qs_handler);
 use Try::Tiny;
 
 #===================================
@@ -22,9 +19,9 @@ sub parse_request {
             ignore    => delete $params->{ignore} || [],
             method    => $defn->{method}          || 'GET',
             serialize => $defn->{serialize}       || 'std',
-            path => $self->_parse_path( $defn->{path}, $params ),
-            body => $self->_parse_body( $defn->{body}, $params ),
-            qs   => $self->_parse_qs( $defn->{qs},     $params ),
+            path => $self->_parse_path( $defn->{path_handler}, $params ),
+            body => $self->_parse_body( $defn->{body},         $params ),
+            qs   => $self->_parse_qs( $defn->{qs_handlers},    $params ),
         };
     }
     catch {
@@ -40,10 +37,11 @@ sub parse_request {
 #===================================
 sub _parse_path {
 #===================================
-    my ( $self, $defn, $params ) = @_;
+    my ( $self, $handler, $params ) = @_;
+    die "No (path_handler) defined\n" unless $handler;
     return delete $params->{path}
         if $params->{path};
-    path_handler( $defn, $params );
+    $handler->($params);
 }
 
 #===================================
@@ -62,7 +60,8 @@ sub _parse_body {
 #===================================
 sub _parse_qs {
 #===================================
-    my ( $self, $defn, $params ) = @_;
+    my ( $self, $handlers, $params ) = @_;
+    die "No (qs_handlers) defined\n" unless $handlers;
     my %qs;
 
     if ( my $raw = delete $params->{params} ) {
@@ -72,16 +71,17 @@ sub _parse_qs {
     }
 
     for my $key ( keys %$params ) {
-        my $key_defn = $defn->{$key}
+        my $key_defn = $handlers->{$key}
             or die("Unknown param ($key)\n");
-        my $handler = qs_handler( $key_defn->{type} );
+        my $handler = $key_defn->{handler}
+            or die "No (handler) defined for ($key)\n";
         $qs{$key} = $handler->( delete $params->{$key} );
     }
     return \%qs;
 }
 
 #===================================
-sub _install_actions {
+sub _install_api {
 #===================================
     my ( $class, $group ) = @_;
     my $defns = $class->api;

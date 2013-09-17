@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use URI::Escape qw(uri_escape_utf8);
 
-use Sub::Exporter -setup => { exports => ['path_handler'] };
+use Sub::Exporter -setup => { exports => ['path_init'] };
 
 our %Handler = (
     '{aliases}'            => sub { multi_opt( 'alias',     @_, '*' ) },
@@ -17,6 +17,8 @@ our %Handler = (
     '{indices}'            => sub { multi_opt( 'index',     @_ ) },
     '{indices|all}'        => sub { multi_opt( 'index',     @_, '_all' ) },
     '{req_indices}'        => sub { multi_req( 'index',     @_ ) },
+    '{names}'              => sub { multi_opt( 'name',      @_, '*' ) },
+    '{name}'               => sub { one_req( 'name',        @_ ) },
     '{type}'               => sub { one_req( 'type',        @_ ) },
     '{type|all}'           => sub { one_opt( 'type',        @_, '_all' ) },
     '{type|blank}'         => sub { one_opt( 'type',        @_ ) },
@@ -31,21 +33,20 @@ our %Handler = (
 );
 
 #===================================
-sub path_handler {
+sub path_init {
 #===================================
-    my ( $template, $params ) = @_;
-    my @parts;
-    for ( split '/', $template ) {
-        if ( my $handler = $Handler{$_} ) {
-            my $val = $handler->($params);
-            next unless defined $val and length $val;
-            push @parts, uri_escape_utf8($val);
-        }
-        else {
-            push @parts, $_;
-        }
-    }
-    return join '/', '', @parts;
+    my $template = shift;
+    my @handlers = map {
+        my $part = $_;
+        $Handler{$part}
+            || sub {$part}
+    } split '/', $template || 'FOO';
+
+    return sub {
+        my $params = shift;
+        return join '/', '', map { uri_escape_utf8($_) }
+            grep { defined and length } map { $_->($params) } @handlers;
+    };
 }
 
 #===================================
