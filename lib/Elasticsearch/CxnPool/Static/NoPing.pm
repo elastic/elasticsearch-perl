@@ -27,7 +27,7 @@ sub next_cxn {
             || $cxn->next_ping < time();
     }
 
-    throw( "NoNodes", "No nodes are available: [", $self->cxns_str, ']' )
+    throw( "NoNodes", "No nodes are available: [" . $self->cxns_str . ']' )
         if $force;
 
     return $self->next_cxn(1);

@@ -27,7 +27,7 @@ sub next_cxn {
             || $cxn->pings_ok($force);
     }
 
-    throw( "NoNodes", "No nodes are available: [", $self->cxns_str, ']' )
+    throw( "NoNodes", "No nodes are available: [" . $self->cxns_str . ']' )
         if $force;
 
     return $self->next_cxn(1);
@@ -39,7 +39,7 @@ sub schedule_check {
     my $self = shift;
     $self->logger->info("Forcing ping before next use on all cxns");
     for my $cxn ( @{ $self->cxns } ) {
-        $cxn->force_ping if $cxn->is_live
+        $cxn->force_ping if $cxn->is_live;
     }
 }
 
