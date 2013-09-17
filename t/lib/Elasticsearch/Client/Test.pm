@@ -8,14 +8,18 @@ use Elasticsearch;
 use Test::More;
 use Test::Deep;
 use Data::Dump qw(pp);
-use File::Spec::Functions qw(rel2abs);
 use File::Basename;
 
-my $es = Elasticsearch->new;
+my $trace
+    = !$ENV{TRACE}       ? undef
+    : $ENV{TRACE} eq '1' ? 'Stderr'
+    :                      [ 'File', $ENV{TRACE} ];
+
+my $es = Elasticsearch->new( trace_to => $trace );
 
 require Exporter;
-our @ISA = 'Exporter';
-our @EXPORT = ( 'test_files', 'trace', 'trace_file' );
+our @ISA    = 'Exporter';
+our @EXPORT = ('test_files');
 
 our %Test_Types = (
     is_true => sub {
@@ -41,23 +45,12 @@ our %Test_Types = (
 );
 
 our %Errors = (
-    missing  => 'Elasticsearch::Error::Missing',
-    conflict => 'Elasticsearch::Error::Conflict',
-    param    => 'Elasticsearch::Error::Param',
-    request  => 'Elasticsearch::Error::Request',
+    missing   => 'Elasticsearch::Error::Missing',
+    conflict  => 'Elasticsearch::Error::Conflict',
+    forbidden => 'Elasticsearch::Error::ClusterBlocked',
+    param     => 'Elasticsearch::Error::Param',
+    request   => 'Elasticsearch::Error::Request',
 );
-
-#===================================
-sub trace {
-#===================================
-    $es = Elasticsearch->new( trace_to => 'Stderr' );
-}
-
-#===================================
-sub trace_file {
-#===================================
-    $es = Elasticsearch->new( trace_to => [ 'File', 'log' ] );
-}
 
 #===================================
 sub test_files {
