@@ -66,32 +66,42 @@ sub test_files {
             next;
         };
 
+        $es->logger->trace_comment("*** FILE: $file");
+
         my $setup;
         if ( $setup = $asts[0]{setup} ) {
             shift @asts;
         }
+
         for my $ast (@asts) {
-            if ($setup) {
-                for (@$setup) {
-                    run_cmd( $_->{do} );
-                }
-            }
+
             my ( $title, $tests ) = key_val($ast);
 
             if ( $tests->[0]{skip} ) {
                 my $skip = check_skip( $tests->[0]{skip} );
                 shift @$tests;
                 if ($skip) {
+                    $es->logger->trace_comment(
+                        "*** SKIPPING: $title : $skip");
                 SKIP: { skip $skip, 1 }
                     next;
                 }
             }
 
+            if ($setup) {
+                $es->logger->trace_comment("*** RUNNING SETUP");
+                for (@$setup) {
+                    run_cmd( $_->{do} );
+                }
+            }
+
+            $es->logger->trace_comment("*** RUNNING TESTS: $title");
+
             subtest $name => sub {
                 plan tests => 0 + @$tests;
-                reset_es();
                 run_tests( $title, $tests );
             };
+            reset_es();
         }
     }
 }
@@ -211,7 +221,9 @@ sub run_cmd {
 #===================================
 sub reset_es {
 #===================================
-    $es->indices->delete( index => 'test*', ignore => 404 );
+    $es->logger->trace_comment("*** RESETTING");
+    $es->indices->delete( index => '_all', ignore => 404 );
+    $es->indices->delete_template( name => '*', ignore => 404 );
 }
 
 #===================================
