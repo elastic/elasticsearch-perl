@@ -21,19 +21,26 @@ sub perform_request {
     my $pool   = $self->cxn_pool;
     my $logger = $self->logger;
 
-    my ( $response, $cxn, $retry, $error );
+    my ( $code, $response, $cxn, $retry, $error );
 
     try {
         $cxn = $pool->next_cxn;
         my $start = time();
         $logger->trace_request( $cxn, $params );
 
-        ( my $code, $response ) = $cxn->perform_request($params);
+        ( $code, $response ) = $cxn->perform_request($params);
         $cxn->mark_live;
         $logger->trace_response( $cxn, $code, $response, time() - $start );
     }
     catch {
-        $error = upgrade_error( $_, $params );
+        $error = upgrade_error(
+            $_,
+            {   request     => $params,
+                status_code => $code,
+                body        => $response
+            }
+        );
+
         if ( $error->is('Cxn') ) {
             $cxn->mark_dead;
             $pool->schedule_check;
