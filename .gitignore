@@ -1,2 +1,6 @@
+.build
 .includepath
 .project
+Elasticsearch-*
+cover_db
+log
