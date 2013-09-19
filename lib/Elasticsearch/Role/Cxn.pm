@@ -112,6 +112,10 @@ sub sniff {
             }
         )->{nodes};
     }
+    catch {
+        $self->logger->debug($_);
+        return;
+    };
 }
 
 #===================================

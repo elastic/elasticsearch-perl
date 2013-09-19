@@ -20,7 +20,7 @@ has 'node_num'       => ( is => 'ro', default  => sub { ++$i } );
 sub BUILD {
 #===================================
     my $self = shift;
-    $self->logger->debugf( "[%s] Created node: %s",
+    $self->logger->debugf( "[%s-%s] CREATED",
         $self->node_num, $self->host );
 }
 
@@ -46,24 +46,25 @@ sub perform_request {
 
     my $log_msg;
 
-    # Normal request
-    if ( $response->{code} ) {
-        $log_msg = "REQUEST: " . ( $response->{error} || $response->{code} );
-    }
-
     # Sniff request
-    elsif ( my $nodes = $response->{sniff} ) {
-        $log_msg = "SNIFF: " . ( join ", ", @$nodes );
+    if ( my $nodes = $response->{sniff} ) {
+        $log_msg = "SNIFF: [" . ( join ", ", @$nodes )."]";
         $response->{code} ||= 200;
         my $i = 1;
+        unless ($response->{error}){
         $response->{content} = $self->serializer->encode(
             {   nodes => {
                     map { 'node_' . $i++ => { http_address => "inet[/$_]" } }
                         @$nodes
                 }
             }
-        );
+        );}
     }
+    # Normal request
+    elsif ( $response->{code} ) {
+        $log_msg = "REQUEST: " . ( $response->{error} || $response->{code} );
+    }
+
 
     # Ping request
     else {
@@ -74,7 +75,7 @@ sub perform_request {
             : { code => 500, error => 'Cxn' };
     }
 
-    $self->logger->debugf( "[%s] %s", $self->node_num, $log_msg );
+    $self->logger->debugf( "[%s-%s] %s", $self->node_num, $self->host,$log_msg );
 
     return $self->process_response(
         $params,                 # request

@@ -10,18 +10,18 @@ use Elasticsearch::MockCxn qw(mock_static_client);
 my $t = mock_static_client(
     { nodes => 'one' },
 
-    { ping => 1 },
-    { code => 200, content => 1 },
-    { code => 503, error => 'NotReady' },
-    { ping => 1 },
-    { code => 503, error => 'NotReady' },
+    { node => 1, ping => 1 },
+    { node => 1, code => 200, content => 1 },
+    { node => 1, code => 503, error => 'NotReady' },
+    { node => 1, ping => 1 },
+    { node => 1, code => 503, error => 'NotReady' },
 
     # throw Internal: too many retries
 
-    { ping => 1 },
-    { code => 503, error => 'NotReady' },
-    { ping => 1 },
-    { code => 503, error => 'NotReady' },
+    { node => 1, ping => 1 },
+    { node => 1, code => 503, error => 'NotReady' },
+    { node => 1, ping => 1 },
+    { node => 1, code => 503, error => 'NotReady' },
 
     # throw Internal: too many retries
 

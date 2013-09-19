@@ -41,7 +41,7 @@ sub next_cxn_num {
     my $cxns = $self->cxns;
     return unless @$cxns;
     my $current = $self->current_cxn_num;
-    $self->_set_current_cxn_num( ($current +1 ) % @$cxns );
+    $self->_set_current_cxn_num( ( $current + 1 ) % @$cxns );
     return $current;
 }
 
