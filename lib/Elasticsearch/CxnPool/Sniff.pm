@@ -8,16 +8,25 @@ use Elasticsearch::Util qw(parse_params);
 use List::Util qw(min);
 use Try::Tiny;
 
-has 'sniff_interval'           => ( is => 'ro', default => 300 );
-has 'next_sniff'               => ( is => 'rw', default => 0 );
-has 'sniff_max_content_length' => ( is => 'ro', default => 1 );
+has 'sniff_interval' => ( is => 'ro', default => 300 );
+has 'next_sniff'     => ( is => 'rw', default => 0 );
+has 'sniff_max_content_length' => ( is => 'ro' );
+
+#===================================
+sub BUILDARGS {
+#===================================
+    my ( $class, $params ) = parse_params(@_);
+    $params->{sniff_max_content_length} = !$params->{max_content_length}
+        unless defined $params->{sniff_max_content_length};
+    return $params;
+}
 
 #===================================
 sub next_cxn {
 #===================================
-    my ( $self, $force ) = @_;
+    my ($self) = @_;
 
-    $self->sniff($force);
+    $self->sniff if $self->next_sniff <= time();
 
     my $cxns  = $self->cxns;
     my $total = @$cxns;
@@ -28,10 +37,7 @@ sub next_cxn {
     }
 
     throw( "NoNodes",
-        "No nodes are available: [" . $self->cxns_seeds_str . ']' )
-        if $force;
-
-    return $self->next_cxn(1);
+        "No nodes are available: [" . $self->cxns_seeds_str . ']' );
 }
 
 #===================================
@@ -45,20 +51,26 @@ sub schedule_check {
 #===================================
 sub sniff {
 #===================================
-    my ( $self, $force ) = @_;
-
-    return unless $force || $self->next_sniff <= time();
+    my $self = shift;
 
     my $cxns  = $self->cxns;
     my $total = @$cxns;
+    my @skipped;
 
     while ( 0 < $total-- ) {
         my $cxn = $cxns->[ $self->next_cxn_num ];
-        next if $cxn->is_dead xor $force;
-        $self->sniff_cxn($cxn) and return;
+        if ( $cxn->is_dead ) {
+            push @skipped, $cxn;
+        }
+        else {
+            $self->sniff_cxn($cxn) and return;
+            $cxn->mark_dead;
+        }
     }
 
-    return if $force;
+    for my $cxn (@skipped) {
+        $self->sniff_cxn($cxn) and return;
+    }
 
     $self->logger->infof("No live nodes available. Trying seed nodes.");
     for my $seed ( @{ $self->seed_nodes } ) {
@@ -76,8 +88,8 @@ sub sniff_cxn {
 
     my $nodes = $cxn->sniff or return;
     my $protocol = $cxn->protocol;
-
-    my ( $max, @live_nodes );
+    my @live_nodes;
+    my $max       = 0;
     my $sniff_max = $self->sniff_max_content_length;
 
     for my $node_id ( keys %$nodes ) {
@@ -90,7 +102,7 @@ sub sniff_cxn {
             or next;
 
         push @live_nodes, $host;
-        next unless $sniff_max and $data->{protocol};
+        next unless $sniff_max and $data->{$protocol};
 
         my $node_max = $data->{$protocol}{max_content_length_in_bytes} || 0;
         $max
@@ -101,12 +113,12 @@ sub sniff_cxn {
 
     return unless @live_nodes;
 
+    $self->cxn_factory->max_content_length($max)
+        if $sniff_max and $max;
+
     $self->set_cxns(@live_nodes);
     my $next = $self->next_sniff( time() + $self->sniff_interval );
     $self->logger->infof( "Next sniff at: %s", scalar localtime($next) );
-
-    $self->max_content_length($max)
-        if $sniff_max and $max;
 
     return 1;
 }

@@ -9,7 +9,7 @@ use namespace::autoclean;
 has 'scheme'             => ( is => 'ro' );
 has 'is_https'           => ( is => 'ro' );
 has 'userinfo'           => ( is => 'ro' );
-has 'max_content_length' => ( is => 'rw', default => 104_857_600 );
+has 'max_content_length' => ( is => 'ro' );
 has 'default_headers'    => ( is => 'ro' );
 has 'handle'             => ( is => 'lazy' );
 

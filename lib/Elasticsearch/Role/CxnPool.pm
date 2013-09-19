@@ -23,16 +23,17 @@ has 'max_retries'     => ( is => 'rw',  default  => 2 );
 has 'randomize_cxns'  => ( is => 'ro',  default  => 1 );
 
 #===================================
-sub BUILDARGS {
+around BUILDARGS => sub {
 #===================================
-    my ( $class, $params ) = parse_params(@_);
-    my @seed = grep {$_} to_list( delete $params->{nodes} || ('') );
+    my $orig   = shift;
+    my $params = $orig->(@_);
+    my @seed   = grep {$_} to_list( delete $params->{nodes} || ('') );
 
     @seed = $params->{cxn_factory}->default_host
         unless @seed;
     $params->{seed_nodes} = \@seed;
     return $params;
-}
+};
 
 #===================================
 sub next_cxn_num {
