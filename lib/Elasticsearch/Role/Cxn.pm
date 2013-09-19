@@ -41,7 +41,6 @@ sub is_dead { !!shift->next_ping }
 sub mark_live {
 #===================================
     my $self = shift;
-    $self->logger->infof( 'Marking [%s] as live', $self->stringify );
     $self->ping_failures(0);
     $self->next_ping(0);
 }
@@ -75,10 +74,7 @@ sub force_ping {
 #===================================
 sub pings_ok {
 #===================================
-    my $self  = shift;
-    my $force = shift;
-    return 0 unless $force || $self->next_ping < time();
-
+    my $self = shift;
     $self->logger->infof( 'Pinging [%s]', $self->stringify );
     return try {
         $self->perform_request(
@@ -87,6 +83,7 @@ sub pings_ok {
                 timeout => $self->ping_timeout,
             }
         );
+        $self->logger->infof( 'Marking [%s] as live', $self->stringify );
         $self->mark_live;
         1;
     }
@@ -147,10 +144,11 @@ sub process_response {
 
     if ( $body = $self->serializer->decode($body) ) {
         $error_args{body} = $body;
-        if (ref $body) {
+        if ( ref $body ) {
             $msg = $body->{error} || $msg;
-        } else {
-            $msg = $body
+        }
+        else {
+            $msg = $body;
         }
 
         $error_args{current_version} = $1

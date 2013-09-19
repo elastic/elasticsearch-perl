@@ -13,8 +13,6 @@ has 'serializer' => ( is => 'ro', required => 1 );
 has 'logger'     => ( is => 'ro', required => 1 );
 has 'cxn_pool'   => ( is => 'ro', required => 1 );
 
-my $Version_RE = qr/: version conflict, current \[(\d+)\]/;
-
 #===================================
 sub perform_request {
 #===================================
@@ -35,7 +33,7 @@ sub perform_request {
         $logger->trace_response( $cxn, $code, $response, time() - $start );
     }
     catch {
-        $error = upgrade_error($_);
+        $error = upgrade_error( $_, $params );
         if ( $error->is('Cxn') ) {
             $cxn->mark_dead;
             $pool->schedule_check;
@@ -54,6 +52,9 @@ sub perform_request {
         $logger->info('Retrying request on a new cxn');
         return $self->perform_request($params);
     }
+
+    $pool->reset_retries;
+
     if ($error) {
         $logger->trace_error( $cxn, $error );
         delete $error->{vars}{body};

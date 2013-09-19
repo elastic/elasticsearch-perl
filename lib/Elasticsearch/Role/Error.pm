@@ -13,10 +13,10 @@ sub throw {
 #===================================
 sub upgrade_error {
 #===================================
-    my $error = shift();
+    my ( $error, $vars ) = @_;
     return ref($error) && $error->isa('Elasticsearch::Error')
         ? $error
-        : Elasticsearch::Error->new( "Internal", $error, {}, 1 );
+        : Elasticsearch::Error->new( "Internal", $error, $vars || {}, 1 );
 }
 
 1;

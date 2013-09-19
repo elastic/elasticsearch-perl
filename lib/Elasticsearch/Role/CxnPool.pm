@@ -18,6 +18,8 @@ has 'serializer'      => ( is => 'ro',  required => 1 );
 has 'current_cxn_num' => ( is => 'rwp', default  => 0 );
 has 'cxns'            => ( is => 'rw',  default  => sub { [] } );
 has 'seed_nodes'      => ( is => 'ro',  required => 1 );
+has 'retries'         => ( is => 'rw',  default  => 0 );
+has 'max_retries'     => ( is => 'rw',  default  => 2 );
 
 #===================================
 sub BUILDARGS {
@@ -69,4 +71,23 @@ sub cxns_seeds_str {
     join ", ", ( map { $_->stringify } @{ $self->cxns } ),
         @{ $self->seed_nodes };
 }
+
+#===================================
+sub reset_retries { shift->retries(0) }
+#===================================
+
+#===================================
+before 'next_cxn' => sub {
+#===================================
+    my ( $self, $force ) = @_;
+    return if $force;
+
+    my $retries = $self->retries( $self->retries + 1 );
+    if ( $retries > $self->max_retries ) {
+        die "Retried request $retries times";
+    }
+    return 1;
+
+};
+
 1;

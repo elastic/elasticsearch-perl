@@ -15,28 +15,39 @@ sub BUILD {
 #===================================
 sub next_cxn {
 #===================================
-    my ( $self, $force ) = @_;
+    my ($self) = @_;
 
     my $cxns  = $self->cxns;
     my $total = @$cxns;
 
+    my $now = time();
+    my @skipped;
+
     while ( $total-- ) {
         my $cxn = $cxns->[ $self->next_cxn_num ];
-        return $cxn
-            if $cxn->is_live
-            || $cxn->pings_ok($force);
+        return $cxn if $cxn->is_live;
+
+        if ( $cxn->next_ping < $now ) {
+            return $cxn if $cxn->pings_ok;
+        }
+        else {
+            push @skipped, $cxn;
+        }
     }
 
-    throw( "NoNodes", "No nodes are available: [" . $self->cxns_str . ']' )
-        if $force;
+    for my $cxn (@skipped) {
+        return $cxn if $cxn->pings_ok;
+    }
 
-    return $self->next_cxn(1);
+    $_->force_ping for @$cxns;
+
+    throw( "NoNodes", "No nodes are available: [" . $self->cxns_str . ']' );
 }
 
 #===================================
 sub schedule_check {
 #===================================
-    my $self = shift;
+    my ($self) = @_;
     $self->logger->info("Forcing ping before next use on all cxns");
     for my $cxn ( @{ $self->cxns } ) {
         $cxn->force_ping if $cxn->is_live;
