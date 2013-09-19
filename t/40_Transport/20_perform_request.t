@@ -3,82 +3,67 @@ use Test::Deep;
 use Test::Exception;
 use Elasticsearch;
 use lib 't/lib';
-use Elasticsearch::MockCxn;
+use Elasticsearch::MockCxn qw(mock_static_client);
 
 our $t;
 
 # good request
-$t = mock_client(
-    { ping => 1 },                              #
-    { code => '200', content => '{"ok":1}' }    #
+$t = mock_static_client(
+    { nodes => ['one'] },                         #
+    { node  => 1, ping => 1 },                    #
+    { node  => 1, code => '200', content => 1 }
 );
 
-cmp_deeply $t->perform_request( { path => '/' } ), { ok => 1 },
-    'Simple request';
+ok $t->perform_request, 'Simple request';
 
 # Request error
-$t = mock_client(
-    { ping => 1 },
-    {   code    => '404',
-        content => '{"error":"Foo missing"}',
-        error   => 'NotFound'
-    }
+$t = mock_static_client(
+    { nodes => ['one'] },
+    { node  => 1, ping => 1 },
+    { node  => 1, code => '404', error => 'NotFound' }
 );
 
-throws_ok { $t->perform_request( { path => '/_foo' } ) }
-qr/Missing.*Foo missing/, 'Request error';
+throws_ok { $t->perform_request } qr/Missing/, 'Request error';
 
 # Timeout error
-$t = mock_client(
-    { ping => 1 },
-    { code => '509', error => 'Timeout' },
-    { ping => 1 },
-    { code => '200', content => '{"ok":1}' }    #
+$t = mock_static_client(
+    { nodes => ['one'] },
+    { node  => 1, ping => 1 },
+    { node  => 1, code => '509', error => 'Timeout' },
+    { node => 1, ping => 1 },
+    { node => 1, code => '200', content => 1 }
 );
 
-throws_ok { $t->perform_request( { path => '/' } ) } qr/Timeout/,
-    'Timeout error';
-cmp_deeply $t->perform_request( { path => '/' } ), { ok => 1 },
-    'Timeout resolved';
+throws_ok { $t->perform_request } qr/Timeout/, 'Timeout error';
+ok $t->perform_request, 'Timeout resolved';
 
 # Cxn error
-$t = mock_client(
-    { ping => 1 },
-    { code => '509', error => 'Cxn' },
-    { ping => 1 },
-    { code => '200', content => '{"ok":1}' }    #
+$t = mock_static_client(
+    { nodes => ['one'] },
+    { node  => 1, ping => 1 },
+    { node  => 1, code => '509', error => 'Cxn' },
+    { node => 1, ping => 1 },
+    { node => 1, code => '200', content => 1 }
 );
 
-cmp_deeply $t->perform_request( { path => '/' } ), { ok => 1 },
-    'Retried connection error';
+ok $t->perform_request, 'Retried connection error';
 
 # NoNodes from failure
-$t = mock_client(
-    { ping => 1 },
-    { code => '509', error => 'Cxn' },
-    { ping => 0 },                              # this node
-    { ping => 0 },                              # seed node
+$t = mock_static_client(
+    { nodes => ['one'] },
+    { node  => 1, ping => 1 },
+    { node  => 1, code => '509', error => 'Cxn' },
+    { node => 1, ping => 0 },
 );
 
-throws_ok { $t->perform_request( { path => '/' } ) } qr/NoNodes/,
-    'Cxn then bad ping';
+throws_ok { $t->perform_request } qr/NoNodes/, 'Cxn then bad ping';
 
 # NoNodes reachable
-$t = mock_client(
-    { ping => 0 },                              # this node
-    { ping => 0 }                               # seed node
+$t = mock_static_client(
+    { nodes => ['one'] },       #
+    { node => 1, ping => 0 },
 );
-throws_ok { $t->perform_request( { path => '/' } ) } qr/NoNodes/,
-    'Initial bad ping';
+
+throws_ok { $t->perform_request } qr/NoNodes/, 'Initial bad ping';
 
 done_testing;
-
-#===================================
-sub mock_client {
-#===================================
-    return Elasticsearch->new(
-        cxn            => '+Elasticsearch::MockCxn',
-        mock_responses => \@_
-    )->transport;
-}
-

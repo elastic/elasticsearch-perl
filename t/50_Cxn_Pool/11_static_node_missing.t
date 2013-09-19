@@ -2,10 +2,10 @@ use Test::More;
 use Test::Exception;
 use Elasticsearch;
 use lib 't/lib';
-use Elasticsearch::MockCxn;
+use Elasticsearch::MockCxn qw(mock_static_client);
 
 ## One node missing at first, then joins later
-my $t = mock_client(
+my $t = mock_static_client(
     { nodes => [ 'one', 'two' ] },
 
     { node => 1, ping => 1 },
@@ -30,16 +30,5 @@ $t->cxn_pool->cxns->[1]->next_ping(-1);
 ok $t->perform_request && $t->perform_request && $t->perform_request,
     'Missing node joined - 2';
 
-
 done_testing;
 
-#===================================
-sub mock_client {
-#===================================
-    my $params = shift;
-    return Elasticsearch->new(
-        cxn            => '+Elasticsearch::MockCxn',
-        mock_responses => \@_,
-        %$params,
-    )->transport;
-}

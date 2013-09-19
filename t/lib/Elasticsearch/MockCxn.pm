@@ -1,11 +1,28 @@
 package Elasticsearch::MockCxn;
 
+use strict;
+use warnings;
+
 use Data::Dumper;
 use Moo;
 with 'Elasticsearch::Role::Cxn::HTTP';
 
+use Sub::Exporter -setup =>
+    { exports => [qw(mock_static_client mock_sniff_client)] };
+
+our $i = 0;
+
 has 'mock_responses' => ( is => 'rw', required => 1 );
-has 'marked_live' => ( is => 'rw', default => sub {0} );
+has 'marked_live'    => ( is => 'rw', default  => sub {0} );
+has 'node_num'       => ( is => 'ro', default  => sub { ++$i } );
+
+#===================================
+sub BUILD {
+#===================================
+    my $self = shift;
+    $self->logger->debugf( "[%s] Created node: %s",
+        $self->node_num, $self->host );
+}
 
 #===================================
 sub error_from_text { return $_[2] }
@@ -20,23 +37,44 @@ sub perform_request {
     my $response = shift @{ $self->mock_responses }
         or die "Mock responses exhausted";
 
-    if ( $response->{code} ) {
-
-        $self->logger->debug( '['
-                . $self->host
-                . '] REQUEST: '
-                . ( $response->{error} || $response->{code} ) );
+    if ( my $node = $response->{node} ) {
+        die "Mock response handled by wrong node ["
+            . $self->node_num . "]: "
+            . Dumper($response)
+            unless $node eq $self->node_num;
     }
+
+    my $log_msg;
+
+    # Normal request
+    if ( $response->{code} ) {
+        $log_msg = "REQUEST: " . ( $response->{error} || $response->{code} );
+    }
+
+    # Sniff request
+    elsif ( my $nodes = $response->{sniff} ) {
+        $log_msg = "SNIFF: " . ( join ", ", @$nodes );
+        $response->{code} ||= 200;
+        my $i = 1;
+        $response->{content} = $self->serializer->encode(
+            {   nodes => {
+                    map { 'node_' . $i++ => { http_address => "inet[/$_]" } }
+                        @$nodes
+                }
+            }
+        );
+    }
+
+    # Ping request
     else {
-        $self->logger->debug( '['
-                . $self->host
-                . '] PING: '
-                . ( $response->{ping} ? 'OK' : 'NOT_OK' ) );
+        $log_msg = "PING: " . ( $response->{ping} ? 'OK' : 'NOT_OK' );
         $response
             = $response->{ping}
             ? { code => 200 }
             : { code => 500, error => 'Cxn' };
     }
+
+    $self->logger->debugf( "[%s] %s", $self->node_num, $log_msg );
 
     return $self->process_response(
         $params,                 # request
@@ -44,6 +82,34 @@ sub perform_request {
         $response->{error},      # msg
         $response->{content},    # body
     );
+}
+
+#### EXPORTS ###
+
+my $trace
+    = !$ENV{TRACE}       ? undef
+    : $ENV{TRACE} eq '1' ? 'Stderr'
+    :                      [ 'File', $ENV{TRACE} ];
+
+#===================================
+sub mock_static_client { _mock_client( 'Static', @_ ) }
+sub mock_sniff_client  { _mock_client( 'Sniff',  @_ ) }
+#===================================
+
+#===================================
+sub _mock_client {
+#===================================
+    my $pool   = shift;
+    my $params = shift;
+    $i = 0;
+    return Elasticsearch->new(
+        cxn            => '+Elasticsearch::MockCxn',
+        cxn_pool       => $pool,
+        mock_responses => \@_,
+        randomize_cxns => 0,
+        log_to         => $trace,
+        %$params,
+    )->transport;
 }
 
 1

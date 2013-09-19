@@ -2,12 +2,12 @@ use Test::More;
 use Test::Exception;
 use Elasticsearch;
 use lib 't/lib';
-use Elasticsearch::MockCxn;
+use Elasticsearch::MockCxn qw(mock_static_client);
 
 ## Runaway nodes (ie wrong HTTP response codes signal node failure, instead of
 ## request failure)
 
-my $t = mock_client(
+my $t = mock_static_client(
     { nodes => 'one' },
 
     { ping => 1 },
@@ -35,14 +35,3 @@ ok $t->perform_request
     "Runaway nodes";
 
 done_testing;
-
-#===================================
-sub mock_client {
-#===================================
-    my $params = shift;
-    return Elasticsearch->new(
-        cxn            => '+Elasticsearch::MockCxn',
-        mock_responses => \@_,
-        %$params,
-    )->transport;
-}
