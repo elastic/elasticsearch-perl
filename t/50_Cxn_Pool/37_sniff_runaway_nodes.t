@@ -12,16 +12,16 @@ my $t = mock_sniff_client(
 
     { node => 1, sniff => [ 'one', 'two' ] },
     { node => 2, code  => 200,     content => 1 },
-    { node => 3, code  => 503,     error   => 'NotReady' },
+    { node => 3, code  => 503,     error   => 'Unavailable' },
     { node => 2, sniff => [ 'one', 'two' ] },
-    { node => 4, code  => 503,     error   => 'NotReady' },
+    { node => 4, code  => 503,     error   => 'Unavailable' },
 
     # throw Internal: too many retries
 
     { node => 5, sniff => [ 'one', 'two' ] },
-    { node => 6, code  => 503,     error => 'NotReady' },
+    { node => 6, code  => 503,     error => 'Unavailable' },
     { node => 7, sniff => [ 'one', 'two' ] },
-    { node => 8, code  => 503,     error => 'NotReady' },
+    { node => 8, code  => 503,     error => 'Unavailable' },
 
     # throw Internal: too many retries
 );

@@ -11,12 +11,12 @@ my $t = mock_sniff_client(
 
     { node => 1, sniff => [ 'one', 'two' ] },
     { node => 2, code => 200, content => 1 },
-    { node => 3, code => 500, error   => 'Timeout' },
+    { node => 3, code => 509, error   => 'Timeout' },
 
     # throws Timeout
 
     { node => 2, sniff => ['one'] },
-    { node => 4, code  => 500, error => 'Timeout' },
+    { node => 4, code  => 509, error => 'Timeout' },
 
     # throws Timeout
 

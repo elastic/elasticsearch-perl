@@ -18,7 +18,7 @@ my $response = <<RESPONSE;
         "two": {
             "http_address": "inet[/two]",
             "http": {
-                "max_content_length_in_bytes": 500
+                "max_content_length_in_bytes": 509
             }
         },
         "three": {
@@ -38,10 +38,10 @@ is $t->perform_request
     && $t->cxn_pool->next_cxn->max_content_length, 200,
     "Dynamic max content length";
 
- $t = mock_sniff_client(
-    { nodes => ['one'], max_content_length=>1000 },
-    { node  => 1, code => 200, content => $response },
-    { node  => 2, code => 200, content => 1 },
+$t = mock_sniff_client(
+    { nodes => ['one'], max_content_length => 1000 },
+    { node => 1, code => 200, content => $response },
+    { node => 2, code => 200, content => 1 },
 );
 
 is $t->perform_request

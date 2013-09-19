@@ -10,7 +10,7 @@ our $DEBUG = 0;
 @Elasticsearch::Error::ClusterBlocked::ISA = __PACKAGE__;
 @Elasticsearch::Error::Request::ISA        = __PACKAGE__;
 @Elasticsearch::Error::Timeout::ISA        = __PACKAGE__;
-@Elasticsearch::Error::Cxn::ISA     = __PACKAGE__;
+@Elasticsearch::Error::Cxn::ISA            = __PACKAGE__;
 @Elasticsearch::Error::Serializer::ISA     = __PACKAGE__;
 
 @Elasticsearch::Error::Conflict::ISA
@@ -19,7 +19,7 @@ our $DEBUG = 0;
 @Elasticsearch::Error::Missing::ISA
     = ( 'Elasticsearch::Error::Request', __PACKAGE__ );
 
-@Elasticsearch::Error::NotReady::ISA
+@Elasticsearch::Error::Unavailable::ISA
     = ( 'Elasticsearch::Error::Cxn', __PACKAGE__ );
 
 @Elasticsearch::Error::ContentLength::ISA

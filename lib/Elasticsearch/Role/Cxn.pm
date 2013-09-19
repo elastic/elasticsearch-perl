@@ -26,10 +26,12 @@ has 'logger'                => ( is => 'ro', required => 1 );
 has 'handle_args'           => ( is => 'ro', default  => sub { {} } );
 
 my %Code_To_Error = (
-    409 => 'Conflict',
-    404 => 'Missing',
+    400 => 'Request',
     403 => 'ClusterBlocked',
-    503 => 'NotReady'
+    404 => 'Missing',
+    409 => 'Conflict',
+    500 => 'Request',
+    503 => 'Unavailable'
 );
 
 #===================================

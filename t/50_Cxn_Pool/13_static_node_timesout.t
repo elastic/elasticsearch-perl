@@ -13,7 +13,7 @@ my $t = mock_static_client(
     { node => 1, code => 200, content => 1 },
     { node => 2, ping => 1 },
     { node => 2, code => 200, content => 1 },
-    { node => 1, code => 500, error => 'Timeout' },
+    { node => 1, code => 509, error => 'Timeout' },
     { node => 2, ping => 1 },
     { node => 2, code => 200, content => 1 },
     { node => 1, ping => 1 },

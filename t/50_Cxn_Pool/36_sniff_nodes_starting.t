@@ -9,13 +9,13 @@ use Elasticsearch::MockCxn qw(mock_sniff_client);
 my $t = mock_sniff_client(
     { nodes => [ 'one', 'two' ] },
 
-    { node => 1, sniff => [], error => 'Cxn', code => 500 },
-    { node => 2, sniff => [], error => 'Cxn', code => 500 },
+    { node => 1, sniff => [], error => 'Cxn', code => 509 },
+    { node => 2, sniff => [], error => 'Cxn', code => 509 },
 
     # NoNodes
 
-    { node => 3, sniff => [], error => 'Cxn', code => 500 },
-    { node => 4, sniff => [], error => 'Cxn', code => 500 },
+    { node => 3, sniff => [], error => 'Cxn', code => 509 },
+    { node => 4, sniff => [], error => 'Cxn', code => 509 },
 
     # NoNodes
 
