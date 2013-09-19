@@ -15,7 +15,17 @@ my $trace
     : $ENV{TRACE} eq '1' ? 'Stderr'
     :                      [ 'File', $ENV{TRACE} ];
 
-my $es = Elasticsearch->new( trace_to => $trace );
+my $es;
+if ( $ENV{ES} ) {
+    eval {
+        $es = Elasticsearch->new( nodes => $ENV{ES} );
+        $es->ping;
+    };
+}
+unless ($es) {
+    plan skip_all => 'No Elasticsearch test node available';
+    exit;
+}
 
 require Exporter;
 our @ISA    = 'Exporter';
