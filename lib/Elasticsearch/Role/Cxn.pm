@@ -51,8 +51,8 @@ sub mark_live {
 sub mark_dead {
 #===================================
     my $self  = shift;
-    my $fails = 1 + $self->ping_failures;
-    $self->ping_failures($fails);
+    my $fails = $self->ping_failures;
+    $self->ping_failures( $fails + 1 );
 
     my $timeout
         = min( $self->dead_timeout * 2**$fails, $self->max_dead_timeout );
@@ -130,7 +130,7 @@ sub process_response {
         return ( $code, $self->serializer->decode($body) )
             if length $body;
         return ( $code, 1 ) if $params->{method} eq 'HEAD';
-        return ($code);
+        return ( $code, '' );
     }
 
     my @ignore = to_list( $params->{ignore} );

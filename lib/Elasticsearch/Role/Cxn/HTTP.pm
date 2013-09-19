@@ -31,6 +31,9 @@ sub BUILDARGS {
         unless ( $node =~ m{^http(s)?://} ) {
             $node = ( $params->{https} ? 'https://' : 'http://' ) . $node;
         }
+        if ( $params->{port} && $node !~ m{//[^/]+:\d+} ) {
+            $node =~ s{(//[^/]+)}{$1:$params->{port}};
+        }
         my $uri = URI->new($node);
         $node = {
             scheme   => $uri->scheme,
@@ -44,8 +47,12 @@ sub BUILDARGS {
     my $host = $node->{host} || 'localhost';
     my $userinfo = $node->{userinfo} || $params->{userinfo} || '';
     my $scheme = $node->{scheme} || ( $params->{https} ? 'https' : 'http' );
-    my $port   = $node->{port}   || ( $scheme eq 'http' ? 80 : 443 );
-    my $path   = $node->{path}   || '';
+    my $port
+        = $node->{port}
+        || $params->{port}
+        || ( $scheme eq 'http' ? 80 : 443 );
+    my $path = $node->{path} || $params->{path_prefix} || '';
+    $path=~s{^/?}{/}g;
     $path =~ s{/+$}{};
 
     my %default_headers = %{ $params->{default_headers} || {} };
