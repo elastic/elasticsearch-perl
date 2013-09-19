@@ -13,7 +13,7 @@ has 'log_to'     => ( is => 'ro' );
 has 'trace_to'   => ( is => 'ro' );
 has 'trace_handle' => (
     is      => 'lazy',
-    handles => [qw( trace       tracef      is_trace)]
+    handles => [qw( trace tracef is_trace)]
 );
 
 has 'log_handle' => (
@@ -61,14 +61,14 @@ sub trace_request {
         : $params->{data};
 
     if ( defined $body ) {
-        $body =~ s/'/\u0027/g;
+        $body =~ s/'/\\u0027/g;
         $body = " -d '\n$body'\n";
     }
     else { $body = "\n" }
 
     my $msg = sprintf(
-        "# Request to: %s\n"          #
-            . "curl -X%s '%s' %s",    #
+        "# Request to: %s\n"         #
+            . "curl -X%s '%s'%s",    #
         $cxn->stringify,
         $params->{method},
         $uri,
@@ -84,11 +84,11 @@ sub trace_response {
     my ( $self, $cxn, $code, $response, $took ) = @_;
     return unless $self->is_trace;
 
-    my $body = $self->serializer->encode_pretty($response) || '';
+    my $body = $self->serializer->encode_pretty($response) || "\n";
     $body =~ s/^/# /mg;
 
     my $msg = sprintf(
-        "# Response: %s, Took:%dms\n%s",    #
+        "# Response: %s, Took: %d ms\n%s",    #
         $code, $took * 1000, $body
     );
 
@@ -101,10 +101,13 @@ sub trace_error {
     my ( $self, $cxn, $error ) = @_;
     return unless $self->is_trace;
 
-    my $body = $self->serializer->encode_pretty( $error->{vars}{body} || '' );
+    my $body
+        = $self->serializer->encode_pretty( $error->{vars}{body} || "\n" );
     $body =~ s/^/# /mg;
 
-    my $msg = sprintf( "# ERROR: %s\n%s\n", $error->{text}, $body );
+    my $msg
+        = sprintf( "# ERROR: %s %s\n%s", ref($error), $error->{text}, $body );
+
     $self->trace($msg);
 }
 
@@ -113,9 +116,9 @@ sub trace_comment {
 #===================================
     my ( $self, $comment ) = @_;
     return unless $self->is_trace;
-    my $tracer = $self->trace_to or return;
-    $comment =~ s/^/# /mg;
-    $self->trace($comment);
+    $comment =~ s/^/# *** /mg;
+    chomp $comment;
+    $self->trace("$comment\n");
 }
 
 1;
