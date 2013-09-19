@@ -2,7 +2,7 @@ package Elasticsearch::Util::API::Path;
 
 use strict;
 use warnings;
-use URI::Escape qw(uri_escape_utf8);
+use Any::URI::Escape qw(uri_escape);
 
 use Sub::Exporter -setup => { exports => ['path_init'] };
 
@@ -44,7 +44,7 @@ sub path_init {
 
     return sub {
         my $params = shift;
-        return join '/', '', map { uri_escape_utf8($_) }
+        return join '/', '', map { utf8::encode($_); uri_escape($_) }
             grep { defined and length } map { $_->($params) } @handlers;
     };
 }
