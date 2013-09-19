@@ -20,6 +20,7 @@ has 'cxns'            => ( is => 'rw',  default  => sub { [] } );
 has 'seed_nodes'      => ( is => 'ro',  required => 1 );
 has 'retries'         => ( is => 'rw',  default  => 0 );
 has 'max_retries'     => ( is => 'rw',  default  => 2 );
+has 'randomize_cxns'  => ( is => 'ro',  default  => 1 );
 
 #===================================
 sub BUILDARGS {
@@ -39,7 +40,9 @@ sub next_cxn_num {
     my $self = shift;
     my $cxns = $self->cxns;
     return unless @$cxns;
-    $self->_set_current_cxn_num( ( $self->current_cxn_num + 1 ) % @$cxns );
+    my $current = $self->current_cxn_num;
+    $self->_set_current_cxn_num( ($current +1 ) % @$cxns );
+    return $current;
 }
 
 #===================================
@@ -47,7 +50,8 @@ sub set_cxns {
 #===================================
     my $self    = shift;
     my $factory = $self->cxn_factory;
-    my @cxns    = map { $factory->new_cxn($_) } shuffle @_;
+    my @cxns    = map { $factory->new_cxn($_) } @_;
+    @cxns = shuffle @cxns if $self->randomize_cxns;
     $self->cxns( \@cxns );
     $self->_set_current_cxn_num(0);
 
