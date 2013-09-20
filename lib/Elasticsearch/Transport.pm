@@ -21,7 +21,7 @@ sub perform_request {
     my $pool   = $self->cxn_pool;
     my $logger = $self->logger;
 
-    my ( $code, $response, $cxn, $retry, $error );
+    my ( $code, $response, $cxn, $error );
 
     try {
         $cxn = $pool->next_cxn;
@@ -29,7 +29,7 @@ sub perform_request {
         $logger->trace_request( $cxn, $params );
 
         ( $code, $response ) = $cxn->perform_request($params);
-        $cxn->mark_live;
+        $pool->request_ok($cxn);
         $logger->trace_response( $cxn, $code, $response, time() - $start );
     }
     catch {
@@ -40,35 +40,22 @@ sub perform_request {
                 body        => $response
             }
         );
-
-        if ( $error->is('Cxn') ) {
-            $cxn->mark_dead;
-            $pool->schedule_check;
-            $retry = $self->should_retry( $params, $cxn, $error );
-        }
-        elsif ( $error->is('Timeout') ) {
-            $pool->schedule_check;
-        }
-        else {
-            $cxn->mark_live if $cxn;
-        }
     };
 
-    if ($retry) {
-        $logger->debugf( "[%s] %s", $cxn->stringify, "$error" );
-        $logger->info('Retrying request on a new cxn');
-        return $self->perform_request($params);
-    }
-
-    $pool->reset_retries;
-
     if ($error) {
+        if ( $pool->request_failed( $cxn, $error ) ) {
+            $logger->debugf( "[%s] %s", $cxn->stringify, "$error" );
+            $logger->info('Retrying request on a new cxn');
+            return $self->perform_request($params);
+        }
+
         $logger->trace_error( $cxn, $error );
         delete $error->{vars}{body};
         $error->is('NoNodes')
             ? $logger->throw_critical($error)
             : $logger->throw_error($error);
     }
+
     return $response;
 }
 

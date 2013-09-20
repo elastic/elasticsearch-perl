@@ -19,7 +19,6 @@ has 'current_cxn_num' => ( is => 'rwp', default  => 0 );
 has 'cxns'            => ( is => 'rw',  default  => sub { [] } );
 has 'seed_nodes'      => ( is => 'ro',  required => 1 );
 has 'retries'         => ( is => 'rw',  default  => 0 );
-has 'max_retries'     => ( is => 'rw',  default  => 2 );
 has 'randomize_cxns'  => ( is => 'ro',  default  => 1 );
 
 #===================================
@@ -63,6 +62,49 @@ sub set_cxns {
 }
 
 #===================================
+sub request_ok {
+#===================================
+    my ( $self, $cxn ) = @_;
+    $cxn->mark_live;
+    $self->reset_retries;
+}
+
+#===================================
+sub request_failed {
+#===================================
+    my ( $self, $cxn, $error ) = @_;
+
+    if ( $error->is( 'Cxn', 'Timeout' ) ) {
+        $cxn->mark_dead if $self->should_mark_dead($error);
+        $self->schedule_check;
+
+        if ( $self->should_retry($error) ) {
+            my $retries = $self->retries( $self->retries + 1 );
+            return 1 if $retries < $self->_max_retries;
+        }
+    }
+    else {
+        $cxn->mark_live if $cxn;
+    }
+    $self->reset_retries;
+    return 0;
+}
+
+#===================================
+sub should_retry {
+#===================================
+    my ( $self, $error ) = @_;
+    return $error->is('Cxn');
+}
+
+#===================================
+sub should_mark_dead {
+#===================================
+    my ( $self, $error ) = @_;
+    return $error->is('Cxn');
+}
+
+#===================================
 sub cxns_str {
 #===================================
     my $self = shift;
@@ -79,20 +121,7 @@ sub cxns_seeds_str {
 
 #===================================
 sub reset_retries { shift->retries(0) }
+sub _max_retries  {2}
 #===================================
-
-#===================================
-before 'next_cxn' => sub {
-#===================================
-    my ( $self, $force ) = @_;
-    return if $force;
-
-    my $retries = $self->retries( $self->retries + 1 );
-    if ( $retries > $self->max_retries ) {
-        die "Retried request $retries times";
-    }
-    return 1;
-
-};
 
 1;

@@ -16,21 +16,25 @@ my $t = mock_sniff_client(
     { node => 2, sniff => [ 'one', 'two' ] },
     { node => 4, code  => 503,     error   => 'Unavailable' },
 
-    # throw Internal: too many retries
+    # throw Unavailable: too many retries
 
     { node => 5, sniff => [ 'one', 'two' ] },
     { node => 6, code  => 503,     error => 'Unavailable' },
     { node => 7, sniff => [ 'one', 'two' ] },
     { node => 8, code  => 503,     error => 'Unavailable' },
 
-    # throw Internal: too many retries
+    # throw Unavailable: too many retries
+
+    { node => 9, sniff => [ 'one', 'two' ] },
+    { node => 10, code => 200, content => 1 },
 );
 
 ok $t->perform_request
     && !eval { $t->perform_request }
-    && $@ =~ /Retried request/
+    && $@ =~ /Unavailable/
     && !eval { $t->perform_request }
-    && $@ =~ /Retried request/,
+    && $@ =~ /Unavailable/
+    && $t->perform_request,
     "Runaway nodes";
 
 done_testing;

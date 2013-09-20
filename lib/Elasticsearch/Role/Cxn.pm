@@ -69,8 +69,6 @@ sub force_ping {
     my $self = shift;
     $self->ping_failures(0);
     $self->next_ping(-1);
-    $self->logger->infof( "Ping [%s] before next request", $self->stringify );
-
 }
 
 #===================================

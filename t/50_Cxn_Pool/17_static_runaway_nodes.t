@@ -16,22 +16,26 @@ my $t = mock_static_client(
     { node => 1, ping => 1 },
     { node => 1, code => 503, error => 'Unavailable' },
 
-    # throw Internal: too many retries
+    # throw Unavailable: too many retries
 
     { node => 1, ping => 1 },
     { node => 1, code => 503, error => 'Unavailable' },
     { node => 1, ping => 1 },
     { node => 1, code => 503, error => 'Unavailable' },
 
-    # throw Internal: too many retries
+    # throw Unavailable: too many retries
+
+    { node => 1, ping => 1 },
+    { node => 1, code => 200, content => 1 },
 
 );
 
 ok $t->perform_request
     && !eval { $t->perform_request }
-    && $@ =~ /Retried request/
+    && $@ =~ /Unavailable/
     && !eval { $t->perform_request }
-    && $@ =~ /Retried request/,
+    && $@ =~ /Unavailable/
+    && $t->perform_request,
     "Runaway nodes";
 
 done_testing;

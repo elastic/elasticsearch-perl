@@ -50,7 +50,10 @@ sub schedule_check {
     my ($self) = @_;
     $self->logger->info("Forcing ping before next use on all cxns");
     for my $cxn ( @{ $self->cxns } ) {
-        $cxn->force_ping if $cxn->is_live;
+        next if $cxn->is_dead;
+        $self->logger->infof( "Ping [%s] before next request",
+            $cxn->stringify );
+        $cxn->force_ping;
     }
 }
 
