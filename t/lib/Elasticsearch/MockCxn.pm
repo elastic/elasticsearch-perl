@@ -7,8 +7,14 @@ use Data::Dumper;
 use Moo;
 with 'Elasticsearch::Role::Cxn::HTTP';
 
-use Sub::Exporter -setup =>
-    { exports => [qw(mock_static_client mock_sniff_client)] };
+use Sub::Exporter -setup => {
+    exports => [ qw(
+            mock_static_client
+            mock_sniff_client
+            mock_noping_client
+            )
+    ]
+};
 
 our $i = 0;
 
@@ -20,8 +26,7 @@ has 'node_num'       => ( is => 'ro', default  => sub { ++$i } );
 sub BUILD {
 #===================================
     my $self = shift;
-    $self->logger->debugf( "[%s-%s] CREATED",
-        $self->node_num, $self->host );
+    $self->logger->debugf( "[%s-%s] CREATED", $self->node_num, $self->host );
 }
 
 #===================================
@@ -48,23 +53,26 @@ sub perform_request {
 
     # Sniff request
     if ( my $nodes = $response->{sniff} ) {
-        $log_msg = "SNIFF: [" . ( join ", ", @$nodes )."]";
+        $log_msg = "SNIFF: [" . ( join ", ", @$nodes ) . "]";
         $response->{code} ||= 200;
         my $i = 1;
-        unless ($response->{error}){
-        $response->{content} = $self->serializer->encode(
-            {   nodes => {
-                    map { 'node_' . $i++ => { http_address => "inet[/$_]" } }
-                        @$nodes
+        unless ( $response->{error} ) {
+            $response->{content} = $self->serializer->encode(
+                {   nodes => {
+                        map {
+                            'node_'
+                                . $i++ => { http_address => "inet[/$_]" }
+                        } @$nodes
+                    }
                 }
-            }
-        );}
+            );
+        }
     }
+
     # Normal request
     elsif ( $response->{code} ) {
         $log_msg = "REQUEST: " . ( $response->{error} || $response->{code} );
     }
-
 
     # Ping request
     else {
@@ -75,7 +83,8 @@ sub perform_request {
             : { code => 500, error => 'Cxn' };
     }
 
-    $self->logger->debugf( "[%s-%s] %s", $self->node_num, $self->host,$log_msg );
+    $self->logger->debugf( "[%s-%s] %s", $self->node_num, $self->host,
+        $log_msg );
 
     return $self->process_response(
         $params,                 # request
@@ -93,8 +102,9 @@ my $trace
     :                      [ 'File', $ENV{TRACE} ];
 
 #===================================
-sub mock_static_client { _mock_client( 'Static', @_ ) }
-sub mock_sniff_client  { _mock_client( 'Sniff',  @_ ) }
+sub mock_static_client { _mock_client( 'Static',         @_ ) }
+sub mock_sniff_client  { _mock_client( 'Sniff',          @_ ) }
+sub mock_noping_client { _mock_client( 'Static::NoPing', @_ ) }
 #===================================
 
 #===================================
