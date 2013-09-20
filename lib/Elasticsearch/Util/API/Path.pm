@@ -7,29 +7,24 @@ use Any::URI::Escape qw(uri_escape);
 use Sub::Exporter -setup => { exports => ['path_init'] };
 
 our %Handler = (
-    '{aliases}'            => sub { multi_opt( 'alias',     @_, '*' ) },
-    '{alias}'              => sub { one_req( 'alias',       @_ ) },
-    '{id}'                 => sub { one_req( 'id',          @_ ) },
-    '{id|blank}'           => sub { one_opt( 'id',          @_ ) },
-    '{index}'              => sub { one_req( 'index',       @_ ) },
-    '{index|blank}'        => sub { one_opt( 'index',       @_ ) },
-    '{index-when-type}'    => sub { index_plus( 'type',     @_ ) },
-    '{indices}'            => sub { multi_opt( 'index',     @_ ) },
-    '{indices|all}'        => sub { multi_opt( 'index',     @_, '_all' ) },
-    '{req_indices}'        => sub { multi_req( 'index',     @_ ) },
-    '{names}'              => sub { multi_opt( 'name',      @_, '*' ) },
-    '{name}'               => sub { one_req( 'name',        @_ ) },
-    '{type}'               => sub { one_req( 'type',        @_ ) },
-    '{type|all}'           => sub { one_opt( 'type',        @_, '_all' ) },
-    '{type|blank}'         => sub { one_opt( 'type',        @_ ) },
-    '{types}'              => sub { multi_opt( 'type',      @_ ) },
-    '{req_types}'          => sub { multi_req( 'type',      @_ ) },
-    '{nodes}'              => sub { multi_opt( 'node',      @_ ) },
-    '{template}'           => sub { one_req( 'template',    @_ ) },
-    '{warmer}'             => sub { one_req( 'warmer',      @_ ) },
-    '{warmers}'            => sub { multi_opt( 'warmer',    @_ ) },
-    '{indices|all-type}'   => sub { indices_plus( 'type',   @_ ) },
-    '{indices|all-warmer}' => sub { indices_plus( 'warmer', @_ ) },
+    '{id}'              => sub { one_req( 'id',      @_ ) },
+    '{id|blank}'        => sub { one_opt( 'id',      @_ ) },
+    '{index}'           => sub { one_req( 'index',   @_ ) },
+    '{index|blank}'     => sub { one_opt( 'index',   @_ ) },
+    '{index-when-type}' => sub { index_plus( 'type', @_ ) },
+    '{indices}'         => sub { multi_opt( 'index', @_ ) },
+    '{indices|all}'      => sub { multi_opt( 'index',   @_, '_all' ) },
+    '{indices|all-type}' => sub { indices_plus( 'type', @_ ) },
+    '{req_indices}'      => sub { multi_req( 'index',   @_ ) },
+    '{req_types}'        => sub { multi_req( 'type',    @_ ) },
+    '{names}'            => sub { multi_opt( 'name',    @_, '*' ) },
+    '{name}'             => sub { one_req( 'name',      @_ ) },
+    '{type}'             => sub { one_req( 'type',      @_ ) },
+    '{type|all}'         => sub { one_opt( 'type',      @_, '_all' ) },
+    '{type|blank}'       => sub { one_opt( 'type',      @_ ) },
+    '{types}'            => sub { multi_opt( 'type',    @_ ) },
+    '{nodes|blank}'      => sub { multi_opt( 'node_id',    @_ ) },
+    '{metric|blank}' => \&metric_or_blank,
 );
 
 #===================================
@@ -108,5 +103,16 @@ sub multi_req {
     die "Param ($name) must contain at least one value\n"
         unless defined $val and length $val;
     return $val;
+}
+
+#===================================
+sub metric_or_blank {
+#===================================
+    my ( $params, $default ) = @_;
+    my $metric = delete $params->{metric} or return;
+    die "Param (metric) must contain a single value\n"
+        if ref $metric eq 'ARRAY';
+    delete $params->{indices};
+    return ( 'indices', $metric );
 }
 1;

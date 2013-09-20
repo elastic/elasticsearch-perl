@@ -261,13 +261,13 @@ sub api {
 
     'cluster.hot_threads' => {
         doc  => '/api/admin-cluster-nodes-hot-threads/',
-        path => '_nodes/{nodes}/hot_threads',
+        path => '_nodes/{nodes|blank}/hot_threads',
         qs   => [ 'interval', 'snapshots', 'threads', 'type' ],
     },
 
     'cluster.node_info' => {
         doc  => '/api/admin-cluster-nodes-info/',
-        path => '_nodes/{nodes}',
+        path => '_nodes/{nodes|blank}',
         qs   => [
             'all',      'clear',   'http',        'jvm',
             'network',  'os',      'plugin',      'process',
@@ -278,15 +278,14 @@ sub api {
     'cluster.shutdown' => {
         doc    => '/api/admin-cluster-nodes-shutdown/',
         method => 'POST',
-        path   => '_cluster/nodes/{nodes}/_shutdown',
+        path   => '_cluster/nodes/{nodes|blank}/_shutdown',
         qs     => [ 'delay', 'exit' ],
     },
 
     'cluster.node_stats' => {
-        doc => '/api/admin-cluster-nodes-stats/',
-
-        ###
-        qs => [
+        doc  => '/api/admin-cluster-nodes-stats/',
+        path => '/_nodes/{nodes|blank}/stats/{metric|blank}',
+        qs   => [
             'all',  'clear',   'fields',      'fs',
             'http', 'indices', 'jvm',         'network',
             'os',   'process', 'thread_pool', 'transport'
@@ -459,7 +458,7 @@ sub api {
 
     'indices.get_warmer' => {
         doc  => '/api/admin-indices-warmers/',
-        path => '{indices|all-warmer}/_warmer/{names}',
+        path => '{indices|all}/_warmer/{names}',
     },
 
     'indices.open' => {
@@ -549,19 +548,27 @@ sub api {
         qs   => [ 'ignore_indices', ],
     },
 
+    'indices.snapshot_index' => {
+        docs   => '/api/admin-indices-gateway-snapshot/',
+        method => 'POST',
+        path   => '/{indices}/_gateway/snapshot',
+        params => ['ignore_indices']
+    },
+
     'indices.stats' => {
         doc  => '/api/admin-indices-stats/',
         path => '/{indices}/_stats',
         qs   => [
-            'all',            'clear',
-            'docs',           'fielddata',
-            'fields',         'filter_cache',
-            'flush',          'get',
-            'groups',         'id_cache',
-            'ignore_indices', 'indexing',
-            'merge',          'refresh',
-            'search',         'store',
-            'warmer'
+            'all',              'clear',
+            'completion',       'completion_fields',
+            'docs',             'fielddata',
+            'fielddata_fields', 'fields',
+            'filter_cache',     'flush',
+            'get',              'groups',
+            'id_cache',         'ignore_indices',
+            'indexing',         'merge',
+            'refresh',          'search',
+            'store',            'warmer'
         ],
     },
 

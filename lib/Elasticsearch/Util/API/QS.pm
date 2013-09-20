@@ -41,6 +41,15 @@ our %Params = (
         desc => 'Reset the default settings',
         type => 'bool'
     },
+    completion => {
+        desc => 'Return information about the completion suggester',
+        type => 'bool'
+    },
+    completion_fields => {
+        desc => 'A comma-separated list of fields'
+            . ' to return in the completion suggester response',
+        type => 'list'
+    },
     consistency => {
         desc    => 'Explicit write consistency setting for the operation',
         options => [ 'one', 'quorum', 'all' ],
@@ -84,6 +93,11 @@ our %Params = (
     fielddata => {
         desc => 'Return information about field data',
         type => 'bool'
+    },
+    fielddata_fields => {
+        desc => 'A comma-separated list of fields'
+            . ' to return in the fielddata response',
+        type => 'list'
     },
     fields => {
         desc => 'A comma-separated list of fields'
