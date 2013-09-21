@@ -32,6 +32,12 @@ sub api {
         qs        => [ 'consistency', 'refresh', 'replication', 'type' ],
     },
 
+    'clear_scroll' => {
+        method => 'DELETE',
+        doc    => '/',
+        path   => '_search/scroll/{scroll_ids}'
+    },
+
     'count' => {
         body => { desc => 'A query to restrict the results (optional)' },
         doc  => '/api/count/',
