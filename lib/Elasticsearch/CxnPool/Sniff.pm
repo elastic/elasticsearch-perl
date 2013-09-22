@@ -98,7 +98,7 @@ sub sniff_cxn {
         my $host = $data->{ $protocol . "_address" } or next;
         $host =~ s{^inet\[/([^\]]+)\]}{$1} or next;
 
-        $self->should_accept_node( $host, $node_id, $data )
+        $host = $self->should_accept_node( $host, $node_id, $data )
             or next;
 
         push @live_nodes, $host;
@@ -124,9 +124,7 @@ sub sniff_cxn {
 }
 
 #===================================
-sub should_accept_node {
+sub should_accept_node { return $_[1] }
 #===================================
-    return 1;
-}
 
 1;
