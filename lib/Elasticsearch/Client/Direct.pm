@@ -35,7 +35,7 @@ sub _index {
     unless ( defined $params->{id} and length $params->{id} ) {
         $defn = { %$defn, method => 'POST' };
     }
-    $self->perform_request( $name, $defn, $params );
+    $self->perform_request( { %$defn, name => $name }, $params );
 }
 
 #===================================

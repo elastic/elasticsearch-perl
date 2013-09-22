@@ -66,6 +66,7 @@ sub tidy_request {
     $params->{method} ||= 'GET';
     $params->{path}   ||= '/';
     $params->{qs}     ||= {};
+    $params->{ignore} ||= [];
     my $body = $params->{body};
     return $params unless defined $body;
 
@@ -77,13 +78,6 @@ sub tidy_request {
 
     return $params;
 
-}
-
-#===================================
-sub should_retry {
-#===================================
-    my ( $self, $request, $cxn, $error ) = @_;
-    return $error->is('Cxn');
 }
 
 1;

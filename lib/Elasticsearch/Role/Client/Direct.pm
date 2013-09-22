@@ -9,8 +9,7 @@ use Try::Tiny;
 sub parse_request {
 #===================================
     my $self   = shift;
-    my $name   = shift;
-    my $defn   = shift;
+    my $defn   = shift || {};
     my $params = { ref $_[0] ? %{ shift() } : @_ };
 
     my $request;
@@ -26,6 +25,7 @@ sub parse_request {
     }
     catch {
         chomp $_;
+        my $name = $defn->{name}||'<unknown method>';
         $self->logger->throw_error( 'Param',
                   "$_ in ($name) request. "
                 . "See http://elasticsearch.org"
@@ -93,10 +93,10 @@ sub _install_api {
             or next;
         next if $stash->has_symbol( '&' . $name );
 
-        my $defn = $defns->{$action};
+        my %defn = ( name => $name, %{ $defns->{$action} } );
         $stash->add_symbol(
             '&' . $name => sub {
-                shift->perform_request( $action, $defn, @_ );
+                shift->perform_request( \%defn, @_ );
             }
         );
     }
