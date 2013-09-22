@@ -52,7 +52,8 @@ __END__
 
     use Elasticsearch;
 
-    # connect to localhost:9200
+Connect to C<localhost:9200>:
+
     my $e = Elasticsearch->new();
 
     # round-robin between two nodes
@@ -63,15 +64,16 @@ __END__
         ]
     );
 
-    # connect to cluster at search1:9200, sniff all nodes and
-    # round-robin between them
+Connect to cluster at C<search1:9200>, sniff all nodes and
+round-robin between them:
 
     my $e = Elasticsearch->new(
         nodes    => 'search1:9200',
         cxn_pool => 'Sniff'
     );
 
-    # index a document
+Index a document:
+
     $e->index(
         index   => 'my_app',
         type    => 'blog_post',
@@ -83,17 +85,22 @@ __END__
         }
     );
 
-    # get the document
+Get the document:
+
     my $doc = $e->get(
         index   => 'my_app',
         type    => 'blog_post',
         id      => 1
     );
 
-    # search
+Search:
+
     my $results = $e->search(
-        query => {
-            match => { title => 'elasticsearch'}
+        index => 'my_app',
+        body  => {
+            query => {
+                match => { title => 'elasticsearch' }
+            }
         }
     );
 
@@ -446,4 +453,6 @@ bodies.  See:
 L<Elasticsearch::Serializer::JSON>
 
 =back
+
+=head1 TODO
 

@@ -49,6 +49,7 @@ sub test_tidy {
         method => 'GET',
         path   => '/',
         qs     => {},
+        ignore => [],
         %$test
     };
     cmp_deeply $t->tidy_request($params), $test, $title;

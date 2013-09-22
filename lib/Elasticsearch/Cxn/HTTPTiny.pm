@@ -67,3 +67,17 @@ sub _build_handle {
 }
 
 1;
+
+# ABSTRACT: A Cxn implementation which uses HTTP::Tiny
+
+=head1 DESCRIPTION
+
+Provides the default HTTP Cxn class and is based on L<HTTP::Tiny>.
+The HTTP::Tiny backend is fast, uses pure Perl, but doesn't provide
+persistent connections.
+
+This class does L<Elasticsearch::Role::Cxn::HTTP>, whose documentation
+provides more information.
+
+
+

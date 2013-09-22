@@ -36,3 +36,16 @@ sub new_cxn { shift->_factory->(@_) }
 #===================================
 
 1
+
+__END__
+
+# ABSTRACT: Used by CxnPools to create new Cxn instances.
+
+=head1 DESCRIPTION
+
+This class is used by the L<Elasticsearch::Role::CxnPool> implementations
+to create new L<Elasticsearch::Role::Cxn>-based instances. It holds on
+to all the configuration options passed to L<Elasticsearhch/new()> so
+that new Cxns can use them.
+
+It contains no user serviceable parts.

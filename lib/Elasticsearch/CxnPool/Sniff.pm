@@ -169,8 +169,10 @@ This class does L<Elasticsearch::Role::CxnPool>.
 
 =head2 C<nodes>
 
-The list of nodes to use to discover the cluster.  Defaults to C<localhost:9200>.
-See L<TODO>.
+The list of nodes to use to discover the cluster.  Can accept a single node,
+multiple nodes, and defaults to C<localhost:9200> if no C<nodes> are
+specified. See L<Elasticsearch::Role::Cxn::HTTP/node> for details of the node
+specification.
 
 =head2 C<sniff_interval>
 

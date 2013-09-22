@@ -125,3 +125,28 @@ sub _max_retries  {2}
 #===================================
 
 1;
+
+__END__
+
+#ABSTRACT: Provides common functionality to the CxnPool implementations
+
+
+=head1 DESCRIPTION
+
+See the CxnPool implementations:
+
+=over
+
+=item *
+
+L<Elasticsearch::CxnPool::Static>
+
+=item *
+
+L<Elasticsearch::CxnPool::Sniff>
+
+=item *
+
+L<Elasticsearch::CxnPool::Static::NoPing>
+
+=back

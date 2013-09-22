@@ -166,3 +166,191 @@ sub process_response {
 }
 
 1;
+
+# ABSTRACT: Provides common functionality to Cxn implementations
+
+=head1 DESCRIPTION
+
+L<Elasticsearch::Role::Cxn> provides common functionality to the Cxn
+implementations. Cxn instances are created by a L<Elasticsearch::Role::CxnPool>
+implentation, using the L<Elasticsearch::Cxn::Factory> class.
+
+=head1 CONFIGURATION
+
+The configuration parameters are as follows:
+
+=head2 C<request_timeout>
+
+    $e = Elasticsearch->new(
+        request_timeout => 10
+    );
+
+How long a normal request (ie not a ping or sniff request) should wait
+before throwing a C<Timeout> error.  Defaults to C<10> seconds.
+
+=head2 C<ping_timeout>
+
+    $e = Elasticsearch->new(
+        request_timeout => 0.3
+    );
+
+How long a ping request should wait before throwing a C<Timeout> error.
+Defaults to C<0.3> seconds.  You may want to increase this if you are
+using the L<Elasticsearch::CxnPool::Static>  connection pool with a slow
+network.
+
+=head2 C<dead_timeout>
+
+How long a Cxn should be considered to be I<dead> (not used to serve requests),
+before it is retried.  The default is C<60> seconds.  This value is increased
+by powers of 2 for each time a request fails.  In other words, the delay
+after each failure is as follows:
+
+    Failure     Delay
+    1           60 * 1  = 60 seconds
+    2           60 * 2  = 120 seconds
+    3           60 * 4  = 240 seconds
+    4           60 * 8  = 480 seconds
+    5           60 * 16 = 960 seconds
+
+=head2 C<max_dead_timeout>
+
+The maximum delay that should be applied to a failed node. If the
+L</dead_timeout> calculation results in a delay greater than
+C<max_dead_timeout> (default C<3,600> seconds) then the C<max_dead_timeout>
+is used instead.  In other words, dead nodes will be retried at least once
+every hour by default.
+
+=head2 C<sniff_request_timeout>
+
+How long a sniff request should wait before throwing a C<Timeout> error.
+Defaults to C<0.3> seconds.  You may want to increase this if you are
+using the L<Elasticsearch::CxnPool::Sniff> connection pool with a slow
+network.
+
+
+=head2 C<sniff_timeout>
+
+How long the node being sniffed should wait for responses from other nodes
+before responding to the client.  B<Note:> this is distinct from the
+L</sniff_request_timeout>.  For example, let's say you have a cluster with
+5 nodes, 2 of which are unhealthy (taking a long time to respond):
+
+=over
+
+=item *
+
+If you sniff an unhealthy node, the request will throw a C<Timeout> error
+after C<sniff_request_timeout> seconds.
+
+=item *
+
+If you sniff a healthy node, it will gather responses from the other nodes,
+and give up after C<sniff_timeout> seconds, returning just the information it
+has managed to gather from the healthy nodes.
+
+=back
+
+B<NOTE:> The C<sniff_request_timeout> must be longer than the C<sniff_timeout>
+to ensure that you get information about healthy nodes from the cluster.
+
+For CxnPool's which implement sniffing (see L<Elasticsearch::CxnPool::Sniff>),
+the C<sniff_timeout> is the amount of time that the node being sniffed
+will wait to receive responses from other nodes, before returning a list
+of healthy nodes.
+
+=head2 C<handle_args>
+
+Any default arguments which should be passed when creating a new instance of
+the class which handles the network transport, eg L<HTTP::Tiny>.
+
+=head1 METHODS
+
+None of the methods listed below are useful to the user. They are
+documented for those who are writing alternative implementations only.
+
+=head2 C<host()>
+
+    $host = $cxn->host;
+
+The value of the C<host> parameter, eg C<search.domain.com>.
+
+=head2 C<port()>
+
+    $port = $cxn->port;
+
+The value of the C<port> parameter, eg C<9200>.
+
+=head2 C<uri()>
+
+    $uri = $cxn->uri;
+
+A L<URI> object representing the node, eg C<https://search.domain.com:9200/path>.
+
+=head2 C<is_dead()>
+
+    $bool = $cxn->is_dead
+
+Is the current node marked as I<dead>.
+
+=head2 C<is_live()>
+
+    $bool = $cxn->is_live
+
+Is the current node marked as I<live>.
+
+=head2 C<next_ping()>
+
+    $time = $cxn->next_ping($time)
+
+Get/set the time for the next scheduled ping.  If zero, no ping is scheduled
+and the cxn is considered to be alive.  If -1, a ping is scheduled before
+the next use.
+
+=head2 C<ping_failures()>
+
+    $num = $cxn->ping_failures($num)
+
+The number of times that a cxn has been marked as dead.
+
+=head2 C<mark_dead()>
+
+    $cxn->mark_dead
+
+Mark the cxn as I<dead>, set L</next_ping()> and increment L</ping_failures()>.
+
+=head2 C<mark_live()>
+
+Mark the cxn as I<live>, set L</next_ping()> and L</ping_failures()> to zero.
+
+=head2 C<force_ping()>
+
+Set L</next_ping()> to -1 (ie before next use) and L</ping_failures()> to zero.
+
+=head2 C<pings_ok()>
+
+    $bool = $cxn->pings_ok
+
+Try to ping the node and call L</mark_live()> or L</mark_dead()> depending on
+the success or failure of the ping.
+
+=head2 C<sniff()>
+
+    $response = $cxn->sniff;
+
+Send a sniff request to the node and return the response.
+
+=head2 C<process_response()>
+
+    ($code,$result) = $cxn->process_response($params, $code, $msg, $body );
+
+Processes the response received from an Elasticsearch node and either
+returns the HTTP status code and the response body (deserialized from JSON)
+or throws an error of the appropriate type.
+
+The C<$params> are the original params passed to
+L<Elasticsearch::Transport/perform_request()>, the C<$code> is the HTTP
+status code, the C<$msg> is the error message returned by the backend
+library and the C<$body> is the HTTP response body returned by
+Elasticsearch.
+

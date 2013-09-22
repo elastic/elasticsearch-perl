@@ -82,3 +82,50 @@ sub tidy_request {
 
 1;
 
+__END__
+
+#ABSTRACT: Interface between the client class the Elasticsearch cluster
+
+=head1 DESCRIPTION
+
+The Transport class manages the request cycle. It receives parsed requests
+from the (user-facing) client class, and tries to execute the request on a
+node in the cluster, retrying a request if necessary.
+
+Raw requests can be executed using the transport class as follows:
+
+    $result = $e->transport->perform_request(
+        method => 'POST',
+        path   => '/_search',
+        qs     => { from => 0, size => 10 },
+        body   => {
+            query => {
+                match => {
+                    title => "Elasticsearch clients"
+                }
+            }
+        }
+    );
+
+Other than the C<method>, C<path>, C<qs> and C<body> parameters, which
+should be self-explanatory, it also accepts:
+
+=over
+
+=item C<ignore>
+
+The HTTP error codes which should be ignored instead of throwing an error,
+eg C<404 NOT FOUND>:
+
+    $result = $e->transport->perform_request(
+        method => 'GET',
+        path   => '/index/type/id'
+        ignore => [404],
+    );
+
+=item C<serialize>
+
+Whether the C<body> should be serialized in the standard way (as plain
+JSON) or using the special I<bulk> format:  C<"std"> or C<"bulk">.
+
+=back
