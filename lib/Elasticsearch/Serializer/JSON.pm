@@ -86,3 +86,50 @@ sub decode {
 }
 
 1;
+
+__END__
+
+# ABSTRACT: A Serializer for JSON
+
+=head1 DESCRIPTION
+
+This module uses L<JSON> to Perl data structures into JSON strings, and
+to decode JSON strings into Perl data structures.
+
+=head1 METHODS
+
+=head2 C<encode()>
+
+    $bytes = $serializer->encode($ref);
+    $bytes = $serializer->encode($str);
+
+The L</encode()> method converts array and hash refs into their JSON
+equivalents.  If a string is passed in, it is returned as the UTF8 encoded
+version of itself.  The empty string and C<undef> are returned as is.
+
+=head2 C<encode_pretty()>
+
+    $bytes = $serializer->encode_pretty($ref);
+    $bytes = $serializer->encode_pretty($str);
+
+Works exactly as L</encode()> but the JSON output is pretty-printed.
+
+=head2 C<encode_bulk()>
+
+    $bytes = $serializer->encode_bulk([\%hash,\%hash,...]);
+    $bytes = $serializer->encode_bulk([$str,$str,...]);
+
+The L</encode_bulk()> method expects an arry ref of hashes or strings.
+Each hash or string is processed by L</encode()> then joined together
+by newline characters, with a final newline character appended to the end.
+This is the special JSON format used for bulk requests.
+
+=head2 C<decode()>
+
+    $var = $serializer->decode($json_bytes);
+    $str = $serializer->decode($bytes);
+
+If the passed in value looks like JSON (ie starts with a C<{> or C<[>
+character), then it is decoded from JSON, otherwise it is returned as
+the UTF8 decoded version of itself. The empty string and C<undef> are
+returned as is.
