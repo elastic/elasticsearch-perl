@@ -30,7 +30,7 @@ our %Params = (
         type => 'bool'
     },
     analyzer => {
-        desc => 'The analyzer for the query string query',
+        desc => 'Which analyzer to use as the default',
         type => 'string'
     },
     boost_terms => {
@@ -617,3 +617,35 @@ sub qs_init {
 }
 
 1;
+
+__END__
+
+# ABSTRACT: A utility class for query string parameters in the API
+
+=head1 DESCRIPTION
+
+This class contains a definition of each query string parameter that
+can be accepeted by actions in the L<API|Elasticsearch::Role::API>.
+
+=head1 EXPORTS
+
+=head2 C<qs_init()>
+
+    use Elasticsearch::Util::API::QS qw(qs_init);
+    $handler = qs_init( @qs_params );
+    $qs_hash = $handler->($params);
+
+The C<qs_init()> sub accepts a list of query string parameter names,
+and returns a handler which can extract those parameters from C<\%params>
+and return a hash of values to be passed as a query string.
+
+For instance:
+
+    $handler = qs_init(qw(fields size from));
+    $params  = { fields =>['foo','bar'], size => 10, query=>\%query };
+    $qs_hash = $handler->($params);
+
+Would result in:
+
+    $qs_hash: { fields => 'foo,bar', size => 10};
+    $params:   { query => \%query }

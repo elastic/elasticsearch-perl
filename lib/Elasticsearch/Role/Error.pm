@@ -21,3 +21,4 @@ sub upgrade_error {
 
 1;
 
+# ABSTRACT: Common functionality for throwing errors

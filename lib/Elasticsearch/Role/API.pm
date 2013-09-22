@@ -610,3 +610,61 @@ for ( values %API ) {
 }
 
 1;
+
+__END__
+
+# ABSTRACT: This class contains the spec for the Elasticsearch APIs
+
+=head1 DESCRIPTION
+
+All of the Elasticsearch APIs are defined in this role. The example given below
+is the definition for the L<Elasticsearch::Client::Direct/index()> method:
+
+    'index' => {
+        body => {
+            desc     => 'The document',
+            required => 1
+        },
+        doc    => '/api/index_/',
+        method => 'PUT',
+        path   => '{index}/{type}/{id|blank}',
+        qs     => [
+            'consistency', 'op_type',     'parent',  'percolate',
+            'refresh',     'replication', 'routing', 'timeout',
+            'timestamp',   'ttl',         'version', 'version_type'
+        ],
+    },
+
+These definitions can be used by different L<Elasticsearch::Role::Client>
+implementations to provide distinct user interfaces.
+
+=head1 METHODS
+
+=head2 C<api()>
+
+    $defn = $api->api($name);
+
+The only method in this class is the C<api()> method which takes the name
+of the I<action> and returns its definition.  Actions in the
+C<indices> or C<cluster> namespace use the namespace as a prefix, eg:
+
+    $defn = $e->api('indices.create');
+    $defn = $e->api('cluster.node_stats');
+
+=head1 SEE ALSO
+
+=over
+
+=item *
+
+L<Elasticsearch::Util::API::Path>
+
+=item *
+
+L<Elasticsearch::Util::API::QS>
+
+=item *
+
+L<Elasticsearch::Client::Direct>
+
+=back

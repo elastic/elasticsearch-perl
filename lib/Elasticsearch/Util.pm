@@ -57,3 +57,5 @@ sub load_plugin {
 }
 
 1;
+
+# ABSTRACT: A utility class for internal use by Elasticsearch

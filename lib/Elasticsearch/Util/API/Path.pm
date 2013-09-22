@@ -116,4 +116,37 @@ sub metric_or_blank {
     delete $params->{indices};
     return ( 'indices', $metric );
 }
+
 1;
+
+__END__
+
+# ABSTRACT: A utility class for converting path templates into real paths
+
+=head1 DESCRIPTION
+
+This module converts path templates in L<Elasticsearch::Role::API> such as
+C</{index}/{type}/{id}> into real paths such as C</my_index/my_type/123>.
+
+=head1 EXPORTS
+
+=head2 C<path_init()>
+
+    use Elasticsearch::Util::API::Path qw(path_init);
+
+    $handler = path_init($template);
+    $path    = $handler->(\%params);
+
+The C<path_init()> sub accepts a path template and returns an anonymous sub
+which converts C<\%params> into a real path, removing the keys that it
+has used from C<%params>, eg:
+
+    $handler = path_init('/{indices}/_search');
+    $params  = { index => ['foo','bar'], size => 10 };
+    $path    = $handler->($params);
+
+Would result in:
+
+    $path:      '/foo,bar/_search';
+    $params:    { size => 10 };
+

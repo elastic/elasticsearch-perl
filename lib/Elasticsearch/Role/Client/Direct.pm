@@ -103,3 +103,49 @@ sub _install_api {
 }
 
 1;
+
+# ABSTRACT: Request parsing for Direct clients
+
+=head1 DESCRIPTION
+
+This role provides the single C<parse_request()> method for classes
+which need to parse an API definition from L<Elasticsearch::Role::API>
+and convert it into a request which can be passed to
+L<Elasticsearch::Transport/perform_request()>.
+
+=head1 METHODS
+
+=head2 C<perform_request()>
+
+    $request = $client->parse_request(\%defn,\%params);
+
+The C<%defn> is a definition returned by L<Elasticsearch::Role::API/api()>
+with an extra key C<name> which should be the name of the method that
+was called on the client.  For instance if the user calls C<< $client->search >>,
+then the C<name> should be C<"search">.
+
+C<parse_request()> will turn the parameters that have been passed in into
+a C<path> (via L<Elasticsearch::Util::API::Path/path_init()>), a query-string
+hash (via L<Elasticsearch::Util::API::QS/qs_init>) and will through a
+C<body> value directly.
+
+B<NOTE:> If a C<path> key is specified in the C<%params> then it will be used
+directly, instead of trying to build path from the path template.  Similarly,
+if a C<params> key is specified in the C<%params>, then it will be used
+as a basis for the query string hash.  For instance:
+
+    $client->perform_request(
+        {
+            method => 'GET',
+            name   => 'new_method'
+        },
+        {
+            path   => '/new/method',
+            params => { foo => 'bar' },
+            body   => \%body
+        }
+    );
+
+This makes it easy to add support for custom plugins or new functionality
+not yet supported by the released client.
+
