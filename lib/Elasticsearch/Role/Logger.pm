@@ -122,3 +122,86 @@ sub trace_comment {
 }
 
 1;
+
+# ABSTRACT: Provides common functionality to Logger implementations
+
+=head1 DESCRIPTION
+
+This role provides common functionality to Logger implementations, to enable
+the logging of events and the tracing of request-response conversations
+with Elasticsearch nodes.
+
+See L<Elasticsearch::Logger::LogAny> for the default implementation.
+
+=head1 CONFIGURATION
+
+=head2 C<log_to>
+
+Parameters passed to C<log_to> are used by L<Elasticsearch::Role::Logger>
+implementations to setup the L</log_handle()>.  See
+L<Elasticsearch::Logger::LogAny/log_to> for details.
+
+=head2 C<log_as>
+
+By default, events emitted by L</debug()>, L</info()>, L</warning()>,
+L</error()> and L</critical()> are logged to the L</log_handle()> under the
+category C<"elasticsearch.event">, which can be configured with C<log_as>.
+
+=head2 C<trace_to>
+
+Parameters passed to C<trace_to> are used by L<Elasticsearch::Role::Logger>
+implementations to setup the L</trace_handle()>. See
+L<Elasticsearch::Logger::LogAny/trace_to> for details.
+
+=head2 C<trace_as>
+
+By default, trace output emitted by L</trace_request()>, L</trace_response()>,
+L</trace_error()> and L</trace_comment()> are logged under the category
+C<elasticsearch.trace>, which can be configured with C<trace_as>.
+
+=head1 METHODS
+
+=head2 C<log_handle()>
+
+Returns an object which can handle the methods:
+C<debug()>, C<debugf()>, C<is_debug()>, C<info()>, C<infof()>, C<is_info()>,
+C<warning()>, C<warningf()>, C<is_warning()>, C<error()>, C<errorf()>,
+C<is_error()>, C<critical()>, C<criticalf()> and  C<is_critical()>.
+
+=head2 C<trace_handle()>
+
+Returns an object which can handle the methods:
+C<trace()>, C<tracef()> and C<is_trace()>.
+
+=head2 C<trace_request()>
+
+    $logger->trace_request($cxn,\%request);
+
+Accepts a Cxn object and request parameters and logs them if tracing is
+enabled.
+
+=head2 C<trace_response()>
+
+    $logger->trace_response($cxn,$code,$response,$took);
+
+Logs a successful HTTP response, where C<$code> is the HTTP status code,
+C<$response> is the HTTP body and C<$took> is the time the request
+took in seconds
+
+=head2 C<trace_error()>
+
+    $logger->trace_error($cxn,$error);
+
+Logs a failed HTTP response, where C<$error> is an L<Elasticsearch::Error>
+object.
+
+=head2 C<trace_comment()>
+
+    $logger->trace_comment($comment);
+
+Used to insert debugging comments into trace output.
+
+
+
+
+
