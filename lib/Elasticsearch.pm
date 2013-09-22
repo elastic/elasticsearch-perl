@@ -190,7 +190,7 @@ preferably the Java v7 from Sun.
 
 =head1 CREATING A NEW INSTANCE
 
-The L<new()> method returns a new L<client|Elasticsearch::Client::Direct>
+The L</new()> method returns a new L<client|Elasticsearch::Client::Direct>
 which can be used to run requests against the Elasticsearch cluster.
 
     use Elasticsearch;
@@ -223,7 +223,7 @@ Each C<node> can be a URL including a scheme, host, port, path and userinfo
 
     https://username:password@search.domain.com:443/prefix/path
 
-See L<TODO> for more on node specification.
+See L<Elasticsearch::Role::Cxn::HTTP/node> for more on node specification.
 
 =head2 C<cxn_pool>
 
@@ -234,47 +234,53 @@ where your cluster is. There are three choices:
 
 =over
 
-=item C<Static>
+=item * C<Static>
 
     $e = Elasticsearch->new(
         cxn_pool => 'Static'     # default
+        nodes    => [
+            'search1.domain.com:9200',
+            'search2.domain.com:9200'
+        ],
+    );
+
+The L<Static|Elasticsearch::CxnPool::Static> connection pool, which is the
+default, should be used when you don't have direct access to the Elasticsearch
+cluster, eg when you are accessing the cluster through a proxy.  See
+L<Elasticsearch::CxnPool::Static> for more.
+
+=item * C<Sniff>
+
+    $e = Elasticsearch->new(
+        cxn_pool => 'Sniff',
         nodes    => [
             'search1:9200',
             'search2:9200'
         ],
     );
 
-The L<Static|Elasticsearch::CxnPool::Static> connection pool, which is the
-default, should be used when you don't have direct access to the Elasticsearch
-cluster, eg when you are accessing the cluster through a proxy.  It
-round-robins through the nodes that you specified, and pings each node
-before it is used for  the first time, to ensure that it is responding.
-
-If any node fails, then all nodes are pinged before the next request to
-ensure that they are still alive and responding.  Failed nodes will be
-pinged regularly to check if they have recovered.
-
-=item C<Sniff>
-
 The L<Sniff|Elasticsearch::CxnPool::Sniff> connection pool should be used
 when you B<do> have direct access to the Elasticsearch cluster, eg when
 your web servers and Elasticsearch servers are on the same network.
 The nodes that you specify are used to I<discover> the cluster, which is
 then I<sniffed> to find the current list of live nodes that the cluster
-knows about.
-
-This sniff process is repeated regularly, or whenever a node fails,
-to update the list of healthy nodes.  So if you add more nodes to your
-cluster, they will be auto-discovered during a sniff.
+knows about. See L<Elasticsearch::CxnPool::Sniff>.
 
 =item C<Static::NoPing>
 
+    $e = Elasticsearch->new(
+        cxn_pool => 'Static::NoPing'
+        nodes    => [
+            'proxy1.domain.com:80',
+            'proxy2.domain.com:80'
+        ],
+    );
+
 The L<Static::NoPing|Elasticsearch::CxnPool::Static::NoPing> connection
-pool (like the C<Static> pool) should be used when your access to
-the cluster is limited.  However, the C<Static> pool needs to be
-able to ping nodes in the cluster, with a C<HEAD /> request.  If you
-can't ping your nodes, then you should use the C<Static::NoPing>
-connection pool instead.
+pool should be used when your access to a remote cluster is so limited
+that you cannot ping individual nodes with a C<HEAD /> request.
+
+See L<Elasticsearch::CxnPool::Static::NoPing> for more.
 
 =back
 
@@ -299,7 +305,7 @@ for more information.
 
 =head2 Other
 
-Other arguments are explained in the respective L<module docs|MODULES>.
+Other arguments are explained in the respective L<module docs|/MODULES>.
 
 =head1 RUNNING REQUESTS
 
