@@ -113,7 +113,8 @@ sub api {
     'get_source' => {
         doc  => '/api/get/',
         path => '{index}/{type|all}/{id}/_source',
-        qs   => [ 'parent', 'preference', 'realtime', 'refresh', 'routing' ],
+        qs   => [ 'parent', 'preference', 'realtime', 'refresh', 'routing','_source_include',
+            '_source_exclude' ],
     },
 
     'index' => {
