@@ -179,7 +179,8 @@ sub run_test {
     my ( $name, $type, $expect, $got ) = @_;
     my $handler = $Test_Types{$type}
         or die "Unknown test type ($type)";
-    $handler->( $got, $expect, $name );
+    $handler->( $got, $expect, $name )
+        || $es->logger->trace_comment("FAILED: $name");
 }
 
 #===================================
