@@ -1,7 +1,7 @@
 package Elasticsearch::Role::Cxn;
 
 use Moo::Role;
-with 'Elasticsearch::Role::Error';
+use Elasticsearch::Util qw(throw);
 use List::Util qw(min);
 use Try::Tiny;
 use URI();

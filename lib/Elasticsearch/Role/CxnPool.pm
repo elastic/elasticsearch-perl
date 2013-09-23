@@ -1,7 +1,6 @@
 package Elasticsearch::Role::CxnPool;
 
 use Moo::Role;
-with 'Elasticsearch::Role::Error';
 use Elasticsearch::Util qw(parse_params);
 use namespace::autoclean;
 

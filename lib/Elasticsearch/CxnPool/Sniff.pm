@@ -4,7 +4,7 @@ use Moo;
 with 'Elasticsearch::Role::CxnPool';
 use namespace::autoclean;
 
-use Elasticsearch::Util qw(parse_params);
+use Elasticsearch::Util qw(parse_params throw);
 use List::Util qw(min);
 use Try::Tiny;
 
@@ -128,7 +128,6 @@ sub should_accept_node { return $_[1] }
 #===================================
 
 1;
-
 
 # ABSTRACT: A CxnPool for connecting to a local cluster with a dynamic node list
 

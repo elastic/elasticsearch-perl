@@ -1,7 +1,6 @@
 package Elasticsearch::Logger::LogAny;
 
 use Moo;
-with 'Elasticsearch::Role::Error';
 with 'Elasticsearch::Role::Logger';
 use Elasticsearch::Util qw(parse_params to_list);
 use namespace::autoclean;

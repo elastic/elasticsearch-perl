@@ -1,7 +1,6 @@
 package Elasticsearch;
 
 use Moo;
-with 'Elasticsearch::Role::Error';
 use namespace::autoclean;
 
 our $VERSION = '0.04';

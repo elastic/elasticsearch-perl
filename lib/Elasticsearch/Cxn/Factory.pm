@@ -1,7 +1,6 @@
 package Elasticsearch::Cxn::Factory;
 
 use Moo;
-with 'Elasticsearch::Role::Error';
 use namespace::autoclean;
 use Elasticsearch::Util qw(parse_params load_plugin);
 

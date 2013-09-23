@@ -3,7 +3,7 @@ package Elasticsearch::Role::Cxn::HTTP;
 use Moo::Role;
 with 'Elasticsearch::Role::Cxn';
 use URI();
-use Elasticsearch::Util qw(parse_params);
+use Elasticsearch::Util qw(parse_params throw);
 use namespace::autoclean;
 
 has 'scheme'             => ( is => 'ro' );
@@ -52,7 +52,7 @@ sub BUILDARGS {
         || $params->{port}
         || ( $scheme eq 'http' ? 80 : 443 );
     my $path = $node->{path} || $params->{path_prefix} || '';
-    $path=~s{^/?}{/}g;
+    $path =~ s{^/?}{/}g;
     $path =~ s{/+$}{};
 
     my %default_headers = %{ $params->{default_headers} || {} };

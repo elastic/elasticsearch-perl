@@ -2,6 +2,7 @@ package Elasticsearch::CxnPool::Static::NoPing;
 
 use Moo;
 with 'Elasticsearch::Role::CxnPool';
+use Elasticsearch::Util qw(throw);
 use namespace::autoclean;
 
 has 'max_retries' => ( is => 'lazy' );

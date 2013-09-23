@@ -1,12 +1,19 @@
 package Elasticsearch::Util;
 
 use Moo;
-with 'Elasticsearch::Role::Error';
-
+use Elasticsearch::Error();
 use Scalar::Util qw(blessed);
 use Module::Runtime qw(compose_module_name is_module_name use_module);
-use Sub::Exporter -setup =>
-    { exports => [qw(parse_params to_list load_plugin)] };
+use Sub::Exporter -setup => {
+    exports => [ qw(
+            parse_params
+            to_list
+            load_plugin
+            throw
+            upgrade_error
+            )
+    ]
+};
 
 #===================================
 sub to_list {
@@ -54,6 +61,22 @@ sub load_plugin {
     }
     use_module( $class, $version );
     return $class;
+}
+
+#===================================
+sub throw {
+#===================================
+    my ( $type, $msg, $vars ) = @_;
+    die Elasticsearch::Error->new( $type, $msg, $vars, 1 );
+}
+
+#===================================
+sub upgrade_error {
+#===================================
+    my ( $error, $vars ) = @_;
+    return ref($error) && $error->isa('Elasticsearch::Error')
+        ? $error
+        : Elasticsearch::Error->new( "Internal", $error, $vars || {}, 1 );
 }
 
 1;

@@ -3,6 +3,7 @@ package Elasticsearch::Serializer::JSON;
 use Moo;
 
 use namespace::autoclean;
+use Elasticsearch::Util qw(throw);
 use JSON();
 use Try::Tiny;
 
