@@ -42,6 +42,7 @@ sub _index {
 sub _build_cluster {
 #===================================
     my ( $self, $name ) = @_;
+    require Elasticsearch::Client::Direct::Cluster;
     Elasticsearch::Client::Direct::Cluster->new(
         {   transport => $self->transport,
             logger    => $self->logger
@@ -53,6 +54,7 @@ sub _build_cluster {
 sub _build_indices {
 #===================================
     my ( $self, $name ) = @_;
+    require Elasticsearch::Client::Direct::Indices;
     Elasticsearch::Client::Direct::Indices->new(
         {   transport => $self->transport,
             logger    => $self->logger
@@ -60,20 +62,7 @@ sub _build_indices {
     );
 }
 
-#===================================
-package Elasticsearch::Client::Direct::Cluster;
-#===================================
-use Moo;
-with 'Elasticsearch::Role::API';
-with 'Elasticsearch::Role::Client::Direct';
-__PACKAGE__->_install_api('cluster');
+1;
 
-#===================================
-package Elasticsearch::Client::Direct::Indices;
-#===================================
-use Moo;
-with 'Elasticsearch::Role::API';
-with 'Elasticsearch::Role::Client::Direct';
-__PACKAGE__->_install_api('indices');
 
 1;
