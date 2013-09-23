@@ -38,8 +38,8 @@ The C<create()> method is used to creat an index. Optionally, index
 settings, type mappings and index warmers can be added at the same time.
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<master_timeout>,
+    C<timeout>
 
 See the L<create index docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index/>
 for more information.
@@ -65,8 +65,8 @@ for more information.
 The C<delete()> method deletes the specified indices.
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<master_timeout>,
+    C<timeout>
 
 See the L<delete index docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-index/>
 for more information.
@@ -81,8 +81,8 @@ The C<close()> method closes the specified indices, reducing resource usage
 but allowing them to be reopened later.
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<master_timeout>,
+    C<timeout>
 
 See the L<close index docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/>
 for more information.
@@ -96,8 +96,8 @@ for more information.
 The C<open()> method opens closed indices.
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<master_timeout>,
+    C<timeout>
 
 See the L<open index docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/>
 for more information.
@@ -112,15 +112,15 @@ The C<clear_cache()> method is used to clear the in-memory filter, fielddata,
 or id cache for the specified indices.
 
 Query string parameters:
-    L<fielddata|Elasticsearch::Util::API::QS/fielddata>,
-    L<fields|Elasticsearch::Util::API::QS/fields>,
-    L<filter|Elasticsearch::Util::API::QS/filter>,
-    L<filter_cache|Elasticsearch::Util::API::QS/filter_cache>,
-    L<filter_keys|Elasticsearch::Util::API::QS/filter_keys>,
-    L<id|Elasticsearch::Util::API::QS/id>,
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>,
-    L<index|Elasticsearch::Util::API::QS/index>,
-    L<recycler|Elasticsearch::Util::API::QS/recycler>
+    C<fielddata>,
+    C<fields>,
+    C<filter>,
+    C<filter_cache>,
+    C<filter_keys>,
+    C<id>,
+    C<ignore_indices>,
+    C<index>,
+    C<recycler>
 
 See the L<clear_cache docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-clearcache/>
 for more information.
@@ -136,7 +136,7 @@ allowing recent changes to become visible to search. This process normally
 happens automatically once every second by default.
 
 Query string parameters:
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>
+    C<ignore_indices>
 
 See the L<refresh index docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-refresh/>
 for more information.
@@ -152,10 +152,10 @@ written to disk with an C<fsync>, and clears out the transaction log.
 This process normally happens automatically.
 
 Query string parameters:
-    L<force|Elasticsearch::Util::API::QS/force>,
-    L<full|Elasticsearch::Util::API::QS/full>,
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>
+    C<force>,
+    C<full>,
+    C<ignore_indices>,
+    C<refresh>
 
 See the L<flush index docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-flush/>
 for more information.
@@ -171,12 +171,12 @@ C<max_num_segments>.  This is a very heavy operation and should only be run
 with care, and only on indices that are no longer being updated.
 
 Query string parameters:
-    L<flush|Elasticsearch::Util::API::QS/flush>,
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>,
-    L<max_num_segments|Elasticsearch::Util::API::QS/max_num_segments>,
-    L<only_expunge_deletes|Elasticsearch::Util::API::QS/only_expunge_deletes>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>,
-    L<wait_for_merge|Elasticsearch::Util::API::QS/wait_for_merge>
+    C<flush>,
+    C<ignore_indices>,
+    C<max_num_segments>,
+    C<only_expunge_deletes>,
+    C<refresh>,
+    C<wait_for_merge>
 
 See the L<optimize index docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-optimize/>
 for more information.
@@ -223,9 +223,9 @@ For instance:
     );
 
 Query string parameters:
-    L<ignore_conflicts|Elasticsearch::Util::API::QS/ignore_conflicts>,
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<ignore_conflicts>,
+    C<master_timeout>,
+    C<timeout>
 
 See the L<put_mapping docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-put-mapping/>
 for more information.
@@ -255,7 +255,7 @@ The C<exists_type()> method checks for the existence of all specified types
 in all specified indices, and returns C<1> or the empty string.
 
 Query string parameters:
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>
+    C<ignore_indices>
 
 See the L<exists_type docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-types-exists/>
 for more information.
@@ -271,7 +271,7 @@ The C<delete_mapping()> method deletes the type mappings (and all documents of
 that type) in all specified indices.
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>
+    C<master_timeout>
 
 See the L<delete_mapping docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-mapping/>
 for more information.
@@ -297,8 +297,8 @@ index aliases atomically. For instance:
     );
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<master_timeout>,
+    C<timeout>
 
 See the L<update_aliases docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/>
 for more information.
@@ -313,7 +313,7 @@ The C<get_aliases()> method returns a list of aliases per index for all
 the specified indices.
 
 Query string parameters:
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<timeout>
 
 See the L<get_aliases docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/>
 for more information.
@@ -338,8 +338,8 @@ The C<put_alias()> method creates a single index alias. For instance:
     );
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<master_timeout>,
+    C<timeout>
 
 See the L<put_alias docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/>
 for more information.
@@ -355,7 +355,7 @@ The C<get_alias()> method returns the aliase defintions for the specified
 aliases in the specified indices.
 
 Query string parameters:
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>
+    C<ignore_indices>
 
 See the L<get_alias docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/>
 for more information.
@@ -371,7 +371,7 @@ The C<exists_alias()> method returns C<1> or the empty string depending on
 whether the specified aliases exist in the specified indices.
 
 Query string parameters:
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>
+    C<ignore_indices>
 
 See the L<exists_alias docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/>
 for more information.
@@ -386,8 +386,8 @@ for more information.
 The C<delete_alias()> method deletes a single alias in a a single index.
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<master_timeout>,
+    C<timeout>
 
 See the L<delete_alias docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/>
 for more information.
@@ -412,7 +412,7 @@ indices or all indices. For instance:
     );
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>
+    C<master_timeout>
 
 See the L<put_settings docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-update-settings/>
 for more information.
@@ -441,9 +441,9 @@ for more information.
 The C<put_template()> method is used to create or update index templates.
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<order|Elasticsearch::Util::API::QS/order>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<master_timeout>,
+    C<order>,
+    C<timeout>
 
 See the L<put_template docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/>
 for more information.
@@ -469,8 +469,8 @@ for more information.
 The C<delete_template()> method is used to delete a named template.
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<master_timeout>,
+    C<timeout>
 
 See the L<delete_template docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/>
 for more information.
@@ -500,7 +500,7 @@ to user searches.  For instance:
     );
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>
+    C<master_timeout>
 
 See the L<put_warmer docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/>
 for more information.
@@ -527,7 +527,7 @@ for more information.
 The C<delete_warmer()> method is used to delete warmers by name.
 
 Query string parameters:
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>
+    C<master_timeout>
 
 See the L<delete_warmer docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/>
 for more information.
@@ -545,26 +545,26 @@ indices.  Use the query string parameters to specify what information you
 want returned.
 
 Query string parameters:
-    L<all|Elasticsearch::Util::API::QS/all>,
-    L<clear|Elasticsearch::Util::API::QS/clear>,
-    L<completion|Elasticsearch::Util::API::QS/completion>,
-    L<completion_fields|Elasticsearch::Util::API::QS/completion_fields>,
-    L<docs|Elasticsearch::Util::API::QS/docs>,
-    L<fielddata|Elasticsearch::Util::API::QS/fielddata>,
-    L<fielddata_fields|Elasticsearch::Util::API::QS/fielddata_fields>,
-    L<fields|Elasticsearch::Util::API::QS/fields>,
-    L<filter_cache|Elasticsearch::Util::API::QS/filter_cache>,
-    L<flush|Elasticsearch::Util::API::QS/flush>,
-    L<get|Elasticsearch::Util::API::QS/get>,
-    L<groups|Elasticsearch::Util::API::QS/groups>,
-    L<id_cache|Elasticsearch::Util::API::QS/id_cache>,
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>,
-    L<indexing|Elasticsearch::Util::API::QS/indexing>,
-    L<merge|Elasticsearch::Util::API::QS/merge>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>,
-    L<search|Elasticsearch::Util::API::QS/search>,
-    L<store|Elasticsearch::Util::API::QS/store>,
-    L<warmer|Elasticsearch::Util::API::QS/warmer>
+    C<all>,
+    C<clear>,
+    C<completion>,
+    C<completion_fields>,
+    C<docs>,
+    C<fielddata>,
+    C<fielddata_fields>,
+    C<fields>,
+    C<filter_cache>,
+    C<flush>,
+    C<get>,
+    C<groups>,
+    C<id_cache>,
+    C<ignore_indices>,
+    C<indexing>,
+    C<merge>,
+    C<refresh>,
+    C<search>,
+    C<store>,
+    C<warmer>
 
 See the L<stats docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-stats/>
 for more information.
@@ -578,9 +578,9 @@ for more information.
 Deprecated.
 
 Query string parameters:
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>,
-    L<recovery|Elasticsearch::Util::API::QS/recovery>,
-    L<snapshot|Elasticsearch::Util::API::QS/snapshot>
+    C<ignore_indices>,
+    C<recovery>,
+    C<snapshot>
 
 See the L<status docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-status/>
 for more information.
@@ -595,7 +595,7 @@ The C<segments()> method is used to return information about the segments
 that an index contains.
 
 Query string parameters:
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>
+    C<ignore_indices>
 
 See the L<segments docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-segments/>
 for more information.
@@ -615,14 +615,14 @@ with a particular index or field - and returns the tokens.  Very useful
 for debugging analyzer configurations.
 
 Query string parameters:
-    L<analyzer|Elasticsearch::Util::API::QS/analyzer>,
-    L<field|Elasticsearch::Util::API::QS/field>,
-    L<filters|Elasticsearch::Util::API::QS/filters>,
-    L<format|Elasticsearch::Util::API::QS/format>,
-    L<index|Elasticsearch::Util::API::QS/index>,
-    L<prefer_local|Elasticsearch::Util::API::QS/prefer_local>,
-    L<text|Elasticsearch::Util::API::QS/text>,
-    L<tokenizer|Elasticsearch::Util::API::QS/tokenizer>
+    C<analyzer>,
+    C<field>,
+    C<filters>,
+    C<format>,
+    C<index>,
+    C<prefer_local>,
+    C<text>,
+    C<tokenizer>
 
 See the L<analyze docs|http://www.elasticsearch.org/guide/reference/api/admin-indices-analyze/>
 for more information.
@@ -640,10 +640,10 @@ to C<true>, in which case it includes an execution plan in the output.
 
 
 Query string parameters:
-    L<explain|Elasticsearch::Util::API::QS/explain>,
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>,
-    L<q|Elasticsearch::Util::API::QS/q>,
-    L<source|Elasticsearch::Util::API::QS/source>
+    C<explain>,
+    C<ignore_indices>,
+    C<q>,
+    C<source>
 
 See the L<validate_query docs|http://www.elasticsearch.org/guide/reference/api/validate/>
 for more information.

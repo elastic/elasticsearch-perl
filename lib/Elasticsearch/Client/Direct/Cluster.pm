@@ -31,14 +31,14 @@ health, returning C<red>, C<yellow> or C<green> to indicate the state
 of the cluster, indices or shards.
 
 Query string parameters:
-    L<level|Elasticsearch::Util::API::QS/level>,
-    L<local|Elasticsearch::Util::API::QS/local>,
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>,
-    L<wait_for_active_shards|Elasticsearch::Util::API::QS/wait_for_active_shards>,
-    L<wait_for_nodes|Elasticsearch::Util::API::QS/wait_for_nodes>,
-    L<wait_for_relocating_shards|Elasticsearch::Util::API::QS/wait_for_relocating_shards>,
-    L<wait_for_status|Elasticsearch::Util::API::QS/wait_for_status>
+    C<level>,
+    C<local>,
+    C<master_timeout>,
+    C<timeout>,
+    C<wait_for_active_shards>,
+    C<wait_for_nodes>,
+    C<wait_for_relocating_shards>,
+    C<wait_for_status>
 
 See the L<cluster health docs|http://www.elasticsearch.org/guide/reference/api/admin-cluster-health/>
 for more information.
@@ -55,18 +55,18 @@ cluster, such as the configured maximum number of file handles, the maximum
 configured heap size or the threadpool settings.
 
 Query string parameters:
-    L<all|Elasticsearch::Util::API::QS/all>,
-    L<clear|Elasticsearch::Util::API::QS/clear>,
-    L<http|Elasticsearch::Util::API::QS/http>,
-    L<jvm|Elasticsearch::Util::API::QS/jvm>,
-    L<network|Elasticsearch::Util::API::QS/network>,
-    L<os|Elasticsearch::Util::API::QS/os>,
-    L<plugin|Elasticsearch::Util::API::QS/plugin>,
-    L<process|Elasticsearch::Util::API::QS/process>,
-    L<settings|Elasticsearch::Util::API::QS/settings>,
-    L<thread_pool|Elasticsearch::Util::API::QS/thread_pool>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>,
-    L<transport|Elasticsearch::Util::API::QS/transport>
+    C<all>,
+    C<clear>,
+    C<http>,
+    C<jvm>,
+    C<network>,
+    C<os>,
+    C<plugin>,
+    C<process>,
+    C<settings>,
+    C<thread_pool>,
+    C<timeout>,
+    C<transport>
 
 See the L<node_info docs|http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-info/>
 for more information.
@@ -94,18 +94,18 @@ method:
     );
 
 Query string parameters:
-    L<all|Elasticsearch::Util::API::QS/all>,
-    L<clear|Elasticsearch::Util::API::QS/clear>,
-    L<fields|Elasticsearch::Util::API::QS/fields>,
-    L<fs|Elasticsearch::Util::API::QS/fs>,
-    L<http|Elasticsearch::Util::API::QS/http>,
-    L<indices|Elasticsearch::Util::API::QS/indices>,
-    L<jvm|Elasticsearch::Util::API::QS/jvm>,
-    L<network|Elasticsearch::Util::API::QS/network>,
-    L<os|Elasticsearch::Util::API::QS/os>,
-    L<process|Elasticsearch::Util::API::QS/process>,
-    L<thread_pool|Elasticsearch::Util::API::QS/thread_pool>,
-    L<transport|Elasticsearch::Util::API::QS/transport>
+    C<all>,
+    C<clear>,
+    C<fields>,
+    C<fs>,
+    C<http>,
+    C<indices>,
+    C<jvm>,
+    C<network>,
+    C<os>,
+    C<process>,
+    C<thread_pool>,
+    C<transport>
 
 See the L<node_stats docs|http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-stats/>
 for more information.
@@ -120,10 +120,10 @@ The C<hot_threads()> method is a useful tool for diagnosing busy nodes. It
 takes a snapshot of which threads are consuming the most CPU.
 
 Query string parameters:
-    L<interval|Elasticsearch::Util::API::QS/interval>,
-    L<snapshots|Elasticsearch::Util::API::QS/snapshots>,
-    L<threads|Elasticsearch::Util::API::QS/threads>,
-    L<type|Elasticsearch::Util::API::QS/type>
+    C<interval>,
+    C<snapshots>,
+    C<threads>,
+    C<type>
 
 See the L<hot_threads docs|http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-hot-threads/>
 for more information.
@@ -165,14 +165,14 @@ The C<state()> method returns the current cluster state from the master node,
 or from the responding node if C<local> is set to C<true>.
 
 Query string parameters:
-    L<filter_blocks|Elasticsearch::Util::API::QS/filter_blocks>,
-    L<filter_index_templates|Elasticsearch::Util::API::QS/filter_index_templates>,
-    L<filter_indices|Elasticsearch::Util::API::QS/filter_indices>,
-    L<filter_metadata|Elasticsearch::Util::API::QS/filter_metadata>,
-    L<filter_nodes|Elasticsearch::Util::API::QS/filter_nodes>,
-    L<filter_routing_table|Elasticsearch::Util::API::QS/filter_routing_table>,
-    L<local|Elasticsearch::Util::API::QS/local>,
-    L<master_timeout|Elasticsearch::Util::API::QS/master_timeout>
+    C<filter_blocks>,
+    C<filter_index_templates>,
+    C<filter_indices>,
+    C<filter_metadata>,
+    C<filter_nodes>,
+    C<filter_routing_table>,
+    C<local>,
+    C<master_timeout>
 
 See the L<cluster state docs|http://www.elasticsearch.org/guide/reference/api/admin-cluster-state/>
 for more information.
@@ -207,8 +207,8 @@ which changes should be made. For instance:
     );
 
 Query string parameters:
-    L<dry_run|Elasticsearch::Util::API::QS/dry_run>,
-    L<filter_metadata|Elasticsearch::Util::API::QS/filter_metadata>
+    C<dry_run>,
+    C<filter_metadata>
 
 See the L<reroute docs|http://www.elasticsearch.org/guide/reference/api/admin-cluster-reroute/>
 for more information.
@@ -224,8 +224,8 @@ The C<shutdown()> method is used to shutdown one or more nodes, or the whole
 cluster.
 
 Query string parameters:
-    L<delay|Elasticsearch::Util::API::QS/delay>,
-    L<exit|Elasticsearch::Util::API::QS/exit>
+    C<delay>,
+    C<exit>
 
 See the L<shutdown docs|http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-shutdown/>
 for more information.

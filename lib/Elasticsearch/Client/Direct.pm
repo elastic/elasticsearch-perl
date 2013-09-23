@@ -264,18 +264,18 @@ The C<index()> method is used to index a new document or to reindex
 an existing document.
 
 Query string parameters:
-    L<consistency|Elasticsearch::Util::API::QS/consistency>,
-    L<op_type|Elasticsearch::Util::API::QS/op_type>,
-    L<parent|Elasticsearch::Util::API::QS/parent>,
-    L<percolate|Elasticsearch::Util::API::QS/percolate>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>,
-    L<replication|Elasticsearch::Util::API::QS/replication>,
-    L<routing|Elasticsearch::Util::API::QS/routing>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>,
-    L<timestamp|Elasticsearch::Util::API::QS/timestamp>,
-    L<ttl|Elasticsearch::Util::API::QS/ttl>,
-    L<version|Elasticsearch::Util::API::QS/version>,
-    L<version_type|Elasticsearch::Util::API::QS/version_type>
+    C<consistency>,
+    C<op_type>,
+    C<parent>,
+    C<percolate>,
+    C<refresh>,
+    C<replication>,
+    C<routing>,
+    C<timeout>,
+    C<timestamp>,
+    C<ttl>,
+    C<version>,
+    C<version_type>
 
 See the L<index docs|http://www.elasticsearch.org/guide/reference/api/index_/>
 for more information.
@@ -295,18 +295,18 @@ that it will throw a C<Conflict> error if a document with the same
 C<index>, C<type> and C<id> already exists.
 
 Query string parameters:
-    L<consistency|Elasticsearch::Util::API::QS/consistency>,
-    L<op_type|Elasticsearch::Util::API::QS/op_type>,
-    L<parent|Elasticsearch::Util::API::QS/parent>,
-    L<percolate|Elasticsearch::Util::API::QS/percolate>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>,
-    L<replication|Elasticsearch::Util::API::QS/replication>,
-    L<routing|Elasticsearch::Util::API::QS/routing>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>,
-    L<timestamp|Elasticsearch::Util::API::QS/timestamp>,
-    L<ttl|Elasticsearch::Util::API::QS/ttl>,
-    L<version|Elasticsearch::Util::API::QS/version>,
-    L<version_type|Elasticsearch::Util::API::QS/version_type>
+    C<consistency>,
+    C<op_type>,
+    C<parent>,
+    C<percolate>,
+    C<refresh>,
+    C<replication>,
+    C<routing>,
+    C<timeout>,
+    C<timestamp>,
+    C<ttl>,
+    C<version>,
+    C<version_type>
 
 See the L<create docs|http://www.elasticsearch.org/guide/reference/api/create/>
 for more information.
@@ -323,15 +323,15 @@ The C<get()> method will retrieve the document with the specified
 C<index>, C<type> and C<id>, or will throw a C<Missing> error.
 
 Query string parameters:
-    L<_source|Elasticsearch::Util::API::QS/_source>,
-    L<_source_exclude|Elasticsearch::Util::API::QS/_source_exclude>,
-    L<_source_include|Elasticsearch::Util::API::QS/_source_include>,
-    L<fields|Elasticsearch::Util::API::QS/fields>,
-    L<parent|Elasticsearch::Util::API::QS/parent>,
-    L<preference|Elasticsearch::Util::API::QS/preference>,
-    L<realtime|Elasticsearch::Util::API::QS/realtime>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>,
-    L<routing|Elasticsearch::Util::API::QS/routing>
+    C<_source>,
+    C<_source_exclude>,
+    C<_source_include>,
+    C<fields>,
+    C<parent>,
+    C<preference>,
+    C<realtime>,
+    C<refresh>,
+    C<routing>
 
 See the L<get docs|http://www.elasticsearch.org/guide/reference/api/get/>
 for more information.
@@ -350,13 +350,13 @@ in the L</index()> method) instead of returning the C<_source> field
 plus the document metadata, ie the C<_index>, C<_type> etc.
 
 Query string parameters:
-    L<_source_exclude|Elasticsearch::Util::API::QS/_source_exclude>,
-    L<_source_include|Elasticsearch::Util::API::QS/_source_include>,
-    L<parent|Elasticsearch::Util::API::QS/parent>,
-    L<preference|Elasticsearch::Util::API::QS/preference>,
-    L<realtime|Elasticsearch::Util::API::QS/realtime>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>,
-    L<routing|Elasticsearch::Util::API::QS/routing>
+    C<_source_exclude>,
+    C<_source_include>,
+    C<parent>,
+    C<preference>,
+    C<realtime>,
+    C<refresh>,
+    C<routing>
 
 See the L<get_source docs|http://www.elasticsearch.org/guide/reference/api/get/>
 for more information.
@@ -373,11 +373,11 @@ The C<exists()> method returns C<1> if a document with the specified
 C<index>, C<type> and C<id> exists, or an empty string if it doesn't.
 
 Query string parameters:
-    L<parent|Elasticsearch::Util::API::QS/parent>,
-    L<preference|Elasticsearch::Util::API::QS/preference>,
-    L<realtime|Elasticsearch::Util::API::QS/realtime>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>,
-    L<routing|Elasticsearch::Util::API::QS/routing>
+    C<parent>,
+    C<preference>,
+    C<realtime>,
+    C<refresh>,
+    C<routing>
 
 See the L<exists docs|http://www.elasticsearch.org/guide/reference/api/get/>
 for more information.
@@ -394,14 +394,14 @@ The C<delete()> method will delete the document with the specified
 C<index>, C<type> and C<id>, or will throw a C<Missing> error.
 
 Query string parameters:
-    L<consistency|Elasticsearch::Util::API::QS/consistency>,
-    L<parent|Elasticsearch::Util::API::QS/parent>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>,
-    L<replication|Elasticsearch::Util::API::QS/replication>,
-    L<routing|Elasticsearch::Util::API::QS/routing>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>,
-    L<version|Elasticsearch::Util::API::QS/version>,
-    L<version_type|Elasticsearch::Util::API::QS/version_type>
+    C<consistency>,
+    C<parent>,
+    C<refresh>,
+    C<replication>,
+    C<routing>,
+    C<timeout>,
+    C<version>,
+    C<version_type>
 
 See the L<delete docs|http://www.elasticsearch.org/guide/reference/api/delete/>
 for more information.
@@ -443,22 +443,22 @@ C<index>, C<type> and C<id> if it exists. Updates can be performed either by:
 =back
 
 Query string parameters:
-    L<consistency|Elasticsearch::Util::API::QS/consistency>,
-    L<fields|Elasticsearch::Util::API::QS/fields>,
-    L<lang|Elasticsearch::Util::API::QS/lang>,
-    L<parent|Elasticsearch::Util::API::QS/parent>,
-    L<percolate|Elasticsearch::Util::API::QS/percolate>,
-    L<realtime|Elasticsearch::Util::API::QS/realtime>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>,
-    L<replication|Elasticsearch::Util::API::QS/replication>,
-    L<retry_on_conflict|Elasticsearch::Util::API::QS/retry_on_conflict>,
-    L<routing|Elasticsearch::Util::API::QS/routing>,
-    L<script|Elasticsearch::Util::API::QS/script>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>,
-    L<timestamp|Elasticsearch::Util::API::QS/timestamp>,
-    L<ttl|Elasticsearch::Util::API::QS/ttl>,
-    L<version|Elasticsearch::Util::API::QS/version>,
-    L<version_type|Elasticsearch::Util::API::QS/version_type>
+    C<consistency>,
+    C<fields>,
+    C<lang>,
+    C<parent>,
+    C<percolate>,
+    C<realtime>,
+    C<refresh>,
+    C<replication>,
+    C<retry_on_conflict>,
+    C<routing>,
+    C<script>,
+    C<timeout>,
+    C<timestamp>,
+    C<ttl>,
+    C<version>,
+    C<version_type>
 
 See the L<update docs|http://www.elasticsearch.org/guide/reference/api//>
 for more information.
@@ -541,10 +541,10 @@ Each action is performed separately. One failed action will not
 cause the others to fail as well.
 
 Query string parameters:
-    L<consistency|Elasticsearch::Util::API::QS/consistency>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>,
-    L<replication|Elasticsearch::Util::API::QS/replication>,
-    L<type|Elasticsearch::Util::API::QS/type>
+    C<consistency>,
+    C<refresh>,
+    C<replication>,
+    C<type>
 
 See the L<bulk docs|http://www.elasticsearch.org/guide/reference/api/bulk/>
 for more information.
@@ -587,13 +587,13 @@ C<ids> of the documents to retrieve:
     );
 
 Query string parameters:
-    L<_source|Elasticsearch::Util::API::QS/_source>,
-    L<_source_exclude|Elasticsearch::Util::API::QS/_source_exclude>,
-    L<_source_include|Elasticsearch::Util::API::QS/_source_include>,
-    L<fields|Elasticsearch::Util::API::QS/fields>,
-    L<preference|Elasticsearch::Util::API::QS/preference>,
-    L<realtime|Elasticsearch::Util::API::QS/realtime>,
-    L<refresh|Elasticsearch::Util::API::QS/refresh>
+    C<_source>,
+    C<_source_exclude>,
+    C<_source_include>,
+    C<fields>,
+    C<preference>,
+    C<realtime>,
+    C<refresh>
 
 See the L<mget docs|http://www.elasticsearch.org/guide/reference/api/multi-get/>
 for more information.
@@ -623,16 +623,16 @@ query.  For instance, to delete all documents from 2012:
     );
 
 Query string parameters:
-    L<analyzer|Elasticsearch::Util::API::QS/analyzer>,
-    L<consistency|Elasticsearch::Util::API::QS/consistency>,
-    L<default_operator|Elasticsearch::Util::API::QS/default_operator>,
-    L<df|Elasticsearch::Util::API::QS/df>,
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>,
-    L<q|Elasticsearch::Util::API::QS/q>,
-    L<replication|Elasticsearch::Util::API::QS/replication>,
-    L<routing|Elasticsearch::Util::API::QS/routing>,
-    L<source|Elasticsearch::Util::API::QS/source>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>
+    C<analyzer>,
+    C<consistency>,
+    C<default_operator>,
+    C<df>,
+    C<ignore_indices>,
+    C<q>,
+    C<replication>,
+    C<routing>,
+    C<source>,
+    C<timeout>
 
 See the L<delete_by_query docs|http://www.elasticsearch.org/guide/reference/api/delete-by-query/>
 for more information.
@@ -681,35 +681,35 @@ L<request body|http://www.elasticsearch.org/guide/reference/api/search/request-b
     );
 
 Query string parameters:
-    L<_source|Elasticsearch::Util::API::QS/_source>,
-    L<_source_exclude|Elasticsearch::Util::API::QS/_source_exclude>,
-    L<_source_include|Elasticsearch::Util::API::QS/_source_include>,
-    L<analyze_wildcard|Elasticsearch::Util::API::QS/analyze_wildcard>,
-    L<analyzer|Elasticsearch::Util::API::QS/analyzer>,
-    L<default_operator|Elasticsearch::Util::API::QS/default_operator>,
-    L<df|Elasticsearch::Util::API::QS/df>,
-    L<explain|Elasticsearch::Util::API::QS/explain>,
-    L<fields|Elasticsearch::Util::API::QS/fields>,
-    L<from|Elasticsearch::Util::API::QS/from>,
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>,
-    L<indices_boost|Elasticsearch::Util::API::QS/indices_boost>,
-    L<lenient|Elasticsearch::Util::API::QS/lenient>,
-    L<lowercase_expanded_terms|Elasticsearch::Util::API::QS/lowercase_expanded_terms>,
-    L<preference|Elasticsearch::Util::API::QS/preference>,
-    L<q|Elasticsearch::Util::API::QS/q>,
-    L<routing|Elasticsearch::Util::API::QS/routing>,
-    L<scroll|Elasticsearch::Util::API::QS/scroll>,
-    L<search_type|Elasticsearch::Util::API::QS/search_type>,
-    L<size|Elasticsearch::Util::API::QS/size>,
-    L<sort|Elasticsearch::Util::API::QS/sort>,
-    L<source|Elasticsearch::Util::API::QS/source>,
-    L<stats|Elasticsearch::Util::API::QS/stats>,
-    L<suggest_field|Elasticsearch::Util::API::QS/suggest_field>,
-    L<suggest_mode|Elasticsearch::Util::API::QS/suggest_mode>,
-    L<suggest_size|Elasticsearch::Util::API::QS/suggest_size>,
-    L<suggest_text|Elasticsearch::Util::API::QS/suggest_text>,
-    L<timeout|Elasticsearch::Util::API::QS/timeout>,
-    L<version|Elasticsearch::Util::API::QS/version>
+    C<_source>,
+    C<_source_exclude>,
+    C<_source_include>,
+    C<analyze_wildcard>,
+    C<analyzer>,
+    C<default_operator>,
+    C<df>,
+    C<explain>,
+    C<fields>,
+    C<from>,
+    C<ignore_indices>,
+    C<indices_boost>,
+    C<lenient>,
+    C<lowercase_expanded_terms>,
+    C<preference>,
+    C<q>,
+    C<routing>,
+    C<scroll>,
+    C<search_type>,
+    C<size>,
+    C<sort>,
+    C<source>,
+    C<stats>,
+    C<suggest_field>,
+    C<suggest_mode>,
+    C<suggest_size>,
+    C<suggest_text>,
+    C<timeout>,
+    C<version>
 
 See the L<search reference|http://www.elasticsearch.org/guide/reference/api/search/request-body/>
 for more information.
@@ -731,11 +731,11 @@ query:
     );
 
 Query string parameters:
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>,
-    L<min_score|Elasticsearch::Util::API::QS/min_score>,
-    L<preference|Elasticsearch::Util::API::QS/preference>,
-    L<routing|Elasticsearch::Util::API::QS/routing>,
-    L<source|Elasticsearch::Util::API::QS/source>
+    C<ignore_indices>,
+    C<min_score>,
+    C<preference>,
+    C<routing>,
+    C<source>
 
 See the L<count docs|http://www.elasticsearch.org/guide/reference/api/count/>
 for more information.
@@ -748,20 +748,20 @@ for more information.
     );
 
 When a L</search()> has been performed with the
-L<scroll|Elasticsearch::Util::API::QS/scroll> parameter, the C<scroll()>
+C<scroll> parameter, the C<scroll()>
 method allows you to keep pulling more results until the results
 are exhausted.
 
 B<NOTE:> you will almost always want to set the
-L<search_type|Elasticsearch::Util::API::QS/search_type> to C<scan> in your
+C<search_type> to C<scan> in your
 original C<search()> request.
 
 See L<Elasticsearch::Util::Scroll> for a helper utility which makes
 managing scroll requests much easier.
 
 Query string parameters:
-    L<scroll|Elasticsearch::Util::API::QS/scroll>,
-    L<scroll_id|Elasticsearch::Util::API::QS/scroll_id>
+    C<scroll>,
+    C<scroll_id>
 
 See the L<scroll docs|http://www.elasticsearch.org/guide/reference/api/search/scroll/>
 and the L<search_type docs|http://www.elasticsearch.org/guide/reference/api/search/search-type/>
@@ -806,7 +806,7 @@ request).  For instance:
     );
 
 Query string parameters:
-    L<search_type|Elasticsearch::Util::API::QS/search_type>
+    C<search_type>
 
 See the L<msearch docs|http://www.elasticsearch.org/guide/reference/api/multi-search/>
 for more information.
@@ -837,21 +837,21 @@ For instance:
     );
 
 Query string parameters:
-    L<_source|Elasticsearch::Util::API::QS/_source>,
-    L<_source_exclude|Elasticsearch::Util::API::QS/_source_exclude>,
-    L<_source_include|Elasticsearch::Util::API::QS/_source_include>,
-    L<analyze_wildcard|Elasticsearch::Util::API::QS/analyze_wildcard>,
-    L<analyzer|Elasticsearch::Util::API::QS/analyzer>,
-    L<default_operator|Elasticsearch::Util::API::QS/default_operator>,
-    L<df|Elasticsearch::Util::API::QS/df>,
-    L<fields|Elasticsearch::Util::API::QS/fields>,
-    L<lenient|Elasticsearch::Util::API::QS/lenient>,
-    L<lowercase_expanded_terms|Elasticsearch::Util::API::QS/lowercase_expanded_terms>,
-    L<parent|Elasticsearch::Util::API::QS/parent>,
-    L<preference|Elasticsearch::Util::API::QS/preference>,
-    L<q|Elasticsearch::Util::API::QS/q>,
-    L<routing|Elasticsearch::Util::API::QS/routing>,
-    L<source|Elasticsearch::Util::API::QS/source>
+    C<_source>,
+    C<_source_exclude>,
+    C<_source_include>,
+    C<analyze_wildcard>,
+    C<analyzer>,
+    C<default_operator>,
+    C<df>,
+    C<fields>,
+    C<lenient>,
+    C<lowercase_expanded_terms>,
+    C<parent>,
+    C<preference>,
+    C<q>,
+    C<routing>,
+    C<source>
 
 See the L<explain docs|http://www.elasticsearch.org/guide/reference/api/explain/>
 for more information.
@@ -885,7 +885,7 @@ C<_source> field of the document under the C<doc> key:
 
 
 Query string parameters:
-    L<prefer_local|Elasticsearch::Util::API::QS/prefer_local>
+    C<prefer_local>
 
 See the L<percolate docs|http://www.elasticsearch.org/guide/reference/api/percolate/>
 for more information.
@@ -919,10 +919,10 @@ suggestion requests, which can also be run as part of a L</search()> request.
 
 
 Query string parameters:
-    L<ignore_indices|Elasticsearch::Util::API::QS/ignore_indices>,
-    L<preference|Elasticsearch::Util::API::QS/preference>,
-    L<routing|Elasticsearch::Util::API::QS/routing>,
-    L<source|Elasticsearch::Util::API::QS/source>
+    C<ignore_indices>,
+    C<preference>,
+    C<routing>,
+    C<source>
 
 
 =head2 C<mlt()>
@@ -940,26 +940,27 @@ L<more-like-this query|http://www.elasticsearch.org/guide/reference/query-dsl/ml
 to find other documents which are similar to the specified document.
 
 Query string parameters:
-    L<boost_terms|Elasticsearch::Util::API::QS/boost_terms>,
-    L<max_doc_freq|Elasticsearch::Util::API::QS/max_doc_freq>,
-    L<max_query_terms|Elasticsearch::Util::API::QS/max_query_terms>,
-    L<max_word_len|Elasticsearch::Util::API::QS/max_word_len>,
-    L<min_doc_freq|Elasticsearch::Util::API::QS/min_doc_freq>,
-    L<min_term_freq|Elasticsearch::Util::API::QS/min_term_freq>,
-    L<min_word_len|Elasticsearch::Util::API::QS/min_word_len>,
-    L<mlt_fields|Elasticsearch::Util::API::QS/mlt_fields>,
-    L<percent_terms_to_match|Elasticsearch::Util::API::QS/percent_terms_to_match>,
-    L<routing|Elasticsearch::Util::API::QS/routing>,
-    L<search_from|Elasticsearch::Util::API::QS/search_from>,
-    L<search_indices|Elasticsearch::Util::API::QS/search_indices>,
-    L<search_query_hint|Elasticsearch::Util::API::QS/search_query_hint>,
-    L<search_scroll|Elasticsearch::Util::API::QS/search_scroll>,
-    L<search_size|Elasticsearch::Util::API::QS/search_size>,
-    L<search_source|Elasticsearch::Util::API::QS/search_source>,
-    L<search_type|Elasticsearch::Util::API::QS/search_type>,
-    L<search_types|Elasticsearch::Util::API::QS/search_types>,
-    L<stop_words|Elasticsearch::Util::API::QS/stop_words>
+    C<boost_terms>,
+    C<max_doc_freq>,
+    C<max_query_terms>,
+    C<max_word_len>,
+    C<min_doc_freq>,
+    C<min_term_freq>,
+    C<min_word_len>,
+    C<mlt_fields>,
+    C<percent_terms_to_match>,
+    C<routing>,
+    C<search_from>,
+    C<search_indices>,
+    C<search_query_hint>,
+    C<search_scroll>,
+    C<search_size>,
+    C<search_source>,
+    C<search_type>,
+    C<search_types>,
+    C<stop_words>
 
 See the L<mlt docs|http://www.elasticsearch.org/guide/reference/api/more-like-this/>
 for more information.
+
 
