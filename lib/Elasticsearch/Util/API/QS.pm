@@ -493,6 +493,21 @@ our %Params = (
             . ' (instead of using request body)',
         type => 'string'
     },
+    _source => {
+        type        => "list",
+        description => "True or false to return the _source field or not, "
+            . "or a list of fields to return"
+    },
+    _source_exclude => {
+        type => "list",
+        description =>
+            "A list of fields to exclude from the returned _source field"
+    },
+    _source_include => {
+        type => "list",
+        description =>
+            "A list of fields to extract and return from the _source field"
+    },
     stats => {
         desc => 'Specific \'tag\' of the request for'
             . ' logging and statistical purposes',

@@ -92,7 +92,9 @@ sub api {
             'fields',                   'lenient',
             'lowercase_expanded_terms', 'parent',
             'preference',               'q',
-            'routing',                  'source'
+            'routing',                  'source',
+            '_source',                  '_source_include',
+            '_source_exclude'
         ],
     },
 
@@ -100,8 +102,11 @@ sub api {
         doc  => '/api/get/',
         path => '{index}/{type|all}/{id}',
         qs   => [
-            'fields',  'parent', 'preference', 'realtime',
-            'refresh', 'routing'
+            'fields',     'parent',
+            'preference', 'realtime',
+            'refresh',    'routing',
+            '_source',    '_source_include',
+            '_source_exclude'
         ],
     },
 
@@ -140,7 +145,12 @@ sub api {
         },
         doc  => '/api/multi-get/',
         path => '{index-when-type}/{type|blank}/_mget',
-        qs   => [ 'fields', 'preference', 'realtime', 'refresh' ],
+        qs   => [
+            'fields',   'preference',
+            'realtime', 'refresh',
+            '_source',  '_source_include',
+            '_source_exclude'
+        ],
     },
 
     'mlt' => {
@@ -215,10 +225,12 @@ sub api {
             'q',                        'routing',
             'scroll',                   'search_type',
             'size',                     'sort',
-            'source',                   'stats',
-            'suggest_field',            'suggest_mode',
-            'suggest_size',             'suggest_text',
-            'timeout',                  'version'
+            'source',                   '_source',
+            '_source_include',          '_source_exclude',
+            'stats',                    'suggest_field',
+            'suggest_mode',             'suggest_size',
+            'suggest_text',             'timeout',
+            'version'
         ],
     },
 
