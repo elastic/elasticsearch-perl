@@ -18,6 +18,8 @@ This module provides methods to make cluster-level requests, such as
 getting and setting cluster-level settings, manually rerouting shards,
 and retrieving for monitoring purposes.
 
+It does L<Elasticsearch::Role::Client::Direct>.
+
 =head1 METHODS
 
 =head2 C<health()>
