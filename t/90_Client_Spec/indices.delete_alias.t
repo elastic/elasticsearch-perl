@@ -1,7 +1,5 @@
 use lib 't/lib';
-use Test::More;
 use Elasticsearch::Client::Test;
 
-test_files('spec/test/indices.delete_alias/*.yaml');
+test_dir('spec/test/indices.delete_alias');
 
-done_testing;

@@ -1,7 +1,5 @@
 use lib 't/lib';
-use Test::More;
 use Elasticsearch::Client::Test;
 
-test_files('spec/test/indices.validate_query/*.yaml');
+test_dir('spec/test/indices.validate_query');
 
-done_testing;

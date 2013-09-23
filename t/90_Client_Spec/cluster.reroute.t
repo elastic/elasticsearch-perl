@@ -1,7 +1,5 @@
 use lib 't/lib';
-use Test::More;
 use Elasticsearch::Client::Test;
 
-test_files('spec/test/cluster.reroute/*.yaml');
+test_dir('spec/test/cluster.reroute');
 
-done_testing;

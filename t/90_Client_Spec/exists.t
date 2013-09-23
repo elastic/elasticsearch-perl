@@ -1,8 +1,5 @@
 use lib 't/lib';
-use Test::More;
 use Elasticsearch::Client::Test;
 
-#trace;
-test_files('spec/test/exists/*.yaml');
+test_dir('spec/test/exists');
 
-done_testing;

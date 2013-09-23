@@ -1,7 +1,5 @@
 use lib 't/lib';
-use Test::More;
 use Elasticsearch::Client::Test;
 
-test_files('spec/test/scroll/*.yaml');
+test_dir('spec/test/scroll');
 
-done_testing;

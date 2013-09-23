@@ -17,10 +17,8 @@ my $trace
 
 my $es;
 if ( $ENV{ES} ) {
-    eval {
-        $es = Elasticsearch->new( nodes => $ENV{ES} );
-        $es->ping;
-    };
+    $es = Elasticsearch->new( nodes => $ENV{ES}, trace_to => $trace );
+    eval { $es->ping } or undef $es;
 }
 unless ($es) {
     plan skip_all => 'No Elasticsearch test node available';
@@ -29,7 +27,7 @@ unless ($es) {
 
 require Exporter;
 our @ISA    = 'Exporter';
-our @EXPORT = ('test_files');
+our @EXPORT = ('test_dir');
 
 our %Test_Types = (
     is_true => sub {
@@ -63,56 +61,69 @@ our %Errors = (
 );
 
 #===================================
+sub test_dir {
+#===================================
+    my $dir = shift;
+    my $files = $ENV{TESTS} || '*.yaml';
+    test_files(<"$dir/$files">);
+}
+
+#===================================
 sub test_files {
 #===================================
-    my @files = map {<"$_">} @_;
+    my @files = @_;
 
     reset_es();
+    plan tests => 0 + @files;
 
     for my $file (@files) {
-        my $name = File::Basename::basename( $file, '.yml' );
+        my ($name) = ( $file =~ m{(\w+/\w+\.yaml)} );
         my (@asts) = eval { LoadFile($file) } or do {
             fail "Error parsing test file ($file): $@";
             next;
         };
 
-        $es->logger->trace_comment("*** FILE: $file");
+        subtest $name => sub {
+            $es->logger->trace_comment("FILE: $file");
 
-        my $setup;
-        if ( $setup = $asts[0]{setup} ) {
-            shift @asts;
-        }
-
-        for my $ast (@asts) {
-
-            my ( $title, $tests ) = key_val($ast);
-
-            if ( $tests->[0]{skip} ) {
-                my $skip = check_skip( $tests->[0]{skip} );
-                shift @$tests;
-                if ($skip) {
-                    $es->logger->trace_comment(
-                        "*** SKIPPING: $title : $skip");
-                SKIP: { skip $skip, 1 }
-                    next;
-                }
+            my $setup;
+            if ( $setup = $asts[0]{setup} ) {
+                shift @asts;
             }
 
-            if ($setup) {
-                $es->logger->trace_comment("*** RUNNING SETUP");
-                for (@$setup) {
-                    run_cmd( $_->{do} );
+            plan tests => 0 + @asts;
+
+            for my $ast (@asts) {
+
+                my ( $title, $tests ) = key_val($ast);
+
+                if ( $tests->[0]{skip} ) {
+                    my $skip = check_skip( $tests->[0]{skip} );
+                    shift @$tests;
+                    if ($skip) {
+                        $es->logger->trace_comment(
+                            "SKIPPING: $title : $skip");
+                    SKIP: { skip $skip, 1 }
+                        next;
+                    }
                 }
+
+                if ($setup) {
+                    $es->logger->trace_comment("RUNNING SETUP");
+                    for (@$setup) {
+                        run_cmd( $_->{do} );
+                    }
+                }
+
+                $es->logger->trace_comment("RUNNING TESTS: $title");
+
+                subtest $name => sub {
+                    plan tests => 0 + @$tests;
+                    run_tests( $title, $tests );
+                };
+                reset_es();
             }
-
-            $es->logger->trace_comment("*** RUNNING TESTS: $title");
-
-            subtest $name => sub {
-                plan tests => 0 + @$tests;
-                run_tests( $title, $tests );
-            };
-            reset_es();
-        }
+        };
     }
 }
 
@@ -231,7 +242,7 @@ sub run_cmd {
 #===================================
 sub reset_es {
 #===================================
-    $es->logger->trace_comment("*** RESETTING");
+    $es->logger->trace_comment("RESETTING");
     $es->indices->delete( index => '_all', ignore => 404 );
     $es->indices->delete_template( name => '*', ignore => 404 );
 }

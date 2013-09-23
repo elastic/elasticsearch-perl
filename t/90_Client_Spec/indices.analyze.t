@@ -1,8 +1,5 @@
 use lib 't/lib';
-use Test::More;
 use Elasticsearch::Client::Test;
 
-trace_file;
-test_files('spec/test/indices.analyze/*.yaml');
+test_dir('spec/test/indices.analyze');
 
-done_testing;
