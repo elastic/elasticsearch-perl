@@ -1,7 +1,8 @@
 package Elasticsearch::Bulk;
 
 use Moo;
-use Elasticsearch::Util qw(parse_params);
+use Elasticsearch::Util qw(parse_params throw);
+use Try::Tiny;
 use namespace::autoclean;
 
 has 'es'                => ( is => 'ro', required => 1 );
@@ -11,17 +12,24 @@ has 'on_success'        => ( is => 'ro', default  => 0 );
 has 'on_error'          => ( is => 'lazy' );
 has 'on_conflict'       => ( is => 'ro', default  => 0 );
 has 'source_with_error' => ( is => 'ro', default  => 0 );
-has 'verbose'           => ( is => 'ro' );
+has 'verbose'           => ( is => 'rw' );
 
 has '_buffer' => ( is => 'ro', default => sub { [] } );
-has '_buffer_size' => ( is => 'rw', default => 0 );
-has '_serializer'  => ( is => 'lazy' );
-has '_bulk_args'   => ( is => 'ro' );
+has '_buffer_size'  => ( is => 'rw', default => 0 );
+has '_buffer_count' => ( is => 'rw', default => 0 );
+has '_serializer'   => ( is => 'lazy' );
+has '_logger'       => ( is => 'lazy' );
+has '_bulk_args'    => ( is => 'ro' );
 
 our $Conflict = qr/
     DocumentAlreadyExistsException
   | :.version.conflict,.current.\[(\d+)\]
   /x;
+
+our %Actions = map { $_ => 1 } qw(index create update delete);
+our @Metadata_Keys = qw(
+    index type id routing parent timestamp ttl version version_type
+);
 
 #===================================
 sub _build_on_error {
@@ -30,9 +38,15 @@ sub _build_on_error {
     my $serializer = $self->_serializer;
     return sub {
         my ( $action, $result, $src ) = @_;
-        warn( "Bulk error [%s]: %s ", $action, $serializer->encode($result) );
+        $self->logger->warning(
+            "Bulk error [$action]: " . $serializer->encode($result) );
     };
 }
+
+#===================================
+sub _build__serializer { shift->es->transport->serializer }
+sub _build__logger     { shift->es->logger }
+#===================================
 
 #===================================
 sub BUILDARGS {
@@ -48,14 +62,6 @@ sub BUILDARGS {
 }
 
 #===================================
-sub _build_serializer { shift->es->serializer }
-#===================================
-
-my @Metadata_Keys = qw(
-    index type id routing parent timestamp ttl version version_type
-);
-
-#===================================
 sub index  { shift->_add( 'index',  @_ ) }
 sub create { shift->_add( 'create', @_ ) }
 sub delete { shift->_add( 'delete', @_ ) }
@@ -69,14 +75,14 @@ sub create_docs {
     while ( my $next = shift() ) {
         $self->add_action( 'create', { _source => $next } );
     }
+    1;
 }
 
 #===================================
 sub delete_ids {
 #===================================
     my $self = shift;
-    my @meta = map { { _id => $_ } } @_;
-    $self->add_action( 'delete', @meta );
+    $self->delete( map { { _id => $_ } } @_ );
 }
 
 #===================================
@@ -87,73 +93,114 @@ sub _add {
     while ( my $next = shift() ) {
         $self->add_action( $action, $next );
     }
+    1;
 }
 
 #===================================
 sub add_action {
 #===================================
-    my $self = shift;
+    my $self     = shift;
+    my $buffer   = $self->_buffer;
+    my $max_size = $self->max_size;
+    my $max_docs = $self->max_docs;
+
     while (@_) {
-        my $action = shift;
-        my $params = shift or die "foo";
-        my %metadata;
-        for (@Metadata_Keys) {
-            my $val
-                = exists $params->{$_}    ? $params->{$_}
-                : exists $params->{"_$_"} ? $params->{"_$_"}
-                :                           next;
-            $metadata{"_$_"} = $val;
-        }
-        my $source;
-        if ( $action eq 'update' ) {
-            for (qw(doc upsert script params lang)) {
-                $source->{$_} = $params->{$_} if exists $params->{$_};
-            }
-        }
-        elsif ( $action ne 'delete' ) {
-            $source = $params->{_source} || $params->{source} || {};
-        }
-        $self->_add_to_buffer( { $action => \%metadata }, $source );
+        my $action = shift || '';
+        throw( 'Param', "Unrecognised action <$action>" )
+            unless $Actions{$action};
+
+        my $params = shift;
+        throw( 'Param', "Missing <params> for action <$action>" )
+            unless ref($params) eq 'HASH';
+
+        my @json = $self->_encode_action( $action, $params );
+        push @$buffer, @json;
+
+        my $size = $self->_buffer_size;
+        $size += length($_) + 1 for @json;
+        $self->_buffer_size($size);
+
+        my $count = $self->_buffer_count( $self->_buffer_count + 1 );
+
+        $self->flush
+            if ( $max_size && $size >= $max_size )
+            || $max_docs && $count >= $max_docs;
     }
+    return 1;
 }
 
 #===================================
-sub _add_to_buffer {
+sub _encode_action {
 #===================================
-    my $self       = shift;
-    my $buffer     = $self->_buffer;
-    my $size       = $self->_buffer_size;
+    my ( $self, $action, $orig ) = @_;
+    my %metadata;
+    my $params     = {%$orig};
     my $serializer = $self->_serializer;
 
-    while ( my $hash = shift ) {
-        push @{$buffer}, $serializer->encode($hash);
-        $size += length $buffer->[-1] + 1;
+    for (@Metadata_Keys) {
+        my $val
+            = exists $params->{$_}    ? delete $params->{$_}
+            : exists $params->{"_$_"} ? delete $params->{"_$_"}
+            :                           next;
+        $metadata{"_$_"} = $val;
     }
-    $self->_buffer_size($size);
-    if ( my $max_size = $self->max_size ) {
-        return $self->flush if $max_size >= $size;
+
+    my $source;
+    if ( $action eq 'update' ) {
+        for (qw(doc upsert doc_as_upsert script params lang)) {
+            $source->{$_} = delete $params->{$_}
+                if exists $params->{$_};
+        }
     }
-    if ( my $max_docs = $self->max_docs ) {
-        return $self->flush if $max_docs >= @$buffer;
+    elsif ( $action ne 'delete' ) {
+        $source
+            = delete $params->{_source}
+            || delete $params->{source}
+            || throw( 'Param',
+            "Missing <_source> in <$action>: " . $serializer->encode($orig) );
     }
+    throw(    "Unknown params <"
+            . ( join ',', sort keys %$params )
+            . "> in <$action>: "
+            . $serializer->encode($orig) )
+        if keys %$params;
+
+    return map { $serializer->encode($_) }
+        grep {$_} ( { $action => \%metadata }, $source );
 }
 
 #===================================
 sub flush {
 #===================================
-    my $self   = shift;
-    my $buffer = $self->_buffer;
+    my $self = shift;
 
-    my $results = $self->es->bulk( %{ $self->bulk_args }, body => $buffer );
+    my $results = try {
+        $self->es->bulk( %{ $self->_bulk_args }, body => $self->_buffer );
+    }
+    catch {
+        my $error = $_;
+        $self->clear_buffer;
+        die $error;
+    };
+
     $self->_report($results);
+    $self->clear_buffer;
+
     if ( $self->verbose ) {
         local $| = 1;
         print ".";
     }
 
-    @{$buffer} = ();
-    $self->_buffer_size(0);
+    return 1;
+}
 
+#===================================
+sub clear_buffer {
+#===================================
+    my $self = shift;
+    @{ $self->_buffer } = ();
+    $self->_buffer_size(0);
+    $self->_buffer_count(0);
 }
 
 #===================================
@@ -218,7 +265,7 @@ sub _report {
 
     return unless $on_success || $on_error || $on_conflict;
 
-    my $inc_src    = $self->doc_with_error;
+    my $incl_src   = $self->source_with_error;
     my $buffer     = $self->_buffer;
     my $serializer = $self->_serializer;
 
@@ -231,7 +278,7 @@ sub _report {
             my @args = ($action);
             if ( my $error = $result->{error} ) {
                 my $src
-                    = $inc_src && $action ne 'delete'
+                    = $incl_src && $action ne 'delete'
                     ? $serializer->decode( $buffer->[ $i + 1 ] )
                     : $j;
 
@@ -249,3 +296,11 @@ sub _report {
 }
 
 1;
+
+__END__
+
+# ABSTRACT: A helper utility for the Bulk API
+
+=head1 DESCRIPTION
+
+Docs to follow soon

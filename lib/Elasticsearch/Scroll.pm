@@ -93,3 +93,11 @@ sub DESTROY {
 }
 
 1;
+
+__END__
+
+# ABSTRACT: A helper utility for scrolled searches
+
+=head1 DESCRIPTION
+
+Docs to follow soon

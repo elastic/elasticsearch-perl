@@ -10,23 +10,7 @@ use Test::Deep;
 use Data::Dump qw(pp);
 use File::Basename;
 
-my $trace
-    = !$ENV{TRACE}       ? undef
-    : $ENV{TRACE} eq '1' ? 'Stderr'
-    :                      [ 'File', $ENV{TRACE} ];
-
-my $es;
-if ( $ENV{ES} ) {
-    $es = Elasticsearch->new( nodes => $ENV{ES}, trace_to => $trace );
-    eval { $es->ping; } or do {
-        diag $@;
-        undef $es;
-    };
-}
-unless ($es) {
-    plan skip_all => 'No Elasticsearch test node available';
-    exit;
-}
+my $es = do "es_test_server.pl";
 
 require Exporter;
 our @ISA    = 'Exporter';
