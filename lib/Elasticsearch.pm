@@ -45,7 +45,7 @@ sub new {
 
 __END__
 
-# ABSTRACT: The official client for Elasticsearch (beta)
+# ABSTRACT: The official client for Elasticsearch
 
 =head1 SYNOPSIS
 
@@ -522,7 +522,7 @@ To trace requests/responses in C<curl> format, do:
     $e = Elasticsearch->new (trace_to => 'Stderr');
 
     # To a file
-    $e = Elasticsearch->new (trace_to => ['File','/path/to/file.log');
+    $e = Elasticsearch->new (trace_to => ['File','/path/to/file.log']);
 
 =head2 SearchBuilder
 
