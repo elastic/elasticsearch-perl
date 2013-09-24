@@ -472,7 +472,7 @@ that need to be made, bulk requests greatly improve performance.
 =head2 C<bulk()>
 
     $response = $e->bulk(
-        index   => 'index_name',        # optional
+        index   => 'index_name',        # required if type specified
         type    => 'type_name',         # optional
 
         body    => [ actions ]          # required

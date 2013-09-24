@@ -55,7 +55,8 @@ Connect to C<localhost:9200>:
 
     my $e = Elasticsearch->new();
 
-    # round-robin between two nodes
+Round-robin between two nodes:
+
     my $e = Elasticsearch->new(
         nodes => [
             'search1:9200',
@@ -265,7 +266,7 @@ The nodes that you specify are used to I<discover> the cluster, which is
 then I<sniffed> to find the current list of live nodes that the cluster
 knows about. See L<Elasticsearch::CxnPool::Sniff>.
 
-=item C<Static::NoPing>
+=item * C<Static::NoPing>
 
     $e = Elasticsearch->new(
         cxn_pool => 'Static::NoPing'
@@ -459,5 +460,167 @@ L<Elasticsearch::Serializer::JSON>
 
 =back
 
+=head1 MIGRATING FROM ElasticSearch.pm
+
+The L<Elasticseach> API is pretty similar to the old L<ElasticSearch> API,
+but there are a few differences.  The most notable are:
+
+=head2 C<hosts> vs C<servers>
+
+When instantiating a new Elasticsearch instance, use C<nodes> instead of
+C<servers>:
+
+    $e = Elasticsearch->new(
+        nodes => [ 'search1:9200', 'search2:9200' ]
+    );
+
+=head2 C<no_refresh>
+
+By default, the new client does not sniff the cluster to discover nodes.
+To enable sniffing, use:
+
+    $e = Elasticsearch->new(
+        cxn_pool => 'Sniff',
+        nodes    => [ 'search1:9200', 'search2:9200' ]
+    );
+
+To disable sniffing (the equivalent of setting C<no_refresh> to C<true>), do:
+
+    $e = Elasticsearch->new(
+        nodes    => [ 'search1:9200', 'search2:9200' ]
+    );
+
+=head2 Request parameters
+
+In the old client, you could specify query string and body parameters at
+the same level, eg:
+
+    $e->search(
+        search_type => 'count',
+        query       => {
+            match_all => {}
+        }
+    );
+
+In the new client, body parameters should be passed in a C<body> element:
+
+    $e->search(
+        search_type => 'count',
+        body        => {
+            query       => {
+                match_all => {}
+            }
+        }
+    );
+
+=head2 C<trace_calls>
+
+The new client uses L<Log::Any> for event logging and request tracing.
+To trace requests/responses in C<curl> format, do:
+
+    # To STDERR
+    $e = Elasticsearch->new (trace_to => 'Stderr');
+
+    # To a file
+    $e = Elasticsearch->new (trace_to => ['File','/path/to/file.log');
+
+=head2 SearchBuilder
+
+The old API integrated L<ElasticSearch::SearchBuilder> for an L<SQL::Abstract>
+style of writing queries and filters in Elasticsearch.
+This integration does not exist in the new client, but will be added in a
+future module.
+
+=head2 Bulk methods and C<scrolled_search()>
+
+Bulk indexing has changed a lot in the new client.  The helper methods, eg
+C<bulk_index()> and C<reindex()> have been removed from the main client,
+and the C<bulk()> method itself now simply returns the response from
+Elasticsearch. It doesn't interfere with processing at all.
+
+The helper methods will be replaced by the L<Elasticsearch::Bulk> class,
+which has been written but not yet documented or fully tested.
+
+Similarly, C<scrolled_search()> will be replaced by the L<Elasticsearch::Scroll>
+class which is similarly unfinished.
+
 =head1 TODO
 
+=over
+
+=item * L<Elasticsearch::Bulk>
+
+=item * L<Elasticsearch::Scroll>
+
+=item * L<Elasticsearch::Compat>
+
+This module will provide an easy migration path from the old L<ElasticSearch>
+to the new L<Elasticsearch>.
+
+=item * New backends
+
+Release backends for L<LWP>, L<HTTP::Lite>, L<WWW::Curl>, L<Net::Curl>.
+Also add async support via L<AnyEvent> and perhaps L<Mojo>.
+
+=item * New frontend
+
+Add a new client with a similar less verbose interface to L<ElasticSearch>
+and integration with L<ElasticSearch::SearchBuilder>.
+
+=back
+
+
+=head1 BUGS
+
+This is a stable API but this implemenation is new. Watch this space
+for new releases.
+
+If you have any suggestions for improvements, or find any bugs, please report
+them to L<http://github.com/elasticsearch/elasticsearch-perl/issues>.
+I will be notified, and then you'll automatically be notified of progress on
+your bug as I make changes.
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Elasticsearch
+
+You can also look for information at:
+
+=over 4
+
+=item * GitHub
+
+L<http://github.com/elasticsearch/elasticsearch-perl>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/Elasticsearch>
+
+
+=item * Search MetaCPAN
+
+L<https://metacpan.org/module/Elasticsearch>
+
+=item * IRC
+
+The L<#elasticsearch|irc://irc.freenode.net/elasticsearch> channel on
+C<irc.freenode.net>.
+
+=item * Mailing list
+
+The main L<Elasticsearch mailing list|http://www.elasticsearch.org/community/forum/>.
+
+=back
+
+=head1 TEST SUITE
+
+The full test suite requires a live Elasticsearch node to run, and should
+be run as :
+
+    perl Makefile.PL
+    ES=localhost:9200 make test
+
+B<TESTS RUN IN THIS WAY ARE DESTRUCTIVE! DO NOT RUN AGAINST A CLUSTER WITH
+DATA YOU WANT TO KEEP!>
