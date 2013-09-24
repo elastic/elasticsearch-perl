@@ -1,8 +1,12 @@
 Revision history for Elasticsearch
 
+0.71    2013-09-24
+        Fixed dist.ini to list dependencies correctly
+
 0.70    2013-09-24
         Bumped version numbers because CPAN clashes
         with ElasticSearch.pm
+
 0.04    2013-09-23
         First release
 

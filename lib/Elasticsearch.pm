@@ -3,7 +3,7 @@ package Elasticsearch;
 use Moo;
 use namespace::autoclean;
 
-our $VERSION = '0.70';
+our $VERSION = '0.71';
 
 use Elasticsearch::Util qw(parse_params load_plugin);
 
