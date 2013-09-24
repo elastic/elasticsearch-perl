@@ -1,4 +1,4 @@
-package Elasticsearch::Util::Bulk;
+package Elasticsearch::Bulk;
 
 use Moo;
 use Elasticsearch::Util qw(parse_params);
@@ -166,9 +166,9 @@ sub reindex {
     my $src       = $params->{source};
 
     if ( ref $src eq 'HASH' ) {
-        require Elasticsearch::Util::Scroll;
+        require Elasticsearch::Scroll;
 
-        my $scroll = Elasticsearch::Util::Scroll->new(
+        my $scroll = Elasticsearch::Scroll->new(
             es        => $self->es,
             scan_type => 'search',
             size      => 500,

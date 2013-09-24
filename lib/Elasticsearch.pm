@@ -161,9 +161,9 @@ Good defaults
 =item *
 
 Helper utilities for more complex operations, such as
-L<bulk indexing|Elasticsearch::Util::Bulk>,
-L<scrolled searches|Elasticsearch::Util::Scroll> and
-L<reindexing|Elasticsearch::Util::Bulk/"reindex">.
+L<bulk indexing|Elasticsearch::Bulk>,
+L<scrolled searches|Elasticsearch::Scroll> and
+L<reindexing|Elasticsearch::Bulk/"reindex()">.
 
 =item *
 

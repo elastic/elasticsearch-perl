@@ -478,7 +478,7 @@ that need to be made, bulk requests greatly improve performance.
         body    => [ actions ]          # required
     );
 
-See L<Elasticsearch::Util::Bulk> for a helper module that makes
+See L<Elasticsearch::Bulk> for a helper module that makes
 bulk indexing simpler to use.
 
 The C<bulk()> method can perform multiple L</index()>, L</create()>,
@@ -756,7 +756,7 @@ B<NOTE:> you will almost always want to set the
 C<search_type> to C<scan> in your
 original C<search()> request.
 
-See L<Elasticsearch::Util::Scroll> for a helper utility which makes
+See L<Elasticsearch::Scroll> for a helper utility which makes
 managing scroll requests much easier.
 
 Query string parameters:

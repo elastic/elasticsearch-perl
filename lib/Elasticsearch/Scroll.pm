@@ -1,4 +1,4 @@
-package Elasticsearch::Util::Scroll;
+package Elasticsearch::Scroll;
 
 use Moo;
 use Elasticsearch::Util qw(parse_params);
