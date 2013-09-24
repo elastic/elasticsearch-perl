@@ -34,7 +34,7 @@ sub BUILDARGS {
 sub new_cxn { shift->_factory->(@_) }
 #===================================
 
-1
+1;
 
 __END__
 

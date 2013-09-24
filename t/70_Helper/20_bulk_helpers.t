@@ -4,9 +4,13 @@ use strict;
 use warnings;
 use lib 't/lib';
 
-my $es = do "es_test_server.pl";
+my $es;
+$es = do "es_test_server.pl";
 
-BEGIN { use_ok "Elasticsearch::Bulk" }
+BEGIN {
+    $es = do "es_test_server.pl";
+    use_ok "Elasticsearch::Bulk";
+}
 
 isa_ok my $b = Elasticsearch::Bulk->new( es => $es ), 'Elasticsearch::Bulk',
     'Bulk';

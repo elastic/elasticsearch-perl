@@ -7,7 +7,7 @@ use Elasticsearch;
 
 use Test::More;
 use Test::Deep;
-use Data::Dump qw(pp);
+use Data::Dumper;
 use File::Basename;
 
 my $es = do "es_test_server.pl";
@@ -119,7 +119,7 @@ sub run_tests {
 #===================================
     my ( $title, $tests ) = @_;
 
-    fail "Expected an ARRAY of tests, got: " . pp($tests)
+    fail "Expected an ARRAY of tests, got: " . Dumper($tests)
         unless ref $tests eq 'ARRAY';
 
     my $val;
@@ -239,11 +239,11 @@ sub reset_es {
 sub key_val {
 #===================================
     my $val = shift;
-    die "Expected HASH, got: " . pp($val)
+    die "Expected HASH, got: " . Dumper($val)
         unless defined $val
         and ref $val
         and ref $val eq 'HASH';
-    die "Expected single key-value pair, got: " . pp($val)
+    die "Expected single key-value pair, got: " . Dumper($val)
         unless keys(%$val) == 1;
     return (%$val);
 }
