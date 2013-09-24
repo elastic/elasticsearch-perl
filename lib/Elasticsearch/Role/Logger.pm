@@ -53,7 +53,8 @@ sub trace_request {
     return unless $self->is_trace;
 
     my $uri = URI->new( 'http://localhost:9200' . $params->{path} );
-    $uri->query_form( { %{ $params->{qs} }, pretty => 1 } );
+    my %qs = ( %{ $params->{qs} }, pretty => 1 );
+    $uri->query_form( [ map { $_, $qs{$_} } sort keys %qs ] );
 
     my $body
         = $params->{serialize} eq 'std'

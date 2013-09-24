@@ -26,7 +26,7 @@ ok $l->trace_request(
 
 is $format, <<'REQUEST', 'No body - format';
 # Request to: https://foo.bar:444/some/path
-curl -XPOST 'http://localhost:9200/xyz?pretty=1&foo=bar'
+curl -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1'
 REQUEST
 
 # Std body
@@ -45,7 +45,7 @@ ok $l->trace_request(
 
 is $format, <<'REQUEST', 'Body - format';
 # Request to: https://foo.bar:444/some/path
-curl -XPOST 'http://localhost:9200/xyz?pretty=1&foo=bar' -d '
+curl -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
 {
    "foo" : "bar\n\u0027baz"
 }
@@ -68,7 +68,7 @@ ok $l->trace_request(
 
 is $format, <<'REQUEST', 'Bulk - format';
 # Request to: https://foo.bar:444/some/path
-curl -XPOST 'http://localhost:9200/xyz?pretty=1&foo=bar' -d '
+curl -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
 {"foo":"bar\n\u0027baz"}
 {"foo":"bar\n\u0027baz"}
 '
@@ -89,7 +89,7 @@ ok $l->trace_request(
 
 is $format, <<'REQUEST', 'Body string - format';
 # Request to: https://foo.bar:444/some/path
-curl -XPOST 'http://localhost:9200/xyz?pretty=1&foo=bar' -d '
+curl -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
 The quick brown fox
 jumped over the lazy dog\u0027s basket'
 REQUEST
