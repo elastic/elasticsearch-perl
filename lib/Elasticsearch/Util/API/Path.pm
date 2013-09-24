@@ -36,7 +36,7 @@ sub path_init {
         my $part = $_;
         $Handler{$part}
             || sub {$part}
-    } split '/', $template || 'FOO';
+    } split '/', $template;
 
     return sub {
         my $params = shift;

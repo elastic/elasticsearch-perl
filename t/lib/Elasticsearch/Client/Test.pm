@@ -18,7 +18,10 @@ my $trace
 my $es;
 if ( $ENV{ES} ) {
     $es = Elasticsearch->new( nodes => $ENV{ES}, trace_to => $trace );
-    eval { $es->ping } or undef $es;
+    eval { $es->ping; } or do {
+        diag $@;
+        undef $es;
+    };
 }
 unless ($es) {
     plan skip_all => 'No Elasticsearch test node available';
