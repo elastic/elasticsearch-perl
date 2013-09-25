@@ -25,5 +25,6 @@ echo "Starting Elasticsearch v${ES_VERSION}"
 sleep 3
 
 ES=localhost:9200 prove -l t/*/*.t
-
+RESULT=$?
 killall java 2>/dev/null
+exit $RESULT
