@@ -14,3 +14,16 @@ env:
 
 install: "cpanm --installdeps --notest ."
 script:  "./run_travis_tests.sh"
+notifications:
+  email:
+    recipients:
+      - clinton.gormley@elasticsearch.com
+    on_success: change
+    on_failure: always
+  hipchat:
+    rooms:
+      secure: "hek0OEEhbrM1QMEvuuWgR1309+a7ypgwBv/5kSGYohmcpfWO3LYCO/WhydWR6cVlKHmFXcqdP+h13X1SLldHCNZM7R4LT5vK4JOU20hyRfKg6I+cP9IoaLn6kx858Mm9eCvNhDdWkuPXgbTqSihrllcimfiHttYLy8S9RcGg+I0="
+    template:
+       - '@clint %{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message} %{build_url}'
+    on_success: change
+    on_failure: always
