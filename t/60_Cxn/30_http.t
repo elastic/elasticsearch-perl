@@ -39,7 +39,7 @@ is_cxn "Userinfo", new_cxn( nodes => 'http://foo:bar@localhost/' ),
 
 ### Options with scalar ###
 
-is_cxn "HTTPS option", new_cxn( nodes => 'foo', https => 1 ),
+is_cxn "HTTPS option", new_cxn( nodes => 'foo', use_https => 1 ),
     {
     scheme => 'https',
     host   => 'foo',
@@ -48,7 +48,7 @@ is_cxn "HTTPS option", new_cxn( nodes => 'foo', https => 1 ),
     };
 
 is_cxn "HTTPS option with settings",
-    new_cxn( nodes => 'http://foo', https => 1 ),
+    new_cxn( nodes => 'http://foo', use_https => 1 ),
     { scheme => 'http', host => 'foo', port => '80', uri => 'http://foo:80' };
 
 is_cxn "Port option",

@@ -29,7 +29,7 @@ sub BUILDARGS {
 
     unless ( ref $node eq 'HASH' ) {
         unless ( $node =~ m{^http(s)?://} ) {
-            $node = ( $params->{https} ? 'https://' : 'http://' ) . $node;
+            $node = ( $params->{use_https} ? 'https://' : 'http://' ) . $node;
         }
         if ( $params->{port} && $node !~ m{//[^/]+:\d+} ) {
             $node =~ s{(//[^/]+)}{$1:$params->{port}};
@@ -46,7 +46,8 @@ sub BUILDARGS {
 
     my $host = $node->{host} || 'localhost';
     my $userinfo = $node->{userinfo} || $params->{userinfo} || '';
-    my $scheme = $node->{scheme} || ( $params->{https} ? 'https' : 'http' );
+    my $scheme
+        = $node->{scheme} || ( $params->{use_https} ? 'https' : 'http' );
     my $port
         = $node->{port}
         || $params->{port}
@@ -179,13 +180,13 @@ Alternatively, a C<node> can be specified as a hash:
     }
 
 Similarly, default values can be specified with C<port>, C<path_prefix>,
-C<userinfo> and C<https>:
+C<userinfo> and C<use_https>:
 
     $e = Elasticsearch->new(
         port        => 9201,
         path_prefix => '/path',
         userinfo    => 'user:pass',
-        https       => 1,
+        use_https   => 1,
         nodes       => [ 'search1', 'search2' ]
     )
 
