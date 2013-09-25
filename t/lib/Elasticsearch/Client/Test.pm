@@ -52,7 +52,7 @@ sub test_dir {
 #===================================
     my $dir = shift;
     my $files = $ENV{TESTS} || '*.yaml';
-    test_files(<"$dir/$files">);
+    test_files( glob "$dir/$files" );
 }
 
 #===================================
