@@ -126,7 +126,7 @@ sub process_response {
 
     if ( $code >= 200 and $code <= 209 ) {
         return ( $code, $self->serializer->decode($body) )
-            if length $body;
+            if defined $body and length $body;
         return ( $code, 1 ) if $params->{method} eq 'HEAD';
         return ( $code, '' );
     }
