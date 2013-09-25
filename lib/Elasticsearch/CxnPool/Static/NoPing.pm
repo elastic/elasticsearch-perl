@@ -3,7 +3,7 @@ package Elasticsearch::CxnPool::Static::NoPing;
 use Moo;
 with 'Elasticsearch::Role::CxnPool';
 use Elasticsearch::Util qw(throw);
-use namespace::autoclean;
+use namespace::clean;
 
 has 'max_retries' => ( is => 'lazy' );
 has '_dead_cxns' => ( is => 'ro', default => sub { [] } );

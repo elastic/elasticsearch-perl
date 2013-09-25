@@ -2,7 +2,7 @@ package Elasticsearch::CxnPool::Sniff;
 
 use Moo;
 with 'Elasticsearch::Role::CxnPool';
-use namespace::autoclean;
+use namespace::clean;
 
 use Elasticsearch::Util qw(parse_params throw);
 use List::Util qw(min);

@@ -1,11 +1,11 @@
 package Elasticsearch::Role::API;
 
 use Moo::Role;
-use namespace::autoclean;
 
 use Elasticsearch::Util qw(throw);
 use Elasticsearch::Util::API::QS qw(qs_init);
 use Elasticsearch::Util::API::Path qw(path_init);
+use namespace::clean;
 
 our %API;
 

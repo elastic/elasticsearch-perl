@@ -1,8 +1,8 @@
 package Elasticsearch::Cxn::Factory;
 
 use Moo;
-use namespace::autoclean;
 use Elasticsearch::Util qw(parse_params load_plugin);
+use namespace::clean;
 
 has '_factory'           => ( is => 'ro', required => 1 );
 has 'default_host'       => ( is => 'ro', required => 1 );

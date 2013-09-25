@@ -2,8 +2,8 @@ package Elasticsearch::Role::Client::Direct;
 
 use Moo::Role;
 with 'Elasticsearch::Role::Client';
-use namespace::autoclean;
 use Try::Tiny;
+use namespace::clean;
 
 #===================================
 sub parse_request {
@@ -25,7 +25,7 @@ sub parse_request {
     }
     catch {
         chomp $_;
-        my $name = $defn->{name}||'<unknown method>';
+        my $name = $defn->{name} || '<unknown method>';
         $self->logger->throw_error( 'Param',
                   "$_ in ($name) request. "
                 . "See http://elasticsearch.org/guide/reference/"

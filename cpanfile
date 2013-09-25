@@ -18,7 +18,7 @@ requires "Sub::Exporter" => "0";
 requires "Time::HiRes" => "0";
 requires "Try::Tiny" => "0";
 requires "URI" => "0";
-requires "namespace::autoclean" => "0";
+requires "namespace::clean" => "0";
 requires "overload" => "0";
 requires "strict" => "0";
 requires "warnings" => "0";
@@ -45,5 +45,7 @@ on 'configure' => sub {
 };
 
 on 'develop' => sub {
+  requires "Test::More" => "0";
+  requires "Test::NoTabs" => "0";
   requires "Test::Pod" => "1.41";
 };

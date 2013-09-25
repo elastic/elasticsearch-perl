@@ -1,10 +1,10 @@
 package Elasticsearch::Role::Logger;
 
 use Moo::Role;
-use namespace::autoclean;
 
 use URI();
 use Try::Tiny;
+use namespace::clean;
 
 has 'serializer' => ( is => 'ro', required => 1 );
 has 'log_as'     => ( is => 'ro', default  => 'elasticsearch.event' );

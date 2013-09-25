@@ -3,7 +3,7 @@ package Elasticsearch::CxnPool::Static;
 use Moo;
 with 'Elasticsearch::Role::CxnPool';
 use Elasticsearch::Util qw(throw);
-use namespace::autoclean;
+use namespace::clean;
 
 #===================================
 sub BUILD {

@@ -1,12 +1,12 @@
 package Elasticsearch::Transport;
 
 use Moo;
-use namespace::autoclean;
 
 use URI();
 use Time::HiRes qw(time);
 use Try::Tiny;
 use Elasticsearch::Util qw(parse_params upgrade_error);
+use namespace::clean;
 
 has 'serializer' => ( is => 'ro', required => 1 );
 has 'logger'     => ( is => 'ro', required => 1 );

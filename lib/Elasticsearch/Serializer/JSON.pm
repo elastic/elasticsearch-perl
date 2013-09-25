@@ -2,10 +2,11 @@ package Elasticsearch::Serializer::JSON;
 
 use Moo;
 
-use namespace::autoclean;
 use Elasticsearch::Util qw(throw);
 use JSON();
 use Try::Tiny;
+use Encode qw(encode_utf8 decode_utf8 is_utf8);
+use namespace::clean;
 
 our $JSON = JSON->new->utf8;
 

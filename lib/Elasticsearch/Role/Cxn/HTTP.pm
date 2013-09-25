@@ -4,7 +4,7 @@ use Moo::Role;
 with 'Elasticsearch::Role::Cxn';
 use URI();
 use Elasticsearch::Util qw(parse_params throw);
-use namespace::autoclean;
+use namespace::clean;
 
 has 'scheme'             => ( is => 'ro' );
 has 'is_https'           => ( is => 'ro' );

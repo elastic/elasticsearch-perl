@@ -6,7 +6,7 @@ use List::Util qw(min);
 use Try::Tiny;
 use URI();
 use Elasticsearch::Util qw(to_list);
-use namespace::autoclean;
+use namespace::clean;
 
 requires qw(protocol perform_request error_from_text);
 

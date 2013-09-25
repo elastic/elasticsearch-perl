@@ -5,7 +5,7 @@ with 'Elasticsearch::Role::API';
 with 'Elasticsearch::Role::Client::Direct';
 
 use Elasticsearch::Util qw(parse_params);
-use namespace::autoclean;
+use namespace::clean;
 
 has 'cluster' => ( is => 'lazy' );
 has 'indices' => ( is => 'lazy' );

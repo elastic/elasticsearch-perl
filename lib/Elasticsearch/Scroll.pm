@@ -2,7 +2,7 @@ package Elasticsearch::Scroll;
 
 use Moo;
 use Elasticsearch::Util qw(parse_params);
-use namespace::autoclean;
+use namespace::clean;
 
 has 'es' => ( is => 'ro', required => 1 );
 has 'scroll'     => ( is => 'ro' );

@@ -3,7 +3,7 @@ package Elasticsearch::Logger::LogAny;
 use Moo;
 with 'Elasticsearch::Role::Logger';
 use Elasticsearch::Util qw(parse_params to_list);
-use namespace::autoclean;
+use namespace::clean;
 
 use Log::Any();
 use Log::Any::Adapter();

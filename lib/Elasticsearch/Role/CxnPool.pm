@@ -2,12 +2,11 @@ package Elasticsearch::Role::CxnPool;
 
 use Moo::Role;
 use Elasticsearch::Util qw(parse_params);
-use namespace::autoclean;
-
 use List::Util qw(shuffle);
 use IO::Select();
 use Time::HiRes qw(time sleep);
 use Elasticsearch::Util qw(to_list);
+use namespace::clean;
 
 requires qw(next_cxn schedule_check);
 

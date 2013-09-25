@@ -3,7 +3,7 @@ package Elasticsearch::Bulk;
 use Moo;
 use Elasticsearch::Util qw(parse_params throw);
 use Try::Tiny;
-use namespace::autoclean;
+use namespace::clean;
 
 has 'es'                => ( is => 'ro', required => 1 );
 has 'max_docs'          => ( is => 'rw', default  => 1_000 );

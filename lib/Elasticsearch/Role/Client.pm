@@ -1,7 +1,7 @@
 package Elasticsearch::Role::Client;
 
 use Moo::Role;
-use namespace::autoclean;
+use namespace::clean;
 
 requires 'parse_request';
 
