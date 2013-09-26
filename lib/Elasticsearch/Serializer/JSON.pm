@@ -76,7 +76,7 @@ sub decode {
 
     return unless defined $json;
 
-    return decode_utf8($json)
+    return is_utf8($json) ? $json : decode_utf8($json)
         unless substr( $json, 0, 1 ) =~ /^[\[{]/;
 
     return try {
