@@ -1,7 +1,7 @@
 requires "Any::URI::Escape" => "0";
 requires "Data::Dumper" => "0";
 requires "Encode" => "0";
-requires "HTTP::Tiny" => "v0.33.0";
+requires "HTTP::Tiny" => "0.036";
 requires "IO::Select" => "0";
 requires "IO::Socket::SSL" => "0";
 requires "IO::Uncompress::Inflate" => "0";
@@ -45,7 +45,5 @@ on 'configure' => sub {
 };
 
 on 'develop' => sub {
-  requires "Test::More" => "0";
-  requires "Test::NoTabs" => "0";
   requires "Test::Pod" => "1.41";
 };

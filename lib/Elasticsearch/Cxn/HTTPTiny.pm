@@ -3,7 +3,7 @@ package Elasticsearch::Cxn::HTTPTiny;
 use Moo;
 with 'Elasticsearch::Role::Cxn::HTTP';
 
-use HTTP::Tiny v0.33 ();
+use HTTP::Tiny 0.036 ();
 use namespace::clean;
 
 my $Cxn_Error = qr/ Connection.(?:timed.out|re(?:set|fused))
