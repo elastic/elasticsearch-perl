@@ -193,11 +193,6 @@ document has already changed, it will throw a C<Conflict> error.  If it can,
 it will include the C<current_version> in the error vars. This error
 is triggered by the C<409> HTTP status code.
 
-=item * C<Elasticsearch::Error::Unavailable>
-
-The service you requested is temporarily unavailable. This error
-is triggered by the C<503> HTTP status code.
-
 =item * C<Elasticsearch::Error::ContentLength>
 
 The request body was longer than the
