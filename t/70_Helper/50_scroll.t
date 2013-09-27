@@ -17,18 +17,20 @@ $es->indices->delete( index => '_all', ignore => 404 );
 
 my $s;
 
-test_scroll(
-    "No indices",
-    {},
-    total     => 0,
-    max_score => 0,
-    steps     => [
-        eof           => 1,
-        next          => [0],
-        refill_buffer => 0,
-        drain_buffer  => [0],
-    ]
-);
+if ( $es->info->{version}{number} ge '0.90.5' ) {
+    test_scroll(
+        "No indices",
+        {},
+        total     => 0,
+        max_score => 0,
+        steps     => [
+            eof           => 1,
+            next          => [0],
+            refill_buffer => 0,
+            drain_buffer  => [0],
+        ]
+    );
+}
 
 do "index_test_data.pl" or die $!;
 
