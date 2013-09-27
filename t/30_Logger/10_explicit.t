@@ -18,10 +18,8 @@ isa_ok $l
     'Elasticsearch::Logger::LogAny',
     'Std Logger';
 
-isa_ok $l->log_handle, 'Log::Any::Adapter::Stderr',
-    'Std - Log to Stderr';
-isa_ok $l->trace_handle, 'Log::Any::Adapter::Stdout',
-    'Std - Trace to Stdout';
+isa_ok $l->log_handle,   'Log::Any::Adapter::Stderr', 'Std - Log to Stderr';
+isa_ok $l->trace_handle, 'Log::Any::Adapter::Stdout', 'Std - Trace to Stdout';
 
 # file
 

@@ -7,10 +7,10 @@ use Elasticsearch::MockCxn qw(mock_noping_client);
 ## Node fails and recover
 
 my $t = mock_noping_client(
-    { nodes => [ 'one', 'two' ,'three'] },
+    { nodes => [ 'one', 'two', 'three' ] },
 
     { node => 1, code => 200, content => 1 },
-    { node => 2, code => 509, error => 'Cxn' },
+    { node => 2, code => 509, error   => 'Cxn' },
     { node => 3, code => 200, content => 1 },
     { node => 1, code => 200, content => 1 },
     { node => 3, code => 200, content => 1 },

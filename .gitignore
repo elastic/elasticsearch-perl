@@ -5,4 +5,5 @@ foo
 .project
 Elasticsearch-*
 cover_db
+doc
 log

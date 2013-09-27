@@ -7,7 +7,7 @@ use Elasticsearch::Bulk;
 
 my $es = do "es_test_server.pl";
 
-$es->indices->delete(index=>'_all');
+$es->indices->delete( index => '_all' );
 
 test_flush(
     "max count",    #
@@ -53,7 +53,7 @@ test_flush(
 
 done_testing;
 
-$es->indices->delete(index=>'test');
+$es->indices->delete( index => 'test' );
 
 #===================================
 sub test_flush {

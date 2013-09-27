@@ -10,7 +10,7 @@ use Log::Any::Adapter;
 
 my $es = do "es_test_server.pl";
 
-$es->indices->delete(index=>'_all');
+$es->indices->delete( index => '_all' );
 
 my @Missing_Metadata = { source => {} };
 my @Std = (
@@ -140,8 +140,7 @@ $b->flush;
 
 done_testing;
 
-$es->indices->delete(index=>'test');
-
+$es->indices->delete( index => 'test' );
 
 #===================================
 sub bulk {
