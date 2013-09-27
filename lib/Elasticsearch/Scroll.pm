@@ -10,6 +10,8 @@ has 'total'      => ( is => 'ro' );
 has 'max_score'  => ( is => 'ro' );
 has 'facets'     => ( is => 'ro' );
 has 'suggest'    => ( is => 'ro' );
+has 'took'       => ( is => 'ro' );
+has 'total_took' => ( is => 'rwp' );
 has '_scroll_id' => ( is => 'rw' );
 has '_buffer'    => ( is => 'ro' );
 has 'eof'        => ( is => 'rw' );
@@ -26,12 +28,15 @@ sub BUILDARGS {
     return {
         es         => $es,
         scroll     => $scroll,
-        total      => $results->{hits}{total},
-        max_score  => $results->{hits}{max_score},
         facets     => $results->{facets},
         suggest    => $results->{suggest},
+        took       => $results->{took},
+        total_took => $results->{took},
+        total      => $results->{hits}{total},
+        max_score  => $results->{hits}{max_score},
         _buffer    => $results->{hits}{hits},
         _scroll_id => $results->{_scroll_id},
+        eof        => !$results->{_scroll_id},
     };
 }
 
@@ -40,37 +45,47 @@ sub next {
 #===================================
     my ( $self, $n ) = @_;
     $n ||= 1;
-    my $buffer = $self->_buffer;
-    while ( !$self->eof and @$buffer < $n ) {
+    while ( !$self->eof and $self->buffer_size < $n ) {
         $self->refill_buffer;
     }
-    return splice( @$buffer, 0, $n );
+    return splice( @{ $self->_buffer }, 0, $n );
 }
 
 #===================================
 sub drain_buffer {
 #===================================
     my $self = shift;
-    return splice( @{ $self->buffer } );
+    return splice( @{ $self->_buffer } );
 }
+
+#===================================
+sub buffer_size { 0 + @{ shift->_buffer } }
+#===================================
 
 #===================================
 sub refill_buffer {
 #===================================
-    my $self    = shift;
+    my $self   = shift;
+    my $buffer = $self->_buffer;
+
+    return 0 + @$buffer if $self->eof;
+
     my $results = $self->es->scroll(
         scroll => $self->scroll,
         body   => $self->_scroll_id
     );
+
     $self->_scroll_id( $results->{_scroll_id} );
     my $hits = $results->{hits}{hits};
+    $self->_set_total_took( $self->total_took + $results->{took} );
+
     if ( @$hits == 0 ) {
         $self->eof(1);
     }
     else {
-        push @{ $self->_buffer }, @$hits;
+        push @$buffer, @$hits;
     }
-
+    return 0 + @$buffer;
 }
 
 #===================================
@@ -79,10 +94,10 @@ sub finish {
     my $self = shift;
     return if $self->eof;
 
-    $self->es->clear_scroll( scroll_id => $self->_scroll_id );
-
     @{ $self->_buffer } = ();
     $self->eof(1);
+    eval { $self->es->clear_scroll( scroll_id => $self->_scroll_id ) };
+    return 1;
 }
 
 #===================================

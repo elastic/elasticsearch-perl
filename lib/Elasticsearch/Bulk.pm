@@ -5,20 +5,18 @@ use Elasticsearch::Util qw(parse_params throw);
 use Try::Tiny;
 use namespace::clean;
 
-has 'es'                => ( is => 'ro', required => 1 );
-has 'max_docs'          => ( is => 'rw', default  => 1_000 );
-has 'max_size'          => ( is => 'rw', default  => 500_000 );
-has 'on_success'        => ( is => 'ro', default  => 0 );
-has 'on_error'          => ( is => 'lazy' );
-has 'on_conflict'       => ( is => 'ro', default  => 0 );
-has 'source_with_error' => ( is => 'ro', default  => 0 );
-has 'verbose'           => ( is => 'rw' );
+has 'es'          => ( is => 'ro', required => 1 );
+has 'max_count'   => ( is => 'rw', default  => 1_000 );
+has 'max_size'    => ( is => 'rw', default  => 500_000 );
+has 'on_success'  => ( is => 'ro', default  => 0 );
+has 'on_error'    => ( is => 'lazy' );
+has 'on_conflict' => ( is => 'ro', default  => 0 );
+has 'verbose'     => ( is => 'rw' );
 
 has '_buffer' => ( is => 'ro', default => sub { [] } );
 has '_buffer_size'  => ( is => 'rw', default => 0 );
 has '_buffer_count' => ( is => 'rw', default => 0 );
 has '_serializer'   => ( is => 'lazy' );
-has '_logger'       => ( is => 'lazy' );
 has '_bulk_args'    => ( is => 'ro' );
 
 our $Conflict = qr/
@@ -26,9 +24,17 @@ our $Conflict = qr/
   | :.version.conflict,.current.\[(\d+)\]
   /x;
 
-our %Actions = map { $_ => 1 } qw(index create update delete);
-our @Metadata_Keys = qw(
-    index type id routing parent timestamp ttl version version_type
+our %Actions = (
+    'index'  => 1,
+    'create' => 1,
+    'update' => 1,
+    'delete' => 1
+);
+
+our @Metadata_Keys = (
+    'index',  'type',      'id',  'routing',
+    'parent', 'timestamp', 'ttl', 'version',
+    'version_type'
 );
 
 #===================================
@@ -38,14 +44,12 @@ sub _build_on_error {
     my $serializer = $self->_serializer;
     return sub {
         my ( $action, $result, $src ) = @_;
-        $self->logger->warning(
-            "Bulk error [$action]: " . $serializer->encode($result) );
+        warn( "Bulk error [$action]: " . $serializer->encode($result) );
     };
 }
 
 #===================================
 sub _build__serializer { shift->es->transport->serializer }
-sub _build__logger     { shift->es->logger }
 #===================================
 
 #===================================
@@ -99,10 +103,10 @@ sub _add {
 #===================================
 sub add_action {
 #===================================
-    my $self     = shift;
-    my $buffer   = $self->_buffer;
-    my $max_size = $self->max_size;
-    my $max_docs = $self->max_docs;
+    my $self      = shift;
+    my $buffer    = $self->_buffer;
+    my $max_size  = $self->max_size;
+    my $max_count = $self->max_count;
 
     while (@_) {
         my $action = shift || '';
@@ -124,7 +128,7 @@ sub add_action {
 
         $self->flush
             if ( $max_size && $size >= $max_size )
-            || $max_docs && $count >= $max_docs;
+            || $max_count && $count >= $max_count;
     }
     return 1;
 }
@@ -156,9 +160,13 @@ sub _encode_action {
         $source
             = delete $params->{_source}
             || delete $params->{source}
-            || throw( 'Param',
-            "Missing <_source> in <$action>: " . $serializer->encode($orig) );
+            || throw(
+            'Param',
+            "Missing <_source> for action <$action>: "
+                . $serializer->encode($orig)
+            );
     }
+
     throw(    "Unknown params <"
             . ( join ',', sort keys %$params )
             . "> in <$action>: "
@@ -174,24 +182,27 @@ sub flush {
 #===================================
     my $self = shift;
 
-    my $results = try {
-        $self->es->bulk( %{ $self->_bulk_args }, body => $self->_buffer );
-    }
-    catch {
-        my $error = $_;
-        $self->clear_buffer;
-        die $error;
-    };
-
-    $self->_report($results);
-    $self->clear_buffer;
+    return { items => [] }
+        unless $self->_buffer_size;
 
     if ( $self->verbose ) {
         local $| = 1;
         print ".";
     }
+    my $results = try {
+        $self->es->bulk( %{ $self->_bulk_args }, body => $self->_buffer );
+    }
+    catch {
+        my $error = $_;
+        $self->clear_buffer
+            if $error->is('Request')
+            and not $error->is('Unavailable');
 
-    return 1;
+        die $error;
+    };
+    $self->clear_buffer;
+    $self->_report($results);
+    return defined wantarray ? $results : undef;
 }
 
 #===================================
@@ -207,18 +218,18 @@ sub clear_buffer {
 sub reindex {
 #===================================
     my ( $self, $params ) = parse_params(@_);
-    my $index     = $self->index;
-    my $type      = $self->type;
-    my $transform = $params->{transform};
-    my $src       = $params->{source};
+    my $src = $params->{source}
+        or die "Missing required param <source>";
+    my $transform    = $params->{transform};
+    my $version_type = $params->{version_type};
 
     if ( ref $src eq 'HASH' ) {
         require Elasticsearch::Scroll;
 
         my $scroll = Elasticsearch::Scroll->new(
-            es        => $self->es,
-            scan_type => 'search',
-            size      => 500,
+            es          => $self->es,
+            search_type => 'scan',
+            size        => 500,
             %$src
         );
 
@@ -226,22 +237,31 @@ sub reindex {
             $scroll->refill_buffer;
             $scroll->drain_buffer;
         };
+
+        print "Reindexing " . $scroll->total . " docs\n"
+            if $self->verbose;
     }
+
+    my $bulk_args = $self->_bulk_args;
+    my %allowed = map { $_ => 1, "_$_" => 1 } ( @Metadata_Keys, 'source' );
+    $allowed{fields} = 1;
+    delete @allowed{ 'index', '_index' } if $bulk_args->{index};
+    delete @allowed{ 'type',  '_type' }  if $bulk_args->{type};
 
     my $cb = sub {
         my %doc = %{ shift() };
-        delete $doc{_index} if $index;
-        delete $doc{_type}  if $type;
-
-        $doc{_version_type} = 'external'
-            if $doc{_version};
+        for ( keys %doc ) {
+            delete $doc{$_} unless $allowed{$_};
+        }
 
         if ( my $fields = delete $doc{fields} ) {
-            for (qw(_routing parent)) {
+            for (qw(_routing routing _parent parent)) {
                 $doc{$_} = $fields->{$_}
                     if exists $fields->{$_};
             }
         }
+        $doc{_version_type} = $version_type if $version_type;
+
         return \%doc unless $transform;
         return $transform->( \%doc );
     };
@@ -253,6 +273,7 @@ sub reindex {
         }
     }
     $self->flush;
+    return 1;
 }
 
 #===================================
@@ -265,33 +286,23 @@ sub _report {
 
     return unless $on_success || $on_error || $on_conflict;
 
-    my $incl_src   = $self->source_with_error;
     my $buffer     = $self->_buffer;
     my $serializer = $self->_serializer;
 
-    my $i = 0;
     my $j = 0;
 
-    if ( $on_success || $on_error || $on_conflict ) {
-        for my $item ( @{ $results->{items} } ) {
-            my ( $action, $result ) = %$item;
-            my @args = ($action);
-            if ( my $error = $result->{error} ) {
-                my $src
-                    = $incl_src && $action ne 'delete'
-                    ? $serializer->decode( $buffer->[ $i + 1 ] )
-                    : $j;
-
-                $on_conflict && $error =~ /$Conflict/
-                    ? $on_conflict->( $action, $result, $src, $1 )
-                    : $on_error && $on_error->( $action, $result, $src );
-            }
-            else {
-                $on_success && $on_success->( $action, $result );
-            }
-            $i += $action eq 'delete' ? 1 : 2;
-            $j++;
+    for my $item ( @{ $results->{items} } ) {
+        my ( $action, $result ) = %$item;
+        my @args = ($action);
+        if ( my $error = $result->{error} ) {
+            $on_conflict && $error =~ /$Conflict/
+                ? $on_conflict->( $action, $result, $j, $1 )
+                : $on_error && $on_error->( $action, $result, $j );
         }
+        else {
+            $on_success && $on_success->( $action, $result, $j );
+        }
+        $j++;
     }
 }
 

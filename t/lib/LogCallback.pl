@@ -1,4 +1,3 @@
-
 use Log::Any::Adapter::Callback;
 use Log::Any::Adapter;
 
