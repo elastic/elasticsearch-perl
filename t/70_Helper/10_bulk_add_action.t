@@ -236,10 +236,14 @@ throws_ok { $b->add_action( 'foo' => {} ) } qr/Unrecognised action/,
 throws_ok { $b->add_action( 'index', 'bar' ) } qr/Missing <params>/,
     'Missing params';
 
-throws_ok { $b->add_action( index => {} ) } qr/Missing <_source>/,
+throws_ok { $b->add_action( index => {type=>'t'} ) } qr/Missing .*<index>/,
+    'Missing index';
+throws_ok { $b->add_action( index => {index=>'i'} ) } qr/Missing .*<type>/,
+    'Missing type';
+throws_ok { $b->add_action( index => {index =>'i',type=>'t'} ) } qr/Missing <source>/,
     'Missing source';
 
-throws_ok { $b->add_action( index => { _source => {}, foo => 1 } ) }
+throws_ok { $b->add_action( index => { index=>'i',type=>'t',_source => {}, foo => 1 } ) }
 qr/Unknown params/, 'Unknown params';
 
 done_testing;

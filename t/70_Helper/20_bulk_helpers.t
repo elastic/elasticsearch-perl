@@ -8,7 +8,7 @@ use lib 't/lib';
 
 my $es = do "es_test_server.pl";
 
-my $b = Elasticsearch::Bulk->new( es => $es );
+my $b = Elasticsearch::Bulk->new( es => $es, index => 'i', type => 't' );
 my $s = $b->_serializer;
 $s->_set_canonical;
 

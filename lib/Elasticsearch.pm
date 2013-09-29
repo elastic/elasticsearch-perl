@@ -538,19 +538,13 @@ C<bulk_index()> and C<reindex()> have been removed from the main client,
 and the C<bulk()> method itself now simply returns the response from
 Elasticsearch. It doesn't interfere with processing at all.
 
-The helper methods will be replaced by the L<Elasticsearch::Bulk> class,
-which has been written but not yet documented or fully tested.
-
-Similarly, C<scrolled_search()> will be replaced by the L<Elasticsearch::Scroll>
-class which is similarly unfinished.
+These helper methods have been replaced by the L<Elasticsearch::Bulk> class.
+Similarly, C<scrolled_search()> has been replaced by the
+L<Elasticsearch::Scroll>.
 
 =head1 TODO
 
 =over
-
-=item * L<Elasticsearch::Bulk>
-
-=item * L<Elasticsearch::Scroll>
 
 =item * L<Elasticsearch::Compat>
 

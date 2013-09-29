@@ -12,7 +12,7 @@ my $es = do "es_test_server.pl";
 
 $es->indices->delete( index => '_all' );
 
-my @Missing_Metadata = { source => {} };
+my @Bad_Metadata = { index => '_bad', type => '_bad', source => {} };
 my @Std = (
     { id => 1, source => { count => 1 } },
     { id => 1, source => { count => 'foo' } },
@@ -22,7 +22,7 @@ my @Std = (
 my $b;
 
 ## Request error - clears buffer
-$b = bulk( {}, @Missing_Metadata );
+$b = bulk( {}, @Bad_Metadata );
 throws_ok { $b->flush } qr/Request/, "Request error";
 is $b->_buffer_size, 0, 'Request error - buffer cleared';
 
