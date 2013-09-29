@@ -1,5 +1,10 @@
 Revision history for Elasticsearch
 
+0.72    2013-09-29
+        Added Elasticsearch::Bulk and Elasticsearch::Scroll
+        Changed `https` to `use_https` for compatibility with elasticsearch-py
+        Numerous fixes for different Perl versions, and Moo 1.003 now required
+
 0.71    2013-09-24
         Fixed dist.ini to list dependencies correctly
 
