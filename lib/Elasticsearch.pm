@@ -1,6 +1,6 @@
 package Elasticsearch;
 
-use Moo;
+use Moo 1.003;
 
 use Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
