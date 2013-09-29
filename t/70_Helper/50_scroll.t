@@ -53,8 +53,8 @@ test_scroll(
 );
 
 SKIP: {
-    skip "Bug in Elasticsearch suggest JSON parsing pre 0.90.2", 2
-        if $es->info->{version}{number} lt '0.90.2';
+    skip "Bug in Elasticsearch suggest JSON parsing pre 0.90.3", 2
+        if $es->info->{version}{number} lt '0.90.3';
 
     test_scroll(
         "Query",
