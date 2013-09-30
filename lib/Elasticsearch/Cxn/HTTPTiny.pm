@@ -46,7 +46,7 @@ sub error_from_text {
 #===================================
     local $_ = $_[2];
     return
-          /Timed out/                ? 'Timeout'
+          /[Tt]imed out/             ? 'Timeout'
         : /Unexpected end of stream/ ? 'ContentLength'
         : /$Cxn_Error/               ? 'Cxn'
         :                              'Request';
