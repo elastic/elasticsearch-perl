@@ -1,8 +1,8 @@
 use Test::More;
 use Elasticsearch;
 
-isa_ok my $c = Elasticsearch->new->transport->cxn_pool->cxns->[0],
-    'Elasticsearch::Cxn::HTTPTiny', 'Connection';
+my $c = Elasticsearch->new->transport->cxn_pool->cxns->[0];
+ok $c->does('Elasticsearch::Role::Cxn'), 'Does Elasticsearch::Role::Cxn';
 
 # MARK LIVE
 

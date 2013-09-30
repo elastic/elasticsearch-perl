@@ -3,8 +3,8 @@ use Test::Exception;
 use Test::Deep;
 use Elasticsearch;
 
-isa_ok my $c = Elasticsearch->new->transport->cxn_pool->cxns->[0],
-    'Elasticsearch::Cxn::HTTPTiny', 'Connection';
+my $c = Elasticsearch->new->transport->cxn_pool->cxns->[0];
+ok $c->does('Elasticsearch::Role::Cxn'), 'Does Elasticsearch::Role::Cxn';
 
 my ( $code, $response );
 
@@ -80,7 +80,7 @@ is $@->{vars}{current_version}, 1, "Error has current version";
 ### Timeout error
 throws_ok {
     $c->process_response( { method => 'GET', ignore => [] },
-        509, "Timed out" );
+        509, "28: Timed out,read timeout" );
 }
 qr/Timeout/, "Timeout error";
 
