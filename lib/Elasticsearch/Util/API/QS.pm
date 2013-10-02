@@ -188,7 +188,7 @@ our %Params = (
     },
     wait_for_active_shards     => { type => 'number' },
     wait_for_merge             => { type => 'bool' },
-    wait_for_nodes             => { type => 'number' },
+    wait_for_nodes             => { type => 'string' },
     wait_for_relocating_shards => { type => 'number' },
     wait_for_status            => {
         default => undef,
