@@ -41,6 +41,28 @@ sub new {
     return $params->{client};
 }
 
+package    # hide from pause
+    ElasticSearch::Deprecation;
+
+sub new {
+    my $class = shift;
+    die <<DEPRECATION;
+
+It appears that you are using a case-insensitive filesystem. You tried
+to load "ElasticSearch", but you have loaded "Elasticsearch" instead. See:
+
+    https://metacpan.org/release/Elasticsearch
+
+ElasticSearch has been replaced by the official client: Elasticsearch.
+To ease your transition from old to new, please install Elasticsearch::Compat:
+
+    https://metacpan.org/module/Elasticsearch::Compat
+
+DEPRECATION
+}
+
+@ElasticSearch::ISA = 'ElasticSearch::Deprecation';
+
 1;
 
 __END__
@@ -548,7 +570,6 @@ Add a new client with a similar less verbose interface to L<ElasticSearch>
 and integration with L<ElasticSearch::SearchBuilder>.
 
 =back
-
 
 =head1 BUGS
 
