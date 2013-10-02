@@ -54,12 +54,13 @@ sub _build_handle {
 #===================================
     my $self = shift;
     my %args = (
-        verify_hostname => 0,
         default_headers => HTTP::Headers->new( $self->default_headers ),
         keep_alive      => 1,
         parse_head      => 0
     );
-
+    if ( $self->is_https ) {
+        $args{verify_hostname} = 0;
+    }
     return LWP::UserAgent->new( %args, %{ $self->handle_args } );
 }
 
