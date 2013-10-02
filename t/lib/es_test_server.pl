@@ -12,13 +12,15 @@ my $es;
 if ( $ENV{ES} ) {
     $es = Elasticsearch->new(
         nodes    => $ENV{ES},
-        trace_to => $trace
+        trace_to => $trace,
+        cxn      => $ENV{ES_CXN} || 'LWP'
     );
     eval { $es->ping; } or do {
         diag $@;
         undef $es;
     };
 }
+
 unless ($es) {
     plan skip_all => 'No Elasticsearch test node available';
     exit;

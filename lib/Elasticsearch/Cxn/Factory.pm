@@ -4,6 +4,7 @@ use Moo;
 use Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
+has 'cxn_class'          => ( is => 'ro', required => 1 );
 has '_factory'           => ( is => 'ro', required => 1 );
 has 'default_host'       => ( is => 'ro', required => 1 );
 has 'max_content_length' => ( is => 'rw', default  => 104_857_600 );

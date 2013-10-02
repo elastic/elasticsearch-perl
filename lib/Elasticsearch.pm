@@ -30,7 +30,7 @@ sub new {
 #===================================
     my ( $class, $params ) = parse_params(@_);
 
-    $params->{cxn} ||= 'HTTPTiny';
+    $params->{cxn} ||= 'LWP';
 
     for my $name (@Load_Order) {
         my ( $base, $default ) = @{ $Default_Plugins{$name} };
@@ -366,9 +366,10 @@ See :
 
 =over
 
-=item *
+=item * L<Elasticsearch::Client::Direct> (default)
 
-L<Elasticsearch::Client::Direct>.
+=item * L<Elasticsearch::Client::Compat> (for migration from the old
+L<ElasticSearch> module)
 
 =back
 
@@ -380,9 +381,7 @@ retrying after failure where appropriate. See:
 
 =over
 
-=item *
-
-L<Elasticsearch::Transport>
+=item * L<Elasticsearch::Transport>
 
 =back
 
@@ -393,9 +392,11 @@ See:
 
 =over
 
-=item *
+=item * L<Elasticsearch::Cxn::LWP> (default)
 
-L<Elasticsearch::Cxn::HTTPTiny>
+=item * L<Elasticsearch::Cxn::HTTPTiny>
+
+=item * L<Elasticsearch::Cxn::NetCurl>
 
 =back
 
@@ -406,9 +407,7 @@ See:
 
 =over
 
-=item *
-
-L<Elasticsearch::Cxn::Factory>
+=item * L<Elasticsearch::Cxn::Factory>
 
 =back
 
@@ -420,17 +419,11 @@ appropriate. See:
 
 =over
 
-=item *
+=item * L<Elasticsearch::CxnPool::Static> (default)
 
-L<Elasticsearch::CxnPool::Static> (default)
+=item * L<Elasticsearch::CxnPool::Sniff>
 
-=item *
-
-L<Elasticsearch::CxnPool::Sniff>
-
-=item *
-
-L<Elasticsearch::CxnPool::Static::NoPing>
+=item * L<Elasticsearch::CxnPool::Static::NoPing>
 
 =back
 
@@ -441,9 +434,7 @@ requests/responses.  See:
 
 =over
 
-=item *
-
-L<Elasticsearch::Logger::LogAny>
+=item * L<Elasticsearch::Logger::LogAny>
 
 =back
 
@@ -454,13 +445,14 @@ bodies.  See:
 
 =over
 
-=item *
-
-L<Elasticsearch::Serializer::JSON>
+=item * L<Elasticsearch::Serializer::JSON>
 
 =back
 
 =head1 MIGRATING FROM ElasticSearch.pm
+
+See L<Elasticsearch::Compat>, which allows you to run your old
+L<ElasticSearch> code with the new L<Elasticsearch> module.
 
 The L<Elasticseach> API is pretty similar to the old L<ElasticSearch> API,
 but there are a few differences.  The most notable are:
@@ -546,15 +538,9 @@ L<Elasticsearch::Scroll>.
 
 =over
 
-=item * L<Elasticsearch::Compat>
+=item * Async support
 
-This module will provide an easy migration path from the old L<ElasticSearch>
-to the new L<Elasticsearch>.
-
-=item * New backends
-
-Release backends for L<LWP>, L<HTTP::Lite>, L<WWW::Curl>, L<Net::Curl>.
-Also add async support via L<AnyEvent> and perhaps L<Mojo>.
+Add async support using L<Promises> for L<AnyEvent> and perhaps L<Mojo>.
 
 =item * New frontend
 
@@ -618,3 +604,8 @@ be run as :
 
 B<TESTS RUN IN THIS WAY ARE DESTRUCTIVE! DO NOT RUN AGAINST A CLUSTER WITH
 DATA YOU WANT TO KEEP!>
+
+You can change the Cxn class which is used by setting the C<ES_CXN>
+environment variable:
+
+    ES_CXN=HTTPTiny ES=localhost:9200 make test

@@ -72,12 +72,26 @@ sub _build_handle {
 
 =head1 DESCRIPTION
 
-Provides the default HTTP Cxn class and is based on L<HTTP::Tiny>.
+Provides an HTTP Cxn class based on L<HTTP::Tiny>.
 The HTTP::Tiny backend is fast, uses pure Perl, but doesn't provide
-persistent connections.
+persistent connections. If you are going to use it, make sure you
+have a high open filehandle limit (C<ulimit -l>) so that your system
+doesn't run out of sockets.
 
 This class does L<Elasticsearch::Role::Cxn::HTTP>, whose documentation
 provides more information.
 
+
+=head1 SEE ALSO
+
+=over
+
+=item * L<Elasticsearch::Role::Cxn::HTTP>
+
+=item * L<Elasticsearch::Cxn::LWP>
+
+=item * L<Elasticsearch::Cxn::NetCurl>
+
+=back
 
 
