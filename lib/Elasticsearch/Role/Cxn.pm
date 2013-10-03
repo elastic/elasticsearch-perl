@@ -13,10 +13,10 @@ requires qw(protocol perform_request error_from_text);
 has 'host'                  => ( is => 'ro', required => 1 );
 has 'port'                  => ( is => 'ro', required => 1 );
 has 'uri'                   => ( is => 'ro', required => 1 );
-has 'request_timeout'       => ( is => 'ro', default  => 10 );
-has 'ping_timeout'          => ( is => 'ro', default  => 5 );
-has 'sniff_timeout'         => ( is => 'ro', default  => 0.5 );
-has 'sniff_request_timeout' => ( is => 'ro', default  => 5 );
+has 'request_timeout'       => ( is => 'ro', default  => 30 );
+has 'ping_timeout'          => ( is => 'ro', default  => 2 );
+has 'sniff_timeout'         => ( is => 'ro', default  => 1 );
+has 'sniff_request_timeout' => ( is => 'ro', default  => 2 );
 has 'next_ping'             => ( is => 'rw', default  => 0 );
 has 'ping_failures'         => ( is => 'rw', default  => 0 );
 has 'dead_timeout'          => ( is => 'ro', default  => 60 );
@@ -178,29 +178,46 @@ implentation, using the L<Elasticsearch::Cxn::Factory> class.
 
 =head1 CONFIGURATION
 
+B<IMPORTANT:> The L</request_timeout>, L</ping_timeout>, L</sniff_timeout>,
+and L</sniff_request_timeout> parameters default to values that allow
+this module to function with low powered hardware and slow networks.
+When you use Elasticsearch in production, you will probably want to reduce
+these timeout parameters to values that suit your environment.
+
 The configuration parameters are as follows:
 
 =head2 C<request_timeout>
 
     $e = Elasticsearch->new(
-        request_timeout => 10
+        request_timeout => 30
     );
 
 How long a normal request (ie not a ping or sniff request) should wait
-before throwing a C<Timeout> error.  Defaults to C<10> seconds.
+before throwing a C<Timeout> error.  Defaults to C<30> seconds.
+
+B<Note:> In production, no request should take 30 seconds to run, other
+than an L<optimize()/Elasticsearch::Client::Direct/optimize()> request.
+A more reasonable value for production would be C<10> seconds or lower.
 
 =head2 C<ping_timeout>
 
     $e = Elasticsearch->new(
-        request_timeout => 0.3
+        ping_timeout => 2
     );
 
 How long a ping request should wait before throwing a C<Timeout> error.
-Defaults to C<0.3> seconds.  You may want to increase this if you are
-using the L<Elasticsearch::CxnPool::Static>  connection pool with a slow
-network.
+Defaults to C<2> seconds. The L<Elasticsearch::CxnPool::Static> module
+pings nodes on first use, after any failure, and periodically to ensure
+that nodes are healthy. The C<ping_timeout> should be long enough to allow
+nodes respond in time, but not so long that sick nodes cause delays.
+A reasonable value for use in production on reasonable hardware
+would be C<0.3>-C<1> seconds.
 
 =head2 C<dead_timeout>
+
+    $e = Elasticsearch->new(
+        dead_timeout => 60
+    );
 
 How long a Cxn should be considered to be I<dead> (not used to serve requests),
 before it is retried.  The default is C<60> seconds.  This value is increased
@@ -216,6 +233,10 @@ after each failure is as follows:
 
 =head2 C<max_dead_timeout>
 
+    $e = Elasticsearch->new(
+        max_dead_timeout => 3600
+    );
+
 The maximum delay that should be applied to a failed node. If the
 L</dead_timeout> calculation results in a delay greater than
 C<max_dead_timeout> (default C<3,600> seconds) then the C<max_dead_timeout>
@@ -224,18 +245,27 @@ every hour by default.
 
 =head2 C<sniff_request_timeout>
 
-How long a sniff request should wait before throwing a C<Timeout> error.
-Defaults to C<0.3> seconds.  You may want to increase this if you are
-using the L<Elasticsearch::CxnPool::Sniff> connection pool with a slow
-network.
+    $e = Elasticsearch->new(
+        sniff_request_timeout => 2
+    );
 
+How long a sniff request should wait before throwing a C<Timeout> error.
+Defaults to C<2> seconds. A reasonable value for production would be
+C<0.5>-C<2> seconds.
 
 =head2 C<sniff_timeout>
 
+    $e = Elasticsearch->new(
+        sniff_timeout => 1
+    );
+
 How long the node being sniffed should wait for responses from other nodes
-before responding to the client.  B<Note:> this is distinct from the
-L</sniff_request_timeout>.  For example, let's say you have a cluster with
-5 nodes, 2 of which are unhealthy (taking a long time to respond):
+before responding to the client.  Defaults to C<1> second. A reasonable
+value in production would be C<0.3>-C<1> seconds.
+
+B<Note:> The C<sniff_timeout> is distinct from the L</sniff_request_timeout>.
+For example, let's say you have a cluster with 5 nodes, 2 of which are
+unhealthy (taking a long time to respond):
 
 =over
 
@@ -254,11 +284,6 @@ has managed to gather from the healthy nodes.
 
 B<NOTE:> The C<sniff_request_timeout> must be longer than the C<sniff_timeout>
 to ensure that you get information about healthy nodes from the cluster.
-
-For CxnPool's which implement sniffing (see L<Elasticsearch::CxnPool::Sniff>),
-the C<sniff_timeout> is the amount of time that the node being sniffed
-will wait to receive responses from other nodes, before returning a list
-of healthy nodes.
 
 =head2 C<handle_args>
 
