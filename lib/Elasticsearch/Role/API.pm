@@ -25,7 +25,7 @@ sub api {
             desc => 'The operation definition and data (action-data pairs), '
                 . 'separated by newlines'
         },
-        doc       => 'api/bulk/',
+        doc       => 'docs-bulk',
         method    => 'POST',
         path      => '{index-when-type}/{type|blank}/_bulk',
         serialize => 'bulk',
@@ -34,13 +34,13 @@ sub api {
 
     'clear_scroll' => {
         method => 'DELETE',
-        doc    => '',
+        doc    => 'search-request-search-type',
         path   => '_search/scroll/{scroll_ids}'
     },
 
     'count' => {
         body => { desc => 'A query to restrict the results (optional)' },
-        doc  => 'api/count/',
+        doc  => 'search-count',
         path => '{indices|all-type}/{types}/_count',
         qs   => [
             'ignore_indices', 'min_score', 'preference', 'routing',
@@ -49,7 +49,7 @@ sub api {
     },
 
     'delete' => {
-        doc    => 'api/delete/',
+        doc    => 'docs-delete',
         method => 'DELETE',
         path   => '{index}/{type}/{id}',
         qs     => [
@@ -61,7 +61,7 @@ sub api {
     'delete_by_query' => {
         body =>
             { desc => 'A query to restrict the operation', required => 1 },
-        doc    => 'api/delete-by-query/',
+        doc    => 'docs-delete-by-query',
         method => 'DELETE',
         path   => '{indices|all-type}/{types}/_query',
         qs     => [
@@ -74,7 +74,7 @@ sub api {
     },
 
     'exists' => {
-        doc    => 'api/get/',
+        doc    => 'docs-get',
         method => 'HEAD',
         path   => '{index}/{type|all}/{id}',
         qs => [ 'parent', 'preference', 'realtime', 'refresh', 'routing' ],
@@ -85,7 +85,7 @@ sub api {
             desc     => 'The query definition using the Query DSL',
             required => 1
         },
-        doc  => 'api/explain/',
+        doc  => 'search-explain',
         path => '{index}/{type}/{id}/_explain',
         qs   => [
             'analyze_wildcard',         'analyzer',
@@ -100,7 +100,7 @@ sub api {
     },
 
     'get' => {
-        doc  => 'api/get/',
+        doc  => 'docs-get',
         path => '{index}/{type|all}/{id}',
         qs   => [
             'fields',     'parent',
@@ -112,7 +112,7 @@ sub api {
     },
 
     'get_source' => {
-        doc  => 'api/get/',
+        doc  => 'docs-get',
         path => '{index}/{type|all}/{id}/_source',
         qs   => [
             'parent',   'preference',
@@ -127,7 +127,7 @@ sub api {
             desc     => 'The document',
             required => 1
         },
-        doc    => 'api/index_/',
+        doc    => 'docs-index_',
         method => 'PUT',
         path   => '{index}/{type}/{id|blank}',
         qs     => [
@@ -138,7 +138,7 @@ sub api {
     },
 
     'info' => {
-        doc  => '',
+        doc  => 'index',
         path => '',
     },
 
@@ -149,7 +149,7 @@ sub api {
                 . ' `docs` (containing full document information) or '
                 . '`ids` (when index and type is provided in the URL.'
         },
-        doc  => 'api/multi-get/',
+        doc  => 'docs-multi-get',
         path => '{index-when-type}/{type|blank}/_mget',
         qs   => [
             'fields',   'preference',
@@ -161,7 +161,7 @@ sub api {
 
     'mlt' => {
         body => { desc => 'A specific search request definition' },
-        doc  => 'api/more-like-this/',
+        doc  => 'search-more-like-this',
         path => '{index}/{type|all}/{id}/_mlt',
         qs   => [
             'boost_terms',            'max_doc_freq',
@@ -183,7 +183,7 @@ sub api {
             desc     => 'The request definitions (metadata-search '
                 . 'request definition pairs), separated by newlines'
         },
-        doc       => 'api/multi-search/',
+        doc       => 'search-multi-search',
         path      => '{indices|all-type}/{types}/_msearch',
         serialize => 'bulk',
         qs        => ['search_type'],
@@ -197,13 +197,13 @@ sub api {
                 . '`query` to limit the percolation to '
                 . 'specific registered queries'
         },
-        doc  => 'api/percolate/',
+        doc  => 'search-percolate',
         path => '{index}/{type}/_percolate',
         qs   => ['prefer_local'],
     },
 
     'ping' => {
-        doc    => '',
+        doc    => 'index',
         method => 'HEAD',
         path   => '',
     },
@@ -212,14 +212,14 @@ sub api {
         body => {
             desc => 'The scroll ID if not passed by URL or query parameter.'
         },
-        doc  => 'api/search/scroll/',
+        doc  => 'search-request-scroll',
         path => '_search/scroll',
         qs   => [ 'scroll', 'scroll_id' ],
     },
 
     'search' => {
         body => { desc => 'The search definition using the Query DSL' },
-        doc  => 'api/search/',
+        doc  => 'search-search',
         path => '{indices|all-type}/{types}/_search',
         qs   => [
             'analyze_wildcard', 'analyzer',
@@ -241,7 +241,7 @@ sub api {
 
     'suggest' => {
         body => { desc => 'The request definition' },
-        doc  => 'api/search/suggest/',
+        doc  => 'search-suggesters',
         path => '{indices|all-type}/{types}/_suggest',
         qs   => [ 'ignore_indices', 'preference', 'routing', 'source' ],
     },
@@ -251,7 +251,7 @@ sub api {
             desc => 'The request definition using either '
                 . '`script` or partial `doc`'
         },
-        doc    => 'api/update/',
+        doc    => 'docs-update',
         method => 'POST',
         path   => '{index}/{type}/{id}/_update',
         qs     => [
@@ -267,12 +267,12 @@ sub api {
     },
 
     'cluster.get_settings' => {
-        doc  => 'api/admin-cluster-update-settings/',
+        doc  => 'cluster-update-settings/',
         path => '_cluster/settings',
     },
 
     'cluster.health' => {
-        doc  => 'api/admin-cluster-health/',
+        doc  => 'cluster-health/',
         path => '_cluster/health',
         qs   => [
             'level',                      'local',
@@ -283,13 +283,13 @@ sub api {
     },
 
     'cluster.hot_threads' => {
-        doc  => 'api/admin-cluster-nodes-hot-threads/',
+        doc  => 'cluster-nodes-hot-threads/',
         path => '_nodes/{nodes|blank}/hot_threads',
         qs   => [ 'interval', 'snapshots', 'threads', 'type' ],
     },
 
     'cluster.node_info' => {
-        doc  => 'api/admin-cluster-nodes-info/',
+        doc  => 'cluster-nodes-info/',
         path => '_nodes/{nodes|blank}',
         qs   => [
             'all',      'clear',   'http',        'jvm',
@@ -299,14 +299,14 @@ sub api {
     },
 
     'cluster.shutdown' => {
-        doc    => 'api/admin-cluster-nodes-shutdown/',
+        doc    => 'cluster-nodes-shutdown/',
         method => 'POST',
         path   => '_cluster/nodes/{nodes|blank}/_shutdown',
         qs     => [ 'delay', 'exit' ],
     },
 
     'cluster.node_stats' => {
-        doc  => 'api/admin-cluster-nodes-stats/',
+        doc  => 'cluster-nodes-stats/',
         path => '_nodes/{nodes|blank}/stats/{metric|blank}',
         qs   => [
             'all',  'clear',   'fields',      'fs',
@@ -320,7 +320,7 @@ sub api {
             desc => 'The settings to be updated. Can be either '
                 . '`transient` or `persistent`.'
         },
-        doc    => 'api/admin-cluster-update-settings/',
+        doc    => 'cluster-update-settings/',
         method => 'PUT',
         path   => '_cluster/settings',
     },
@@ -330,14 +330,14 @@ sub api {
             desc => 'The definition of `commands` to perform '
                 . '(`move`, `cancel`, `allocate`)'
         },
-        doc    => 'api/admin-cluster-reroute/',
+        doc    => 'cluster-reroute/',
         method => 'POST',
         path   => '_cluster/reroute',
         qs     => [ 'dry_run', 'filter_metadata' ],
     },
 
     'cluster.state' => {
-        doc  => 'api/admin-cluster-state/',
+        doc  => 'cluster-state/',
         path => '_cluster/state',
         qs   => [
             'filter_blocks',  'filter_index_templates',
@@ -350,7 +350,7 @@ sub api {
     'indices.analyze' => {
         body =>
             { desc => 'The text on which the analysis should be performed' },
-        doc    => 'api/admin-indices-analyze/',
+        doc    => 'indices-analyze/',
         method => 'POST',
         path   => '{index|blank}/_analyze',
         qs     => [
@@ -360,7 +360,7 @@ sub api {
     },
 
     'indices.clear_cache' => {
-        doc    => 'api/admin-indices-clearcache/',
+        doc    => 'indices-clearcache/',
         method => 'POST',
         path   => '{indices}/_cache/clear',
         qs     => [
@@ -373,7 +373,7 @@ sub api {
     },
 
     'indices.close' => {
-        doc    => 'api/admin-indices-open-close/',
+        doc    => 'indices-open-close/',
         method => 'POST',
         path   => '{req_indices}/_close',
         qs     => [ 'timeout', 'master_timeout' ],
@@ -384,115 +384,115 @@ sub api {
             desc => 'The configuration for the index '
                 . '(`settings` and `mappings`)'
         },
-        doc    => 'api/admin-indices-create-index/',
+        doc    => 'indices-create-index/',
         method => 'PUT',
         path   => '{index}',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.delete' => {
-        doc    => 'api/admin-indices-delete-index/',
+        doc    => 'indices-delete-index/',
         method => 'DELETE',
         path   => '{req_indices}',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.delete_alias' => {
-        doc    => 'api/admin-indices-aliases/',
+        doc    => 'indices-aliases/',
         method => 'DELETE',
         path   => '{index}/_alias/{name}',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.delete_mapping' => {
-        doc    => 'api/admin-indices-delete-mapping/',
+        doc    => 'indices-delete-mapping/',
         method => 'DELETE',
         path   => '{req_indices}/{type}',
         qs     => ['master_timeout'],
     },
 
     'indices.delete_template' => {
-        doc    => 'api/admin-indices-templates/',
+        doc    => 'indices-templates/',
         method => 'DELETE',
         path   => '_template/{name}',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.delete_warmer' => {
-        doc    => 'api/admin-indices-warmers/',
+        doc    => 'indices-warmers/',
         method => 'DELETE',
         path   => '{req_indices}/_warmer/{names}',
         qs     => ['master_timeout'],
     },
 
     'indices.exists' => {
-        doc    => 'api/admin-indices-indices-exists/',
+        doc    => 'indices-exists/',
         method => 'HEAD',
         path   => '{req_indices}',
     },
 
     'indices.exists_alias' => {
-        doc    => 'api/admin-indices-aliases/',
+        doc    => 'indices-aliases/',
         method => 'HEAD',
         path   => '{indices}/_alias/{names}',
         qs     => ['ignore_indices'],
     },
 
     'indices.exists_type' => {
-        doc    => 'api/admin-indices-types-exists/',
+        doc    => 'indices-types-exists/',
         method => 'HEAD',
         path   => '{indices|all}/{req_types}',
         qs     => ['ignore_indices'],
     },
 
     'indices.flush' => {
-        doc    => 'api/admin-indices-flush/',
+        doc    => 'indices-flush/',
         method => 'POST',
         path   => '{indices}/_flush',
         qs     => [ 'force', 'full', 'ignore_indices', 'refresh' ],
     },
 
     'indices.get_alias' => {
-        doc  => 'api/admin-indices-aliases/',
+        doc  => 'indices-aliases/',
         path => '{indices}/_alias/{names}',
         qs   => ['ignore_indices'],
     },
 
     'indices.get_aliases' => {
-        doc  => 'api/admin-indices-aliases/',
+        doc  => 'indices-aliases/',
         path => '{indices}/_aliases',
         qs   => ['timeout'],
     },
 
     'indices.get_mapping' => {
-        doc  => 'api/admin-indices-get-mapping/',
+        doc  => 'indices-get-mapping/',
         path => '{indices|all-type}/{types}/_mapping',
     },
 
     'indices.get_settings' => {
-        doc  => 'api/admin-indices-get-settings/',
+        doc  => 'indices-get-settings/',
         path => '{indices}/_settings',
     },
 
     'indices.get_template' => {
-        doc  => 'api/admin-indices-templates/',
+        doc  => 'indices-templates/',
         path => '_template/{name}',
     },
 
     'indices.get_warmer' => {
-        doc  => 'api/admin-indices-warmers/',
+        doc  => 'indices-warmers/',
         path => '{indices|all}/_warmer/{names}',
     },
 
     'indices.open' => {
-        doc    => 'api/admin-indices-open-close/',
+        doc    => 'indices-open-close/',
         method => 'POST',
         path   => '{indices|all}/_open',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.optimize' => {
-        doc    => 'api/admin-indices-optimize/',
+        doc    => 'indices-optimize/',
         method => 'POST',
         path   => '{indices}/_optimize',
         qs     => [
@@ -507,7 +507,7 @@ sub api {
             desc => 'The settings for the alias, '
                 . 'such as `routing` or `filter`',
         },
-        doc    => 'api/admin-indices-aliases/',
+        doc    => 'indices-aliases/',
         method => 'PUT',
         path   => '{index}/_alias/{name}',
         qs     => [ 'timeout', 'master_timeout' ],
@@ -518,7 +518,7 @@ sub api {
             desc     => 'The mapping definition',
             required => 1
         },
-        doc    => 'api/admin-indices-put-mapping/',
+        doc    => 'indices-put-mapping/',
         method => 'PUT',
         path   => '{indices|all}/{type}/_mapping',
         qs     => [ 'ignore_conflicts', 'timeout', 'master_timeout' ],
@@ -529,7 +529,7 @@ sub api {
             desc     => 'The index settings to be updated',
             required => 1
         },
-        doc    => 'api/admin-indices-update-settings/',
+        doc    => 'indices-update-settings/',
         method => 'PUT',
         path   => '{indices}/_settings',
         qs     => ['master_timeout'],
@@ -540,7 +540,7 @@ sub api {
             desc     => 'The template definition',
             required => 1
         },
-        doc    => 'api/admin-indices-templates/',
+        doc    => 'indices-templates/',
         method => 'PUT',
         path   => '_template/{name}',
         qs     => [ 'order', 'timeout', 'master_timeout' ],
@@ -552,34 +552,34 @@ sub api {
                 . ' the warmer (query, filters, facets, sorting, etc)',
             required => 1
         },
-        doc    => 'api/admin-indices-warmers/',
+        doc    => 'indices-warmers/',
         method => 'PUT',
         path   => '{indices|all}/_warmer/{name}',
         qs     => ['master_timeout'],
     },
 
     'indices.refresh' => {
-        doc    => 'api/admin-indices-refresh/',
+        doc    => 'indices-refresh/',
         method => 'POST',
         path   => '{indices}/_refresh',
         qs     => ['ignore_indices'],
     },
 
     'indices.segments' => {
-        doc  => 'api/admin-indices-segments/',
+        doc  => 'indices-segments/',
         path => '{indices}/_segments',
         qs   => [ 'ignore_indices', ],
     },
 
     'indices.snapshot_index' => {
-        docs   => 'api/admin-indices-gateway-snapshot/',
+        docs   => 'indices-gateway-snapshot/',
         method => 'POST',
         path   => '{indices}/_gateway/snapshot',
         params => ['ignore_indices']
     },
 
     'indices.stats' => {
-        doc  => 'api/admin-indices-stats/',
+        doc  => 'indices-stats/',
         path => '{indices}/_stats',
         qs   => [
             'all',              'clear',
@@ -596,7 +596,7 @@ sub api {
     },
 
     'indices.status' => {
-        doc  => 'api/admin-indices-status/',
+        doc  => 'indices-status/',
         path => '{indices}/_status',
         qs   => [ 'ignore_indices', 'recovery', 'snapshot' ],
     },
@@ -606,7 +606,7 @@ sub api {
             required => 1,
             desc     => 'The definition of `actions` to perform'
         },
-        doc    => 'api/admin-indices-aliases/',
+        doc    => 'indices-aliases/',
         method => 'POST',
         path   => '_aliases',
         qs     => [ 'timeout', 'master_timeout' ],
@@ -614,7 +614,7 @@ sub api {
 
     'indices.validate_query' => {
         body => { desc => 'The query definition' },
-        doc  => 'api/validate/',
+        doc  => 'search-validate/',
         path => '{indices|all-type}/{types}/_validate/query',
         qs   => [ 'explain', 'ignore_indices', 'q', 'source' ],
     },

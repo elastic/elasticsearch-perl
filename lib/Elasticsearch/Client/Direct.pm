@@ -277,7 +277,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<index docs|http://www.elasticsearch.org/guide/reference/api/index_/>
+See the L<index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-index_.html>
 for more information.
 
 =head2 C<create()>
@@ -308,7 +308,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<create docs|http://www.elasticsearch.org/guide/reference/api/create/>
+See the L<create docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-create.html>
 for more information.
 
 =head2 C<get()>
@@ -333,7 +333,7 @@ Query string parameters:
     C<refresh>,
     C<routing>
 
-See the L<get docs|http://www.elasticsearch.org/guide/reference/api/get/>
+See the L<get docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
 
 =head2 C<get_source()>
@@ -358,7 +358,7 @@ Query string parameters:
     C<refresh>,
     C<routing>
 
-See the L<get_source docs|http://www.elasticsearch.org/guide/reference/api/get/>
+See the L<get_source docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
 
 =head2 C<exists()>
@@ -379,7 +379,7 @@ Query string parameters:
     C<refresh>,
     C<routing>
 
-See the L<exists docs|http://www.elasticsearch.org/guide/reference/api/get/>
+See the L<exists docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
 
 =head2 C<delete()>
@@ -403,7 +403,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<delete docs|http://www.elasticsearch.org/guide/reference/api/delete/>
+See the L<delete docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-delete.html>
 for more information.
 
 =head2 C<update()>
@@ -460,7 +460,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<update docs|http://www.elasticsearch.org/guide/reference/api//>
+See the L<update docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-update.html>
 for more information.
 
 =head1 BULK DOCUMENT CRUD METHODS
@@ -546,7 +546,7 @@ Query string parameters:
     C<replication>,
     C<type>
 
-See the L<bulk docs|http://www.elasticsearch.org/guide/reference/api/bulk/>
+See the L<bulk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-bulk.html>
 for more information.
 
 =head2 C<mget()>
@@ -595,7 +595,7 @@ Query string parameters:
     C<realtime>,
     C<refresh>
 
-See the L<mget docs|http://www.elasticsearch.org/guide/reference/api/multi-get/>
+See the L<mget docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-multi-get.html>
 for more information.
 
 =head2 C<delete_by_query()>
@@ -634,7 +634,7 @@ Query string parameters:
     C<source>,
     C<timeout>
 
-See the L<delete_by_query docs|http://www.elasticsearch.org/guide/reference/api/delete-by-query/>
+See the L<delete_by_query docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-delete-by-query.html>
 for more information.
 
 =head1 SEARCH METHODS
@@ -654,23 +654,23 @@ and of one, more or all types:
 The C<search()> method searches for matching documents in one or more
 indices.  It is just as easy to search a single index as it is to search
 all the indices in your cluster.  It can also return
-L<facets|http://www.elasticsearch.org/guide/reference/api/search/facets/>
+L<facets|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-facets.thml>
 (aggregations on particular fields),
-L<highlighted snippets|http://www.elasticsearch.org/guide/reference/api/search/highlighting/>
-and L<did-you-mean|http://www.elasticsearch.org/guide/reference/api/search/phrase-suggest/>
-or L<search-as-you-type|http://www.elasticsearch.org/guide/reference/api/search/completion-suggest.html>
+L<highlighted snippets|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-highlighting.html>
+and L<did-you-mean|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-suggesters-phrase.html>
+or L<search-as-you-type|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-suggesters-completion.html>
 suggestions.
 
-The I<lite> L<version of search|http://www.elasticsearch.org/guide/reference/api/search/uri-request.html>
+The I<lite> L<version of search|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-uri-request.html>
 allows you to specify a query string in the C<q> parameter, using the
 Lucene query string syntax:
 
     $results = $e->search( q => 'title:(elasticsearch clients)');
 
 However, the preferred way to search is by using the
-L<Query DSL|http://www.elasticsearch.org/guide/reference/query-dsl/>
+L<Query DSL|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html>
 to create a query, and passing that C<query> in the
-L<request body|http://www.elasticsearch.org/guide/reference/api/search/request-body/>:
+L<request body|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-body.html>:
 
     $results = $e->search(
         body => {
@@ -711,7 +711,7 @@ Query string parameters:
     C<timeout>,
     C<version>
 
-See the L<search reference|http://www.elasticsearch.org/guide/reference/api/search/request-body/>
+See the L<search reference|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-body.html>
 for more information.
 
 =head2 C<count()>
@@ -723,7 +723,7 @@ for more information.
         body    => { query }                # optional
     )
 
-The C<count()> method returns just the total count of all documents matching the
+The C<count()> method returns the total count of all documents matching the
 query:
 
     $results = $e->count(
@@ -737,7 +737,7 @@ Query string parameters:
     C<routing>,
     C<source>
 
-See the L<count docs|http://www.elasticsearch.org/guide/reference/api/count/>
+See the L<count docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-count.html>
 for more information.
 
 =head2 C<scroll()>
@@ -763,8 +763,8 @@ Query string parameters:
     C<scroll>,
     C<scroll_id>
 
-See the L<scroll docs|http://www.elasticsearch.org/guide/reference/api/search/scroll/>
-and the L<search_type docs|http://www.elasticsearch.org/guide/reference/api/search/search-type/>
+See the L<scroll docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-scroll.html>
+and the L<search_type docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search.html/search-request-search-type.html>
 for more information.
 
 =head2 C<clear_scroll()>
@@ -808,7 +808,7 @@ request).  For instance:
 Query string parameters:
     C<search_type>
 
-See the L<msearch docs|http://www.elasticsearch.org/guide/reference/api/multi-search/>
+See the L<msearch docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-multi-search.html>
 for more information.
 
 =head2 C<explain()>
@@ -853,7 +853,7 @@ Query string parameters:
     C<routing>,
     C<source>
 
-See the L<explain docs|http://www.elasticsearch.org/guide/reference/api/explain/>
+See the L<explain docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-explain.html>
 for more information.
 
 =head2 C<percolate()>
@@ -887,7 +887,7 @@ C<_source> field of the document under the C<doc> key:
 Query string parameters:
     C<prefer_local>
 
-See the L<percolate docs|http://www.elasticsearch.org/guide/reference/api/percolate/>
+See the L<percolate docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-percolate.html>
 for more information.
 
 =head2 C<suggest()>
@@ -900,8 +900,8 @@ for more information.
     );
 
 The C<suggest()> method is used to run
-L<did-you-mean|http://www.elasticsearch.org/guide/reference/api/search/phrase-suggest/>
-or L<search-as-you-type|http://www.elasticsearch.org/guide/reference/api/search/completion-suggest.html>
+L<did-you-mean|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-suggesteres-phrase.html>
+or L<search-as-you-type|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-suggesters-completion.html>
 suggestion requests, which can also be run as part of a L</search()> request.
 
     $results = $e->suggest(
@@ -936,7 +936,7 @@ Query string parameters:
     );
 
 The C<mlt()> method runs a
-L<more-like-this query|http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query/>
+L<more-like-this query|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html>
 to find other documents which are similar to the specified document.
 
 Query string parameters:
@@ -960,7 +960,7 @@ Query string parameters:
     C<search_types>,
     C<stop_words>
 
-See the L<mlt docs|http://www.elasticsearch.org/guide/reference/api/more-like-this/>
+See the L<mlt docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-more-like-this.html>
 for more information.
 
 
