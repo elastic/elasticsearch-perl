@@ -101,7 +101,10 @@ sub _start_node {
             exec(@config);
         }
         else {
-            sleep 1;
+            for ( 1 .. 5 ) {
+                last if -s $pid_file->filename();
+                sleep 1;
+            }
             open my $pid_fh, '<', $pid_file->filename;
             my $pid = <$pid_fh>;
             throw( 'Internal', "ES is running, but no PID found" )
