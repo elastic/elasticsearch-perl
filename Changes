@@ -1,10 +1,14 @@
 Revision history for Elasticsearch
 
-0.73	2013-10-02
-		Added Elasticsearch::Cxn::LWP
-		Added Elasticsearch::TestServer
-	    Die with explanation if a user on a case-insensitive file system
-	    loads this module instead of ElasticSearch
+0.74    2013-10-03
+        Fixed a timeout bug in LWP with persistent connections
+        and bad params when using https
+
+0.73    2013-10-02
+        Added Elasticsearch::Cxn::LWP
+        Added Elasticsearch::TestServer
+        Die with explanation if a user on a case-insensitive file system
+        loads this module instead of ElasticSearch
 
 0.72    2013-09-29
         Added Elasticsearch::Bulk and Elasticsearch::Scroll
