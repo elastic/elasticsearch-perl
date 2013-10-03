@@ -13,7 +13,7 @@ requires qw(protocol perform_request error_from_text);
 has 'host'                  => ( is => 'ro', required => 1 );
 has 'port'                  => ( is => 'ro', required => 1 );
 has 'uri'                   => ( is => 'ro', required => 1 );
-has 'request_timeout'       => ( is => 'ro', default  => 60 );
+has 'request_timeout'       => ( is => 'ro', default  => 10 );
 has 'ping_timeout'          => ( is => 'ro', default  => 5 );
 has 'sniff_timeout'         => ( is => 'ro', default  => 0.5 );
 has 'sniff_request_timeout' => ( is => 'ro', default  => 5 );
