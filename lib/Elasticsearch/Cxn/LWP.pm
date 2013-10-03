@@ -25,7 +25,11 @@ sub perform_request {
     );
 
     my $ua = $self->handle;
-    $ua->timeout( $params->{timeout} || $self->request_timeout );
+    my $timeout = $params->{timeout} || $self->request_timeout;
+    if ( $timeout ne $ua->timeout ) {
+        $ua->conn_cache->drop;
+        $ua->timeout($timeout);
+    }
     my $response = $ua->request($request);
 
     return $self->process_response(
