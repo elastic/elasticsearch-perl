@@ -12,7 +12,7 @@ env:
  - ES_VERSION=0.90.4
  - ES_VERSION=0.90.5
 
-install: "cpanm --installdeps --notest ."
+install: "cpanm --installdeps --notest --with-recommends ."
 script:  "./run_travis_tests.sh"
 notifications:
   email:
