@@ -1,5 +1,7 @@
 use Test::More;
 use Elasticsearch;
+use File::Temp;
+my $file = File::Temp->new;
 
 # default
 
@@ -24,8 +26,8 @@ isa_ok $l->trace_handle, 'Log::Any::Adapter::Stdout', 'Std - Trace to Stdout';
 # file
 
 isa_ok $l = Elasticsearch->new(
-    log_to   => [ 'File', 'foo' ],
-    trace_to => [ 'File', 'foo' ]
+    log_to   => [ 'File', $file->filename ],
+    trace_to => [ 'File', $file->filename ]
     )->logger, 'Elasticsearch::Logger::LogAny',
     'File Logger';
 
