@@ -9,6 +9,12 @@ test_tidy( 'Path',   { path   => '/foo' }, { path   => '/foo' } );
 test_tidy( 'QS', { qs => { foo => 'bar' } }, { qs => { foo => 'bar' } } );
 
 test_tidy(
+    'MimeType',
+    { mime_type => 'text/plain' },
+    { mime_type => 'text/plain' }
+);
+
+test_tidy(
     'Body - Str',
     { body => 'foo' },
     { body => 'foo', data => 'foo', serialize => 'std' }
@@ -46,10 +52,11 @@ sub test_tidy {
 #===================================
     my ( $title, $params, $test ) = @_;
     $test = {
-        method => 'GET',
-        path   => '/',
-        qs     => {},
-        ignore => [],
+        method    => 'GET',
+        path      => '/',
+        qs        => {},
+        ignore    => [],
+        mime_type => 'application/json',
         %$test
     };
     cmp_deeply $t->tidy_request($params), $test, $title;
