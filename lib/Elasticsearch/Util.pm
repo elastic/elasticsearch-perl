@@ -9,6 +9,7 @@ use Sub::Exporter -setup => {
             parse_params
             to_list
             load_plugin
+            new_error
             throw
             upgrade_error
             )
@@ -65,6 +66,13 @@ sub load_plugin {
 
 #===================================
 sub throw {
+#===================================
+    my ( $type, $msg, $vars ) = @_;
+    die Elasticsearch::Error->new( $type, $msg, $vars, 1 );
+}
+
+#===================================
+sub new_error {
 #===================================
     my ( $type, $msg, $vars ) = @_;
     die Elasticsearch::Error->new( $type, $msg, $vars, 1 );

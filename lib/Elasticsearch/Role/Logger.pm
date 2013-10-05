@@ -4,6 +4,7 @@ use Moo::Role;
 
 use URI();
 use Try::Tiny;
+use Elasticsearch::Util qw(new_error);
 use namespace::clean;
 
 has 'serializer' => ( is => 'ro', required => 1 );
@@ -32,7 +33,7 @@ has 'log_handle' => (
 sub throw_error {
 #===================================
     my ( $self, $type, $msg, $vars ) = @_;
-    my $error = Elasticsearch::Error->new( $type, $msg, $vars, 1 );
+    my $error = new_error( $type, $msg, $vars );
     $self->error($error);
     die $error;
 }
@@ -41,7 +42,7 @@ sub throw_error {
 sub throw_critical {
 #===================================
     my ( $self, $type, $msg, $vars ) = @_;
-    my $error = Elasticsearch::Error->new( $type, $msg, $vars, 1 );
+    my $error = new_error( $type, $msg, $vars );
     $self->critical($error);
     die $error;
 }
