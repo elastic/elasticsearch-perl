@@ -19,6 +19,7 @@ sub perform_request {
     my $request = HTTP::Request->new(
         $method => $uri,
         [   'Content-Type' => $params->{mime_type},
+            %{ $self->default_headers },
         ],
         $params->{data}
     );
@@ -57,9 +58,8 @@ sub _build_handle {
 #===================================
     my $self = shift;
     my %args = (
-        default_headers => HTTP::Headers->new( $self->default_headers ),
-        keep_alive      => 1,
-        parse_head      => 0
+        keep_alive => 1,
+        parse_head => 0
     );
     if ( $self->is_https ) {
         $args{ssl_opts} = { verify_hostname => 0 };
