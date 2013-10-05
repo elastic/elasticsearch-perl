@@ -75,6 +75,7 @@ sub tidy_request {
         ? $self->serializer->encode($body)
         : $self->serializer->encode_bulk($body);
 
+    $params->{mime_type} ||= $self->serializer->mime_type;
     return $params;
 
 }

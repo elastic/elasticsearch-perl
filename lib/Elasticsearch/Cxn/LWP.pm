@@ -18,8 +18,7 @@ sub perform_request {
 
     my $request = HTTP::Request->new(
         $method => $uri,
-        [   'Content-Type' => $params->{mime_type}
-                || $self->serializer->mime_type
+        [   'Content-Type' => $params->{mime_type},
         ],
         $params->{data}
     );

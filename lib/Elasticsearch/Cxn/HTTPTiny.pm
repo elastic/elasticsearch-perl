@@ -23,8 +23,7 @@ sub perform_request {
     my %args;
     if ( defined $params->{data} ) {
         $args{content} = $params->{data};
-        $args{headers}{'Content-Type'}
-            = $params->{mime_type} || $self->serializer->mime_type;
+        $args{headers}{'Content-Type'} = $params->{mime_type};
     }
 
     my $handle = $self->handle;
