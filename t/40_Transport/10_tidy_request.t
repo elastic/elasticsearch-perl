@@ -9,15 +9,13 @@ test_tidy( 'Path',   { path   => '/foo' }, { path   => '/foo' } );
 test_tidy( 'QS', { qs => { foo => 'bar' } }, { qs => { foo => 'bar' } } );
 
 test_tidy(
-    'MimeType',
-    { mime_type => 'text/plain' },
-    { mime_type => 'text/plain' }
-);
-
-test_tidy(
     'Body - Str',
     { body => 'foo' },
-    { body => 'foo', data => 'foo', serialize => 'std' }
+    {   body      => 'foo',
+        data      => 'foo',
+        serialize => 'std',
+        mime_type => 'application/json',
+    }
 );
 
 test_tidy(
@@ -25,7 +23,8 @@ test_tidy(
     { body => { foo => 'bar' } },
     {   body      => { foo => 'bar' },
         data      => '{"foo":"bar"}',
-        serialize => 'std'
+        serialize => 'std',
+        mime_type => 'application/json',
     }
 );
 
@@ -34,7 +33,8 @@ test_tidy(
     { body => [ { foo => 'bar' } ] },
     {   body      => [ { foo => 'bar' } ],
         data      => '[{"foo":"bar"}]',
-        serialize => 'std'
+        serialize => 'std',
+        mime_type => 'application/json',
     }
 );
 
@@ -43,7 +43,18 @@ test_tidy(
     { body => [ { foo => 'bar' } ], serialize => 'bulk' },
     {   body      => [ { foo => 'bar' } ],
         data      => qq({"foo":"bar"}\n),
-        serialize => 'bulk'
+        serialize => 'bulk',
+        mime_type => 'application/json',
+    }
+);
+
+test_tidy(
+    'MimeType',
+    { mime_type => 'text/plain', body => 'foo' },
+    {   mime_type => 'text/plain',
+        body      => 'foo',
+        data      => 'foo',
+        serialize => 'std'
     }
 );
 
@@ -52,11 +63,10 @@ sub test_tidy {
 #===================================
     my ( $title, $params, $test ) = @_;
     $test = {
-        method    => 'GET',
-        path      => '/',
-        qs        => {},
-        ignore    => [],
-        mime_type => 'application/json',
+        method => 'GET',
+        path   => '/',
+        qs     => {},
+        ignore => [],
         %$test
     };
     cmp_deeply $t->tidy_request($params), $test, $title;
