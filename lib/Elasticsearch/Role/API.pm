@@ -476,7 +476,7 @@ sub api {
 
     'indices.get_template' => {
         doc  => 'indices-templates/',
-        path => '_template/{name}',
+        path => '_template/{name|blank}',
     },
 
     'indices.get_warmer' => {
