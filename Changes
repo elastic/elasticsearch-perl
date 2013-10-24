@@ -1,5 +1,8 @@
 Revision history for Elasticsearch
 
+0.75    2013-10-24
+        Fixed the sniff regex to accommodate hostnames when present
+
 0.74    2013-10-03
         Fixed a timeout bug in LWP with persistent connections
         and bad params when using https
