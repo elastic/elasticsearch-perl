@@ -167,7 +167,10 @@ sub run_test {
     my $handler = $Test_Types{$type}
         or die "Unknown test type ($type)";
     $handler->( $got, $expect, $name )
-        || $es->logger->trace_comment("FAILED: $name");
+        || do {
+        $es->logger->trace_comment("FAILED: $name");
+        exit if $ENV{BAILOUT};
+        };
 }
 
 #===================================
