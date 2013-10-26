@@ -8,7 +8,7 @@ use Sub::Exporter -setup => { exports => ['qs_init'] };
 our %Handler = (
     string => sub {"$_[0]"},
     list   => sub {
-        ref $_[0]
+        ref $_[0] eq 'ARRAY'
             ? join( ',', @{ shift() } )
             : shift();
     },
