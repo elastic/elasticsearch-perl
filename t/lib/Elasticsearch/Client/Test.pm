@@ -184,7 +184,10 @@ sub populate_vars {
     if ( ref $val eq 'ARRAY' ) {
         return [ map { populate_vars( $_, $stash ) } @$val ];
     }
-    return $val unless defined $val and $val =~ /^\$(\w+)/;
+    return undef unless defined $val;
+    return 1 if $val eq 'true';
+    return 0 if $val eq 'false';
+    return $val unless $val =~ /^\$(\w+)/;
     return $stash->{$1};
 }
 
