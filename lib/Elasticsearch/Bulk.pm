@@ -417,7 +417,7 @@ a L<bulk()|Elasticsearch::Client::Direct/bulk()> request.
 
 =head2 Auto-flushing
 
-An autmatic L</flush()> is triggered whenever the C<max_count> or C<max_size>
+An automatic L</flush()> is triggered whenever the C<max_count> or C<max_size>
 threshold is breached.  This causes all actions in the buffer to be
 sent to Elasticsearch.
 
@@ -425,7 +425,7 @@ sent to Elasticsearch.
 
 =item * C<max_count>
 
-The maximium number of actions to allow before triggering a L</flush()>.
+The maximum number of actions to allow before triggering a L</flush()>.
 This can be disabled by setting C<max_count> to C<0>. Defaults to
 C<1,000>.
 
@@ -511,7 +511,7 @@ response.
         },
     );
 
-The C<on_conflict> callback is called for actions have have triggered
+The C<on_conflict> callback is called for actions that have triggered
 a C<Conflict> error, eg trying to C<create> a document which already
 exists.  The C<$version> argument will contain the version number
 of the document currently stored in Elasticsearch (if found).
@@ -699,7 +699,7 @@ into C<"new_index">.
 =head2 Reindexing from a generic source
 
 The C<source> parameter also accepts a coderef or an anonymous sub,
-which should return one or more new documents every time is is executed.
+which should return one or more new documents every time it is executed.
 This allows you to pass any iterator, wrapped in an anonymous sub:
 
     my $iter = get_iterator_from_somewhere();
