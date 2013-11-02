@@ -31,7 +31,7 @@ implementations.
 
 =head2 C<perform_request()>
 
-This method takes whatever arguments it is passed and passes them tdirectly to
+This method takes whatever arguments it is passed and passes them directly to
 a C<parse_request()> method (which should be provided by Client implementations).
 The C<parse_request()> method should return a request suitable for passing
 to L<Elasticsearch::Transport/perform_request()>.
