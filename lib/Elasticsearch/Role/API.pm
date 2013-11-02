@@ -267,12 +267,12 @@ sub api {
     },
 
     'cluster.get_settings' => {
-        doc  => 'cluster-update-settings/',
+        doc  => 'cluster-update-settings',
         path => '_cluster/settings',
     },
 
     'cluster.health' => {
-        doc  => 'cluster-health/',
+        doc  => 'cluster-health',
         path => '_cluster/health',
         qs   => [
             'level',                      'local',
@@ -283,13 +283,13 @@ sub api {
     },
 
     'cluster.hot_threads' => {
-        doc  => 'cluster-nodes-hot-threads/',
+        doc  => 'cluster-nodes-hot-threads',
         path => '_nodes/{nodes|blank}/hot_threads',
         qs   => [ 'interval', 'snapshots', 'threads', 'type' ],
     },
 
     'cluster.node_info' => {
-        doc  => 'cluster-nodes-info/',
+        doc  => 'cluster-nodes-info',
         path => '_nodes/{nodes|blank}',
         qs   => [
             'all',      'clear',   'http',        'jvm',
@@ -299,14 +299,14 @@ sub api {
     },
 
     'cluster.shutdown' => {
-        doc    => 'cluster-nodes-shutdown/',
+        doc    => 'cluster-nodes-shutdown',
         method => 'POST',
         path   => '_cluster/nodes/{nodes|blank}/_shutdown',
         qs     => [ 'delay', 'exit' ],
     },
 
     'cluster.node_stats' => {
-        doc  => 'cluster-nodes-stats/',
+        doc  => 'cluster-nodes-stats',
         path => '_nodes/{nodes|blank}/stats/{metric|blank}',
         qs   => [
             'all',  'clear',   'fields',      'fs',
@@ -320,7 +320,7 @@ sub api {
             desc => 'The settings to be updated. Can be either '
                 . '`transient` or `persistent`.'
         },
-        doc    => 'cluster-update-settings/',
+        doc    => 'cluster-update-settings',
         method => 'PUT',
         path   => '_cluster/settings',
     },
@@ -330,14 +330,14 @@ sub api {
             desc => 'The definition of `commands` to perform '
                 . '(`move`, `cancel`, `allocate`)'
         },
-        doc    => 'cluster-reroute/',
+        doc    => 'cluster-reroute',
         method => 'POST',
         path   => '_cluster/reroute',
         qs     => [ 'dry_run', 'filter_metadata' ],
     },
 
     'cluster.state' => {
-        doc  => 'cluster-state/',
+        doc  => 'cluster-state',
         path => '_cluster/state',
         qs   => [
             'filter_blocks',  'filter_index_templates',
@@ -350,7 +350,7 @@ sub api {
     'indices.analyze' => {
         body =>
             { desc => 'The text on which the analysis should be performed' },
-        doc    => 'indices-analyze/',
+        doc    => 'indices-analyze',
         method => 'POST',
         path   => '{index|blank}/_analyze',
         qs     => [
@@ -360,7 +360,7 @@ sub api {
     },
 
     'indices.clear_cache' => {
-        doc    => 'indices-clearcache/',
+        doc    => 'indices-clearcache',
         method => 'POST',
         path   => '{indices}/_cache/clear',
         qs     => [
@@ -373,7 +373,7 @@ sub api {
     },
 
     'indices.close' => {
-        doc    => 'indices-open-close/',
+        doc    => 'indices-open-close',
         method => 'POST',
         path   => '{req_indices}/_close',
         qs     => [ 'timeout', 'master_timeout' ],
@@ -384,115 +384,115 @@ sub api {
             desc => 'The configuration for the index '
                 . '(`settings` and `mappings`)'
         },
-        doc    => 'indices-create-index/',
+        doc    => 'indices-create-index',
         method => 'PUT',
         path   => '{index}',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.delete' => {
-        doc    => 'indices-delete-index/',
+        doc    => 'indices-delete-index',
         method => 'DELETE',
         path   => '{req_indices}',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.delete_alias' => {
-        doc    => 'indices-aliases/',
+        doc    => 'indices-aliases',
         method => 'DELETE',
         path   => '{index}/_alias/{name}',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.delete_mapping' => {
-        doc    => 'indices-delete-mapping/',
+        doc    => 'indices-delete-mapping',
         method => 'DELETE',
         path   => '{req_indices}/{type}',
         qs     => ['master_timeout'],
     },
 
     'indices.delete_template' => {
-        doc    => 'indices-templates/',
+        doc    => 'indices-templates',
         method => 'DELETE',
         path   => '_template/{name}',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.delete_warmer' => {
-        doc    => 'indices-warmers/',
+        doc    => 'indices-warmers',
         method => 'DELETE',
         path   => '{req_indices}/_warmer/{names}',
         qs     => ['master_timeout'],
     },
 
     'indices.exists' => {
-        doc    => 'indices-exists/',
+        doc    => 'indices-exists',
         method => 'HEAD',
         path   => '{req_indices}',
     },
 
     'indices.exists_alias' => {
-        doc    => 'indices-aliases/',
+        doc    => 'indices-aliases',
         method => 'HEAD',
         path   => '{indices}/_alias/{names}',
         qs     => ['ignore_indices'],
     },
 
     'indices.exists_type' => {
-        doc    => 'indices-types-exists/',
+        doc    => 'indices-types-exists',
         method => 'HEAD',
         path   => '{indices|all}/{req_types}',
         qs     => ['ignore_indices'],
     },
 
     'indices.flush' => {
-        doc    => 'indices-flush/',
+        doc    => 'indices-flush',
         method => 'POST',
         path   => '{indices}/_flush',
         qs     => [ 'force', 'full', 'ignore_indices', 'refresh' ],
     },
 
     'indices.get_alias' => {
-        doc  => 'indices-aliases/',
+        doc  => 'indices-aliases',
         path => '{indices}/_alias/{names}',
         qs   => ['ignore_indices'],
     },
 
     'indices.get_aliases' => {
-        doc  => 'indices-aliases/',
+        doc  => 'indices-aliases',
         path => '{indices}/_aliases',
         qs   => ['timeout'],
     },
 
     'indices.get_mapping' => {
-        doc  => 'indices-get-mapping/',
+        doc  => 'indices-get-mapping',
         path => '{indices|all-type}/{types}/_mapping',
     },
 
     'indices.get_settings' => {
-        doc  => 'indices-get-settings/',
+        doc  => 'indices-get-settings',
         path => '{indices}/_settings',
     },
 
     'indices.get_template' => {
-        doc  => 'indices-templates/',
+        doc  => 'indices-templates',
         path => '_template/{name|blank}',
     },
 
     'indices.get_warmer' => {
-        doc  => 'indices-warmers/',
+        doc  => 'indices-warmers',
         path => '{indices|all}/_warmer/{names}',
     },
 
     'indices.open' => {
-        doc    => 'indices-open-close/',
+        doc    => 'indices-open-close',
         method => 'POST',
         path   => '{indices|all}/_open',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.optimize' => {
-        doc    => 'indices-optimize/',
+        doc    => 'indices-optimize',
         method => 'POST',
         path   => '{indices}/_optimize',
         qs     => [
@@ -507,7 +507,7 @@ sub api {
             desc => 'The settings for the alias, '
                 . 'such as `routing` or `filter`',
         },
-        doc    => 'indices-aliases/',
+        doc    => 'indices-aliases',
         method => 'PUT',
         path   => '{index}/_alias/{name}',
         qs     => [ 'timeout', 'master_timeout' ],
@@ -518,7 +518,7 @@ sub api {
             desc     => 'The mapping definition',
             required => 1
         },
-        doc    => 'indices-put-mapping/',
+        doc    => 'indices-put-mapping',
         method => 'PUT',
         path   => '{indices|all}/{type}/_mapping',
         qs     => [ 'ignore_conflicts', 'timeout', 'master_timeout' ],
@@ -529,7 +529,7 @@ sub api {
             desc     => 'The index settings to be updated',
             required => 1
         },
-        doc    => 'indices-update-settings/',
+        doc    => 'indices-update-settings',
         method => 'PUT',
         path   => '{indices}/_settings',
         qs     => ['master_timeout'],
@@ -540,7 +540,7 @@ sub api {
             desc     => 'The template definition',
             required => 1
         },
-        doc    => 'indices-templates/',
+        doc    => 'indices-templates',
         method => 'PUT',
         path   => '_template/{name}',
         qs     => [ 'order', 'timeout', 'master_timeout' ],
@@ -552,34 +552,34 @@ sub api {
                 . ' the warmer (query, filters, facets, sorting, etc)',
             required => 1
         },
-        doc    => 'indices-warmers/',
+        doc    => 'indices-warmers',
         method => 'PUT',
         path   => '{indices|all}/_warmer/{name}',
         qs     => ['master_timeout'],
     },
 
     'indices.refresh' => {
-        doc    => 'indices-refresh/',
+        doc    => 'indices-refresh',
         method => 'POST',
         path   => '{indices}/_refresh',
         qs     => ['ignore_indices'],
     },
 
     'indices.segments' => {
-        doc  => 'indices-segments/',
+        doc  => 'indices-segments',
         path => '{indices}/_segments',
         qs   => [ 'ignore_indices', ],
     },
 
     'indices.snapshot_index' => {
-        docs   => 'indices-gateway-snapshot/',
+        docs   => 'indices-gateway-snapshot',
         method => 'POST',
         path   => '{indices}/_gateway/snapshot',
         params => ['ignore_indices']
     },
 
     'indices.stats' => {
-        doc  => 'indices-stats/',
+        doc  => 'indices-stats',
         path => '{indices}/_stats',
         qs   => [
             'all',              'clear',
@@ -596,7 +596,7 @@ sub api {
     },
 
     'indices.status' => {
-        doc  => 'indices-status/',
+        doc  => 'indices-status',
         path => '{indices}/_status',
         qs   => [ 'ignore_indices', 'recovery', 'snapshot' ],
     },
@@ -606,7 +606,7 @@ sub api {
             required => 1,
             desc     => 'The definition of `actions` to perform'
         },
-        doc    => 'indices-aliases/',
+        doc    => 'indices-aliases',
         method => 'POST',
         path   => '_aliases',
         qs     => [ 'timeout', 'master_timeout' ],
@@ -614,7 +614,7 @@ sub api {
 
     'indices.validate_query' => {
         body => { desc => 'The query definition' },
-        doc  => 'search-validate/',
+        doc  => 'search-validate',
         path => '{indices|all-type}/{types}/_validate/query',
         qs   => [ 'explain', 'ignore_indices', 'q', 'source' ],
     },
