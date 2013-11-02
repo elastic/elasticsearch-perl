@@ -464,6 +464,12 @@ sub api {
         qs   => ['timeout'],
     },
 
+    'indices.get_field_mapping' => {
+        doc  => 'indices-get-field-mapping',
+        path => '{indices|all-type}/{types}/_mapping/field/{field}',
+        qs   => ['include_defaults'],
+    },
+
     'indices.get_mapping' => {
         doc  => 'indices-get-mapping',
         path => '{indices|all-type}/{types}/_mapping',

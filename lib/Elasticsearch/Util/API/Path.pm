@@ -7,6 +7,7 @@ use Any::URI::Escape qw(uri_escape);
 use Sub::Exporter -setup => { exports => ['path_init'] };
 
 our %Handler = (
+    '{field}'           => sub { multi_req( 'field', @_ ) },
     '{id}'              => sub { one_req( 'id',      @_ ) },
     '{id|blank}'        => sub { one_opt( 'id',      @_ ) },
     '{index}'           => sub { one_req( 'index',   @_ ) },

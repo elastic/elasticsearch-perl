@@ -77,16 +77,17 @@ our %Params = (
         options => [ 'none', 'missing' ],
         type    => 'enum'
     },
-    ignore        => { type => 'list', },
-    index         => { type => 'list' },
-    indexing      => { type => 'bool' },
-    indices       => { type => 'bool' },
-    indices_boost => { type => 'list' },
-    interval      => { type => 'duration' },
-    jvm           => { type => 'bool' },
-    lang          => { type => 'string' },
-    lenient       => { type => 'bool' },
-    level         => {
+    ignore           => { type => 'list', },
+    include_defaults => { type => 'bool' },
+    index            => { type => 'list' },
+    indexing         => { type => 'bool' },
+    indices          => { type => 'bool' },
+    indices_boost    => { type => 'list' },
+    interval         => { type => 'duration' },
+    jvm              => { type => 'bool' },
+    lang             => { type => 'string' },
+    lenient          => { type => 'bool' },
+    level            => {
         default => 'cluster',
         options => [ 'cluster', 'indices', 'shards' ],
         type    => 'enum'
