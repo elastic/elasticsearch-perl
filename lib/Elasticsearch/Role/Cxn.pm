@@ -174,7 +174,7 @@ sub process_response {
 
 L<Elasticsearch::Role::Cxn> provides common functionality to the Cxn
 implementations. Cxn instances are created by a L<Elasticsearch::Role::CxnPool>
-implentation, using the L<Elasticsearch::Cxn::Factory> class.
+implementation, using the L<Elasticsearch::Cxn::Factory> class.
 
 =head1 CONFIGURATION
 
