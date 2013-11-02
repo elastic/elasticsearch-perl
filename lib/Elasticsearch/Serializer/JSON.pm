@@ -127,7 +127,7 @@ Works exactly as L</encode()> but the JSON output is pretty-printed.
     $bytes = $serializer->encode_bulk([\%hash,\%hash,...]);
     $bytes = $serializer->encode_bulk([$str,$str,...]);
 
-The L</encode_bulk()> method expects an arry ref of hashes or strings.
+The L</encode_bulk()> method expects an array ref of hashes or strings.
 Each hash or string is processed by L</encode()> then joined together
 by newline characters, with a final newline character appended to the end.
 This is the special JSON format used for bulk requests.
