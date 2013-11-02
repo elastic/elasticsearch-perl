@@ -34,7 +34,7 @@ It does L<Elasticsearch::Role::Client::Direct>.
         }
     );
 
-The C<create()> method is used to creat an index. Optionally, index
+The C<create()> method is used to create an index. Optionally, index
 settings, type mappings and index warmers can be added at the same time.
 
 Query string parameters:
@@ -367,7 +367,7 @@ for more information.
         name    => 'alias' | \@aliases      # required
     );
 
-The C<get_alias()> method returns the aliase defintions for the specified
+The C<get_alias()> method returns the alias definitions for the specified
 aliases in the specified indices.
 
 Query string parameters:
@@ -399,7 +399,7 @@ for more information.
         name    => 'alias'                  # required
     );
 
-The C<delete_alias()> method deletes a single alias in a a single index.
+The C<delete_alias()> method deletes a single alias in a single index.
 
 Query string parameters:
     C<master_timeout>,
