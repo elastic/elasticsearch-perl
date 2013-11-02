@@ -10,7 +10,7 @@ requires qw(encode decode encode_pretty encode_bulk mime_type);
 
 =head1 DESCRIPTION
 
-There is no code in this module. It defines an inteface for
+There is no code in this module. It defines an interface for
 Serializer implementations, and requires the following methods:
 
 =over
