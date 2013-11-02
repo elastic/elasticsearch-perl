@@ -144,7 +144,7 @@ sub inflate {
 
 L<Elasticsearch::Role::Cxn::HTTP> provides common functionality to the Cxn
 implementations which use the HTTP protocol. Cxn instances are created by a
-L<Elasticsearch::Role::CxnPool> implentation, using the
+L<Elasticsearch::Role::CxnPool> implementation, using the
 L<Elasticsearch::Cxn::Factory> class.
 
 This class does L<Elasticsearch::Role::Cxn>.

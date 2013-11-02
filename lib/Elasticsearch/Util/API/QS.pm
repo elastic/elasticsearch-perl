@@ -222,7 +222,7 @@ __END__
 =head1 DESCRIPTION
 
 This class contains a definition of each query string parameter that
-can be accepeted by actions in the L<API|Elasticsearch::Role::API>.
+can be accepted by actions in the L<API|Elasticsearch::Role::API>.
 
 =head1 EXPORTS
 

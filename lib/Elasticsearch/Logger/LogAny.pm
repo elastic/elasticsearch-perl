@@ -30,7 +30,7 @@ sub _build_trace_handle {
 
 1;
 
-# ABSTRACT: A Log::Any-based Logger implemenation
+# ABSTRACT: A Log::Any-based Logger implementation
 
 =head1 DESCRIPTION
 

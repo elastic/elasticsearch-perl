@@ -206,7 +206,7 @@ L<Missing|Elasticsearch::Error/Elasticsearch::Error::Missing> errors, which
 are triggered by a C<404> status code when some requested resource does
 not exist.
 
-Multiple error codes can be specfied with an array:
+Multiple error codes can be specified with an array:
 
     $e->indices->delete(
         index  => 'my_index',
@@ -866,7 +866,7 @@ for more information.
     );
 
 Percolation is search inverted: instead of finding docs which match a
-particular query, it finds queries which match a paticular document, eg
+particular query, it finds queries which match a particular document, eg
 for I<alert-me-when> functionality.
 
 The C<percolate()> method runs a percolation request to find the

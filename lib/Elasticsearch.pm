@@ -310,7 +310,7 @@ See L<Elasticsearch::CxnPool::Static::NoPing> for more.
 
 For debugging purposes, it is useful to be able to dump the actual HTTP
 requests which are sent to the cluster, and the response that is received.
-This can be enabled with the C<trace_to> parametere, as follows:
+This can be enabled with the C<trace_to> parameter, as follows:
 
     # To STDERR
     $e = Elasticsearch->new(
@@ -375,7 +375,7 @@ with C<+>:
         cxn_pool => '+My::Custom::CxnClass'
     );
 
-The modules that you can override are specfied with the following
+The modules that you can override are specified with the following
 arguments to L</new()>:
 
 =head2 C<client>
@@ -573,7 +573,7 @@ and integration with L<ElasticSearch::SearchBuilder>.
 
 =head1 BUGS
 
-This is a stable API but this implemenation is new. Watch this space
+This is a stable API but this implementation is new. Watch this space
 for new releases.
 
 If you have any suggestions for improvements, or find any bugs, please report

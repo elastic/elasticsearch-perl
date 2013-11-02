@@ -149,7 +149,7 @@ sub stacktrace {
 =head1 DESCRIPTION
 
 Errors thrown by Elasticsearch are error objects, which can include
-a strack trace and information to help debug problems. An error object
+a stack trace and information to help debug problems. An error object
 consists of the following:
 
     {
