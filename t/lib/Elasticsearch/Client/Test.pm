@@ -76,7 +76,10 @@ sub test_files {
             my $setup;
             if ( $setup = $asts[0]{setup} ) {
                 shift @asts;
-                next if check_skip($name,$setup);
+                if ( check_skip( $name, $setup ) ) {
+                    plan tests => 1;
+                    return;
+                }
             }
 
             plan tests => 0 + @asts;
@@ -84,7 +87,7 @@ sub test_files {
             for my $ast (@asts) {
 
                 my ( $title, $tests ) = key_val($ast);
-                next if check_skip($title,$tests);
+                next if check_skip( $title, $tests );
 
                 if ($setup) {
                     $es->logger->trace_comment("RUNNING SETUP");
