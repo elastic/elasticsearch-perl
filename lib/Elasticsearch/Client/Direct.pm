@@ -544,6 +544,7 @@ Query string parameters:
     C<consistency>,
     C<refresh>,
     C<replication>,
+    C<timeout>,
     C<type>
 
 See the L<bulk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-bulk.html>

@@ -57,7 +57,7 @@ sub BUILDARGS {
 #===================================
     my ( $class, $params ) = parse_params(@_);
     my %args;
-    for (qw(index type consistency refresh replication)) {
+    for (qw(index type consistency refresh replication timeout)) {
         $args{$_} = $params->{$_}
             if exists $params->{$_};
     }

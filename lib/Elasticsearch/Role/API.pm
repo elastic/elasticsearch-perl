@@ -29,7 +29,7 @@ sub api {
         method    => 'POST',
         path      => '{index-when-type}/{type|blank}/_bulk',
         serialize => 'bulk',
-        qs        => [ 'consistency', 'refresh', 'replication', 'type' ],
+        qs => [ 'consistency', 'refresh', 'replication', 'timeout', 'type' ],
     },
 
     'clear_scroll' => {
