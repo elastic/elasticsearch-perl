@@ -126,6 +126,16 @@ Search:
         }
     );
 
+Cluster requests:
+
+    $info        = $e->cluster->info;
+    $health      = $e->cluster->health;
+    $node_stats  = $e->cluster->node_stats
+
+Index requests:
+
+    $e->indices->create(index=>'my_index');
+    $e->indices->delete(index=>'my_index');
 
 =head1 DESCRIPTION
 
