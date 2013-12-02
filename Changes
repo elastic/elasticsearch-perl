@@ -1,5 +1,9 @@
 Revision history for Elasticsearch
 
+0.76    2013-12-02
+        Added support for send_get_body_as GET/POST/source
+        Added timeout to bulk API
+
 0.75    2013-10-24
         Fixed the sniff regex to accommodate hostnames when present
 
