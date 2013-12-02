@@ -715,6 +715,8 @@ Query string parameters:
 See the L<search reference|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-body.html>
 for more information.
 
+Also see L<Elasticsearch::Transport/send_get_body_as>.
+
 =head2 C<count()>
 
     $results = $e->count(
