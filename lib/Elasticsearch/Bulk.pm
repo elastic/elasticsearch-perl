@@ -289,7 +289,12 @@ sub _report {
     my $on_error    = $self->on_error;
     my $on_conflict = $self->on_conflict;
 
-    return unless $on_success || $on_error || $on_conflict;
+    # assume errors if key not present, bwc
+    $results->{errors} = 1 unless exists $results->{errors};
+
+    return
+        unless $on_success
+        || ( $results->{errors} and $on_error || $on_conflict );
 
     my $buffer     = $self->_buffer;
     my $serializer = $self->_serializer;

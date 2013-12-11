@@ -10,6 +10,8 @@ use Log::Any::Adapter;
 
 my $es = do "es_test_server.pl";
 
+my $has_status = $es->info->{version}{number} ge '1.0.0.Beta2';
+
 $es->indices->delete( index => '_all' );
 
 my @Bad_Metadata = { index => '_bad', type => '_bad', source => {} };
@@ -111,7 +113,8 @@ $b = bulk(
                 _type    => 'test',
                 _id      => 1,
                 _version => 1,
-                ok       => JSON::true()
+                ok       => JSON::true(),
+                status   => 201,
             },
             0
         ),
@@ -120,7 +123,8 @@ $b = bulk(
             {   _index => 'test',
                 _type  => 'test',
                 _id    => 1,
-                error  => re('MapperParsingException')
+                error  => re('MapperParsingException'),
+                status => 400,
             },
             1
         ),
@@ -129,7 +133,8 @@ $b = bulk(
             {   _index => 'test',
                 _type  => 'test',
                 _id    => 1,
-                error  => re('VersionConflictEngineException')
+                error  => re('VersionConflictEngineException'),
+                status => 409,
             },
             2, 1
         ),
@@ -178,6 +183,7 @@ sub test_flush {
 sub test_params {
 #===================================
     my ( $type, $result, $j, $version ) = @_;
+    delete $result->{status} unless $has_status;
     return sub {
         is $_[0], 'index', "$type - action";
         cmp_deeply $_[1], $result,  "$type - result";
