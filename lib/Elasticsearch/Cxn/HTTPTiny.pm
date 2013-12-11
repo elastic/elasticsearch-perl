@@ -32,11 +32,11 @@ sub perform_request {
     my $response = $handle->request( $method, "$uri", \%args );
 
     return $self->process_response(
-        $params,                                    # request
-        $response->{status},                        # code
-        $response->{reason},                        # msg
-        $response->{content},                       # body
-        $response->{headers}{'content-encoding'}    # encoding,
+        $params,                 # request
+        $response->{status},     # code
+        $response->{reason},     # msg
+        $response->{content},    # body
+        $response->{headers}     # headers
     );
 }
 

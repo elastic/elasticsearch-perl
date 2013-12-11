@@ -111,12 +111,15 @@ before 'perform_request' => sub {
 #===================================
 around 'process_response' => sub {
 #===================================
-    my ( $orig, $self, $params, $code, $msg, $body, $encoding ) = @_;
+    my ( $orig, $self, $params, $code, $msg, $body, $headers ) = @_;
 
-    $body = $self->inflate($body)
-        if $encoding && $encoding eq 'deflate';
+    if ( my $encoding = $headers->{'content-encoding'} ) {
+        $body = $self->inflate($body)
+            if $encoding eq 'deflate';
+    }
 
-    $orig->( $self, $params, $code, $msg, $body );
+    my ($mime_type) = split /\s*;\s*/, ( $headers->{'content-type'} || '' );
+    $orig->( $self, $params, $code, $msg, $body, $mime_type );
 };
 
 #===================================

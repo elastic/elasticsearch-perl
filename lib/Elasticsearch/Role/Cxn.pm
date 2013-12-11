@@ -121,12 +121,16 @@ sub sniff {
 #===================================
 sub process_response {
 #===================================
-    my ( $self, $params, $code, $msg, $body ) = @_;
-    $code ||= 500;
+    my ( $self, $params, $code, $msg, $body, $mime_type ) = @_;
+
+    my $is_encoded = $mime_type && $mime_type ne 'text/plain';
 
     if ( $code >= 200 and $code <= 209 ) {
-        return ( $code, $self->serializer->decode($body) )
-            if defined $body and length $body;
+        if ( defined $body and length $body ) {
+            $body = $self->serializer->decode($body)
+                if $is_encoded;
+            return $code, $body;
+        }
         return ( $code, 1 ) if $params->{method} eq 'HEAD';
         return ( $code, '' );
     }

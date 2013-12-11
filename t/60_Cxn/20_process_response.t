@@ -11,7 +11,7 @@ my ( $code, $response );
 ### OK GET
 ( $code, $response )
     = $c->process_response( { method => 'GET', ignore => [] },
-    200, "OK", '{"ok":1}' );
+    200, "OK", '{"ok":1}', { 'content-type' => 'application/json' } );
 
 is $code, 200, "OK GET - code";
 cmp_deeply $response, { ok => 1 }, "OK GET - body";
@@ -19,7 +19,7 @@ cmp_deeply $response, { ok => 1 }, "OK GET - body";
 ### OK GET - Text body
 ( $code, $response )
     = $c->process_response( { method => 'GET', ignore => [] },
-    200, "OK", 'Foo' );
+    200, "OK", 'Foo', { 'content-type' => 'text/plain' } );
 
 is $code,             200,   "OK GET Text body - code";
 cmp_deeply $response, 'Foo', "OK GET Text body - body";
@@ -41,15 +41,22 @@ is $response, 1,   "OK HEAD - body";
 
 ### Missing GET
 throws_ok {
-    $c->process_response( { method => 'GET', ignore => [] },
-        404, "Missing", '{"error": "Something is missing"}' );
+    $c->process_response(
+        { method => 'GET', ignore => [] },
+        404, "Missing",
+        '{"error": "Something is missing"}',
+        { 'content-type' => 'application/json' }
+    );
 }
 qr/Missing/, "Missing GET";
 
 ### Missing GET ignore
-( $code, $response )
-    = $c->process_response( { method => 'GET', ignore => [404] },
-    404, "Missing", '{"error": "Something is missing"}' );
+( $code, $response ) = $c->process_response(
+    { method => 'GET', ignore => [404] },
+    404, "Missing",
+    '{"error": "Something is missing"}',
+    { 'content-type' => 'application/json' }
+);
 
 is $code,     404,   "Missing GET - code";
 is $response, undef, "Missing GET - body";
@@ -63,15 +70,23 @@ is $response, undef, "Missing HEAD - body";
 
 ### Request error
 throws_ok {
-    $c->process_response( { method => 'GET', ignore => [] },
-        400, "Request", '{"error":"error in body"}' );
+    $c->process_response(
+        { method => 'GET', ignore => [] },
+        400, "Request",
+        '{"error":"error in body"}',
+        { 'content-type' => 'application/json' }
+    );
 }
 qr/\[400\] error in body/, "Request error";
 
 ### Conflict error
 throws_ok {
-    $c->process_response( { method => 'GET', ignore => [] }, 409, "Conflict",
-        '{"status" : 409,"error" : "VersionConflictEngineException[[test][2] [test][1]: version conflict, current [1], provided [2]]"}'
+    $c->process_response(
+        { method => 'GET', ignore => [] },
+        409,
+        "Conflict",
+        '{"status" : 409,"error" : "VersionConflictEngineException[[test][2] [test][1]: version conflict, current [1], provided [2]]"}',
+        { 'content-type' => 'application/json' }
     );
 }
 qr/\[409\] VersionConflictEngineException/, "Conflict error";
@@ -85,4 +100,3 @@ throws_ok {
 qr/Timeout/, "Timeout error";
 
 done_testing;
-

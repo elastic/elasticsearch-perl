@@ -33,11 +33,11 @@ sub perform_request {
     my $response = $ua->request($request);
 
     return $self->process_response(
-        $params,                                 # request
-        $response->code,                         # code
-        $response->message,                      # msg
-        $response->content,                      # body
-        $response->header('content-encoding')    # encoding,
+        $params,               # request
+        $response->code,       # code
+        $response->message,    # msg
+        $response->content,    # body
+        $response->headers     # headers
     );
 }
 
