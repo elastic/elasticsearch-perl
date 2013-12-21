@@ -30,7 +30,6 @@ my %Code_To_Error = (
     403 => 'ClusterBlocked',
     404 => 'Missing',
     409 => 'Conflict',
-    500 => 'Request',
     503 => 'Unavailable'
 );
 

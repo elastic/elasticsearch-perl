@@ -1,11 +1,17 @@
 package Elasticsearch::Cxn::LWP;
 
 use Moo;
-with 'Elasticsearch::Role::Cxn::HTTP';
+with 'Elasticsearch::Role::Cxn::HTTP', 'Elasticsearch::Role::Cxn';
 
 use LWP::UserAgent();
 use HTTP::Headers();
 use HTTP::Request();
+
+my $Cxn_Error = qr/
+            Can't.connect
+          | Server.closed.connection
+          | Connection.refused
+            /x;
 
 use namespace::clean;
 
@@ -49,7 +55,7 @@ sub error_from_text {
     return
           /read timeout/                           ? 'Timeout'
         : /write failed: Connection reset by peer/ ? 'ContentLength'
-        : /Can't connect|Server closed connection/ ? 'Cxn'
+        : /$Cxn_Error/                             ? 'Cxn'
         :                                            'Request';
 }
 
