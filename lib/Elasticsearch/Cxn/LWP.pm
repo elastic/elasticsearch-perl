@@ -1,7 +1,9 @@
 package Elasticsearch::Cxn::LWP;
 
 use Moo;
-with 'Elasticsearch::Role::Cxn::HTTP', 'Elasticsearch::Role::Cxn';
+with 'Elasticsearch::Role::Cxn::HTTP',
+    'Elasticsearch::Role::Cxn',
+    'Elasticsearch::Role::Is_Sync';
 
 use LWP::UserAgent();
 use HTTP::Headers();

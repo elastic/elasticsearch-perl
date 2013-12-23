@@ -1,7 +1,7 @@
 package Elasticsearch::Role::Cxn::HTTP;
 
 use Moo::Role;
-with 'Elasticsearch::Role::Cxn';
+
 use URI();
 use Elasticsearch::Util qw(parse_params throw);
 use namespace::clean;

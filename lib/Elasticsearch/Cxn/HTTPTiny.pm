@@ -1,7 +1,9 @@
 package Elasticsearch::Cxn::HTTPTiny;
 
 use Moo;
-with 'Elasticsearch::Role::Cxn::HTTP';
+with 'Elasticsearch::Role::Cxn::HTTP',
+    'Elasticsearch::Role::Cxn',
+    'Elasticsearch::Role::Is_Sync';
 
 use HTTP::Tiny 0.036 ();
 use namespace::clean;

@@ -75,7 +75,7 @@ sub throw {
 sub new_error {
 #===================================
     my ( $type, $msg, $vars ) = @_;
-    die Elasticsearch::Error->new( $type, $msg, $vars, 1 );
+    return Elasticsearch::Error->new( $type, $msg, $vars, 1 );
 }
 
 #===================================

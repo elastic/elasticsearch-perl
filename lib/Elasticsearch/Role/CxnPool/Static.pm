@@ -1,40 +1,30 @@
-package Elasticsearch::CxnPool::Static;
+package Elasticsearch::Role::CxnPool::Static;
 
-use Moo;
-with 'Elasticsearch::Role::CxnPool::Static', 'Elasticsearch::Role::Is_Sync';
-use Elasticsearch::Util qw(throw);
+use Moo::Role;
+with 'Elasticsearch::Role::CxnPool';
+requires 'next_cxn';
+
 use namespace::clean;
 
 #===================================
-sub next_cxn {
+sub BUILD {
+#===================================
+    my $self = shift;
+    $self->set_cxns( @{ $self->seed_nodes } );
+    $self->schedule_check;
+}
+
+#===================================
+sub schedule_check {
 #===================================
     my ($self) = @_;
-
-    my $cxns  = $self->cxns;
-    my $total = @$cxns;
-
-    my $now = time();
-    my @skipped;
-
-    while ( $total-- ) {
-        my $cxn = $cxns->[ $self->next_cxn_num ];
-        return $cxn if $cxn->is_live;
-
-        if ( $cxn->next_ping < $now ) {
-            return $cxn if $cxn->pings_ok;
-        }
-        else {
-            push @skipped, $cxn;
-        }
+    $self->logger->info("Forcing ping before next use on all live cxns");
+    for my $cxn ( @{ $self->cxns } ) {
+        next if $cxn->is_dead;
+        $self->logger->infof( "Ping [%s] before next request",
+            $cxn->stringify );
+        $cxn->force_ping;
     }
-
-    for my $cxn (@skipped) {
-        return $cxn if $cxn->pings_ok;
-    }
-
-    $_->force_ping for @$cxns;
-
-    throw( "NoNodes", "No nodes are available: [" . $self->cxns_str . ']' );
 }
 
 1;

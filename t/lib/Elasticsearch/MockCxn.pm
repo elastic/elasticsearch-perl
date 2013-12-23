@@ -5,7 +5,8 @@ use warnings;
 
 use Data::Dumper;
 use Moo;
-with 'Elasticsearch::Role::Cxn::HTTP';
+with 'Elasticsearch::Role::Cxn', 'Elasticsearch::Role::Cxn::HTTP',
+    'Elasticsearch::Role::Is_Sync';
 
 use Sub::Exporter -setup => {
     exports => [ qw(
