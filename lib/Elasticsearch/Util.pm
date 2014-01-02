@@ -12,6 +12,7 @@ use Sub::Exporter -setup => {
             new_error
             throw
             upgrade_error
+            is_compat
             )
     ]
 };
@@ -85,6 +86,20 @@ sub upgrade_error {
     return ref($error) && $error->isa('Elasticsearch::Error')
         ? $error
         : Elasticsearch::Error->new( "Internal", $error, $vars || {}, 1 );
+}
+
+#===================================
+sub is_compat {
+#===================================
+    my ( $attr, $one, $two ) = @_;
+    my $role
+        = $one->does('Elasticsearch::Role::Is_Sync')
+        ? 'Elasticsearch::Role::Is_Sync'
+        : 'Elasticsearch::Role::Is_Async';
+
+    return if eval { $two->does($role); };
+    my $class = ref($two) || $two;
+    die "$attr ($class) does not do $role";
 }
 
 1;

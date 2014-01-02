@@ -5,7 +5,7 @@ use Moo::Role;
 requires qw(perform_request);
 
 use Try::Tiny;
-use Elasticsearch::Util qw(parse_params);
+use Elasticsearch::Util qw(parse_params is_compat);
 use namespace::clean;
 
 has 'serializer'       => ( is => 'ro', required => 1 );
@@ -17,23 +17,10 @@ has 'cxn_pool'         => ( is => 'ro', required => 1 );
 sub BUILD {
 #===================================
     my $self = shift;
-    my $role
-        = $self->does('Elasticsearch::Role::Is_Sync')
-        ? 'Elasticsearch::Role::Is_Sync'
-        : 'Elasticsearch::Role::Is_Async';
     my $pool = $self->cxn_pool;
-    $self->_check_role( $role, 'cxn_pool', $pool );
-    $self->_check_role( $role, 'cxn',      $pool->cxn_factory->cxn_class );
+    is_compat( 'cxn_pool', $self, $pool );
+    is_compat( 'cxn',      $self, $pool->cxn_factory->cxn_class );
     return $self;
-}
-
-#===================================
-sub _check_role {
-#===================================
-    my ( $self, $role, $attr, $obj ) = @_;
-    return if eval { $obj->does($role); };
-    my $class = ref($obj) || $obj;
-    die "$attr ($class) does not do $role";
 }
 
 #===================================
