@@ -4,11 +4,15 @@ use Moo;
 with 'Elasticsearch::Role::API';
 with 'Elasticsearch::Role::Client::Direct';
 
-use Elasticsearch::Util qw(parse_params);
+use Elasticsearch::Util qw(parse_params load_plugin is_compat);
 use namespace::clean;
 
-has 'cluster' => ( is => 'lazy' );
-has 'indices' => ( is => 'lazy' );
+has 'cluster'             => ( is => 'lazy' );
+has 'indices'             => ( is => 'lazy' );
+has 'bulk_helper_class'   => ( is => 'ro', default => 'Bulk' );
+has 'scroll_helper_class' => ( is => 'ro', default => 'Scroll' );
+has '_bulk_class'         => ( is => 'lazy' );
+has '_scroll_class'       => ( is => 'lazy' );
 
 __PACKAGE__->_install_api('');
 
@@ -36,6 +40,40 @@ sub _index {
         $defn = { %$defn, method => 'POST' };
     }
     $self->perform_request( { %$defn, name => $name }, $params );
+}
+
+#===================================
+sub _build__bulk_class {
+#===================================
+    my $self  = shift;
+    my $class = load_plugin( $self->bulk_helper_class );
+    is_compat( 'bulk_helper_class', $self->transport, $class );
+    return $class;
+}
+
+#===================================
+sub _build__scroll_class {
+#===================================
+    my $self  = shift;
+    my $class = load_plugin( $self->scroll_helper_class );
+    is_compat( 'scroll_helper_class', $self->transport, $class );
+    return $class;
+}
+
+#===================================
+sub bulk_helper {
+#===================================
+    my ( $self, $params ) = parse_params(@_);
+    $params->{es} ||= $self;
+    $self->_bulk_class->new($params);
+}
+
+#===================================
+sub scroll_helper {
+#===================================
+    my ( $self, $params ) = parse_params(@_);
+    $params->{es} ||= $self;
+    $self->_scroll_class->new($params);
 }
 
 #===================================
