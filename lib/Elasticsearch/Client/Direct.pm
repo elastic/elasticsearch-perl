@@ -614,10 +614,12 @@ query.  For instance, to delete all documents from 2012:
 
     $result = $e->delete_by_query(
         body  => {
-            range => {
-                date => {
-                    gte => '2012-01-01',
-                    lt  => '2013-01-01'
+            query => {
+                range => {
+                    date => {
+                        gte => '2012-01-01',
+                        lt  => '2013-01-01'
+                    }
                 }
             }
         }
@@ -730,7 +732,11 @@ The C<count()> method returns the total count of all documents matching the
 query:
 
     $results = $e->count(
-        body => { match => { title => 'Elasticsearch clients' }}
+        body => {
+            query => {
+                match => { title => 'Elasticsearch clients' }
+            }
+        }
     );
 
 Query string parameters:
