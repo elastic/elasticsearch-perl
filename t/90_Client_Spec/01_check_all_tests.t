@@ -10,7 +10,7 @@ my @perl = sort
 my @spec = sort
     grep {/^[a-z]/}
     map  { basename($_) }
-    grep { -d $_ } glob('spec/test/*');
+    grep { -d $_ } glob('elasticsearch/rest-api-spec/test/*');
 
 cmp_deeply( \@perl, \@spec, 'Testing full spec' ) and exit;
 

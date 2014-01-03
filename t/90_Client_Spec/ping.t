@@ -1,5 +1,5 @@
 use lib 't/lib';
 use Elasticsearch::Client::Test;
 
-test_dir('spec/test/ping');
+test_dir('elasticsearch/rest-api-spec/test/ping');
 

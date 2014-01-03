@@ -1,5 +1,5 @@
 use lib 't/lib';
 use Elasticsearch::Client::Test;
 
-test_dir('spec/test/indices.get_field_mapping');
+test_dir('elasticsearch/rest-api-spec/test/indices.get_field_mapping');
 

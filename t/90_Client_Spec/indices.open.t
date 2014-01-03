@@ -1,5 +1,5 @@
 use lib 't/lib';
 use Elasticsearch::Client::Test;
 
-test_dir('spec/test/indices.open');
+test_dir('elasticsearch/rest-api-spec/test/indices.open');
 

@@ -1,5 +1,5 @@
 use lib 't/lib';
 use Elasticsearch::Client::Test;
 
-test_dir('spec/test/delete_by_query');
+test_dir('elasticsearch/rest-api-spec/test/delete_by_query');
 
