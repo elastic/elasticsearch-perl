@@ -19,6 +19,7 @@ our %Handler = (
     '{req_indices}'      => sub { multi_req( 'index',     @_ ) },
     '{req_types}'        => sub { multi_req( 'type',      @_ ) },
     '{names}'            => sub { multi_opt( 'name',      @_, '*' ) },
+    '{names|blank}'      => sub { multi_opt( 'name',      @_ ) },
     '{name}'             => sub { one_req( 'name',        @_ ) },
     '{name|blank}'       => sub { one_opt( 'name',        @_ ) },
     '{scroll_ids}'       => sub { multi_req( 'scroll_id', @_ ) },

@@ -19,6 +19,7 @@ sub api {
 
 # DEPRECATED
 # ignore_indices
+# indices.get_aliases
 
 #===================================
 %API = (
@@ -449,7 +450,7 @@ sub api {
     'indices.exists_alias' => {
         doc    => 'indices-aliases',
         method => 'HEAD',
-        path   => '{indices}/_alias/{names}',
+        path   => '{indices}/_alias/{names|blank}',
         qs     => [
             'allow_no_indices',   'expand_wildcards',
             'ignore_unavailable', 'ignore_indices'
@@ -480,7 +481,7 @@ sub api {
 
     'indices.get_alias' => {
         doc  => 'indices-aliases',
-        path => '{indices}/_alias/{names}',
+        path => '{indices}/_alias/{names|blank}',
         qs   => [
             'allow_no_indices',   'expand_wildcards',
             'ignore_unavailable', 'ignore_indices'

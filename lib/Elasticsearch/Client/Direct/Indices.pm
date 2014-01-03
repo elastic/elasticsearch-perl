@@ -336,6 +336,8 @@ for more information.
 
 =head2 C<get_aliases()>
 
+The C<get_aliases()> method is deprecated in favour of L</get_alias()>.
+
     $result = $e->indices->get_aliases(
         index   => 'index' | \@indices      # optional
     );
@@ -379,7 +381,7 @@ for more information.
 
     $result = $e->indices->get_alias(
         index   => 'index' | \@indices,     # optional
-        name    => 'alias' | \@aliases      # required
+        name    => 'alias' | \@aliases      # optional
     );
 
 The C<get_alias()> method returns the alias definitions for the specified
@@ -398,7 +400,7 @@ for more information.
 
     $bool = $e->indices->exists_alias(
         index   => 'index' | \@indices,     # optional
-        name    => 'alias' | \@aliases      # required
+        name    => 'alias' | \@aliases      # optional
     );
 
 The C<exists_alias()> method returns C<1> or the empty string depending on
