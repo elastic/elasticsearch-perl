@@ -17,6 +17,9 @@ sub api {
         || throw( 'Internal', "Unknown api name ($name)" );
 }
 
+# DEPRECATED
+# ignore_indices
+
 #===================================
 %API = (
 #===================================
@@ -43,8 +46,10 @@ sub api {
         doc  => 'search-count',
         path => '{indices|all-type}/{types}/_count',
         qs   => [
-            'ignore_indices', 'min_score', 'preference', 'routing',
-            'source'
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices',
+            'min_score',          'preference',
+            'routing',            'source'
         ],
     },
 
@@ -65,11 +70,13 @@ sub api {
         method => 'DELETE',
         path   => '{indices|all-type}/{types}/_query',
         qs     => [
-            'analyzer',         'consistency',
-            'default_operator', 'df',
-            'ignore_indices',   'q',
-            'replication',      'routing',
-            'source',           'timeout'
+            'analyzer',           'consistency',
+            'default_operator',   'df',
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices',
+            'q',                  'replication',
+            'routing',            'source',
+            'timeout'
         ],
     },
 
@@ -222,20 +229,22 @@ sub api {
         doc  => 'search-search',
         path => '{indices|all-type}/{types}/_search',
         qs   => [
-            'analyze_wildcard', 'analyzer',
-            'default_operator', 'df',
-            'explain',          'fields',
-            'from',             'ignore_indices',
-            'lenient',          'lowercase_expanded_terms',
-            'preference',       'q',
-            'routing',          'scroll',
-            'search_type',      'size',
-            'sort',             'source',
-            '_source',          '_source_include',
-            '_source_exclude',  'stats',
-            'suggest_field',    'suggest_mode',
-            'suggest_size',     'suggest_text',
-            'timeout',          'version'
+            'analyze_wildcard',         'analyzer',
+            'default_operator',         'df',
+            'explain',                  'fields',
+            'from',                     'ignore_indices',
+            'allow_no_indices',         'expand_wildcards',
+            'ignore_unavailable',       'lenient',
+            'lowercase_expanded_terms', 'preference',
+            'q',                        'routing',
+            'scroll',                   'search_type',
+            'size',                     'sort',
+            'source',                   '_source',
+            '_source_include',          '_source_exclude',
+            'stats',                    'suggest_field',
+            'suggest_mode',             'suggest_size',
+            'suggest_text',             'timeout',
+            'version'
         ],
     },
 
@@ -243,7 +252,12 @@ sub api {
         body => { desc => 'The request definition' },
         doc  => 'search-suggesters',
         path => '{indices|all-type}/{types}/_suggest',
-        qs   => [ 'ignore_indices', 'preference', 'routing', 'source' ],
+        qs   => [
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices',
+            'preference',         'routing',
+            'source'
+        ],
     },
 
     'update' => {
@@ -364,11 +378,12 @@ sub api {
         method => 'POST',
         path   => '{indices}/_cache/clear',
         qs     => [
-            'fielddata',      'fields',
-            'filter',         'filter_cache',
-            'filter_keys',    'id',
-            'ignore_indices', 'index',
-            'recycler'
+            'fielddata',          'fields',
+            'filter',             'filter_cache',
+            'filter_keys',        'id',
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices',
+            'index',              'recycler'
         ],
     },
 
@@ -435,27 +450,41 @@ sub api {
         doc    => 'indices-aliases',
         method => 'HEAD',
         path   => '{indices}/_alias/{names}',
-        qs     => ['ignore_indices'],
+        qs     => [
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices'
+        ],
     },
 
     'indices.exists_type' => {
         doc    => 'indices-types-exists',
         method => 'HEAD',
         path   => '{indices|all}/{req_types}',
-        qs     => ['ignore_indices'],
+        qs     => [
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices'
+        ],
     },
 
     'indices.flush' => {
         doc    => 'indices-flush',
         method => 'POST',
         path   => '{indices}/_flush',
-        qs     => [ 'force', 'full', 'ignore_indices', 'refresh' ],
+        qs     => [
+            'force',              'full',
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices',
+            'refresh'
+        ],
     },
 
     'indices.get_alias' => {
         doc  => 'indices-aliases',
         path => '{indices}/_alias/{names}',
-        qs   => ['ignore_indices'],
+        qs   => [
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices'
+        ],
     },
 
     'indices.get_aliases' => {
@@ -502,9 +531,11 @@ sub api {
         method => 'POST',
         path   => '{indices}/_optimize',
         qs     => [
-            'flush',            'ignore_indices',
-            'max_num_segments', 'only_expunge_deletes',
-            'refresh',          'wait_for_merge'
+            'flush',                'allow_no_indices',
+            'expand_wildcards',     'ignore_unavailable',
+            'ignore_indices',       'max_num_segments',
+            'only_expunge_deletes', 'refresh',
+            'wait_for_merge'
         ],
     },
 
@@ -568,20 +599,29 @@ sub api {
         doc    => 'indices-refresh',
         method => 'POST',
         path   => '{indices}/_refresh',
-        qs     => ['ignore_indices'],
+        qs     => [
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices'
+        ],
     },
 
     'indices.segments' => {
         doc  => 'indices-segments',
         path => '{indices}/_segments',
-        qs   => [ 'ignore_indices', ],
+        qs   => [
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices',
+        ],
     },
 
     'indices.snapshot_index' => {
         docs   => 'indices-gateway-snapshot',
         method => 'POST',
         path   => '{indices}/_gateway/snapshot',
-        params => ['ignore_indices']
+        params => [
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices'
+        ]
     },
 
     'indices.stats' => {
@@ -594,17 +634,23 @@ sub api {
             'fielddata_fields', 'fields',
             'filter_cache',     'flush',
             'get',              'groups',
-            'id_cache',         'ignore_indices',
-            'indexing',         'merge',
-            'refresh',          'search',
-            'store',            'warmer'
+            'id_cache',         'allow_no_indices',
+            'expand_wildcards', 'ignore_unavailable',
+            'ignore_indices',   'indexing',
+            'merge',            'refresh',
+            'search',           'store',
+            'warmer'
         ],
     },
 
     'indices.status' => {
         doc  => 'indices-status',
         path => '{indices}/_status',
-        qs   => [ 'ignore_indices', 'recovery', 'snapshot' ],
+        qs   => [
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'ignore_indices',
+            'recovery',           'snapshot'
+        ],
     },
 
     'indices.update_aliases' => {
@@ -622,7 +668,12 @@ sub api {
         body => { desc => 'The query definition' },
         doc  => 'search-validate',
         path => '{indices|all-type}/{types}/_validate/query',
-        qs   => [ 'explain', 'ignore_indices', 'q', 'source' ],
+        qs   => [
+            'explain',          'allow_no_indices',
+            'expand_wildcards', 'ignore_unavailable',
+            'ignore_indices',   'q',
+            'source'
+        ],
     },
 
 );

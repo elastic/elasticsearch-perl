@@ -112,13 +112,16 @@ The C<clear_cache()> method is used to clear the in-memory filter, fielddata,
 or id cache for the specified indices.
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
     C<fielddata>,
     C<fields>,
     C<filter>,
     C<filter_cache>,
     C<filter_keys>,
     C<id>,
-    C<ignore_indices>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>,
     C<index>,
     C<recycler>
 
@@ -136,7 +139,10 @@ allowing recent changes to become visible to search. This process normally
 happens automatically once every second by default.
 
 Query string parameters:
-    C<ignore_indices>
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>
 
 See the L<refresh index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-refresh.html>
 for more information.
@@ -152,9 +158,12 @@ written to disk with an C<fsync>, and clears out the transaction log.
 This process normally happens automatically.
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
     C<force>,
     C<full>,
-    C<ignore_indices>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>,
     C<refresh>
 
 See the L<flush index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-flush.html>
@@ -171,8 +180,11 @@ C<max_num_segments>.  This is a very heavy operation and should only be run
 with care, and only on indices that are no longer being updated.
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
     C<flush>,
-    C<ignore_indices>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>,
     C<max_num_segments>,
     C<only_expunge_deletes>,
     C<refresh>,
@@ -271,7 +283,10 @@ The C<exists_type()> method checks for the existence of all specified types
 in all specified indices, and returns C<1> or the empty string.
 
 Query string parameters:
-    C<ignore_indices>
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>
 
 See the L<exists_type docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-types-exists.html>
 for more information.
@@ -371,7 +386,10 @@ The C<get_alias()> method returns the alias definitions for the specified
 aliases in the specified indices.
 
 Query string parameters:
-    C<ignore_indices>
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>
 
 See the L<get_alias docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
@@ -387,7 +405,10 @@ The C<exists_alias()> method returns C<1> or the empty string depending on
 whether the specified aliases exist in the specified indices.
 
 Query string parameters:
-    C<ignore_indices>
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>
 
 See the L<exists_alias docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
@@ -562,10 +583,12 @@ want returned.
 
 Query string parameters:
     C<all>,
+    C<allow_no_indices>,
     C<clear>,
     C<completion>,
     C<completion_fields>,
     C<docs>,
+    C<expand_wildcards>,
     C<fielddata>,
     C<fielddata_fields>,
     C<fields>,
@@ -574,7 +597,8 @@ Query string parameters:
     C<get>,
     C<groups>,
     C<id_cache>,
-    C<ignore_indices>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>,
     C<indexing>,
     C<merge>,
     C<refresh>,
@@ -594,7 +618,10 @@ for more information.
 Deprecated.
 
 Query string parameters:
-    C<ignore_indices>,
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>,
     C<recovery>,
     C<snapshot>
 
@@ -611,7 +638,10 @@ The C<segments()> method is used to return information about the segments
 that an index contains.
 
 Query string parameters:
-    C<ignore_indices>
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>
 
 See the L<segments docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-segments.html>
 for more information.
@@ -656,8 +686,11 @@ to C<true>, in which case it includes an execution plan in the output.
 
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
     C<explain>,
-    C<ignore_indices>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>,
     C<q>,
     C<source>
 

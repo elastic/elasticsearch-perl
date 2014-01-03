@@ -625,12 +625,16 @@ query.  For instance, to delete all documents from 2012:
         }
     );
 
+
 Query string parameters:
+    C<allow_no_indices>,
     C<analyzer>,
     C<consistency>,
     C<default_operator>,
     C<df>,
-    C<ignore_indices>,
+    C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>,
     C<q>,
     C<replication>,
     C<routing>,
@@ -687,15 +691,18 @@ Query string parameters:
     C<_source>,
     C<_source_exclude>,
     C<_source_include>,
+    C<allow_no_indices>,
     C<analyze_wildcard>,
     C<analyzer>,
     C<default_operator>,
     C<df>,
+    C<expand_wildcards>,
     C<explain>,
     C<fields>,
     C<from>,
+    C<ignore_indices> (DEPR),
     C<ignore_indices>,
-    C<indices_boost>,
+    C<ignore_unavailable>,
     C<lenient>,
     C<lowercase_expanded_terms>,
     C<preference>,
@@ -740,7 +747,10 @@ query:
     );
 
 Query string parameters:
-    C<ignore_indices>,
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>,
     C<min_score>,
     C<preference>,
     C<routing>,
@@ -928,7 +938,10 @@ suggestion requests, which can also be run as part of a L</search()> request.
 
 
 Query string parameters:
-    C<ignore_indices>,
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
+    C<ignore_unavailable>,
     C<preference>,
     C<routing>,
     C<source>
