@@ -251,6 +251,18 @@ Multiple error codes can be specified with an array:
         ignore => [404,409]
     );
 
+=head1 CONFIGURATION
+
+=head2 C<bulk_helper_class>
+
+The class to use for the L</bulk_helper()> method. Defaults to
+L<Elasticsearch::Bulk>.
+
+=head2 C<scroll_helper_class>
+
+The class to use for the L</scroll_helper()> method. Defaults to
+L<Elasticsearch::Scroll>.
+
 =head1 GENERAL METHODS
 
 =head2 C<info()>
@@ -516,7 +528,7 @@ that need to be made, bulk requests greatly improve performance.
         body    => [ actions ]          # required
     );
 
-See L<Elasticsearch::Bulk> for a helper module that makes
+See L<Elasticsearch::Bulk> and L</bulk_helper()> for a helper module that makes
 bulk indexing simpler to use.
 
 The C<bulk()> method can perform multiple L</index()>, L</create()>,
@@ -587,6 +599,13 @@ Query string parameters:
 
 See the L<bulk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-bulk.html>
 for more information.
+
+=head2 C<bulk_helper()>
+
+    $bulk_helper = $e->bulk_helper( @args );
+
+Returns a new instance of the class specified in the L</bulk_helper_class>,
+which defaults to L<Elasticsearch::Bulk>.
 
 =head2 C<mget()>
 
@@ -813,8 +832,8 @@ B<NOTE:> you will almost always want to set the
 C<search_type> to C<scan> in your
 original C<search()> request.
 
-See L<Elasticsearch::Scroll> for a helper utility which makes
-managing scroll requests much easier.
+See L</scroll_helper()> and L<Elasticsearch::Scroll> for a helper utility
+which makes managing scroll requests much easier.
 
 Query string parameters:
     C<scroll>,
@@ -832,6 +851,14 @@ for more information.
 
 The C<clear_scroll()> method can clear unfinished scroll requests, freeing
 up resources on the server.
+
+=head2 C<scroll_helper()>
+
+    $scroll_helper = $e->scroll_helper( @args );
+
+Returns a new instance of the class specified in the L</scroll_helper_class>,
+which defaults to L<Elasticsearch::Scroll>.
+
 
 =head2 C<msearch()>
 

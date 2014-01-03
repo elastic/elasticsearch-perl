@@ -4,17 +4,9 @@ use Moo;
 use Elasticsearch::Util qw(parse_params);
 use namespace::clean;
 
-has 'es' => ( is => 'ro', required => 1 );
-has 'scroll'     => ( is => 'ro' );
-has 'total'      => ( is => 'ro' );
-has 'max_score'  => ( is => 'ro' );
-has 'facets'     => ( is => 'ro' );
-has 'suggest'    => ( is => 'ro' );
-has 'took'       => ( is => 'ro' );
-has 'total_took' => ( is => 'rwp' );
-has '_scroll_id' => ( is => 'rw' );
-has '_buffer'    => ( is => 'ro' );
-has 'eof'        => ( is => 'rw' );
+has '_buffer' => ( is => 'ro' );
+
+with 'Elasticsearch::Role::Is_Sync', 'Elasticsearch::Role::Scroll';
 
 #===================================
 sub BUILDARGS {
@@ -24,6 +16,8 @@ sub BUILDARGS {
     my $scroll  = $params->{scroll} ||= '1m';
     my $results = $es->search($params);
 
+    my $total = $results->{hits}{total};
+
     return {
         es         => $es,
         scroll     => $scroll,
@@ -31,11 +25,12 @@ sub BUILDARGS {
         suggest    => $results->{suggest},
         took       => $results->{took},
         total_took => $results->{took},
-        total      => $results->{hits}{total},
+        total      => $total,
         max_score  => $results->{hits}{max_score},
         _buffer    => $results->{hits}{hits},
-        _scroll_id => $results->{_scroll_id},
-        eof        => !$results->{_scroll_id},
+        $total
+        ? ( _scroll_id => $results->{_scroll_id} )
+        : ( is_finished => 1 )
     };
 }
 
@@ -44,10 +39,12 @@ sub next {
 #===================================
     my ( $self, $n ) = @_;
     $n ||= 1;
-    while ( !$self->eof and $self->buffer_size < $n ) {
+    while ( $self->_has_scroll_id and $self->buffer_size < $n ) {
         $self->refill_buffer;
     }
-    return splice( @{ $self->_buffer }, 0, $n );
+    my @return = splice( @{ $self->_buffer }, 0, $n );
+    $self->finish if @return < $n;
+    return @return;
 }
 
 #===================================
@@ -64,47 +61,41 @@ sub buffer_size { 0 + @{ shift->_buffer } }
 #===================================
 sub refill_buffer {
 #===================================
-    my $self   = shift;
-    my $buffer = $self->_buffer;
+    my $self = shift;
 
-    return 0 + @$buffer if $self->eof;
+    return 0 if $self->is_finished;
+
+    my $buffer    = $self->_buffer;
+    my $scroll_id = $self->_scroll_id
+        || return 0 + @$buffer;
 
     my $results = $self->es->scroll(
         scroll => $self->scroll,
-        body   => $self->_scroll_id
+        body   => $scroll_id,
     );
 
-    $self->_scroll_id( $results->{_scroll_id} );
     my $hits = $results->{hits}{hits};
     $self->_set_total_took( $self->total_took + $results->{took} );
 
     if ( @$hits == 0 ) {
-        $self->eof(1);
+        $self->_clear_scroll_id;
     }
     else {
+        $self->_set__scroll_id( $results->{_scroll_id} );
         push @$buffer, @$hits;
     }
+    $self->finish if @$buffer == 0;
     return 0 + @$buffer;
 }
 
 #===================================
-sub finish {
+around 'finish' => sub {
 #===================================
-    my $self = shift;
-    return if $self->eof;
-
+    my ( $orig, $self ) = @_;
+    $orig->($self);
     @{ $self->_buffer } = ();
-    $self->eof(1);
-    eval { $self->es->clear_scroll( scroll_id => $self->_scroll_id ) };
-    return 1;
-}
-
-#===================================
-sub DESTROY {
-#===================================
-    my $self = shift;
-    eval { $self->finish };
-}
+    1;
+};
 
 1;
 
@@ -311,16 +302,6 @@ currently in the buffer.
 The C<buffer_size()> method returns the total number of docs currently in
 the buffer.
 
-=head2 C<eof()>
-
-    $bool = $scroll->eof;
-
-The C<eof()> method reports whether there may be more results to pull from the
-cluster or not.  If it returns C<false> it doesn't mean that there are
-definitely more results, just that we don't yet know.  If it returns
-C<true> then there are definitely no more results to be retrieved from
-the cluster, but there may still be results in local buffer.
-
 =head2 C<finish()>
 
     $scroll->finish;
@@ -332,7 +313,14 @@ C<eval> so the C<finish()> method can be safely called with any version
 of Elasticsearch.
 
 When the C<$scroll> instance goes out of scope, L</finish()> is called
-automatically unless L</eof()> returns C<true>.
+automatically if required.
+
+=head2 C<is_finished()>
+
+    $bool = $scroll->is_finished;
+
+A flag which returns C<true> if all results have been processed or
+L</finish()> has been called.
 
 =head1 INFO ACCESSORS
 

@@ -22,7 +22,7 @@ if ( $es->info->{version}{number} ge '0.90.5' ) {
         total     => 0,
         max_score => 0,
         steps     => [
-            eof           => 1,
+            is_finished   => 1,
             next          => [0],
             refill_buffer => 0,
             drain_buffer  => [0],
@@ -38,17 +38,17 @@ test_scroll(
     total     => 100,
     max_score => 1,
     steps     => [
-        eof           => '',
+        is_finished   => '',
         buffer_size   => 10,
         next          => [1],
         drain_buffer  => [9],
         refill_buffer => 10,
         refill_buffer => 20,
-        eof           => '',
+        is_finished   => '',
         next_81       => [81],
         next_20       => [9],
         next          => [0],
-        eof           => 1,
+        is_finished   => 1,
     ]
 );
 
@@ -72,9 +72,9 @@ SKIP: {
         facets    => bool(1),
         suggest   => bool(1),
         steps     => [
-            next    => [1],
-            next_50 => [49],
-            eof     => 1,
+            next        => [1],
+            next_50     => [49],
+            is_finished => 1,
         ]
     );
 
@@ -98,7 +98,7 @@ SKIP: {
             next        => [1],
             buffer_size => 49,
             next_100    => [99],
-            eof         => 1,
+            is_finished => 1,
         ]
     );
 
@@ -110,10 +110,10 @@ test_scroll(
     total     => 100,
     max_score => 1,
     steps     => [
-        eof         => '',
+        is_finished => '',
         next        => [1],
         finish      => 1,
-        eof         => 1,
+        is_finished => 1,
         buffer_size => 0,
         next        => [0]
 
