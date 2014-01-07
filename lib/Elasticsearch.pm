@@ -486,7 +486,7 @@ bodies.  See:
 See L<Elasticsearch::Compat>, which allows you to run your old
 L<ElasticSearch> code with the new L<Elasticsearch> module.
 
-The L<Elasticseach> API is pretty similar to the old L<ElasticSearch> API,
+The L<Elasticsearch> API is pretty similar to the old L<ElasticSearch> API,
 but there are a few differences.  The most notable are:
 
 =head2 C<hosts> vs C<servers>
