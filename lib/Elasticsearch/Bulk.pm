@@ -508,7 +508,7 @@ response.
 
 =head3 C<on_conflict>
 
-    $bulk = Elasticsearch->new(
+    $bulk = Elasticsearch::Bulk->new(
         es           => $es,
         on_conflict  => sub {
             my ($action,$response,$i,$version) = @_;
@@ -523,7 +523,7 @@ of the document currently stored in Elasticsearch (if found).
 
 =head3 C<on_error>
 
-    $bulk = Elasticsearch->new(
+    $bulk = Elasticsearch::Bulk->new(
         es        => $es,
         on_error  => sub {
             my ($action,$response,$i) = @_;
@@ -540,7 +540,7 @@ If you want to be in control of flushing, and you just want to receive
 the raw response that Elasticsearch sends instead of using callbacks,
 then you can do so as follows:
 
-    $bulk = Elasticsearch->new(
+    $bulk = Elasticsearch::Bulk->new(
         es          => $es,
         max_count   => 0,
         max_size    => 0,
