@@ -293,7 +293,7 @@ for more information.
 
 =head2 C<delete_mapping()>
 
-    $response = $e->indices->delete(
+    $response = $e->indices->delete_mapping(
         index => 'index' | \@indices    # required,
         type  => 'type'                 # required
     );
