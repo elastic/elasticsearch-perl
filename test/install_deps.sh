@@ -14,13 +14,27 @@ function run {
 }
 
 ##### INSTALL DEPS #####
-export PERL5LIB=perl/lib
+export PERL5LIB=../perl/lib
 
 cd perl
-run "Install main deps" cpanm --installdeps --notest --with-recommends .
+
+run "Install main deps"
+    cpanm --installdeps \
+          --notest \
+          --with-recommends \
+          .
 
 cd ../perl-netcurl
-run "Install NetCurl deps" cpanm --installdeps --notest --with-recommends .
+
+run "Install NetCurl deps" \
+    cpanm --installdeps \
+          --notest \
+          --with-recommends \
+          --skip-satisfied Elasticsearch \
+                           Elasticsearch::Role::Cxn \
+                           Elasticsearch::Role::Cxn::HTTP \
+                           Elasticsearch::Role::Is_Sync \
+          .
 
 #cd ../perl-async
 #run "Install Async deps" cpanm --installdeps --notest --with-recommends .
