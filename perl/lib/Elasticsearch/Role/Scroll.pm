@@ -27,7 +27,7 @@ sub finish {
 
     my $scroll_id = $self->_scroll_id or return;
     $self->_clear_scroll_id;
-    $self->es->clear_scroll( scroll_id => $scroll_id );
+    eval { $self->es->clear_scroll( scroll_id => $scroll_id ) };
 }
 
 #===================================
