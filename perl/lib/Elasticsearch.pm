@@ -73,11 +73,11 @@ __END__
 
     use Elasticsearch;
 
-Connect to C<localhost:9200>:
+    # Connect to localhost:9200:
 
     my $e = Elasticsearch->new();
 
-Round-robin between two nodes:
+    # Round-robin between two nodes:
 
     my $e = Elasticsearch->new(
         nodes => [
@@ -86,15 +86,14 @@ Round-robin between two nodes:
         ]
     );
 
-Connect to cluster at C<search1:9200>, sniff all nodes and
-round-robin between them:
+    # Connect to cluster at search1:9200, sniff all nodes and round-robin between them:
 
     my $e = Elasticsearch->new(
         nodes    => 'search1:9200',
         cxn_pool => 'Sniff'
     );
 
-Index a document:
+    # Index a document:
 
     $e->index(
         index   => 'my_app',
@@ -107,7 +106,7 @@ Index a document:
         }
     );
 
-Get the document:
+    # Get the document:
 
     my $doc = $e->get(
         index   => 'my_app',
@@ -115,7 +114,7 @@ Get the document:
         id      => 1
     );
 
-Search:
+    # Search:
 
     my $results = $e->search(
         index => 'my_app',
@@ -126,13 +125,13 @@ Search:
         }
     );
 
-Cluster requests:
+    # Cluster requests:
 
     $info        = $e->cluster->info;
     $health      = $e->cluster->health;
     $node_stats  = $e->cluster->node_stats
 
-Index requests:
+    # Index requests:
 
     $e->indices->create(index=>'my_index');
     $e->indices->delete(index=>'my_index');

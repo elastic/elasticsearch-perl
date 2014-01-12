@@ -66,7 +66,8 @@ If any node fails, then all nodes are pinged before the next request to
 ensure that they are still alive and responding.  Failed nodes will be
 pinged regularly to check if they have recovered.
 
-This class does L<Elasticsearch::Role::CxnPool>.
+This class does L<Elasticsearch::Role::CxnPool::Static> and
+L<Elasticsearch::Role::Is_Sync>.
 
 =head1 CONFIGURATION
 

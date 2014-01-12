@@ -85,7 +85,8 @@ Provides the default HTTP Cxn class and is based on L<LWP>.
 The LWP backend uses pure Perl and persistent connections.
 
 This class does L<Elasticsearch::Role::Cxn::HTTP>, whose documentation
-provides more information.
+provides more information, L<Elasticsearch::Role::Cxn> and
+L<Elasticsearch::Role::Is_Sync>.
 
 =head1 SEE ALSO
 

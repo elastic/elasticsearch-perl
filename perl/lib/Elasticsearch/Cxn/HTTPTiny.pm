@@ -80,7 +80,8 @@ have a high open filehandle limit (C<ulimit -l>) so that your system
 doesn't run out of sockets.
 
 This class does L<Elasticsearch::Role::Cxn::HTTP>, whose documentation
-provides more information.
+provides more information, L<Elasticsearch::Role::Cxn> and
+L<Elasticsearch::Role::Is_Sync>.
 
 
 =head1 SEE ALSO

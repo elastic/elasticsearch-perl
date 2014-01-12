@@ -99,7 +99,8 @@ For L<HTTP Cxn classes|Elasticsearch::Role::Cxn::HTTP>, this module
 will also dynamically detect the C<max_content_length> which the nodes
 in the cluster will accept.
 
-This class does L<Elasticsearch::Role::CxnPool>.
+This class does L<Elasticsearch::Role::CxnPool::Sniff> and
+L<Elasticsearch::Role::Is_Sync>.
 
 =head1 CONFIGURATION
 

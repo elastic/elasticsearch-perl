@@ -66,7 +66,8 @@ itself times out (see L<Elasticsearch::Cxn/request_timeout>).
 
 Failed nodes will be retried regularly to check if they have recovered.
 
-This class does L<Elasticsearch::Role::CxnPool>.
+This class does L<Elasticsearch::Role::CxnPool::Static::NoPing> and
+L<Elasticsearch::Role::Is_Sync>.
 
 =head1 CONFIGURATION
 

@@ -156,6 +156,9 @@ body, at which point it issues a C<bulk()> request.
 Once you have finished adding actions, call L</flush()> to force the final
 C<bulk()> request on the items left in the queue.
 
+This class does L<Elasticsearch::Role::Bulk> and
+L<Elasticsearch::Role::Is_Sync>.
+
 =head1 CREATING A NEW INSTANCE
 
 =head2 C<new()>
