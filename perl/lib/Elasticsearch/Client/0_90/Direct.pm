@@ -1,7 +1,7 @@
-package Elasticsearch::Client::Direct;
+package Elasticsearch::Client::0_90::Direct;
 
 use Moo;
-with 'Elasticsearch::Role::API';
+with 'Elasticsearch::Role::API::0_90';
 with 'Elasticsearch::Role::Client::Direct';
 
 use Elasticsearch::Util qw(parse_params load_plugin is_compat);
@@ -80,8 +80,8 @@ sub scroll_helper {
 sub _build_cluster {
 #===================================
     my ( $self, $name ) = @_;
-    require Elasticsearch::Client::Direct::Cluster;
-    Elasticsearch::Client::Direct::Cluster->new(
+    require Elasticsearch::Client::0_90::Direct::Cluster;
+    Elasticsearch::Client::0_90::Direct::Cluster->new(
         {   transport => $self->transport,
             logger    => $self->logger
         }
@@ -92,8 +92,8 @@ sub _build_cluster {
 sub _build_indices {
 #===================================
     my ( $self, $name ) = @_;
-    require Elasticsearch::Client::Direct::Indices;
-    Elasticsearch::Client::Direct::Indices->new(
+    require Elasticsearch::Client::0_90::Direct::Indices;
+    Elasticsearch::Client::0_90::Direct::Indices->new(
         {   transport => $self->transport,
             logger    => $self->logger
         }
@@ -690,6 +690,7 @@ Query string parameters:
     C<default_operator>,
     C<df>,
     C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
     C<ignore_unavailable>,
     C<q>,
     C<replication>,
@@ -756,6 +757,7 @@ Query string parameters:
     C<explain>,
     C<fields>,
     C<from>,
+    C<ignore_indices> (DEPR),
     C<ignore_indices>,
     C<ignore_unavailable>,
     C<lenient>,
@@ -804,6 +806,7 @@ query:
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
     C<ignore_unavailable>,
     C<min_score>,
     C<preference>,
@@ -1002,6 +1005,7 @@ suggestion requests, which can also be run as part of a L</search()> request.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
+    C<ignore_indices> (DEPR),
     C<ignore_unavailable>,
     C<preference>,
     C<routing>,
