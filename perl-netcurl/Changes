@@ -1,0 +1,13 @@
+Revision history for Elasticsearch-Cxn-NetCurl
+
+0.03    2013-12-03
+        Removed custom timeouts - rely on defaults
+        Tidied up Curl imports
+
+0.02    2013-10-03
+        NetCurl needs longer ping/sniff timeouts on some platforms
+        Added full ES test suite
+
+0.01    2013-10-02
+        First release
+
