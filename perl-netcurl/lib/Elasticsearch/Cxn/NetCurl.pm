@@ -114,7 +114,7 @@ sub _build_handle { Net::Curl::Easy->new }
 
 1;
 
-# ABSTRACT: An Elasticsearch Cxn implementation which uses libcurl via Net::Curl
+# ABSTRACT: A Cxn implementation which uses libcurl via Net::Curl
 
 =head1 DESCRIPTION
 
@@ -143,7 +143,7 @@ This is a stable API but this implemenation is new. Watch this space
 for new releases.
 
 If you have any suggestions for improvements, or find any bugs, please report
-them to L<http://github.com/elasticsearch/elasticsearch-perl/issues>.
+them to L<http://github.com/elasticsearch/elasticsearch-perl-netcurl/issues>.
 I will be notified, and then you'll automatically be notified of progress on
 your bug as I make changes.
 
@@ -159,7 +159,7 @@ You can also look for information at:
 
 =item * GitHub
 
-L<http://github.com/elasticsearch/elasticsearch-perl>
+L<http://github.com/elasticsearch/elasticsearch-perl-netcurl>
 
 =item * CPAN Ratings
 
