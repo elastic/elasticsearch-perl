@@ -13,18 +13,6 @@ function run {
     ERROR=1
 }
 
-##### INSTALL DEPS #####
-cd perl
-run "Install main deps" cpanm --installdeps --notest --with-recommends .
-
-cd ../perl-netcurl
-run "Install NetCurl deps" cpanm --installdeps --notest --with-recommends .
-
-cd ../perl-async
-run "Install Async deps" cpanm --installdeps --notest --with-recommends .
-cd ..
-########################
-
 export ES=localhost:9200
 
 ###### RUN TESTS #######
