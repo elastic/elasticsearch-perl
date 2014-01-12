@@ -22,7 +22,7 @@ run "Sync Perl core tests" \
 cd ..
 
 run 'YAML: Sync Perl with LWP' \
-    ./test/run_yaml_tests.pl
+    ./test/run_yaml_tests.pl -v
 
 run 'YAML: Sync Perl with NetCurl' \
     ./test/run_yaml_tests.pl \
