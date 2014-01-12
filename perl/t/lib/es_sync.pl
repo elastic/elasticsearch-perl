@@ -13,7 +13,8 @@ if ( $ENV{ES} ) {
     $es = Elasticsearch->new(
         nodes    => $ENV{ES},
         trace_to => $trace,
-        cxn      => $ENV{ES_CXN} || 'LWP'
+        cxn      => $ENV{ES_CXN} || 'LWP',
+        client   => $ENV{ES_API} || 'Direct',
     );
     eval { $es->ping; } or do {
         diag $@;

@@ -17,18 +17,24 @@ my $verbose = 0;
 my $trace   = 0;
 my $async   = 0;
 my $cxn     = '';
+my $api     = $ENV{ES_VERSION} || '';
 
 GetOptions(
     'verbose' => \$verbose,
     'trace'   => \$trace,
     'cxn=s'   => \$cxn,
     'async'   => \$async,
+    'api'     => \$api,
 );
 
 $ENV{ES_ASYNC} = $async;
 $ENV{ES_CXN}   = $cxn;
 $ENV{TRACE}    = $trace;
 $ENV{ES}       = "localhost:9200";
+
+if ( $api =~ /^0.90/ ) {
+    $ENV{ES_API} = '0_90::Direct';
+}
 
 my $tap = TAP::Harness->new(
     {   exec      => [ $^X, 'test/yaml_tester.pl' ],
