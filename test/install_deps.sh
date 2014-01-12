@@ -14,6 +14,8 @@ function run {
 }
 
 ##### INSTALL DEPS #####
+export PERL5LIB=perl/lib
+
 cd perl
 run "Install main deps" cpanm --installdeps --notest --with-recommends .
 
