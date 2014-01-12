@@ -83,7 +83,7 @@ sub test_files {
     plan tests => 0 + @files;
 
     for my $file (@files) {
-        my ($name) = ( $file =~ m{(\w+/\w+\.yaml)} );
+        my ($name) = ( $file =~ m{([\w.]+/[\w.]+\.yaml)} );
         my (@asts) = eval { LoadFile($file) } or do {
             fail "Error parsing test file ($file): $@";
             next;
