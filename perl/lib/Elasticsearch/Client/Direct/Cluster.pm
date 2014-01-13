@@ -57,6 +57,7 @@ configured heap size or the threadpool settings.
 Query string parameters:
     C<all>,
     C<clear>,
+    C<flat_settings>,
     C<http>,
     C<jvm>,
     C<network>,
@@ -135,6 +136,9 @@ for more information.
 The C<get_settings()> method is used to retrieve cluster-wide settings that
 have been set with the L</put_settings()> method.
 
+Query string parameters:
+    C<flat_settings>
+
 See the L<cluster settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-update-settings.html>
 for more information.
 
@@ -154,6 +158,9 @@ For instance:
         }
     );
 
+Query string parameters:
+    C<flat_settings>
+
 See the L<cluster settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-update-settings.html>
  for more information.
 
@@ -165,6 +172,7 @@ The C<state()> method returns the current cluster state from the master node,
 or from the responding node if C<local> is set to C<true>.
 
 Query string parameters:
+    C<flat_settings>,
     C<filter_blocks>,
     C<filter_index_templates>,
     C<filter_indices>,

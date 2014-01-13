@@ -58,6 +58,7 @@ our %Params = (
     filter_nodes           => { type => 'bool' },
     filter_routing_table   => { type => 'bool' },
     filters                => { type => 'list' },
+    flat_settings          => { type => 'bool' },
     flush                  => { type => 'bool' },
     force                  => { type => 'bool' },
     format                 => {

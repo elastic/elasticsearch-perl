@@ -277,6 +277,7 @@ sub api {
     'cluster.get_settings' => {
         doc  => 'cluster-update-settings',
         path => '_cluster/settings',
+        qs   => ['flat_settings']
     },
 
     'cluster.health' => {
@@ -300,9 +301,10 @@ sub api {
         doc  => 'cluster-nodes-info',
         path => '_nodes/{nodes|blank}',
         qs   => [
-            'all',      'clear',   'http',        'jvm',
-            'network',  'os',      'plugin',      'process',
-            'settings', 'timeout', 'thread_pool', 'transport'
+            'all',     'clear',    'flat_settings', 'http',
+            'jvm',     'network',  'os',            'plugin',
+            'process', 'settings', 'timeout',       'thread_pool',
+            'transport'
         ],
     },
 
@@ -331,6 +333,7 @@ sub api {
         doc    => 'cluster-update-settings',
         method => 'PUT',
         path   => '_cluster/settings',
+        qs     => ['flat_settings']
     },
 
     'cluster.reroute' => {
@@ -348,10 +351,11 @@ sub api {
         doc  => 'cluster-state',
         path => '_cluster/state',
         qs   => [
-            'filter_blocks',  'filter_index_templates',
-            'filter_indices', 'filter_metadata',
-            'filter_nodes',   'filter_routing_table',
-            'local',          'master_timeout'
+            'flat_settings',          'filter_blocks',
+            'filter_index_templates', 'filter_indices',
+            'filter_metadata',        'filter_nodes',
+            'filter_routing_table',   'local',
+            'master_timeout'
         ],
     },
 
@@ -494,11 +498,13 @@ sub api {
     'indices.get_settings' => {
         doc  => 'indices-get-settings',
         path => '{indices}/_settings',
+        qs   => ['flat_settings']
     },
 
     'indices.get_template' => {
         doc  => 'indices-templates',
         path => '_template/{name|blank}',
+        qs   => ['flat_settings']
     },
 
     'indices.get_warmer' => {
@@ -555,7 +561,7 @@ sub api {
         doc    => 'indices-update-settings',
         method => 'PUT',
         path   => '{indices}/_settings',
-        qs     => ['master_timeout'],
+        qs     => [ 'master_timeout', 'flat_settings' ],
     },
 
     'indices.put_template' => {
@@ -566,7 +572,7 @@ sub api {
         doc    => 'indices-templates',
         method => 'PUT',
         path   => '_template/{name}',
-        qs     => [ 'order', 'timeout', 'master_timeout' ],
+        qs     => [ 'flat_settings', 'order', 'timeout', 'master_timeout' ],
     },
 
     'indices.put_warmer' => {

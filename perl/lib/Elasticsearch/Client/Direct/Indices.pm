@@ -444,6 +444,7 @@ indices or all indices. For instance:
     );
 
 Query string parameters:
+    C<flat_settings>,
     C<master_timeout>
 
 See the L<put_settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-update-settings.html>
@@ -457,6 +458,9 @@ for more information.
 
 The C<get_settings()> method retrieves the index settings for the specified
 indices or all indices.
+
+Query string parameters:
+    C<flat_settings>
 
 See the L<get_settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-settings.html>
 for more information.
@@ -473,6 +477,7 @@ for more information.
 The C<put_template()> method is used to create or update index templates.
 
 Query string parameters:
+    C<flat_settings>,
     C<master_timeout>,
     C<order>,
     C<timeout>
@@ -487,6 +492,9 @@ for more information.
     );
 
 The C<get_template()> method is used to retrieve a named template.
+
+Query string parameters:
+    C<flat_settings>
 
 See the L<get_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
