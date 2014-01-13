@@ -197,19 +197,27 @@ See the L<cluster settings docs|http://www.elasticsearch.org/guide/en/elasticsea
 
 =head2 C<state()>
 
-    $response = $e->cluster->state();
+    $response = $e->cluster->state(
+        metric => $metric | \@metrics   # optional
+        index  => $index  | \@indices   # optional
+    );
 
 The C<state()> method returns the current cluster state from the master node,
 or from the responding node if C<local> is set to C<true>.
 
+It returns all metrics by default, but these can be limited to any of:
+    C<_all>,
+    C<blocks>,
+    C<index_templates>,
+    C<metadata>,
+    C<nodes>,
+    C<routing_table>
+
+Metrics for indices can be limited to particular indices with the C<index>
+parameter.
+
 Query string parameters:
     C<flat_settings>,
-    C<filter_blocks>,
-    C<filter_index_templates>,
-    C<filter_indices>,
-    C<filter_metadata>,
-    C<filter_nodes>,
-    C<filter_routing_table>,
     C<local>,
     C<master_timeout>
 

@@ -344,14 +344,8 @@ sub api {
 
     'cluster.state' => {
         doc  => 'cluster-state',
-        path => '_cluster/state',
-        qs   => [
-            'flat_settings',          'filter_blocks',
-            'filter_index_templates', 'filter_indices',
-            'filter_metadata',        'filter_nodes',
-            'filter_routing_table',   'local',
-            'master_timeout'
-        ],
+        path => '_cluster/state/{metrics}/{indices}',
+        qs   => [ 'flat_settings', 'local', 'master_timeout' ],
     },
 
     'indices.analyze' => {
