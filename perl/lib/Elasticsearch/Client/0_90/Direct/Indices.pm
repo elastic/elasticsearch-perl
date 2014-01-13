@@ -120,7 +120,7 @@ Query string parameters:
     C<filter_cache>,
     C<filter_keys>,
     C<id>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>,
     C<index>,
     C<recycler>
@@ -141,7 +141,7 @@ happens automatically once every second by default.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>
 
 See the L<refresh index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-refresh.html>
@@ -162,7 +162,7 @@ Query string parameters:
     C<expand_wildcards>,
     C<force>,
     C<full>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>,
     C<refresh>
 
@@ -183,7 +183,7 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<flush>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>,
     C<max_num_segments>,
     C<only_expunge_deletes>,
@@ -285,7 +285,7 @@ in all specified indices, and returns C<1> or the empty string.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>
 
 See the L<exists_type docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-types-exists.html>
@@ -390,7 +390,7 @@ aliases in the specified indices.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>
 
 See the L<get_alias docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
@@ -409,7 +409,7 @@ whether the specified aliases exist in the specified indices.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>
 
 See the L<exists_alias docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
@@ -599,7 +599,7 @@ Query string parameters:
     C<get>,
     C<groups>,
     C<id_cache>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>,
     C<indexing>,
     C<merge>,
@@ -622,7 +622,7 @@ Deprecated.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>,
     C<recovery>,
     C<snapshot>
@@ -642,7 +642,7 @@ that an index contains.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>
 
 See the L<segments docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-segments.html>
@@ -691,7 +691,7 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<explain>,
-    C<ignore_indices> (DEPR),
+    C<ignore_indices>,
     C<ignore_unavailable>,
     C<q>,
     C<source>

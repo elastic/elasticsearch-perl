@@ -756,7 +756,6 @@ Query string parameters:
     C<explain>,
     C<fields>,
     C<from>,
-    C<ignore_indices>,
     C<ignore_unavailable>,
     C<lenient>,
     C<lowercase_expanded_terms>,
