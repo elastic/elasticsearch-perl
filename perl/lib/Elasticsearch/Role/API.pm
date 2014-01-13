@@ -168,9 +168,9 @@ sub api {
         path => '{index}/{type|all}/{id}/_mlt',
         qs   => [
             'boost_terms',            'max_doc_freq',
-            'max_query_terms',        'max_word_len',
+            'max_query_terms',        'max_word_length',
             'min_doc_freq',           'min_term_freq',
-            'min_word_len',           'mlt_fields',
+            'min_word_length',        'mlt_fields',
             'percent_terms_to_match', 'routing',
             'search_from',            'search_indices',
             'search_query_hint',      'search_scroll',

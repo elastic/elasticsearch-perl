@@ -101,12 +101,14 @@ our %Params = (
     max_doc_freq             => { type => 'number' },
     max_num_segments         => { type => 'number' },
     max_query_terms          => { type => 'number' },
-    max_word_len             => { type => 'number' },
+    max_word_len             => { type => 'number' },     # depr 0.90
+    max_word_length          => { type => 'number' },
     merge                    => { type => 'bool' },
     min_doc_freq             => { type => 'number' },
     min_score                => { type => 'number' },
     min_term_freq            => { type => 'number' },
-    min_word_len             => { type => 'number' },
+    min_word_len             => { type => 'number' },     # depr 0.90
+    min_word_length          => { type => 'number' },
     mlt_fields               => { type => 'list' },
     name                     => { type => 'list' },
     network                  => { type => 'bool' },
