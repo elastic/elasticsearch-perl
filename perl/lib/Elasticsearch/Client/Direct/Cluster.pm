@@ -48,16 +48,14 @@ for more information.
 
     $response = $e->cluster->node_info(
         node_id => $node_id | \@node_ids       # optional
+        metric  => $metric  | \@metrics        # optional
     );
 
 The C<node_info()> method returns static information about the nodes in the
 cluster, such as the configured maximum number of file handles, the maximum
 configured heap size or the threadpool settings.
 
-Query string parameters:
-    C<all>,
-    C<clear>,
-    C<flat_settings>,
+Allowed metrics are:
     C<http>,
     C<jvm>,
     C<network>,
@@ -66,8 +64,10 @@ Query string parameters:
     C<process>,
     C<settings>,
     C<thread_pool>,
-    C<timeout>,
     C<transport>
+
+Query string parameters:
+    C<flat_settings>
 
 See the L<node_info docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-info.html>
 for more information.

@@ -299,13 +299,8 @@ sub api {
 
     'cluster.node_info' => {
         doc  => 'cluster-nodes-info',
-        path => '_nodes/{nodes|blank}',
-        qs   => [
-            'all',     'clear',    'flat_settings', 'http',
-            'jvm',     'network',  'os',            'plugin',
-            'process', 'settings', 'timeout',       'thread_pool',
-            'transport'
-        ],
+        path => '_nodes/{nodes}/{metrics}',
+        qs   => ['flat_settings'],
     },
 
     'cluster.shutdown' => {
@@ -317,7 +312,7 @@ sub api {
 
     'cluster.node_stats' => {
         doc  => 'cluster-nodes-stats',
-        path => '_nodes/{nodes|blank}/stats/{metric|blank}',
+        path => '_nodes/{nodes}/stats/{metrics}',
         qs   => [
             'all',  'clear',   'fields',      'fs',
             'http', 'indices', 'jvm',         'network',
