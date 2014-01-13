@@ -577,36 +577,40 @@ for more information.
 =head2 C<stats()>
 
     $result = $e->indices->stats(
-        index   => 'index' | \@indices      # optional
+        index   => 'index'  | \@indices      # optional
+        metric  => 'metric' | \@metrics      # optional
     );
 
 The C<stats()> method returns statistical information about one, more or all
-indices.  Use the query string parameters to specify what information you
-want returned.
+indices. By default it returns all metrics, but you can limit which metrics
+are returned by specifying the C<metric>.
 
-Query string parameters:
-    C<all>,
-    C<allow_no_indices>,
-    C<clear>,
-    C<completion>,
-    C<completion_fields>,
+Allowed metrics are:
+    C<_all>,
+    C<completion>
     C<docs>,
-    C<expand_wildcards>,
     C<fielddata>,
-    C<fielddata_fields>,
-    C<fields>,
     C<filter_cache>,
     C<flush>,
     C<get>,
-    C<groups>,
     C<id_cache>,
-    C<ignore_unavailable>,
     C<indexing>,
     C<merge>,
+    C<percolate>,
     C<refresh>,
     C<search>,
+    C<segments>,
     C<store>,
     C<warmer>
+
+
+Query string parameters:
+    C<completion_fields>,
+    C<fielddata_fields>,
+    C<fields>,
+    C<groups>,
+    C<level>,
+    C<types>
 
 See the L<stats docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-stats.html>
 for more information.

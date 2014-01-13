@@ -92,8 +92,7 @@ our %Params = (
     lang               => { type => 'string' },
     lenient            => { type => 'bool' },
     level              => {
-        default => 'cluster',
-        options => [ 'cluster', 'indices', 'shards' ],
+        options => [ 'cluster', 'node', 'indices', 'shards' ],
         type    => 'enum'
     },
     local                    => { type => 'bool' },
@@ -186,6 +185,7 @@ our %Params = (
     transport    => { type => 'bool' },
     ttl          => { type => 'duration' },
     type         => { type => 'string' },
+    types        => { type => 'list' },
     version      => { type => 'number' },
     version_type => {
         type    => 'enum',

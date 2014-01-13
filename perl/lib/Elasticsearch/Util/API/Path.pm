@@ -7,13 +7,14 @@ use Any::URI::Escape qw(uri_escape);
 use Sub::Exporter -setup => { exports => ['path_init'] };
 
 our %Handler = (
-    '{field}'           => sub { multi_req( 'field', @_ ) },
-    '{id}'              => sub { one_req( 'id',      @_ ) },
-    '{id|blank}'        => sub { one_opt( 'id',      @_ ) },
-    '{index}'           => sub { one_req( 'index',   @_ ) },
-    '{index|blank}'     => sub { one_opt( 'index',   @_ ) },
-    '{index-when-type}' => sub { index_plus( 'type', @_ ) },
-    '{indices}'         => sub { multi_opt( 'index', @_ ) },
+    '{field}'           => sub { multi_req( 'field',        @_ ) },
+    '{id}'              => sub { one_req( 'id',             @_ ) },
+    '{id|blank}'        => sub { one_opt( 'id',             @_ ) },
+    '{index}'           => sub { one_req( 'index',          @_ ) },
+    '{index|blank}'     => sub { one_opt( 'index',          @_ ) },
+    '{index-when-type}' => sub { index_plus( 'type',        @_ ) },
+    '{index_metrics}'   => sub { multi_opt( 'index_metric', @_ ) },
+    '{indices}'         => sub { multi_opt( 'index',        @_ ) },
     '{indices|all}'      => sub { multi_opt( 'index',   @_, '_all' ) },
     '{indices|all-type}' => sub { indices_plus( 'type', @_ ) },
     '{req_indices}'      => sub { multi_req( 'index',   @_ ) },

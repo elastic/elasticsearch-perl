@@ -312,11 +312,11 @@ sub api {
 
     'cluster.node_stats' => {
         doc  => 'cluster-nodes-stats',
-        path => '_nodes/{nodes}/stats/{metrics}',
+        path => '_nodes/{nodes}/stats/{metrics}/{index_metrics}',
         qs   => [
-            'all',  'clear',   'fields',      'fs',
-            'http', 'indices', 'jvm',         'network',
-            'os',   'process', 'thread_pool', 'transport'
+            'completion_fields', 'fielddata_fields',
+            'fields',            'groups',
+            'level',             'types'
         ],
     },
 
@@ -607,19 +607,11 @@ sub api {
 
     'indices.stats' => {
         doc  => 'indices-stats',
-        path => '{indices}/_stats',
+        path => '{indices}/_stats/{metrics}',
         qs   => [
-            'all',              'clear',
-            'completion',       'completion_fields',
-            'docs',             'fielddata',
-            'fielddata_fields', 'fields',
-            'filter_cache',     'flush',
-            'get',              'groups',
-            'id_cache',         'allow_no_indices',
-            'expand_wildcards', 'ignore_unavailable',
-            'indexing',         'merge',
-            'refresh',          'search',
-            'store',            'warmer'
+            'completion_fields', 'fielddata_fields',
+            'fields',            'groups',
+            'level',             'types'
         ],
     },
 

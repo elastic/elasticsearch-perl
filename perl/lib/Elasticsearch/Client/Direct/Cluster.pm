@@ -75,7 +75,9 @@ for more information.
 =head2 C<node_stats()>
 
     $response = $e->cluster->node_stats(
-        node_id => $node_id | \@node_ids       # optional
+        node_id      => $node_id    | \@node_ids       # optional
+        metric       => $metric     | \@metrics        # optional
+        index_metric => $ind_metric | \@ind_metrics    # optional
     );
 
 The C<node_stats()> method returns statistics about the nodes in the
@@ -83,21 +85,12 @@ cluster, such as the number of currently open file handles, the current
 heap memory usage or the current number of threads in use.
 
 Stats can be returned for all nodes, or limited to particular nodes
-with the C<node_id> parameter.
-The L<indices_stats|Elasticsearch::Client::Direct::Indices/indices_stats()>
-information can also be retrieved on a per-node basis with the C<node_stats()>
-method:
+with the C<node_id> parameter. By default all metrics are returned, but
+these can be limited to those specified in the C<metric> parameter.
 
-    $response = $e->cluster->node_stats(
-        node_id => 'node_1',
-        indices => 1,
-        metric  => 'docs'
-    );
-
-Query string parameters:
-    C<all>,
-    C<clear>,
-    C<fields>,
+Allowed metrics are:
+    C<_all>,
+    C<breaker>,
     C<fs>,
     C<http>,
     C<indices>,
@@ -106,7 +99,45 @@ Query string parameters:
     C<os>,
     C<process>,
     C<thread_pool>,
-    C<transport>
+    C<transport
+
+If the C<indices> metric (or C<_all>) is specified, then
+L<indices_stats|Elasticsearch::Client::Direct::Indices/indices_stats()>
+information is returned on a per-node basis. Which indices stats are
+returned can be controlled with the C<index_metric> parameter:
+
+    $response = $e->cluster->node_stats(
+        node_id       => 'node_1',
+        metric        => ['indices','fs']
+        index_metric  => ['docs','fielddata']
+    );
+
+Allowed index metrics are:
+    C<_all>,
+    C<completion>
+    C<docs>,
+    C<fielddata>,
+    C<filter_cache>,
+    C<flush>,
+    C<get>,
+    C<id_cache>,
+    C<indexing>,
+    C<merge>,
+    C<percolate>,
+    C<refresh>,
+    C<search>,
+    C<segments>,
+    C<store>,
+    C<warmer>
+
+
+Query string parameters:
+    C<completion_fields>,
+    C<fielddata_fields>,
+    C<fields>,
+    C<groups>,
+    C<level>,
+    C<types>
 
 See the L<node_stats docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-stats.html>
 for more information.
