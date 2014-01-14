@@ -464,7 +464,7 @@ sub api {
         doc  => 'indices-aliases',
         path => '{indices}/_alias/{names|blank}',
         qs =>
-            [ 'allow_no_indices', 'expand_wildcards', 'ignore_unavailable', ],
+            [ 'allow_no_indices', 'expand_wildcards', 'ignore_unavailable' ],
     },
 
     'indices.get_aliases' => {
@@ -475,8 +475,11 @@ sub api {
 
     'indices.get_field_mapping' => {
         doc  => 'indices-get-field-mapping',
-        path => '{indices|all-type}/{types}/_mapping/field/{field}',
-        qs   => ['include_defaults'],
+        path => '{indices}/_mapping/{types}/field/{field}',
+        qs   => [
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'include_defaults'
+        ],
     },
 
     'indices.get_mapping' => {

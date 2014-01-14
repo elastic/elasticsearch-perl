@@ -265,6 +265,12 @@ for more information.
 The C<get_field_mapping()> method returns the field definitions for one, more or
 all fields in one, more or all types and indices.
 
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<include_defaults>
+
 See the L<get_mapping docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-field-mapping.html>
 for more information.
 
