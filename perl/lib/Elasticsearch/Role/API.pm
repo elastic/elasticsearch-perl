@@ -402,14 +402,14 @@ sub api {
     'indices.delete_alias' => {
         doc    => 'indices-aliases',
         method => 'DELETE',
-        path   => '{index}/_alias/{name}',
+        path   => '{req_indices}/_alias/{req_names}',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
     'indices.delete_mapping' => {
         doc    => 'indices-delete-mapping',
         method => 'DELETE',
-        path   => '{req_indices}/{type}',
+        path   => '{req_indices}/_mapping/{req_types}',
         qs     => ['master_timeout'],
     },
 
@@ -423,7 +423,7 @@ sub api {
     'indices.delete_warmer' => {
         doc    => 'indices-warmers',
         method => 'DELETE',
-        path   => '{req_indices}/_warmer/{names}',
+        path   => '{req_indices}/_warmer/{req_names}',
         qs     => ['master_timeout'],
     },
 
@@ -469,7 +469,7 @@ sub api {
 
     'indices.get_aliases' => {
         doc  => 'indices-aliases',
-        path => '{indices}/_aliases',
+        path => '{indices}/_aliases/{names|blank}',
         qs   => ['timeout'],
     },
 
@@ -481,12 +481,12 @@ sub api {
 
     'indices.get_mapping' => {
         doc  => 'indices-get-mapping',
-        path => '{indices|all-type}/{types}/_mapping',
+        path => '{indices}/_mapping/{types}',
     },
 
     'indices.get_settings' => {
         doc  => 'indices-get-settings',
-        path => '{indices}/_settings',
+        path => '{indices}/_settings/{names|blank}',
         qs   => ['flat_settings']
     },
 
@@ -498,7 +498,7 @@ sub api {
 
     'indices.get_warmer' => {
         doc  => 'indices-warmers',
-        path => '{indices|all}/_warmer/{names}',
+        path => '{indices|all}/_warmer/{names|blank}',
     },
 
     'indices.open' => {
@@ -527,7 +527,7 @@ sub api {
         },
         doc    => 'indices-aliases',
         method => 'PUT',
-        path   => '{index}/_alias/{name}',
+        path   => '{indices}/_alias/{name}',
         qs     => [ 'timeout', 'master_timeout' ],
     },
 
@@ -538,7 +538,7 @@ sub api {
         },
         doc    => 'indices-put-mapping',
         method => 'PUT',
-        path   => '{indices|all}/{type}/_mapping',
+        path   => '{indices}/_mapping/{type}',
         qs     => [ 'ignore_conflicts', 'timeout', 'master_timeout' ],
     },
 
@@ -572,7 +572,7 @@ sub api {
         },
         doc    => 'indices-warmers',
         method => 'PUT',
-        path   => '{indices|all}/_warmer/{name}',
+        path   => '{indices}/_warmer/{name}',
         qs     => ['master_timeout'],
     },
 

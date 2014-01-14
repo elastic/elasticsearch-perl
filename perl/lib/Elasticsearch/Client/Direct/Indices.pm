@@ -290,7 +290,7 @@ for more information.
 
     $response = $e->indices->delete_mapping(
         index => 'index' | \@indices    # required,
-        type  => 'type'                 # required
+        type  => 'type'  | \@types      # required
     );
 
 The C<delete_mapping()> method deletes the type mappings (and all documents of
@@ -331,10 +331,9 @@ for more information.
 
 =head2 C<get_aliases()>
 
-The C<get_aliases()> method is deprecated in favour of L</get_alias()>.
-
     $result = $e->indices->get_aliases(
         index   => 'index' | \@indices      # optional
+        alias   => 'alias' | \@aliases      # optional
     );
 
 The C<get_aliases()> method returns a list of aliases per index for all
@@ -349,13 +348,13 @@ for more information.
 =head2 C<put_alias()>
 
     $response = $e->indices->put_alias(
-        index => 'index',                   # required
+        index => 'index' | \@indices        # optional,
         name  => 'alias',                   # required
 
         body  => { alias defn }             # optional
     );
 
-The C<put_alias()> method creates a single index alias. For instance:
+The C<put_alias()> method creates an index alias. For instance:
 
     $response = $e->indices->put_alias(
         index => 'my_index',
@@ -411,11 +410,12 @@ for more information.
 =head2 C<delete_alias()>
 
     $response = $e->indices->delete_alias(
-        index   => 'index',                 # required
-        name    => 'alias'                  # required
+        index   => 'index' | \@indices        # required,
+        name    => 'alias' | \@aliases        # required
     );
 
-The C<delete_alias()> method deletes a single alias in a single index.
+The C<delete_alias()> method deletes one or more aliases from one or more
+indices.
 
 Query string parameters:
     C<master_timeout>,
@@ -428,7 +428,7 @@ for more information.
 
 =head2 C<put_settings()>
 
-    $response = $e->indices->get_settings(
+    $response = $e->indices->put_settings(
         index   => 'index' | \@indices      # optional
 
         body    => { settings }
@@ -454,6 +454,7 @@ for more information.
 
     $result = $e->indices->get_settings(
         index   => 'index' | \@indices      # optional
+        name    => 'name'  | \@names        # optional
     );
 
 The C<get_settings()> method retrieves the index settings for the specified
