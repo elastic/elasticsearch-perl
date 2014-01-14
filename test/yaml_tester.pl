@@ -117,7 +117,7 @@ sub test_files {
 
                 $es->logger->trace_comment("RUNNING TESTS: $title");
 
-                subtest $name => sub {
+                subtest $title => sub {
                     plan tests => 0 + @$tests;
                     run_tests( $title, $tests );
                 };
