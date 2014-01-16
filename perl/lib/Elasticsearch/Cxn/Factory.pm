@@ -16,7 +16,7 @@ sub BUILDARGS {
     my %args = (%$params);
     delete $args{nodes};
 
-    my $cxn_class = load_plugin( 'Cxn', delete $args{cxn} );
+    my $cxn_class = load_plugin( 'Elasticsearch::Cxn', delete $args{cxn} );
     $params->{_factory} = sub {
         my ( $self, $node ) = @_;
         $cxn_class->new(

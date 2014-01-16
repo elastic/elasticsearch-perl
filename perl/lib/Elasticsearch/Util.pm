@@ -46,7 +46,6 @@ sub parse_params {
 sub load_plugin {
 #===================================
     my ( $base, $spec ) = @_;
-    $base = 'Elasticsearch::' . $base;
     $spec ||= "+$base";
     return $spec if blessed $spec;
 

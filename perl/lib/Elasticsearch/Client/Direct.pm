@@ -45,18 +45,23 @@ sub _index {
 #===================================
 sub _build__bulk_class {
 #===================================
-    my $self  = shift;
-    my $class = load_plugin( $self->bulk_helper_class );
-    is_compat( 'bulk_helper_class', $self->transport, $class );
-    return $class;
+    my $self = shift;
+    $self->_build_helper( 'bulk', $self->bulk_helper_class );
 }
 
 #===================================
 sub _build__scroll_class {
 #===================================
-    my $self  = shift;
-    my $class = load_plugin( $self->scroll_helper_class );
-    is_compat( 'scroll_helper_class', $self->transport, $class );
+    my $self = shift;
+    $self->_build_helper( 'scroll', $self->scroll_helper_class );
+}
+
+#===================================
+sub _build_helper {
+#===================================
+    my ( $self, $name, $sub_class ) = @_;
+    my $class = load_plugin( 'Elasticsearch', $sub_class );
+    is_compat( $name . '_helper_class', $self->transport, $class );
     return $class;
 }
 

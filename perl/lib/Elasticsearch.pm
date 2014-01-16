@@ -8,12 +8,12 @@ use namespace::clean;
 our $VERSION = '0.76';
 
 my %Default_Plugins = (
-    client      => [ 'Client',       'Direct' ],
-    cxn_factory => [ 'Cxn::Factory', '' ],
-    cxn_pool    => [ 'CxnPool',      'Static' ],
-    logger      => [ 'Logger',       'LogAny' ],
-    serializer  => [ 'Serializer',   'JSON' ],
-    transport   => [ 'Transport',    '' ],
+    client      => [ 'Elasticsearch::Client',       'Direct' ],
+    cxn_factory => [ 'Elasticsearch::Cxn::Factory', '' ],
+    cxn_pool    => [ 'Elasticsearch::CxnPool',      'Static' ],
+    logger      => [ 'Elasticsearch::Logger',       'LogAny' ],
+    serializer  => [ 'Elasticsearch::Serializer',   'JSON' ],
+    transport   => [ 'Elasticsearch::Transport',    '' ],
 );
 
 my @Load_Order = qw(
