@@ -379,7 +379,9 @@ Query string parameters:
     C<preference>,
     C<realtime>,
     C<refresh>,
-    C<routing>
+    C<routing>,
+    C<version>,
+    C<version_type>
 
 See the L<get docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
@@ -398,13 +400,16 @@ in the L</index()> method) instead of returning the C<_source> field
 plus the document metadata, ie the C<_index>, C<_type> etc.
 
 Query string parameters:
+    C<_source>,
     C<_source_exclude>,
     C<_source_include>,
     C<parent>,
     C<preference>,
     C<realtime>,
     C<refresh>,
-    C<routing>
+    C<routing>,
+    C<version>,
+    C<version_type>
 
 See the L<get_source docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.

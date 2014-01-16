@@ -106,11 +106,12 @@ sub api {
         doc  => 'docs-get',
         path => '{index}/{type|all}/{id}',
         qs   => [
-            'fields',     'parent',
-            'preference', 'realtime',
-            'refresh',    'routing',
-            '_source',    '_source_include',
-            '_source_exclude'
+            'fields',          'parent',
+            'preference',      'realtime',
+            'refresh',         'routing',
+            '_source',         '_source_include',
+            '_source_exclude', 'version',
+            'version_type'
         ],
     },
 
@@ -118,10 +119,11 @@ sub api {
         doc  => 'docs-get',
         path => '{index}/{type|all}/{id}/_source',
         qs   => [
-            'parent',   'preference',
-            'realtime', 'refresh',
-            'routing',  '_source_include',
-            '_source_exclude'
+            'parent',          'preference',
+            'realtime',        'refresh',
+            'routing',         '_source',
+            '_source_include', '_source_exclude',
+            'version',         'version_type'
         ],
     },
 
