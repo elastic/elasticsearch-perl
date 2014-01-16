@@ -10,7 +10,7 @@ use Log::Any::Adapter;
 
 my $es = do "es_sync.pl";
 
-my $has_status = $es->info->{version}{number} ge '1.0.0.Beta2';
+my $has_status = $es->info->{version}{number} ge '1.0.0';
 
 $es->indices->delete( index => '_all' );
 
@@ -113,7 +113,6 @@ $b = bulk(
                 _type    => 'test',
                 _id      => 1,
                 _version => 1,
-                ok       => JSON::true(),
                 status   => 201,
             },
             0

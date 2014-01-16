@@ -342,7 +342,7 @@ sub api {
     },
 
     "cluster.reroute" => {
-        body   => { required => 1, },
+        body   => {},
         doc    => "cluster-reroute",
         method => "POST",
         path   => "_cluster/reroute",

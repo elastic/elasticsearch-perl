@@ -64,11 +64,13 @@ is $es->count(
     index => 'test2',
     type  => 'test',
     body  => {
-        bool => {
-            must => [
-                { term => { color       => 'green' } },
-                { term => { transformed => 1 } }
-            ]
+        query => {
+            bool => {
+                must => [
+                    { term => { color       => 'green' } },
+                    { term => { transformed => 1 } }
+                ]
+            }
         }
     },
     )->{count}, 50,
