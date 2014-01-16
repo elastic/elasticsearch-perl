@@ -134,9 +134,9 @@ sub api {
         method => 'PUT',
         path   => '{index}/{type}/{id|blank}',
         qs     => [
-            'consistency', 'op_type',     'parent',  'percolate',
-            'refresh',     'replication', 'routing', 'timeout',
-            'timestamp',   'ttl',         'version', 'version_type'
+            'consistency', 'op_type', 'parent',  'refresh',
+            'replication', 'routing', 'timeout', 'timestamp',
+            'ttl',         'version', 'version_type'
         ],
     },
 
@@ -263,14 +263,14 @@ sub api {
         method => 'POST',
         path   => '{index}/{type}/{id}/_update',
         qs     => [
-            'consistency',       'fields',
-            'lang',              'parent',
-            'percolate',         'realtime',
-            'refresh',           'replication',
-            'retry_on_conflict', 'routing',
-            'script',            'timeout',
-            'timestamp',         'ttl',
-            'version',           'version_type'
+            'consistency', 'fields',
+            'lang',        'parent',
+            'realtime',    'refresh',
+            'replication', 'retry_on_conflict',
+            'routing',     'script',
+            'timeout',     'timestamp',
+            'ttl',         'version',
+            'version_type'
         ],
     },
 
