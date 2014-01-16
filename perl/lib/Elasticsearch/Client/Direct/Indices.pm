@@ -600,6 +600,7 @@ Allowed metrics are:
     C<filter_cache>,
     C<flush>,
     C<get>,
+    C<human>,
     C<id_cache>,
     C<indexing>,
     C<merge>,
@@ -633,6 +634,7 @@ Deprecated.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<recovery>,
     C<snapshot>
@@ -652,6 +654,7 @@ that an index contains.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>
 
 See the L<segments docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-segments.html>

@@ -300,7 +300,7 @@ sub api {
     'cluster.node_info' => {
         doc  => 'cluster-nodes-info',
         path => '_nodes/{nodes}/{metrics}',
-        qs   => ['flat_settings'],
+        qs   => [ 'flat_settings', 'human' ],
     },
 
     'cluster.shutdown' => {
@@ -316,7 +316,8 @@ sub api {
         qs   => [
             'completion_fields', 'fielddata_fields',
             'fields',            'groups',
-            'level',             'types'
+            'human',             'level',
+            'types'
         ],
     },
 
@@ -590,8 +591,10 @@ sub api {
     'indices.segments' => {
         doc  => 'indices-segments',
         path => '{indices}/_segments',
-        qs =>
-            [ 'allow_no_indices', 'expand_wildcards', 'ignore_unavailable', ],
+        qs   => [
+            'allow_no_indices', 'expand_wildcards',
+            'human',            'ignore_unavailable',
+        ],
     },
 
     'indices.snapshot_index' => {
@@ -608,7 +611,8 @@ sub api {
         qs   => [
             'completion_fields', 'fielddata_fields',
             'fields',            'groups',
-            'level',             'types'
+            'human',             'level',
+            'types'
         ],
     },
 
@@ -616,9 +620,9 @@ sub api {
         doc  => 'indices-status',
         path => '{indices}/_status',
         qs   => [
-            'allow_no_indices',   'expand_wildcards',
-            'ignore_unavailable', 'recovery',
-            'snapshot'
+            'allow_no_indices', 'expand_wildcards',
+            'human',            'ignore_unavailable',
+            'recovery',         'snapshot'
         ],
     },
 

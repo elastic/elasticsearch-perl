@@ -72,6 +72,7 @@ our %Params = (
     get              => { type => 'bool' },
     groups           => { type => 'list' },
     http             => { type => 'bool' },
+    human            => { type => 'bool' },
     id               => { type => 'string' },
     id_cache         => { type => 'bool' },
     ignore_conflicts => { type => 'bool' },

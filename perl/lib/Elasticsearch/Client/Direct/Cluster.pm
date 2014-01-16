@@ -67,7 +67,8 @@ Allowed metrics are:
     C<transport>
 
 Query string parameters:
-    C<flat_settings>
+    C<flat_settings>,
+    C<human>
 
 See the L<node_info docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-info.html>
 for more information.
@@ -136,6 +137,7 @@ Query string parameters:
     C<fielddata_fields>,
     C<fields>,
     C<groups>,
+    C<human>,
     C<level>,
     C<types>
 
