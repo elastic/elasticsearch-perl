@@ -140,6 +140,7 @@ happens automatically once every second by default.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
+    C<force>,
     C<ignore_unavailable>
 
 See the L<refresh index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-refresh.html>
@@ -160,8 +161,7 @@ Query string parameters:
     C<expand_wildcards>,
     C<force>,
     C<full>,
-    C<ignore_unavailable>,
-    C<refresh>
+    C<ignore_unavailable>
 
 See the L<flush index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-flush.html>
 for more information.
@@ -183,7 +183,6 @@ Query string parameters:
     C<ignore_unavailable>,
     C<max_num_segments>,
     C<only_expunge_deletes>,
-    C<refresh>,
     C<wait_for_merge>
 
 See the L<optimize index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-optimize.html>
@@ -248,6 +247,12 @@ for more information.
 
 The C<get_mapping()> method returns the type definitions for one, more or
 all types in one, more or all indices.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<local>
 
 See the L<get_mapping docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-mapping.html>
 for more information.

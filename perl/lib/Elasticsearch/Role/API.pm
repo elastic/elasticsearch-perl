@@ -331,7 +331,7 @@ sub api {
     'cluster.get_settings' => {
         doc  => 'cluster-update-settings',
         path => '_cluster/settings',
-        qs   => ['flat_settings']
+        qs   => [ 'flat_settings', 'master_timeout', 'timeout' ]
     },
 
     'cluster.health' => {
@@ -389,9 +389,8 @@ sub api {
     'cluster.pending_tasks' => {
         doc  => 'cluster-pending',
         path => '_cluster/pending_tasks',
-        qs   => [ ],
+        qs   => [],
     },
-
 
     'cluster.reroute' => {
         body => {
@@ -401,7 +400,7 @@ sub api {
         doc    => 'cluster-reroute',
         method => 'POST',
         path   => '_cluster/reroute',
-        qs     => [ 'dry_run', 'filter_metadata' ],
+        qs => [ 'dry_run', 'filter_metadata', 'master_timeout', 'timeout' ],
     },
 
     'cluster.state' => {
@@ -528,9 +527,9 @@ sub api {
         method => 'POST',
         path   => '{indices}/_flush',
         qs     => [
-            'force',              'full',
-            'allow_no_indices',   'expand_wildcards',
-            'ignore_unavailable', 'refresh'
+            'force',            'full',
+            'allow_no_indices', 'expand_wildcards',
+            'ignore_unavailable'
         ],
     },
 
@@ -559,6 +558,10 @@ sub api {
     'indices.get_mapping' => {
         doc  => 'indices-get-mapping',
         path => '{indices}/_mapping/{types}',
+        qs   => [
+            'allow_no_indices',   'expand_wildcards',
+            'ignore_unavailable', 'local'
+        ],
     },
 
     'indices.get_settings' => {
@@ -593,7 +596,7 @@ sub api {
             'flush',            'allow_no_indices',
             'expand_wildcards', 'ignore_unavailable',
             'max_num_segments', 'only_expunge_deletes',
-            'refresh',          'wait_for_merge'
+            'wait_for_merge'
         ],
     },
 
@@ -657,8 +660,10 @@ sub api {
         doc    => 'indices-refresh',
         method => 'POST',
         path   => '{indices}/_refresh',
-        qs =>
-            [ 'allow_no_indices', 'expand_wildcards', 'ignore_unavailable', ],
+        qs     => [
+            'allow_no_indices', 'expand_wildcards',
+            'force',            'ignore_unavailable',
+        ],
     },
 
     'indices.segments' => {

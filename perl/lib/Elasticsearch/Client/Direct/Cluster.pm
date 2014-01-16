@@ -186,7 +186,9 @@ The C<get_settings()> method is used to retrieve cluster-wide settings that
 have been set with the L</put_settings()> method.
 
 Query string parameters:
-    C<flat_settings>
+    C<flat_settings>,
+    C<master_timeout>,
+    C<timeout>
 
 See the L<cluster settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-update-settings.html>
 for more information.
@@ -282,7 +284,9 @@ which changes should be made. For instance:
 
 Query string parameters:
     C<dry_run>,
-    C<filter_metadata>
+    C<filter_metadata>,
+    C<master_timeout>,
+    C<timeout>
 
 See the L<reroute docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-reroute.html>
 for more information.
