@@ -242,6 +242,15 @@ Query string parameters:
 See the L<cluster state docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-state.html>
 for more information.
 
+=head2 C<pending_tasks()>
+
+    $response = $e->cluster->pending_tasks();
+
+Returns a list of cluster-level tasks still pending on the master node.
+
+See the L<pending tasks docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-pending.html>
+for more information.
+
 =head2 C<reroute()>
 
     $e->cluster->reroute(

@@ -384,6 +384,13 @@ sub api {
         qs     => ['flat_settings']
     },
 
+    'cluster.pending_tasks' => {
+        doc  => 'cluster-pending',
+        path => '_cluster/pending_tasks',
+        qs   => [ ],
+    },
+
+
     'cluster.reroute' => {
         body => {
             desc => 'The definition of `commands` to perform '
