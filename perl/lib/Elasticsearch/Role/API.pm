@@ -401,6 +401,12 @@ sub api {
         qs   => [ 'flat_settings', 'local', 'master_timeout' ],
     },
 
+    'cluster.stats' => {
+        doc  => 'cluster-stats',
+        path => '_cluster/stats/nodes/{nodes}',
+        qs   => [ 'flat_settings', 'human' ],
+    },
+
     'indices.analyze' => {
         body =>
             { desc => 'The text on which the analysis should be performed' },

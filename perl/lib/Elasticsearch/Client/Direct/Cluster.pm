@@ -43,6 +43,22 @@ Query string parameters:
 See the L<cluster health docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-health.html>
 for more information.
 
+=head2 C<stats()>
+
+    $response = $e->cluster->stats(
+        node_id => 'node' | \@nodes     # optional
+    );
+
+Returns high-level cluster stats, optionally limited to the listed nodes.
+
+Query string parameters:
+    C<flat_settings>,
+    C<human>
+
+See the L<cluster stats docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-stats.html>
+for more information.
+
+
 
 =head2 C<node_info()>
 
