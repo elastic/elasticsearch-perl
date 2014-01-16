@@ -100,7 +100,7 @@ Allowed metrics are:
     C<os>,
     C<process>,
     C<thread_pool>,
-    C<transport
+    C<transport>
 
 If the C<indices> metric (or C<_all>) is specified, then
 L<indices_stats|Elasticsearch::Client::Direct::Indices/indices_stats()>
@@ -278,4 +278,114 @@ Query string parameters:
 
 See the L<shutdown docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-shutdown.html>
 for more information.
+
+=head2 C<put_repository>
+
+    $e->cluster->put_repository(
+        repository  => 'repository',        # required
+        body        => { defn }             # required
+    );
+
+Create a repository for backups.
+
+Query string parameters:
+    C<master_timeout>
+
+See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+for more information.
+
+=head2 C<get_repository>
+
+    $e->cluster->get_repository(
+        repository  => 'repository' | \@repositories    # optional
+    );
+
+Retrieve existing repositories.
+
+Query string parameters:
+    C<master_timeout>
+
+See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+for more information.
+
+=head2 C<delete_repository>
+
+    $e->cluster->delete_repository(
+        repository  => 'repository' | \@repositories    # required
+    );
+
+Delete repositories by name.
+
+Query string parameters:
+    C<master_timeout>,
+    C<timeout>
+
+See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+for more information.
+
+=head2 C<create_snapshot>
+
+    $e->cluster->create_snapshot(
+        repository  => 'repository',     # required
+        snapshot    => 'snapshot',       # required,
+
+        body        => { snapshot defn } # optional
+    );
+
+Create a snapshot of the whole cluster or individual indices in the named
+repository.
+
+Query string parameters:
+    C<master_timeout>,
+    C<wait_for_completion>
+
+=head2 C<get_snapshot>
+
+    $e->cluster->get_snapshot(
+        repository  => 'repository',              # required
+        snapshot    => 'snapshot' | \@snapshots   # optional
+    );
+
+Retrieve snapshots in the named repository.
+
+Query string parameters:
+    C<master_timeout>
+
+See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+for more information.
+
+=head2 C<delete_snapshot>
+
+    $e->cluster->delete_snapshot(
+        repository  => 'repository',              # required
+        snapshot    => 'snapshot' | \@snapshots   # required
+    );
+
+Delete snapshots in the named repository.
+
+Query string parameters:
+    C<master_timeout>
+
+See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+for more information.
+
+
+=head2 C<restore_snapshot>
+
+    $e->cluster->delete_snapshot(
+        repository  => 'repository',              # required
+        snapshot    => 'snapshot'                 # required,
+
+        body        => { what to restore }        # optional
+    );
+
+Restore a named snapshot.
+
+Query string parameters:
+    C<master_timeout>,
+    C<wait_for_completion>
+
+See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+for more information.
+
 

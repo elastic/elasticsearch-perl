@@ -274,6 +274,58 @@ sub api {
         ],
     },
 
+    'cluster.delete_repository' => {
+        doc    => 'module-snapshots',
+        method => 'DELETE',
+        path   => '_snapshot/{req_repos}',
+        qs     => [ 'master_timeout', 'timeout' ],
+    },
+
+    'cluster.get_repository' => {
+        doc  => 'module-snapshots',
+        path => '_snapshot/{repos}',
+        qs   => ['master_timeout'],
+    },
+
+    'cluster.put_repository' => {
+        doc    => 'module-snapshots',
+        method => 'PUT',
+        path   => '_snapshot/{repo}',
+        qs     => [ 'master_timeout', 'timeout' ],
+        body   => {
+            required => 1,
+            desc     => 'The repository definition'
+        }
+    },
+
+    'cluster.create_snapshot' => {
+        doc    => 'module-snapshots',
+        method => 'PUT',
+        path   => '_snapshot/{repo}/{snapshot}',
+        body   => { desc => 'The snapshot details', },
+        qs     => [ 'master_timeout', 'wait_for_completion' ],
+    },
+
+    'cluster.delete_snapshot' => {
+        doc    => 'module-snapshots',
+        method => 'DELETE',
+        path   => '_snapshot/{repo}/{req_snapshots}',
+        qs     => ['master_timeout'],
+    },
+
+    'cluster.get_snapshot' => {
+        doc  => 'module-snapshots',
+        path => '_snapshot/{req_repos}/{snapshots}',
+        qs   => ['master_timeout'],
+    },
+
+    'cluster.restore_snapshot' => {
+        doc  => 'module-snapshots',
+        path => '_snapshot/{repo}/{snapshot}',
+        qs   => [ 'master_timeout', 'wait_for_completion' ],
+        body => { desc => 'Details of what to restore' }
+    },
+
     'cluster.get_settings' => {
         doc  => 'cluster-update-settings',
         path => '_cluster/settings',
