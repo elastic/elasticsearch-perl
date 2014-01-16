@@ -82,23 +82,16 @@ sub scroll_helper {
 }
 
 #===================================
-sub _build_cluster {
+sub _build_cluster { shift->_build_namespace('Cluster') }
+sub _build_indices { shift->_build_namespace('Indices') }
 #===================================
-    my ( $self, $name ) = @_;
-    require Elasticsearch::Client::0_90::Direct::Cluster;
-    Elasticsearch::Client::0_90::Direct::Cluster->new(
-        {   transport => $self->transport,
-            logger    => $self->logger
-        }
-    );
-}
 
 #===================================
-sub _build_indices {
+sub _build_namespace {
 #===================================
-    my ( $self, $name ) = @_;
-    require Elasticsearch::Client::0_90::Direct::Indices;
-    Elasticsearch::Client::0_90::Direct::Indices->new(
+    my ( $self, $ns ) = @_;
+    my $class = load_plugin( __PACKAGE__, [$ns] );
+    return $class->new(
         {   transport => $self->transport,
             logger    => $self->logger
         }

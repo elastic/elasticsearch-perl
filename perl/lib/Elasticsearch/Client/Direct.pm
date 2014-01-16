@@ -7,10 +7,13 @@ with 'Elasticsearch::Role::Client::Direct';
 use Elasticsearch::Util qw(parse_params load_plugin is_compat);
 use namespace::clean;
 
-has 'cluster'             => ( is => 'lazy' );
-has 'indices'             => ( is => 'lazy' );
-has 'bulk_helper_class'   => ( is => 'ro', default => 'Bulk' );
-has 'scroll_helper_class' => ( is => 'ro', default => 'Scroll' );
+has 'cluster'             => ( is => 'lazy', init_arg => undef );
+has 'nodes'               => ( is => 'lazy', init_arg => undef );
+has 'indices'             => ( is => 'lazy', init_arg => undef );
+has 'snapshot'            => ( is => 'lazy', init_arg => undef );
+has 'cat'                 => ( is => 'lazy', init_arg => undef );
+has 'bulk_helper_class'   => ( is => 'ro',   default  => 'Bulk' );
+has 'scroll_helper_class' => ( is => 'ro',   default  => 'Scroll' );
 has '_bulk_class'         => ( is => 'lazy' );
 has '_scroll_class'       => ( is => 'lazy' );
 
@@ -82,23 +85,19 @@ sub scroll_helper {
 }
 
 #===================================
-sub _build_cluster {
+sub _build_cluster  { shift->_build_namespace('Cluster') }
+sub _build_nodes    { shift->_build_namespace('Nodes') }
+sub _build_indices  { shift->_build_namespace('Indices') }
+sub _build_snapshot { shift->_build_namespace('Snapshot') }
+sub _build_cat      { shift->_build_namespace('Cat') }
 #===================================
-    my ( $self, $name ) = @_;
-    require Elasticsearch::Client::Direct::Cluster;
-    Elasticsearch::Client::Direct::Cluster->new(
-        {   transport => $self->transport,
-            logger    => $self->logger
-        }
-    );
-}
 
 #===================================
-sub _build_indices {
+sub _build_namespace {
 #===================================
-    my ( $self, $name ) = @_;
-    require Elasticsearch::Client::Direct::Indices;
-    Elasticsearch::Client::Direct::Indices->new(
+    my ( $self, $ns ) = @_;
+    my $class = load_plugin( __PACKAGE__, [$ns] );
+    return $class->new(
         {   transport => $self->transport,
             logger    => $self->logger
         }
@@ -161,8 +160,32 @@ Index-level requests:
 
 Cluster-level requests:
 
-    $state = $e->cluster->state;
-    $stats = $e->cluster->node_stats;
+    $health = $e->cluster->health;
+
+Node-level requests:
+
+    $info  = $e->nodes->info;
+    $stats = $e->nodes->stats;
+
+Snapshot and restore:
+
+    $e->snapshot->create_repository(
+        repository => 'my_backups',
+        type       => 'fs',
+        settings   => {
+            location => '/mnt/backups'
+        }
+    );
+
+    $e->snapshot->create(
+        repository => 'my_backups',
+        snapshot   => 'backup_2014'
+    );
+
+`cat` debugging:
+
+    say $e->cat->allocation;
+    say $e->cat->health;
 
 =head1 DESCRIPTION
 
@@ -297,8 +320,30 @@ index settings etc.
     $cluster_client = $e->cluster;
 
 Returns an L<Elasticsearch::Client::Direct::Cluster> object which can be used
-for managing the cluster, eg cluster-wide settings, cluster health,
-node information and stats.
+for managing the cluster, eg cluster-wide settings and cluster health.
+
+=head2 C<nodes()>
+
+    $node_client = $e->nodes;
+
+Returns an L<Elasticsearch::Client::Direct::Nodes> object which can be used
+to retrieve node info and stats.
+
+=head2 C<snapshot()>
+
+    $snapshot_client = $e->snapshot;
+
+Returns an L<Elasticsearch::Client::Direct::Snapshot> object which
+is used for managing backup repositories and creating and restoring
+snapshots.
+
+=head2 C<cat()>
+
+    $cat_client = $e->cat;
+
+Returns an L<Elasticsearch::Client::Direct::Cat> object which can be used
+to retrieve simple to read text info for debugging and monitoring an
+Elasticsearch cluster.
 
 =head1 DOCUMENT CRUD METHODS
 
@@ -725,8 +770,7 @@ and of one, more or all types:
 The C<search()> method searches for matching documents in one or more
 indices.  It is just as easy to search a single index as it is to search
 all the indices in your cluster.  It can also return
-L<facets|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-facets.thml>
-(aggregations on particular fields),
+L<aggregations|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html>
 L<highlighted snippets|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-highlighting.html>
 and L<did-you-mean|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-suggesters-phrase.html>
 or L<search-as-you-type|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-suggesters-completion.html>
