@@ -509,6 +509,12 @@ sub api {
             [ 'allow_no_indices', 'expand_wildcards', 'ignore_unavailable', ],
     },
 
+    'indices.exists_template' => {
+        doc    => 'indices-templates',
+        method => 'HEAD',
+        path   => '_template/{name}'
+    },
+
     'indices.exists_type' => {
         doc    => 'indices-types-exists',
         method => 'HEAD',

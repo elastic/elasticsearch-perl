@@ -495,7 +495,7 @@ for more information.
 =head2 C<get_template()>
 
     $result = $e->indices->get_template(
-        name  => 'template'                 # required
+        name  => 'template'                 # optional
     );
 
 The C<get_template()> method is used to retrieve a named template.
@@ -506,6 +506,16 @@ Query string parameters:
 See the L<get_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
 
+=head2 C<exists_template()>
+
+    $result = $e->indices->exists_template(
+        name  => 'template'                 # required
+    );
+
+The C<exists_template()> method is used to check whether the named template exists.
+
+See the L<get_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
+for more information.
 
 =head2 C<delete_template()>
 
