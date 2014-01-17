@@ -8,13 +8,16 @@ my $trace
     : $ENV{TRACE} eq '1' ? 'Stderr'
     :                      [ 'File', $ENV{TRACE} ];
 
+my $version = $ENV{ES_VERSION} || '';
+my $api = $version =~ /^0.90/ ? '0_90::Direct' : 'Direct';
+
 my $es;
 if ( $ENV{ES} ) {
     $es = Elasticsearch->new(
         nodes    => $ENV{ES},
         trace_to => $trace,
         cxn      => $ENV{ES_CXN} || 'LWP',
-        client   => $ENV{ES_API} || 'Direct',
+        client   => $api,
     );
     eval { $es->ping; } or do {
         diag $@;
