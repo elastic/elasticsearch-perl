@@ -1,5 +1,8 @@
 Revision history for Elasticsearch-Cxn-NetCurl
 
+0.76    2014-01-17
+        Foo
+
 0.03    2013-12-03
         Removed custom timeouts - rely on defaults
         Tidied up Curl imports
