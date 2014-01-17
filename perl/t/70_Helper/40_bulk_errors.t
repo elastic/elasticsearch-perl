@@ -10,7 +10,7 @@ use Log::Any::Adapter;
 
 my $es = do "es_sync.pl";
 
-my $has_status = $es->info->{version}{number} ge '1.0.0';
+my $is_0_90 = $es->info->{version}{number} =~ /^0.90/;
 
 $es->indices->delete( index => '_all' );
 
@@ -114,6 +114,7 @@ $b = bulk(
                 _id      => 1,
                 _version => 1,
                 status   => 201,
+                ok       => JSON::true(),
             },
             0
         ),
@@ -182,11 +183,13 @@ sub test_flush {
 sub test_params {
 #===================================
     my ( $type, $result, $j, $version ) = @_;
-    delete $result->{status} unless $has_status;
+    delete $result->{ok}
+        unless $is_0_90;
+
     return sub {
         is $_[0], 'index', "$type - action";
-        cmp_deeply $_[1], $result,  "$type - result";
-        is $_[2],         $j,       "$type - array index";
-        is $_[3],         $version, "$type - version";
+        cmp_deeply $_[1], subhashof($result), "$type - result";
+        is $_[2], $j,       "$type - array index";
+        is $_[3], $version, "$type - version";
     };
 }
