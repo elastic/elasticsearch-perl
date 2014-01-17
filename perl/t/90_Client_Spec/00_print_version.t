@@ -11,7 +11,8 @@ eval {
         diag sprintf "%-20s: %s", $_, $v->{$_};
     }
     diag "";
-    diag "Cxn: " . $es->transport->cxn_pool->cxn_factory->cxn_class;
+    diag "Client: " . ref($es);
+    diag "Cxn:    " . $es->transport->cxn_pool->cxn_factory->cxn_class;
     diag "";
     pass "ES Version";
 } or fail "ES Version";
