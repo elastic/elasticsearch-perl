@@ -1,6 +1,5 @@
-#===================================
 package Elasticsearch::Client::0_90::Direct::Cluster;
-#===================================
+
 use Moo;
 with 'Elasticsearch::Role::API::0_90';
 with 'Elasticsearch::Role::Client::Direct';

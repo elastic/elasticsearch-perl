@@ -68,17 +68,7 @@ if ( $version =~ /^0.90/ ) {
     exit;
 }
 
-# Try checking out a particular version
-if ( $version =~ /^\d/ and $version !~ /SNAPSHOT/ ) {
-    print "Checking out branch: v$version\n";
-    eval {
-        run qw(git checkout -B), "v${version}", "refs/tags/v${version}";
-        1;
-    } and exit;
-    print "Failed: $@\n";
-}
-
-# Fall back to checking out the build hash
+# Check out the build hash
 my $hash = $info->{version}{build_hash};
 unless ( length($hash) == 40 ) {
     print "Unknown build hash: $hash\n";

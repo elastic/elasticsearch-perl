@@ -2,13 +2,7 @@
 
 use strict;
 use warnings;
-use lib qw(
-    perl/lib
-    perl-async/lib
-    perl/t/lib
-    perl-async/t/lib
-    ../promises-perl/lib
-);
+use lib qw(lib t/lib);
 
 use TAP::Harness;
 use Getopt::Long;
@@ -17,20 +11,28 @@ my $verbose = 0;
 my $trace   = 0;
 my $async   = 0;
 my $cxn     = '';
+my $junit   = 0;
 
 GetOptions(
     'verbose' => \$verbose,
     'trace'   => \$trace,
     'cxn=s'   => \$cxn,
     'async'   => \$async,
+    'junit'   => \$junit,
 );
+
+my $harness = 'TAP::Harness';
+if ($junit) {
+    require TAP::Harness::Junit;
+    $harness = 'TAP::Harness::JUnit';
+}
 
 $ENV{ES_ASYNC} = $async;
 $ENV{ES_CXN}   = $cxn;
 $ENV{TRACE}    = $trace;
 $ENV{ES}       = "localhost:9200";
 
-my $tap = TAP::Harness->new(
+my $tap = $harness->new(
     {   exec      => [ $^X, 'test/yaml_tester.pl' ],
         verbosity => $verbose,
         color     => 1,

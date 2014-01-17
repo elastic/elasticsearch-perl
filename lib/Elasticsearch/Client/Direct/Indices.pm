@@ -1,6 +1,5 @@
-#===================================
 package Elasticsearch::Client::Direct::Indices;
-#===================================
+
 use Moo;
 with 'Elasticsearch::Role::API';
 with 'Elasticsearch::Role::Client::Direct';

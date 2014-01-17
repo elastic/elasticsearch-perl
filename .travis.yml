@@ -17,7 +17,7 @@ env:
  - ES_VERSION=0.90.9
  - ES_VERSION=0.90.10
 
-install:        "./test/install_deps.sh && ./test/setup_es_server.pl"
+install:        "cpanm --installdeps --notest . && ./test/setup_es_server.pl"
 script:         ./test/run_all_tests.sh
 
 notifications:

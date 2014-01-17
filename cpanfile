@@ -3,6 +3,7 @@ requires "Data::Dumper" => "0";
 requires "Encode" => "0";
 requires "File::Temp" => "0";
 requires "HTTP::Headers" => "0";
+requires "HTTP::Parser::XS" => "0";
 requires "HTTP::Request" => "0";
 requires "HTTP::Tiny" => "0.036";
 requires "IO::Select" => "0";
@@ -18,6 +19,7 @@ requires "MIME::Base64" => "0";
 requires "Module::Runtime" => "0";
 requires "Moo" => "1.003";
 requires "Moo::Role" => "0";
+requires "Net::Curl::Easy" => "0";
 requires "POSIX" => "0";
 requires "Scalar::Util" => "0";
 requires "Sub::Exporter" => "0";
@@ -41,14 +43,4 @@ on 'test' => sub {
   requires "Test::Exception" => "0";
   requires "Test::More" => "0.98";
   requires "lib" => "0";
-};
-
-on 'configure' => sub {
-  requires "ExtUtils::MakeMaker" => "6.30";
-};
-
-on 'develop' => sub {
-  requires "Test::More" => "0";
-  requires "Test::NoTabs" => "0";
-  requires "Test::Pod" => "1.41";
 };

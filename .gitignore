@@ -8,4 +8,5 @@ cover_db
 doc
 log
 bench_cxn.pl
+*.xml
 
