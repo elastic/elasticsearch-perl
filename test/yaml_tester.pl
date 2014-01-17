@@ -8,7 +8,7 @@ use Test::Deep;
 use Data::Dumper;
 use File::Basename;
 
-use lib qw(lib t/lib ../promises-perl/lib);
+use lib qw(lib t/lib);
 
 my $client
     = $ENV{ES_ASYNC}
