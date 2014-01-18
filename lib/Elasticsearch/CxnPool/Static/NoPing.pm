@@ -49,7 +49,7 @@ __END__
 =head1 DESCRIPTION
 
 The L<Static::NoPing|Elasticsearch::CxnPool::Static::NoPing> connection
-pool (like the L<Static|ElasticSearch::CxnPool::Static> pool) should be used
+pool (like the L<Static|Elasticsearch::CxnPool::Static> pool) should be used
 when your access to the cluster is limited.  However, the C<Static> pool needs
 to be able to ping nodes in the cluster, with a C<HEAD /> request.  If you
 can't ping your nodes, then you should use the C<Static::NoPing>
