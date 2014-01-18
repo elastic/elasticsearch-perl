@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use lib 'perl/lib';
+use lib 'lib';
 use Elasticsearch;
 use Capture::Tiny qw(capture_merged tee_merged);
 
