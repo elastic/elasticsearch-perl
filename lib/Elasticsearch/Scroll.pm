@@ -106,11 +106,11 @@ __END__
 =head1 SYNOPSIS
 
     use Elasticsearch;
-    use Elasticearch::Scroll;
+    use Elasticsearch::Scroll;
 
     my $es     = Elasticsearch->new;
 
-    my $scroll = ElasticSearch::Scroll->new(
+    my $scroll = Elasticsearch::Scroll->new(
         es          => $es,
         index       => 'my_index',
         search_type => 'scan',
