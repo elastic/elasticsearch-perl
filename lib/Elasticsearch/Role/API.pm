@@ -495,7 +495,7 @@ sub api {
         doc   => "cluster-pending",
         parts => {},
         paths => [ [ {}, "_cluster", "pending_tasks" ] ],
-        qs    => ["local"],
+        qs => [ "local", "master_timeout" ],
     },
 
     'cluster.put_settings' => {
