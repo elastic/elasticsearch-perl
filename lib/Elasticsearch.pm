@@ -144,6 +144,18 @@ itself is a flexible and powerful open source, distributed real-time
 search and analytics engine for the cloud.  You can read more about it
 on L<elasticsearch.org|http://www.elasticsearch.org>.
 
+=head1 ELASTICSEARCH VERSION
+
+This version of the client supports the Elasticsearch 1.0 branch by
+default, which is not backwards compatible with the 0.90 branch.
+
+If you need to talk to Elasticsearch v0.90.x, please use
+L<Elasticsearch::Client::0_90::Direct> as follows:
+
+    $es = Elasticsearch->new(
+        client => '0_90::Direct'
+    );
+
 =head2 Motivation
 
 =over
@@ -397,7 +409,9 @@ See :
 
 =over
 
-=item * L<Elasticsearch::Client::Direct> (default)
+=item * L<Elasticsearch::Client::Direct> (default, for 1.0 branch)
+
+= item * L<Elasticsearch::Client::0_90::Direct> (for 0.90 branch)
 
 =item * L<Elasticsearch::Client::Compat> (for migration from the old
 L<ElasticSearch> module)

@@ -204,6 +204,18 @@ L<bulk document CRUD|/BULK DOCUMENT CRUD METHODS> and L<search|/SEARCH METHODS>.
 It also provides access to clients for managing L<indices|/indices()>
 and the L<cluster|/cluster()>.
 
+=head1 ELASTICSEARCH VERSION
+
+This version of the client supports the Elasticsearch 1.0 branch, which
+is not backwards compatible with the 0.90 branch.
+
+If you need to talk to Elasticsearch v0.90.x, please use
+L<Elasticsearch::Client::0_90::Direct> as follows:
+
+    $es = Elasticsearch->new(
+        client => '0_90::Direct'
+    );
+
 =head1 CONVENTIONS
 
 =head2 Parameter passing

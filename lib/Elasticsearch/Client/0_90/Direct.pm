@@ -110,7 +110,7 @@ Create a client:
 
     use Elasticsearch;
     my $e = Elasticsearch->new(
-        client => 'Direct'          # default
+        client => '0_90::Direct'          # for the 0.90 branch
     );
 
 Index a doc:
@@ -173,6 +173,17 @@ This class provides the methods for L<document CRUD|/DOCUMENT CRUD METHODS>,
 L<bulk document CRUD|/BULK DOCUMENT CRUD METHODS> and L<search|/SEARCH METHODS>.
 It also provides access to clients for managing L<indices|/indices()>
 and the L<cluster|/cluster()>.
+
+=head1 ELASTICSEARCH VERSION
+
+This module is for use with the 0.90 branch of Elasticsearch and should
+be used as follows:
+
+    $es = Elasticsearch->new(
+        client => '0_90::Direct'
+    );
+
+See L<Elasticsearch::Client::Direct> for the default client.
 
 =head1 CONVENTIONS
 
