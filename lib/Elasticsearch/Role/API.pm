@@ -495,7 +495,7 @@ sub api {
         doc   => "cluster-pending",
         parts => {},
         paths => [ [ {}, "_cluster", "pending_tasks" ] ],
-        qs    => [],
+        qs    => ["local"],
     },
 
     'cluster.put_settings' => {
@@ -650,8 +650,10 @@ sub api {
         method => "HEAD",
         parts  => { index => { multi => 1, required => 1 } },
         paths => [ [ { index => 0 }, "{index}" ] ],
-        qs =>
-            [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "local",
+        ],
     },
 
     'indices.exists_alias' => {
@@ -663,8 +665,10 @@ sub api {
             [ { name  => 1 }, "_alias",  "{name}" ],
             [ { index => 0 }, "{index}", "_alias" ],
         ],
-        qs =>
-            [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "local",
+        ],
     },
 
     'indices.exists_template' => {
@@ -672,7 +676,7 @@ sub api {
         method => "HEAD",
         parts  => { name => { required => 1 } },
         paths  => [ [ { name => 1 }, "_template", "{name}" ] ],
-        qs     => [],
+        qs     => ["local"],
     },
 
     'indices.exists_type' => {
@@ -683,8 +687,10 @@ sub api {
             type  => { multi => 1, required => 1 },
         },
         paths => [ [ { index => 0, type => 1 }, "{index}", "{type}" ] ],
-        qs =>
-            [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "local",
+        ],
     },
 
     'indices.flush' => {
@@ -709,8 +715,10 @@ sub api {
             [ { index => 0 }, "{index}", "_alias" ],
             [ {}, "_alias" ],
         ],
-        qs =>
-            [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "local",
+        ],
     },
 
     'indices.get_aliases' => {
@@ -722,7 +730,7 @@ sub api {
             [ { index => 0 }, "{index}",  "_aliases" ],
             [ {}, "_aliases" ],
         ],
-        qs => ["timeout"],
+        qs => [ "local", "timeout" ],
     },
 
     'indices.get_field_mapping' => {
@@ -781,6 +789,7 @@ sub api {
         qs => [
             "allow_no_indices", "expand_wildcards",
             "flat_settings",    "ignore_unavailable",
+            "local",
         ],
     },
 
@@ -789,7 +798,7 @@ sub api {
         parts => { name => {} },
         paths =>
             [ [ { name => 1 }, "_template", "{name}" ], [ {}, "_template" ] ],
-        qs => ["flat_settings"],
+        qs => [ "flat_settings", "local" ],
     },
 
     'indices.get_warmer' => {
@@ -812,8 +821,10 @@ sub api {
             [ { index => 0 }, "{index}", "_warmer" ],
             [ {}, "_warmer" ],
         ],
-        qs =>
-            [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "local",
+        ],
     },
 
     'indices.open' => {
@@ -1163,7 +1174,7 @@ sub api {
             [ { repository => 1 }, "_snapshot", "{repository}" ],
             [ {}, "_snapshot" ],
         ],
-        qs => ["master_timeout"],
+        qs => [ "local", "master_timeout" ],
     },
 
     'snapshot.restore' => {

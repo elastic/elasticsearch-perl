@@ -47,6 +47,7 @@ for more information.
 Retrieve existing repositories.
 
 Query string parameters:
+    C<local>,
     C<master_timeout>
 
 See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>

@@ -143,6 +143,9 @@ for more information.
 
 Returns a list of cluster-level tasks still pending on the master node.
 
+Query string parameters:
+    C<local>
+
 See the L<pending tasks docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-pending.html>
 for more information.
 

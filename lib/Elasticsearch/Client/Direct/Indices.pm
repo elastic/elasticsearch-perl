@@ -55,7 +55,8 @@ whether the specified index or indices exist.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_unavailable>
+    C<ignore_unavailable>,
+    C<local>
 
 See the L<index exists docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-indices-exists.html>
 for more information.
@@ -314,7 +315,8 @@ in all specified indices, and returns C<1> or the empty string.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_unavailable>
+    C<ignore_unavailable>,
+    C<local>
 
 See the L<exists_type docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-types-exists.html>
 for more information.
@@ -373,6 +375,7 @@ The C<get_aliases()> method returns a list of aliases per index for all
 the specified indices.
 
 Query string parameters:
+    C<local>,
     C<timeout>
 
 See the L<get_aliases docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
@@ -417,7 +420,8 @@ aliases in the specified indices.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_unavailable>
+    C<ignore_unavailable>,
+    C<local>
 
 See the L<get_alias docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
@@ -435,7 +439,8 @@ whether the specified aliases exist in the specified indices.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_unavailable>
+    C<ignore_unavailable>,
+    C<local>
 
 See the L<exists_alias docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
@@ -500,7 +505,8 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<flat_settings>,
-    C<ignore_unavailable>
+    C<ignore_unavailable>,
+    C<local>
 
 See the L<get_settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-settings.html>
 for more information.
@@ -534,7 +540,8 @@ for more information.
 The C<get_template()> method is used to retrieve a named template.
 
 Query string parameters:
-    C<flat_settings>
+    C<flat_settings>,
+    C<local>
 
 See the L<get_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
@@ -546,6 +553,9 @@ for more information.
     );
 
 The C<exists_template()> method is used to check whether the named template exists.
+
+Query string parameters:
+    C<local>
 
 See the L<get_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
@@ -612,7 +622,8 @@ The C<get_warmer()> method is used to retrieve warmers by name.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_unavailable>
+    C<ignore_unavailable>,
+    C<local>
 
 See the L<get_warmer docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-warmers.html>
 for more information.
