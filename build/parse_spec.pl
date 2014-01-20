@@ -52,6 +52,9 @@ for my $file (@files) {
     say $file;
     my $data = decode_json( $file->slurp );
     my ( $name, $defn ) = %$data;
+    die "File $file doesn't match name $name"
+        unless $file =~ m{/$name.json};
+
     eval { $API{$name} = process( $name, $defn ) }
         || die "$name: $@";
 
