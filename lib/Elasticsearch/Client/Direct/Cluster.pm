@@ -35,7 +35,9 @@ It does L<Elasticsearch::Role::Client::Direct>.
 
 =head2 C<health()>
 
-    $response = $e->cluster->health( %qs_params )
+    $response = $e->cluster->health(
+        index   => 'index' | \@indices  # optional
+    );
 
 The C<health()> method is used to retrieve information about the cluster
 health, returning C<red>, C<yellow> or C<green> to indicate the state
@@ -147,7 +149,7 @@ for more information.
 =head2 C<reroute()>
 
     $e->cluster->reroute(
-        body => { commands }    # required
+        body => { commands }
     );
 
 

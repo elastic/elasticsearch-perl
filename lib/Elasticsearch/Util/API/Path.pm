@@ -3,133 +3,55 @@ package Elasticsearch::Util::API::Path;
 use strict;
 use warnings;
 use Any::URI::Escape qw(uri_escape);
-
-use Sub::Exporter -setup => { exports => ['path_init'] };
-
-our %Handler = (
-    '{field}'           => sub { multi_req( 'field',        @_ ) },
-    '{id}'              => sub { one_req( 'id',             @_ ) },
-    '{id|blank}'        => sub { one_opt( 'id',             @_ ) },
-    '{index}'           => sub { one_req( 'index',          @_ ) },
-    '{index|blank}'     => sub { one_opt( 'index',          @_ ) },
-    '{index-when-type}' => sub { index_plus( 'type',        @_ ) },
-    '{index_metrics}'   => sub { multi_opt( 'index_metric', @_ ) },
-    '{indices}'         => sub { multi_opt( 'index',        @_ ) },
-    '{indices|all}'      => sub { multi_opt( 'index',      @_, '_all' ) },
-    '{indices|all-type}' => sub { indices_plus( 'type',    @_ ) },
-    '{req_indices}'      => sub { multi_req( 'index',      @_ ) },
-    '{req_names}'        => sub { multi_req( 'name',       @_ ) },
-    '{req_types}'        => sub { multi_req( 'type',       @_ ) },
-    '{metrics}'          => sub { multi_opt( 'metric',     @_, '_all' ) },
-    '{names}'            => sub { multi_opt( 'name',       @_, '*' ) },
-    '{names|blank}'      => sub { multi_opt( 'name',       @_ ) },
-    '{name}'             => sub { one_req( 'name',         @_ ) },
-    '{name|blank}'       => sub { one_opt( 'name',         @_ ) },
-    '{nodes}'            => sub { multi_opt( 'node_id',    @_, '_all' ) },
-    '{nodes|blank}'      => sub { multi_opt( 'node_id',    @_ ) },
-    '{repo}'             => sub { one_req( 'repository',   @_ ) },
-    '{repos}'            => sub { multi_opt( 'repository', @_ ) },
-    '{req_repos}'        => sub { multi_req( 'repository', @_ ) },
-    '{req_snapshots}'    => sub { multi_req( 'snapshot',   @_ ) },
-    '{scroll_ids}'       => sub { multi_req( 'scroll_id',  @_ ) },
-    '{snapshot}'         => sub { one_req( 'snapshot',     @_ ) },
-    '{snapshots}'        => sub { multi_opt( 'snapshot',   @_, '_all' ) },
-    '{type}'             => sub { one_req( 'type',         @_ ) },
-    '{type|all}'         => sub { one_opt( 'type',         @_, '_all' ) },
-    '{type|blank}'       => sub { one_opt( 'type',         @_ ) },
-    '{types}'            => sub { multi_opt( 'type',       @_ ) },
-
-    # for 0.90
-    '{metric|blank}' => \&metric_or_blank,
-);
+use Elasticsearch::Util qw(throw);
+use Sub::Exporter -setup => { exports => ['path_handler'] };
 
 #===================================
-sub path_init {
+sub path_handler {
 #===================================
-    my $template = shift;
-    my @handlers = map {
-        my $part = $_;
-        $Handler{$part}
-            || sub {$part}
-    } split '/', $template;
+    my ( $defn, $params ) = @_;
+    my $paths = $defn->{paths};
+    my $parts = $defn->{parts};
 
-    return sub {
-        my $params = shift;
-        return join '/', '', map { utf8::encode($_); uri_escape($_) }
-            grep { defined and length } map { $_->($params) } @handlers;
-    };
-}
+    my %args;
+    keys %$parts;
+    no warnings 'uninitialized';
+    while ( my ( $key, $req ) = each %$parts ) {
+        my $val = delete $params->{$key};
+        if ( ref $val eq 'ARRAY' ) {
+            die "Param ($key) must contain a single value\n"
+                if @$val > 1 and not $req->{multi};
+            $val = join ",", @$val;
+        }
+        if ( !length $val ) {
+            die "Missing required param ($key)\n"
+                if $req->{required};
+            next;
+        }
+        utf8::encode($val);
+        $args{$key} = uri_escape($val);
+    }
+PATH: for my $path (@$paths) {
+        my @keys = keys %{ $path->[0] };
+        next PATH unless @keys == keys %args;
+        for (@keys) {
+            next PATH unless exists $args{$_};
+        }
+        my ( $pos, @parts ) = @$path;
+        for ( keys %$pos ) {
+            $parts[ $pos->{$_} ] = $args{$_};
+        }
+        return join "/", '', @parts;
+    }
 
-#===================================
-sub index_plus {
-#===================================
-    my ( $plus, $params ) = @_;
-    return $params->{$plus}
-        ? one_req( 'index', $params )
-        : one_opt( 'index', $params );
-}
+    die "Param (index) required when (type) specified\n"
+        if $defn->{index_when_type} && $args{type} && !$args{index};
 
-#===================================
-sub indices_plus {
-#===================================
-    my ( $plus, $params ) = @_;
-    return $params->{$plus}
-        ? multi_opt( 'index', $params, '_all' )
-        : multi_opt( 'index', $params );
-}
-
-#===================================
-sub one_opt {
-#===================================
-    my ( $name, $params, $default ) = @_;
-    my $val = delete $params->{$name};
-    return $default unless defined $val and length $val;
-    die "Param ($name) must contain a single value\n"
-        if ref $val eq 'ARRAY';
-    return $val;
-}
-
-#===================================
-sub one_req {
-#===================================
-    my ( $name, $params ) = @_;
-    my $val = delete $params->{$name};
-    die "Missing required param ($name)\n"
-        unless defined $val and length $val;
-    die "Param ($name) must contain a single value\n"
-        if ref $val eq 'ARRAY';
-    return $val;
-}
-
-#===================================
-sub multi_opt {
-#===================================
-    my ( $name, $params, $default ) = @_;
-    my $val = delete $params->{$name};
-    return $default unless defined $val and length $val;
-    return ref $val eq 'ARRAY' ? join ',', @$val : $val;
-}
-
-#===================================
-sub multi_req {
-#===================================
-    my ( $name, $params, $default ) = @_;
-    my $val = delete $params->{$name};
-    $val = join ',', @$val if ref $val eq 'ARRAY';
-    die "Param ($name) must contain at least one value\n"
-        unless defined $val and length $val;
-    return $val;
-}
-
-#===================================
-sub metric_or_blank {
-#===================================
-    my ( $params, $default ) = @_;
-    my $metric = delete $params->{metric} or return;
-    die "Param (metric) must contain a single value\n"
-        if ref $metric eq 'ARRAY';
-    delete $params->{indices};
-    return ( 'indices', $metric );
+    throw(
+        'Internal',
+        "Couldn't determine path",
+        { params => $params, defn => $defn }
+    );
 }
 
 1;

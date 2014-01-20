@@ -52,6 +52,11 @@ for more information.
 The C<exists()> method returns C<1> or the empty string to indicate
 whether the specified index or indices exist.
 
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>
+
 See the L<index exists docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-indices-exists.html>
 for more information.
 
@@ -64,6 +69,9 @@ for more information.
 The C<delete()> method deletes the specified indices.
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
     C<master_timeout>,
     C<timeout>
 
@@ -80,6 +88,9 @@ The C<close()> method closes the specified indices, reducing resource usage
 but allowing them to be reopened later.
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>
     C<master_timeout>,
     C<timeout>
 
@@ -89,12 +100,15 @@ for more information.
 =head2 C<open()>
 
     $response = $e->indices->open(
-        index => 'index' | \@indices    # optional
+        index => 'index' | \@indices    # required
     );
 
 The C<open()> method opens closed indices.
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>
     C<master_timeout>,
     C<timeout>
 
@@ -119,8 +133,8 @@ Query string parameters:
     C<filter_cache>,
     C<filter_keys>,
     C<id>,
+    C<id_cache>,
     C<ignore_unavailable>,
-    C<index>,
     C<recycler>
 
 See the L<clear_cache docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-clearcache.html>
@@ -195,6 +209,11 @@ for more information.
 
 Deprecated.
 
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>
+
 See the L<snapshot_index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/>
 for more information.
 
@@ -229,6 +248,9 @@ For instance:
     );
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
     C<ignore_conflicts>,
     C<master_timeout>,
     C<timeout>
@@ -273,7 +295,8 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<ignore_unavailable>,
-    C<include_defaults>
+    C<include_defaults>,
+    C<local>
 
 See the L<get_mapping docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-field-mapping.html>
 for more information.
@@ -281,7 +304,7 @@ for more information.
 =head2 C<exists_type()>
 
     $bool = $e->indices->exists_type(
-        index => 'index' | \@indices    # optional,
+        index => 'index' | \@indices    # required,
         type  => 'type'  | \@types      # required
     );
 
@@ -454,7 +477,10 @@ indices or all indices. For instance:
     );
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
     C<flat_settings>,
+    C<ignore_unavailable>,
     C<master_timeout>
 
 See the L<put_settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-update-settings.html>
@@ -471,7 +497,10 @@ The C<get_settings()> method retrieves the index settings for the specified
 indices or all indices.
 
 Query string parameters:
-    C<flat_settings>
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<flat_settings>,
+    C<ignore_unavailable>
 
 See the L<get_settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-settings.html>
 for more information.
@@ -543,6 +572,7 @@ for more information.
 
     $response = $e->indices->put_warmer(
         index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional
         name    => 'warmer',                # required
 
         body    => { warmer defn }          # required
@@ -561,6 +591,9 @@ to user searches.  For instance:
     );
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
     C<master_timeout>
 
 See the L<put_warmer docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-warmers.html>
@@ -570,10 +603,16 @@ for more information.
 
     $response = $e->indices->get_warmer(
         index   => 'index'  | \@indices,    # optional
+        type    => 'type'   | \@types,      # optional
         name    => 'warmer' | \@warmers,    # optional
     );
 
 The C<get_warmer()> method is used to retrieve warmers by name.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>
 
 See the L<get_warmer docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-warmers.html>
 for more information.
@@ -582,7 +621,7 @@ for more information.
 
     $response = $e->indices->get_warmer(
         index   => 'index'  | \@indices,    # required
-        name    => 'warmer' | \@warmers,    # optional
+        name    => 'warmer' | \@warmers,    # required
     );
 
 The C<delete_warmer()> method is used to delete warmers by name.
@@ -614,7 +653,6 @@ Allowed metrics are:
     C<filter_cache>,
     C<flush>,
     C<get>,
-    C<human>,
     C<id_cache>,
     C<indexing>,
     C<merge>,
@@ -631,6 +669,7 @@ Query string parameters:
     C<fielddata_fields>,
     C<fields>,
     C<groups>,
+    C<human>,
     C<level>,
     C<types>
 
@@ -693,7 +732,6 @@ Query string parameters:
     C<field>,
     C<filters>,
     C<format>,
-    C<index>,
     C<prefer_local>,
     C<text>,
     C<tokenizer>
@@ -705,6 +743,8 @@ for more information.
 
     $result = $e->indices->validate_query(
         index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional
+
         body    => { query }
     );
 

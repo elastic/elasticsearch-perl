@@ -78,10 +78,10 @@ Returns information about index aliases, optionally limited to the specified
 index/alias names.
 
 Query string parameters:
-    C<local>,
-    C<master_timeout>,
     C<h>,
     C<help>,
+    C<local>,
+    C<master_timeout>,
     C<v>
 
 See the L<cat aliases docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-aliases.html>
@@ -90,7 +90,7 @@ for more information.
 =head2 C<allocation()>
 
     say $e->cat->allocation(
-        node => 'node' | \@nodes    # optional
+        node_id => 'node' | \@nodes    # optional
     );
 
 Provides a snapshot of how shards have located around the cluster and the
@@ -98,10 +98,10 @@ state of disk usage.
 
 Query string parameters:
     C<bytes>,
-    C<local>,
-    C<master_timeout>,
     C<h>,
     C<help>,
+    C<local>,
+    C<master_timeout>,
     C<v>
 
 See the L<cat allocation docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-allocation.html>
@@ -117,10 +117,10 @@ Provides quick access to the document count of the entire cluster, or
 individual indices.
 
 Query string parameters:
-    C<local>,
-    C<master_timeout>,
     C<h>,
     C<help>,
+    C<local>,
+    C<master_timeout>,
     C<v>
 
 See the L<cat count docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-count.html>
@@ -135,10 +135,10 @@ state of disk usage.
 
 Query string parameters:
     C<bytes>,
-    C<local>,
-    C<master_timeout>,
     C<h>,
     C<help>,
+    C<local>,
+    C<master_timeout>,
     C<ts>,
     C<v>
 
@@ -156,10 +156,10 @@ or individual indices
 
 Query string parameters:
     C<bytes>,
-    C<local>,
-    C<master_timeout>,
     C<h>,
     C<help>,
+    C<local>,
+    C<master_timeout>,
     C<pri>,
     C<v>
 
@@ -173,10 +173,10 @@ for more information.
 Displays the master’s node ID, bound IP address, and node name.
 
 Query string parameters:
-    C<local>,
-    C<master_timeout>,
     C<h>,
     C<help>,
+    C<local>,
+    C<master_timeout>,
     C<v>
 
 See the L<cat master docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-master.html>
@@ -189,10 +189,10 @@ for more information.
 Provides a snapshot of all of the nodes in your cluster.
 
 Query string parameters:
-    C<local>,
-    C<master_timeout>,
     C<h>,
     C<help>,
+    C<local>,
+    C<master_timeout>,
     C<v>
 
 See the L<cat nodes docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-nodes.html>
@@ -227,10 +227,10 @@ stuck, try it to see if there’s any movement using C<recovery()>.
 
 Query string parameters:
     C<bytes>,
-    C<local>,
-    C<master_timeout>,
     C<h>,
     C<help>,
+    C<local>,
+    C<master_timeout>,
     C<v>
 
 See the L<cat recovery docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-recovery.html>
@@ -246,10 +246,10 @@ Provides a detailed view of what nodes contain which shards, the state and
 size of each shard.
 
 Query string parameters:
-    C<local>,
-    C<master_timeout>,
     C<h>,
     C<help>,
+    C<local>,
+    C<master_timeout>,
     C<v>
 
 See the L<cat shards docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-shards.html>

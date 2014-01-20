@@ -2,6 +2,7 @@ package Elasticsearch::Role::Client::Direct;
 
 use Moo::Role;
 with 'Elasticsearch::Role::Client';
+use Elasticsearch::Util::API::Path qw(path_handler);
 use Try::Tiny;
 use namespace::clean;
 
@@ -18,9 +19,9 @@ sub parse_request {
             ignore    => delete $params->{ignore} || [],
             method    => $defn->{method}          || 'GET',
             serialize => $defn->{serialize}       || 'std',
-            path => $self->_parse_path( $defn->{path_handler}, $params ),
-            body => $self->_parse_body( $defn->{body},         $params ),
-            qs   => $self->_parse_qs( $defn->{qs_handlers},    $params ),
+            path => $self->_parse_path( $defn,              $params ),
+            body => $self->_parse_body( $defn->{body},      $params ),
+            qs   => $self->_parse_qs( $defn->{qs_handlers}, $params ),
         };
     }
     catch {
@@ -38,11 +39,10 @@ sub parse_request {
 #===================================
 sub _parse_path {
 #===================================
-    my ( $self, $handler, $params ) = @_;
-    die "No (path_handler) defined\n" unless $handler;
+    my ( $self, $defn, $params ) = @_;
     return delete $params->{path}
         if $params->{path};
-    $handler->($params);
+    path_handler( $defn, $params );
 }
 
 #===================================

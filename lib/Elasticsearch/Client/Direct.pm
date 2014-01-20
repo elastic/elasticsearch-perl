@@ -647,8 +647,7 @@ Query string parameters:
     C<consistency>,
     C<refresh>,
     C<replication>,
-    C<timeout>,
-    C<type>
+    C<timeout>
 
 See the L<bulk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-bulk.html>
 for more information.
@@ -712,7 +711,7 @@ for more information.
 =head2 C<delete_by_query()>
 
     $result = $e->delete_by_query(
-        index => 'index' | \@indices,   # optional
+        index => 'index' | \@indices,   # required
         type  => 'type'  | \@types,     # optional
 
         body  => { query }              # required
@@ -809,6 +808,7 @@ Query string parameters:
     C<fields>,
     C<from>,
     C<ignore_unavailable>,
+    C<indices_boost>,
     C<lenient>,
     C<lowercase_expanded_terms>,
     C<preference>,
@@ -1026,7 +1026,6 @@ for more information.
 
     $results = $e->suggest(
         index   => 'index' | \@indices,     # optional
-        type    => 'type'  | \@types,       # optional
 
         body    => { suggest request }      # required
     );
@@ -1038,7 +1037,6 @@ suggestion requests, which can also be run as part of a L</search()> request.
 
     $results = $e->suggest(
         index   => 'my_index',
-        type    => 'my_type',
         body    => {
             my_suggestions => {
                 phrase  => {
