@@ -66,6 +66,33 @@ sub api {
         ],
     },
 
+    'count_percolate' => {
+        body  => {},
+        doc   => "search-percolate",
+        parts => {
+            id    => {},
+            index => { required => 1 },
+            type  => { required => 1 }
+        },
+        paths => [
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}",     "{id}",
+                "_percolate", "count",
+            ],
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_percolate",
+                "count",
+            ],
+        ],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "percolate_index",
+            "percolate_type",     "preference",
+            "routing",            "version",
+            "version_type",
+        ],
+    },
+
     'delete' => {
         doc    => "docs-delete",
         method => "DELETE",
@@ -223,7 +250,6 @@ sub api {
         parts => { index => {}, type => {} },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_mget" ],
-            [ { type => 1 }, "_all", "{type}", "_mget" ],
             [ { index => 0 }, "{index}", "_mget" ],
             [ {}, "_mget" ],
         ],
@@ -262,6 +288,21 @@ sub api {
         ],
     },
 
+    'mpercolate' => {
+        body            => { required => 1 },
+        doc             => "search-percolate",
+        index_when_type => 1,
+        parts => { index => {}, type => {} },
+        paths => [
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_mpercolate" ],
+            [ { index => 0 }, "{index}", "_mpercolate" ],
+            [ {}, "_mpercolate" ],
+        ],
+        qs =>
+            [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
+        serialize => "bulk",
+    },
+
     'msearch' => {
         body => { required => 1 },
         doc  => "search-multi-search",
@@ -276,14 +317,49 @@ sub api {
         serialize => "bulk",
     },
 
+    'mtermvectors' => {
+        body            => {},
+        doc             => "docs-multi-termvectors",
+        index_when_type => 1,
+        parts           => { id => {}, index => {}, type => {} },
+        paths           => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_mtermvectors"
+            ],
+            [ { index => 0 }, "{index}", "_mtermvectors" ],
+            [ {}, "_mtermvectors" ],
+        ],
+        qs => [
+            "field_statistics", "fields",
+            "ids",              "offsets",
+            "parent",           "payloads",
+            "positions",        "preference",
+            "routing",          "term_statistics",
+        ],
+    },
+
     'percolate' => {
-        body => { required => 1 },
-        doc  => "search-percolate",
-        parts => { index => { required => 1 }, type => { required => 1 } },
+        body  => {},
+        doc   => "search-percolate",
+        parts => {
+            id    => {},
+            index => { required => 1 },
+            type  => { required => 1 }
+        },
         paths => [
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}",
+                "_percolate",
+            ],
             [ { index => 0, type => 1 }, "{index}", "{type}", "_percolate" ],
         ],
-        qs => ["prefer_local"],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "percolate_index",
+            "percolate_type",     "preference",
+            "routing",            "version",
+            "version_type",
+        ],
     },
 
     'ping' => {
@@ -346,6 +422,29 @@ sub api {
             "allow_no_indices",   "expand_wildcards",
             "ignore_unavailable", "preference",
             "routing",            "source",
+        ],
+    },
+
+    'termvector' => {
+        body  => {},
+        doc   => "docs-termvectors",
+        parts => {
+            id    => { required => 1 },
+            index => { required => 1 },
+            type  => { required => 1 },
+        },
+        paths => [
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}",
+                "_termvector",
+            ],
+        ],
+        qs => [
+            "field_statistics", "fields",
+            "offsets",          "parent",
+            "payloads",         "positions",
+            "preference",       "routing",
+            "term_statistics",
         ],
     },
 
@@ -1156,8 +1255,8 @@ sub api {
     'snapshot.get' => {
         doc   => "modules-snapshots",
         parts => {
-            repository => { multi => 1, required => 1 },
-            snapshot   => { multi => 1, required => 1 },
+            repository => { required => 1 },
+            snapshot   => { multi    => 1, required => 1 },
         },
         paths => [
             [   { repository => 1, snapshot => 2 }, "_snapshot",

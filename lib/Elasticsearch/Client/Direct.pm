@@ -562,7 +562,6 @@ Query string parameters:
     C<fields>,
     C<lang>,
     C<parent>,
-    C<percolate>,
     C<realtime>,
     C<refresh>,
     C<replication>,
@@ -576,6 +575,34 @@ Query string parameters:
     C<version_type>
 
 See the L<update docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-update.html>
+for more information.
+
+=head2 C<termvector()>
+
+    $results = $e->termvector(
+        index   => $index,          # required
+        type    => $type,           # required
+        id      => $id,             # required
+
+        body    => {...}            # optional
+    )
+
+The C<termvector()> method retrieves term and field statistics, positions,
+offsets and payloads for the specified document, assuming that termvectors
+have been enabled.
+
+Query string parameters:
+    C<field_statistics>,
+    C<fields>,
+    C<offsets>,
+    C<parent>,
+    C<payloads>,
+    C<positions>,
+    C<preference>,
+    C<routing>,
+    C<term_statistics>
+
+See the L<termvector docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-termvectors.html>
 for more information.
 
 =head1 BULK DOCUMENT CRUD METHODS
@@ -762,6 +789,42 @@ Query string parameters:
     C<timeout>
 
 See the L<delete_by_query docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-delete-by-query.html>
+for more information.
+
+=head2 C<mtermvectors()>
+
+    $results = $e->mtermvectors(
+        index   => $index,          # required if type specified
+        type    => $type,           # optional
+
+        body    => { }              # optional
+    )
+
+Runs multiple L</termvector()> requests in a single request, eg:
+
+    $results = $e->mtermvectors(
+        index   => 'test',
+        body    => {
+            docs => [
+                { _type => 'test', _id => 1, fields => ['text'] },
+                { _type => 'test', _id => 2, payloads => 1 },
+            ]
+        }
+    );
+
+Query string parameters:
+    C<field_statistics>,
+    C<fields>,
+    C<ids>,
+    C<offsets>,
+    C<parent>,
+    C<payloads>,
+    C<positions>,
+    C<preference>,
+    C<routing>,
+    C<term_statistics>
+
+See the L<mtermvectors docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-multi-termvectors.html>
 for more information.
 
 =head1 SEARCH METHODS
@@ -1029,9 +1092,96 @@ C<_source> field of the document under the C<doc> key:
 
 
 Query string parameters:
-    C<prefer_local>
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<percolate_index>,
+    C<percolate_type>,
+    C<preference>,
+    C<routing>,
+    C<version>,
+    C<version_type>
 
 See the L<percolate docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-percolate.html>
+for more information.
+
+=head2 C<count_percolate()>
+
+    $results = $e->count_percolate(
+        index   => 'my_index',      # required
+        type    => 'my_type',       # required
+
+        body    => { percolation }  # required
+    );
+
+The L</count_percolate()> request works just like the L</percolate()>
+request except that it returns a count of all matching queries, instead
+of the queries themselves.
+
+    $results = $e->count_percolate(
+        index   => 'my_index',
+        type    => 'my_type',
+        body    => {
+            doc => {
+                title => 'Elasticsearch rocks'
+            }
+        }
+    );
+
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<percolate_index>,
+    C<percolate_type>,
+    C<preference>,
+    C<routing>,
+    C<version>,
+    C<version_type>
+
+See the L<percolate docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-percolate.html>
+for more information.
+
+=head2 C<mpercolate()>
+
+    $results = $e->mpercolate(
+        index   => 'my_index',               # required if type
+        type    => 'my_type',                # optional
+
+        body    => [ percolation requests ]  # required
+    );
+
+Multi-percolation allows multiple L</percolate()> requests to be run
+in a single request.
+
+    $results = $e->mpercolate(
+        index   => 'my_index',
+        type    => 'my_type',
+        body    => [
+            # first request
+            { percolate => {
+                index => 'twitter',
+                type  => 'tweet'
+            }},
+            { doc => {message => 'some_text' }},
+
+            # second request
+            { percolate => {
+                index => 'twitter',
+                type  => 'tweet',
+                id    => 1
+            }},
+            {},
+        ]
+    );
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>
+
+See the L<mpercolate docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-percolate.html>
 for more information.
 
 =head2 C<suggest()>
@@ -1106,5 +1256,4 @@ Query string parameters:
 
 See the L<mlt docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-more-like-this.html>
 for more information.
-
 

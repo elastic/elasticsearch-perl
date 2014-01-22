@@ -23,12 +23,12 @@ sub api {
 #=== AUTOGEN - START ===
 
     'bulk' => {
-        body            => {},
+        body            => { required => 1 },
         doc             => "docs-bulk",
         index_when_type => 1,
         method          => "POST",
-        parts           => { index => {}, type => {} },
-        paths           => [
+        parts => { index => {}, type => {} },
+        paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_bulk" ],
             [ { index => 0 }, "{index}", "_bulk" ],
             [ {}, "_bulk" ],

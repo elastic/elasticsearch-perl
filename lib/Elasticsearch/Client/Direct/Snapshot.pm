@@ -87,8 +87,8 @@ Query string parameters:
 =head2 C<get()>
 
     $e->snapshot->get(
-        repository  => 'repository' | \@repositories  # required
-        snapshot    => 'snapshot'   | \@snapshots     # optional
+        repository  => 'repository'                   # required
+        snapshot    => 'snapshot'   | \@snapshots     # required
     );
 
 Retrieve snapshots in the named repository.

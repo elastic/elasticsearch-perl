@@ -6,6 +6,7 @@ use v5.12;
 use Data::Dump qw(pp);
 use Path::Class;
 use JSON::XS;
+use Perl::Tidy;
 
 my @files = map { file($_) } glob 'elasticsearch/rest-api-spec/api/*.json';
 
@@ -16,6 +17,7 @@ forbid(
         /_nodes/hotthreads
         /_nodes/{node_id}/hotthreads
         /_nodes/{metric}
+        /_all/{type}/_mget
         )
 );
 
@@ -52,14 +54,10 @@ for my $file (@files) {
     my ( $name, $defn ) = %$data;
     die "File $file doesn't match name $name"
         unless $file =~ m{/$name.json};
+
     eval { $API{$name} = process( $name, $defn ) }
         || die "$name: $@";
 
-}
-
-# bulk serializer
-for ( 'bulk', 'msearch' ) {
-    $API{$_}{serialize} = 'bulk';
 }
 
 # require index when type
@@ -76,11 +74,14 @@ sub process {
     my %spec;
 
     # body
-    if ( $defn->{body} ) {
+    if ( my $body = $defn->{body} ) {
         $spec{body}
-            = $defn->{body}{required}
+            = $body->{required}
             ? { required => 1 }
             : {};
+        if ( $body->{serialize} && $body->{serialize} eq 'bulk' ) {
+            $spec{serialize} = 'bulk';
+        }
     }
 
     # method
@@ -246,5 +247,11 @@ sub update_module {
         die "Couldn't find AUTOGEN - END marker";
     }
 
-    $file->spew($out);
+    Perl::Tidy::perltidy(
+        source      => \$out,
+        destination => $module,
+        argv        => '-q --indent-columns=4 --maximum-line-length=80 '
+            . '-pbp -nst -sob -sot -vt=2 -nsob -sbcp=#='
+    );
+
 }
