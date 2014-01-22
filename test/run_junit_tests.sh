@@ -13,8 +13,6 @@ function run {
     ERROR=1
 }
 
-export ES=localhost:9200
-
 ###### RUN TESTS #######
 
 export JUNIT_OUTPUT_FILE=sync_tests.xml
