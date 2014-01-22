@@ -23,14 +23,14 @@ GetOptions(
 
 my $harness = 'TAP::Harness';
 if ($junit) {
-    require TAP::Harness::Junit;
+    require TAP::Harness::JUnit;
     $harness = 'TAP::Harness::JUnit';
 }
 
 $ENV{ES_ASYNC} = $async;
 $ENV{ES_CXN}   = $cxn;
 $ENV{TRACE}    = $trace;
-$ENV{ES}       = "localhost:9200";
+$ENV{ES} ||= "localhost:9200";
 
 my $tap = $harness->new(
     {   exec      => [ $^X, 'test/yaml_tester.pl' ],
