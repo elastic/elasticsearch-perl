@@ -90,6 +90,7 @@ our %Params = (
     ignore_unavailable => { type => 'bool' },
     include_defaults   => { type => 'bool' },
     index              => { type => 'list' },
+    index_templates    => { type => 'list' },
     indexing           => { type => 'bool' },
     indices            => { type => 'bool' },
     indices_boost      => { type => 'list' },

@@ -627,7 +627,8 @@ sub api {
             [ { metric => 2 }, "_cluster", "state", "{metric}" ],
             [ {}, "_cluster", "state" ],
         ],
-        qs => [ "flat_settings", "local", "master_timeout" ],
+        qs =>
+            [ "flat_settings", "index_templates", "local", "master_timeout" ],
     },
 
     'cluster.stats' => {
