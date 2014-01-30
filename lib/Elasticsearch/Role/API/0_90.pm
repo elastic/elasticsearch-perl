@@ -218,7 +218,6 @@ sub api {
         parts => { index => {}, type => {} },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_mget" ],
-            [ { type => 1 }, "_all", "{type}", "_mget" ],
             [ { index => 0 }, "{index}", "_mget" ],
             [ {}, "_mget" ],
         ],
