@@ -32,7 +32,7 @@ run 'Sync tests - POST body' prove --harness=TAP::Harness::JUnit -l t/*/*.t
 export JUNIT_OUTPUT_FILE=yaml_post.xml
 run 'YAML::LWP - POST body' ./test/run_yaml_tests.pl --junit
 
-perl -e 'exit $ENV{ES_VERSION}=~/^0.90.(10|11|[0-9])$/ ? 1 : 0';
+perl -e 'exit $ENV{ES_VERSION}=~/^0.90.(10|[0-9])$/ ? 1 : 0';
 if [ $? -eq 1 ];
     then echo "SKIPPING body-as-source: $ES_VERSION"
     exit $ERROR
