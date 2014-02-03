@@ -8,6 +8,8 @@ use Test::Deep;
 use Data::Dumper;
 use File::Basename;
 
+our %Supported = ( regex => 1 );
+
 use lib qw(lib t/lib);
 
 my $client
@@ -296,18 +298,43 @@ sub check_skip {
     my $skip  = $cmds->[0]{skip} or return;
     shift @$cmds;
 
-    my ( $min, $max ) = split( /\s*-\s*/, $skip->{version} );
+    my $reason
+        = skip_feature($skip)
+        || skip_version($skip)
+        || return;
+
+    $es->logger->trace_comment("SKIPPING: $title : $reason");
+SKIP: { skip $reason, 1 }
+    return 1;
+}
+
+#===================================
+sub skip_feature {
+#===================================
+    my $features = shift()->{features} or return;
+    $features = [$features] unless ref $features;
+    for (@$features) {
+        return "Feature not supported: $_"
+            unless $Supported{$_};
+    }
+    return;
+
+}
+
+#===================================
+sub skip_version {
+#===================================
+    my $skip = shift;
+    my $version = $skip->{version} or return;
+    my ( $min, $max ) = split( /\s*-\s*/, $version );
     my $current = $wrapper->( $es->info )->{version}{number};
 
     return
         unless str_version($min) le str_version($current)
         and str_version($max) ge str_version($current);
 
-    my $reason = "Version $current - " . $skip->{reason};
+    return "Version $current - " . $skip->{reason};
 
-    $es->logger->trace_comment("SKIPPING: $title : $skip");
-SKIP: { skip $reason, 1 }
-    return 1;
 }
 
 #===================================
