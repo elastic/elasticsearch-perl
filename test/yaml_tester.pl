@@ -38,7 +38,15 @@ our %Test_Types = (
         my ( $got, $expect, $name ) = @_;
         ok( $got > $expect, $name );
     },
-    match  => \&cmp_deeply,
+    match => sub {
+        my ( $got, $expect, $name ) = @_;
+        if ( defined $expect and $expect =~ s{^\s*/(.+)/\s*$}{$1}s ) {
+            like $got, qr/$expect/x, $name;
+        }
+        else {
+            cmp_deeply(@_);
+        }
+    },
     length => \&test_length,
     catch  => \&test_error,
 );
@@ -208,6 +216,7 @@ sub get_val {
     my ( $val, $field ) = @_;
     return undef unless defined $val;
     return $val  unless defined $field;
+    return $val if $field eq '$body';
 
     for my $next ( split /(?<!\\)\./, $field ) {
         $next =~ s/\\//g;
