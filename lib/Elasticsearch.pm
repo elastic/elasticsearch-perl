@@ -5,7 +5,7 @@ use Moo 1.003;
 use Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
-our $VERSION = '0.99';
+our $VERSION = '1.00';
 
 my %Default_Plugins = (
     client      => [ 'Elasticsearch::Client',       'Direct' ],
@@ -144,13 +144,13 @@ itself is a flexible and powerful open source, distributed real-time
 search and analytics engine for the cloud.  You can read more about it
 on L<elasticsearch.org|http://www.elasticsearch.org>.
 
-=head1 ELASTICSEARCH VERSION
+=head1 BACKWARDS COMPATIBILITY AND ELASTICSEARCH 0.90.x
 
 This version of the client supports the Elasticsearch 1.0 branch by
 default, which is not backwards compatible with the 0.90 branch.
 
-If you need to talk to Elasticsearch v0.90.x, please use
-L<Elasticsearch::Client::0_90::Direct> as follows:
+If you need to talk to a version of Elasticsearch before 1.0.0,
+please use L<Elasticsearch::Client::0_90::Direct> as follows:
 
     $es = Elasticsearch->new(
         client => '0_90::Direct'

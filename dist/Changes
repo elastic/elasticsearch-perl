@@ -1,5 +1,15 @@
 Revision history for Elasticsearch
 
+1.00    2014-02-07
+        API updated to be compatible with v1.x branch of Elasticsearch.
+
+        BACKWARDS COMPATIBILITY: To use this client with versions of
+        Elasticsearch before 1.x, specify the client version as:
+
+            $es = Elasticsearch->new(
+                client => '0_90::Direct'
+            );
+
 0.76    2013-12-02
         Added support for send_get_body_as GET/POST/source
         Added timeout to bulk API
