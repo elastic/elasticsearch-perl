@@ -60,8 +60,8 @@ sub load_plugin {
     unless ( $class =~ s/\A\+// ) {
         $class = compose_module_name( $base, $class );
     }
-    use_module( $class, $version || 0 );
-    return $class;
+
+    $version ? use_module( $class, $version ) : use_module($class);
 }
 
 #===================================
