@@ -3,6 +3,8 @@ package MockCxn;
 use strict;
 use warnings;
 
+our $VERSION = $Elasticsearch::VERSION;
+
 use Data::Dumper;
 use Moo;
 with 'Elasticsearch::Role::Cxn', 'Elasticsearch::Role::Cxn::HTTP',
