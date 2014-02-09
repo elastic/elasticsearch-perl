@@ -1,4 +1,8 @@
-Revision history for Elasticsearch-Cxn-NetCurl
+Revision history for Elasticsearch::Cxn::NetCurl
+
+1.01    2014-02-09
+        Fixed plugin loader to work with latest version of Module::Runtime
+        which complains about undefined versions
 
 1.00    2014-02-07
         Moved the NetCurl source code into the repo for Elasticsearch.pm
