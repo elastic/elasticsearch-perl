@@ -311,7 +311,7 @@ the buffer.
 
     $scroll->finish;
 
-The C<finish()> method clears out the buffer, sets L</eof()> to C<true>
+The C<finish()> method clears out the buffer, sets L</is_finished()> to C<true>
 and tries to clear the C<scroll_id> on Elasticsearch.  This API is only
 supported since v0.90.5, but the call to C<clear_scroll> is wrapped in an
 C<eval> so the C<finish()> method can be safely called with any version
