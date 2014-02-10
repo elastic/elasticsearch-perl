@@ -568,6 +568,13 @@ sub api {
         qs => [ "h", "help", "local", "master_timeout", "v" ],
     },
 
+    'cat.thread_pool' => {
+        doc   => "cat-thread-pool",
+        parts => {},
+        paths => [ [ {}, "_cat", "thread_pool" ] ],
+        qs    => [ "full_id", "h", "help", "local", "master_timeout", "v" ],
+    },
+
     'cluster.get_settings' => {
         doc   => "cluster-update-settings",
         parts => {},

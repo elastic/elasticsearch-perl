@@ -71,6 +71,7 @@ our %Params = (
     from             => { type => 'number' },
     fs               => { type => 'bool' },
     full             => { type => 'bool' },
+    full_id          => { type => 'bool' },
     get              => { type => 'bool' },
     groups           => { type => 'list' },
     http             => { type => 'bool' },

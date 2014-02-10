@@ -255,9 +255,24 @@ Query string parameters:
 See the L<cat shards docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-shards.html>
 for more information.
 
+=head2 C<thread_pool()>
 
-    "cat.shards" => {
-        doc  => "cat-shards",
-        path => "/_cat/shards/{index}",
-        qs   => [ "local", "master_timeout", "h", "help", "v" ],
-    },
+    say $e->cat->thread_pool(
+        index => 'index' | \@indices    # optional
+    );
+
+Shows cluster wide thread pool statistics per node. By default the C<active>,
+C<queue> and C<rejected> statistics are returned for the C<bulk>, C<index> and
+C<search> thread pools.
+
+Query string parameters:
+    C<full_id>,
+    C<h>,
+    C<help>,
+    C<local>,
+    C<master_timeout>,
+    C<v>
+
+See the L<cat thread_pool docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-thread-pool.html>
+for more information.
+
