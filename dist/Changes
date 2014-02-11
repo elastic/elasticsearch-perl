@@ -1,5 +1,8 @@
 Revision history for Elasticsearch
 
+1.02    2014-02-11
+        Fixed bug in Elasticsearch::Scroll::next when called in scalar context
+
 1.01    2014-02-09
         Fixed plugin loader to work with latest version of Module::Runtime
         which complains about undefined versions
