@@ -44,7 +44,7 @@ sub next {
     }
     my @return = splice( @{ $self->_buffer }, 0, $n );
     $self->finish if @return < $n;
-    return @return;
+    return wantarray ? @return : $return[-1];
 }
 
 #===================================

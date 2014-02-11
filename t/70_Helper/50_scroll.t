@@ -120,6 +120,10 @@ test_scroll(
     ]
 );
 
+my $s = $es->scroll_helper;
+my $d = $s->next;
+ok ref $d && $d->{_source}, 'next() in scalar context';
+
 done_testing;
 $es->indices->delete( index => 'test' );
 
