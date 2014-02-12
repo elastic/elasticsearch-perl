@@ -1,5 +1,8 @@
 Revision history for Elasticsearch
 
+1.03    2014-02-12
+        Fixed node sniffing to work across 0.90 and 1.0
+
 1.02    2014-02-11
         Fixed bug in Elasticsearch::Scroll::next when called in scalar context
 
