@@ -101,12 +101,9 @@ sub sniff {
     $self->logger->infof( 'Sniffing [%s]', $self->stringify );
     return try {
         $self->perform_request(
-            {   method => 'GET',
-                path   => '/_cluster/nodes',
-                qs     => {
-                    timeout   => 1000 * $self->sniff_timeout,
-                    $protocol => 1
-                },
+            {   method  => 'GET',
+                path    => '/_nodes/' . $protocol,
+                qs      => { timeout => 1000 * $self->sniff_timeout },
                 timeout => $self->sniff_request_timeout,
             }
         )->{nodes};
