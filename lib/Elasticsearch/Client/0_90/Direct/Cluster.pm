@@ -42,6 +42,18 @@ Query string parameters:
 See the L<cluster health docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-health.html>
 for more information.
 
+=head2 C<pending_tasks()>
+
+    $response = $e->cluster->pending_tasks();
+
+Returns a list of cluster-level tasks still pending on the master node.
+
+Query string parameters:
+    C<local>,
+    C<master_timeout>
+
+See the L<pending tasks docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-pending.html>
+for more information.
 
 =head2 C<node_info()>
 
