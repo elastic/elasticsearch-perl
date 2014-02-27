@@ -182,6 +182,7 @@ which changes should be made. For instance:
 
 Query string parameters:
     C<dry_run>,
+    C<explain>,
     C<filter_metadata>,
     C<master_timeout>,
     C<timeout>
