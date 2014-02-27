@@ -70,8 +70,8 @@ sub refill_buffer {
         || return 0 + @$buffer;
 
     my $results = $self->es->scroll(
-        scroll => $self->scroll,
-        body   => $scroll_id,
+        scroll    => $self->scroll,
+        scroll_id => $scroll_id,
     );
 
     my $hits = $results->{hits}{hits};
