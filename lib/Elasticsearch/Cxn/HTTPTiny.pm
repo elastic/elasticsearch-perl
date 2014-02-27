@@ -5,7 +5,7 @@ with 'Elasticsearch::Role::Cxn::HTTP',
     'Elasticsearch::Role::Cxn',
     'Elasticsearch::Role::Is_Sync';
 
-use HTTP::Tiny 0.036 ();
+use HTTP::Tiny 0.043 ();
 use namespace::clean;
 
 my $Cxn_Error = qr/ Connection.(?:timed.out|re(?:set|fused))
@@ -57,7 +57,7 @@ sub error_from_text {
 sub _build_handle {
 #===================================
     my $self = shift;
-    my %args = ( default_headers => $self->default_headers );
+    my %args = ( keep_alive => 1,default_headers => $self->default_headers );
     if ( $self->is_https ) {
         require IO::Socket::SSL;
         $args{SSL_options}{SSL_verify_mode}
@@ -73,11 +73,9 @@ sub _build_handle {
 
 =head1 DESCRIPTION
 
-Provides an HTTP Cxn class based on L<HTTP::Tiny>.
-The HTTP::Tiny backend is fast, uses pure Perl, but doesn't provide
-persistent connections. If you are going to use it, make sure you
-have a high open filehandle limit (C<ulimit -l>) so that your system
-doesn't run out of sockets.
+Provides the default HTTP Cxn class and is based on L<HTTP::Tiny>.
+The HTTP::Tiny backend is fast, uses pure Perl, support https and provides
+persistent connections.
 
 This class does L<Elasticsearch::Role::Cxn::HTTP>, whose documentation
 provides more information, L<Elasticsearch::Role::Cxn> and

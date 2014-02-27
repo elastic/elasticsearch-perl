@@ -30,7 +30,7 @@ sub new {
 #===================================
     my ( $class, $params ) = parse_params(@_);
 
-    $params->{cxn} ||= 'LWP';
+    $params->{cxn} ||= 'HTTPTiny';
 
     for my $name (@Load_Order) {
         my ( $base, $default ) = @{ $Default_Plugins{$name} };
@@ -437,9 +437,9 @@ See:
 
 =over
 
-=item * L<Elasticsearch::Cxn::LWP> (default)
+=item * L<Elasticsearch::Cxn::HTTPTiny> (default)
 
-=item * L<Elasticsearch::Cxn::HTTPTiny>
+=item * L<Elasticsearch::Cxn::LWP>
 
 =item * L<Elasticsearch::Cxn::NetCurl>
 

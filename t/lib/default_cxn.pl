@@ -1,1 +1,1 @@
-return 'LWP';
+return 'HTTPTiny';

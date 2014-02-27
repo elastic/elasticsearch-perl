@@ -19,7 +19,7 @@ export ES=localhost:9200
 
 run "Sync tests"        prove -l t/*/*.t
 
-run 'YAML: LWP'         ./test/run_yaml_tests.pl
+run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl
 
 run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --cxn NetCurl
 

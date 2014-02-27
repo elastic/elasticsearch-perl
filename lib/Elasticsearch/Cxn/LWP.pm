@@ -81,7 +81,7 @@ sub _build_handle {
 
 =head1 DESCRIPTION
 
-Provides the default HTTP Cxn class and is based on L<LWP>.
+Provides an HTTP Cxn class and based on L<LWP>.
 The LWP backend uses pure Perl and persistent connections.
 
 This class does L<Elasticsearch::Role::Cxn::HTTP>, whose documentation
