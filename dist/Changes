@@ -1,5 +1,14 @@
 Revision history for Elasticsearch
 
+1.04    2014-02-27
+
+        Changed the default Cxn to HTTPTiny v0.043. Now provides persistent
+        connections and is a lot faster than LWP.
+
+        Changed ES::Scroll to pass the scroll_id in the URL instead of the
+        body. Better support for older versions and servers behind caching
+        proxies.
+
 1.03    2014-02-12
         Fixed node sniffing to work across 0.90 and 1.0
 
