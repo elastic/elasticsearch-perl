@@ -169,6 +169,7 @@ sub run_tests {
                 pass("$test_name: set $expect");
                 next;
             }
+            $got = populate_vars( $got, {} );
             $expect = populate_vars( $expect, \%stash );
             $field ||= 'response';
             run_test( "$test_name: $field $type", $type, $expect, $got );
@@ -206,7 +207,7 @@ sub populate_vars {
     return undef unless defined $val;
     return 1 if $val eq 'true';
     return 0 if $val eq 'false';
-    return $val unless $val =~ /^\$(\w+)/;
+    return "$val" unless $val =~ /^\$(\w+)/;
     return $stash->{$1};
 }
 
