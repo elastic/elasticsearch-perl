@@ -6,6 +6,7 @@ requires "HTTP::Headers" => "0";
 requires "HTTP::Parser::XS" => "0";
 requires "HTTP::Request" => "0";
 requires "HTTP::Tiny" => "0.043";
+requires "Hijk" => "0.12";
 requires "IO::Select" => "0";
 requires "IO::Socket" => "0";
 requires "IO::Socket::SSL" => "0";

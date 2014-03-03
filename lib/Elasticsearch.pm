@@ -437,6 +437,8 @@ See:
 
 =item * L<Elasticsearch::Cxn::HTTPTiny> (default)
 
+=item * L<Elasticsearch::Cxn::Hijk>
+
 =item * L<Elasticsearch::Cxn::LWP>
 
 =item * L<Elasticsearch::Cxn::NetCurl>

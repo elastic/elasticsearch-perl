@@ -14,6 +14,7 @@ use Net::Curl::Easy qw(
     CURLOPT_HEADER
     CURLOPT_VERBOSE
     CURLOPT_URL
+    CURLOPT_CONNECTTIMEOUT_MS
     CURLOPT_CUSTOMREQUEST
     CURLOPT_TIMEOUT_MS
     CURLOPT_POSTFIELDS
@@ -26,6 +27,8 @@ use Net::Curl::Easy qw(
     CURLINFO_RESPONSE_CODE
     CURLOPT_TCP_NODELAY
 );
+
+has 'connect_timeout' => ( is => 'ro', default => 2 );
 
 use namespace::clean;
 
@@ -45,6 +48,10 @@ sub perform_request {
     $handle->setopt( CURLOPT_TCP_NODELAY,   1 );
     $handle->setopt( CURLOPT_URL,           $uri );
     $handle->setopt( CURLOPT_CUSTOMREQUEST, $method );
+
+    $handle->setopt( CURLOPT_CONNECTTIMEOUT_MS,
+        $self->connect_timeout * 1000 );
+
     $handle->setopt( CURLOPT_TIMEOUT_MS,
         1000 * ( $params->{timeout} || $self->request_timeout ) );
 
@@ -126,6 +133,12 @@ This class does L<Elasticsearch::Role::Cxn::HTTP>, whose documentation
 provides more information.
 
 =head1 CONFIGURATION
+
+=head2 C<connect_timeout>
+
+Unlike most HTTP backends, L<Net::Curl> accepts a separate C<connect_timeout>
+parameter, which defaults to C<2> seconds but can be reduced in an
+environment with low network latency.
 
 =head2 Inherited configuration
 
@@ -240,6 +253,8 @@ From L<Elasticsearch::Role::Cxn>
 
 =item * L<Elasticsearch::Role::Cxn::HTTP>
 
+=item * L<Elasticsearch::Cxn::Hijk>
+
 =item * L<Elasticsearch::Cxn::LWP>
 
 =item * L<Elasticsearch::Cxn::HTTPTiny>
@@ -252,7 +267,7 @@ This is a stable API but this implemenation is new. Watch this space
 for new releases.
 
 If you have any suggestions for improvements, or find any bugs, please report
-them to L<http://github.com/elasticsearch/elasticsearch-perl-netcurl/issues>.
+them to L<http://github.com/elasticsearch/elasticsearch-perl/issues>.
 I will be notified, and then you'll automatically be notified of progress on
 your bug as I make changes.
 
@@ -268,7 +283,7 @@ You can also look for information at:
 
 =item * GitHub
 
-L<http://github.com/elasticsearch/elasticsearch-perl-netcurl>
+L<http://github.com/elasticsearch/elasticsearch-perl>
 
 =item * CPAN Ratings
 

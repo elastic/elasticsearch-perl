@@ -1,18 +1,29 @@
-package Elasticsearch::Cxn::HTTPTiny;
+package Elasticsearch::Cxn::Hijk;
 
 use Moo;
 with 'Elasticsearch::Role::Cxn::HTTP',
     'Elasticsearch::Role::Cxn',
     'Elasticsearch::Role::Is_Sync';
 
-use HTTP::Tiny 0.043 ();
+use Hijk 0.12;
+use Try::Tiny;
 use namespace::clean;
+
+has 'connect_timeout' => ( is => 'ro', default => 2 );
+has '_socket_cache' => ( is => 'ro', default => sub { {} } );
 
 my $Cxn_Error = qr/ Connection.(?:timed.out|re(?:set|fused))
                        | connect:.timeout
                        | Host.is.down
                        | No.route.to.host
                        | temporarily.unavailable
+                       | Socket.is.not.connected
+                       | Broken.pipe
+                       | Failed.to
+                       | select\(2\)
+                       | connect\(2\)
+                       | send.error
+                       | zombie.error
                        /x;
 
 #===================================
@@ -21,24 +32,44 @@ sub perform_request {
     my ( $self, $params ) = @_;
     my $uri    = $self->build_uri($params);
     my $method = $params->{method};
+    my $cache  = $self->_socket_cache;
 
-    my %args;
+    my %args = (
+        host            => $uri->host,
+        port            => $uri->port,
+        socket_cache    => $self->_socket_cache,
+        connect_timeout => $self->request_timeout,
+        read_timeout    => $params->{timeout} || $self->request_timeout,
+        method          => $method,
+        path            => $uri->path,
+        query_string    => $uri->query,
+    );
     if ( defined $params->{data} ) {
-        $args{content} = $params->{data};
-        $args{headers}{'Content-Type'} = $params->{mime_type};
+        $args{body} = $params->{data};
+        $args{head} = [ 'Content-Type', $params->{mime_type} ];
     }
 
-    my $handle = $self->handle;
-    $handle->timeout( $params->{timeout} || $self->request_timeout );
+    my $response;
+    try {
+        local $SIG{PIPE} = sub { die $! };
+        $response = Hijk::request( \%args );
+    }
+    catch {
+        $response = {
+            status => 500,
+            error  => $_ || 'Unknown error'
+        };
+    };
 
-    my $response = $handle->request( $method, "$uri", \%args );
+    my $head = $response->{head} || {};
+    my %head = map { lc($_) => $head->{$_} } keys %$head;
 
     return $self->process_response(
-        $params,                 # request
-        $response->{status},     # code
-        $response->{reason},     # msg
-        $response->{content},    # body
-        $response->{headers}     # headers
+        $params,                # request
+        $response->{status},    # code
+        $response->{error},     # msg
+        $response->{body},      # body
+        \%head                  # headers
     );
 }
 
@@ -46,42 +77,43 @@ sub perform_request {
 sub error_from_text {
 #===================================
     local $_ = $_[2];
-    return
-          /[Tt]imed out/             ? 'Timeout'
-        : /Unexpected end of stream/ ? 'ContentLength'
-        : /$Cxn_Error/               ? 'Cxn'
-        :                              'Request';
-}
 
-#===================================
-sub _build_handle {
-#===================================
-    my $self = shift;
-    my %args = ( default_headers => $self->default_headers );
-    if ( $self->is_https ) {
-        require IO::Socket::SSL;
-        $args{SSL_options}{SSL_verify_mode}
-            = IO::Socket::SSL::SSL_VERIFY_NONE();
+    no warnings 'numeric';
+    my $type
+        = 0 + $_ & Hijk::Error::TIMEOUT        ? 'Timeout'
+        : 0 + $_ & Hijk::Error::CANNOT_RESOLVE ? 'Cxn'
+        : /Connection reset by peer/           ? 'ContentLength'
+        : m/$Cxn_Error/                        ? 'Cxn'
+        :                                        'Request';
+
+    if ( $type eq 'Cxn' || $type eq 'Timeout' ) {
+        %{ $_[0]->_socket_cache } = ();
     }
-
-    return HTTP::Tiny->new( %args, %{ $self->handle_args } );
+    return $type;
 }
 
 1;
 
-# ABSTRACT: A Cxn implementation which uses HTTP::Tiny
+# ABSTRACT: A Cxn implementation which uses Hijk
 
 =head1 DESCRIPTION
 
-Provides the default HTTP Cxn class and is based on L<HTTP::Tiny>.
-The HTTP::Tiny backend is fast, uses pure Perl, support proxies and https
-and provides persistent connections.
+Provides an HTTP Cxn class based on L<Hijk>.
+The Hijk backend is pure Perl and is very fast, faster even that
+L<Elasticsearch::Cxn::NetCurl>, but doesn't provide support for
+https or proxies.
 
 This class does L<Elasticsearch::Role::Cxn::HTTP>, whose documentation
 provides more information, L<Elasticsearch::Role::Cxn> and
 L<Elasticsearch::Role::Is_Sync>.
 
 =head1 CONFIGURATION
+
+=head2 C<connect_timeout>
+
+Unlike most HTTP backends, L<Hijk> accepts a separate C<connect_timeout>
+parameter, which defaults to C<2> seconds but can be reduced in an
+environment with low network latency.
 
 =head2 Inherited configuration
 
@@ -196,7 +228,7 @@ From L<Elasticsearch::Role::Cxn>
 
 =item * L<Elasticsearch::Role::Cxn::HTTP>
 
-=item * L<Elasticsearch::Cxn::Hijk>
+=item * L<Elasticsearch::Cxn::HTTPTiny>
 
 =item * L<Elasticsearch::Cxn::LWP>
 

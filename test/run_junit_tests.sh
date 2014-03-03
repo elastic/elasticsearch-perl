@@ -24,6 +24,9 @@ run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl --junit
 export JUNIT_OUTPUT_FILE=yaml_netcurl.xml
 run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --cxn NetCurl
 
+export JUNIT_OUTPUT_FILE=yaml_netcurl.xml
+run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --cxn Hijk
+
 export ES_BODY='POST'
 
 export JUNIT_OUTPUT_FILE=sync_post.xml

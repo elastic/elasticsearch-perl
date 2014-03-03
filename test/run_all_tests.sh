@@ -23,6 +23,8 @@ run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl
 
 run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --cxn NetCurl
 
+run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --cxn Hijk
+
 #########################
 
 exit $ERROR
