@@ -152,9 +152,7 @@ default, which is not backwards compatible with the 0.90 branch.
 If you need to talk to a version of Elasticsearch before 1.0.0,
 please use L<Elasticsearch::Client::0_90::Direct> as follows:
 
-    $es = Elasticsearch->new(
-        client => '0_90::Direct'
-    );
+    $es = Elasticsearch->new( client => '0_90::Direct' );
 
 =head2 Motivation
 
@@ -411,7 +409,7 @@ See :
 
 =item * L<Elasticsearch::Client::Direct> (default, for 1.0 branch)
 
-= item * L<Elasticsearch::Client::0_90::Direct> (for 0.90 branch)
+=item * L<Elasticsearch::Client::0_90::Direct> (for 0.90 branch)
 
 =item * L<Elasticsearch::Client::Compat> (for migration from the old
 L<ElasticSearch> module)
@@ -474,8 +472,7 @@ appropriate. See:
 
 =head2 C<logger>
 
-The class the use for logging events and tracing HTTP
-requests/responses.  See:
+The class to use for logging events and tracing HTTP requests/responses.  See:
 
 =over
 

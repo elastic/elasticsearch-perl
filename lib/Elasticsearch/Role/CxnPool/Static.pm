@@ -32,3 +32,13 @@ sub schedule_check {
 __END__
 
 # ABSTRACT: A CxnPool role for connecting to a remote cluster with a static list of nodes.
+
+=head1 METHODS
+
+=head2 C<schedule_check()>
+
+    $cxn_pool->schedule_check
+
+Forces a ping on each cxn in L<cxns()|Elasticsearch::Role::CxnPool/cxns()>
+before the next time that cxn is used for a request.
+

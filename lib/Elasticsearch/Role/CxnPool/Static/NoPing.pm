@@ -42,3 +42,22 @@ sub schedule_check { }
 1;
 
 # ABSTRACT: A CxnPool for connecting to a remote cluster without the ability to ping.
+
+=head1 CONFIGURATION
+
+=head2 C<max_retries>
+
+The number of times a request should be retried before throwin an exception.
+Defaults to the number of nodes minus 1.
+
+=head1 METHODS
+
+=head2 C<should_mark_dead()>
+
+    $bool = $cxn_pool->should_mark_dead($error);
+
+Connection and timeout errors cause cxns to be marked as dead.
+
+=head2 C<schedule_check()>
+
+This method is a NOOP.

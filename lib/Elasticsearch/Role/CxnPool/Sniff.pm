@@ -78,5 +78,67 @@ sub should_accept_node { return $_[1] }
 
 1;
 
+__END__
+
 # ABSTRACT: A CxnPool role for connecting to a local cluster with a dynamic node list
+
+=head1 CONFIGURATION
+
+=head2 C<sniff_interval>
+
+How often should we perform a sniff in order to detect whether new nodes
+have been added to the cluster.  Defaults to `300` seconds.
+
+=head2 C<sniff_max_content_length>
+
+Whether we should set the
+L<max_content_length|Elasticsearch::Role::Cxn::HTTP/max_content_length>
+dynamically while sniffing. Defaults to true unless a fixed
+C<max_content_length> was specified.
+
+=head1 METHODS
+
+=head2 C<schedule_check()>
+
+    $cxn_pool->schedule_check
+
+Schedules a sniff before the next request is processed.
+
+=head2 C<parse_sniff()>
+
+    $bool = $cxn_pool->parse_sniff(\%nodes);
+
+Parses the response from a sniff request and extracts the hostname/ip
+of all listed nodes, filtered through L</should_accept_node()>. If any live
+nodes are found, they are passed to L<Elasticsearch::Role::CxnPool/set_cxns()>.
+The L<max_content_length|Elasticsearch::Role::Cxn::HTTP/max_content_length>
+is also detected if L</sniff_max_content_length> is true.
+
+=head2 C<should_accept_node()>
+
+    $host = $cxn_pool->should_accept_node($host,$node_id,\%node_data)
+
+This method serves as a hook which can be overridden by the user.  When
+a sniff is performed, this method is called with the C<host>
+(eg C<192.168.5.100:9200>), the C<node_id> (the ID assigned to the node
+by Elasticsearch) and the C<node_data> which contains the information
+about the node that Elasticsearch has returned, eg:
+
+    {
+        "transport_address" => "inet[192.168.5.100/192.168.5.100:9300]",
+        "http" : {
+           "publish_address"    => "inet[/192.168.5.100:9200]",
+           "max_content_length" => "100mb",
+           "bound_address"      => "inet[/0:0:0:0:0:0:0:0:9200]",
+           "max_content_length_in_bytes" : 104857600
+        },
+        "version"       => "0.90.4",
+        "name"          => "Silver Sable",
+        "hostname"      => "search1.domain.com",
+        "http_address"  => "inet[/192.168.5.100:9200]"
+    }
+
+If the node should be I<accepted> (ie used to serve data), then it should
+return the C<host> value to use.  By default, nodes are always
+accepted.
 

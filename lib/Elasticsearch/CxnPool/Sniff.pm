@@ -111,30 +111,6 @@ multiple nodes, and defaults to C<localhost:9200> if no C<nodes> are
 specified. See L<Elasticsearch::Role::Cxn::HTTP/node> for details of the node
 specification.
 
-=head2 C<sniff_interval>
-
-    $e = Elasticsearch->new(
-        cxn_pool       => 'Sniff',
-        nodes          => [...],
-        sniff_interval => 300,
-    );
-
-How often to perform a sniff to detect new nodes in the cluster.  Defaults to
-C<300> seconds.  B<Note:> In case of node failure, the cluster will be
-resniffed before the next request to update the list of healthy nodes.
-
-=head2 C<sniff_max_content_length>
-
-    $e = Elasticsearch->new(
-        cxn_pool                 => 'Sniff',
-        nodes                    => [...],
-        sniff_max_content_length => 0,
-    );
-
-Whether C<max_content_length> should be dynamically updated based on the
-value returned from each node in the cluster.  This defaults to C<true>
-unless you have manually set L<Elasticsearch::Cxn::HTTP/max_content_length>.
-
 =head2 See also
 
 =over
@@ -150,6 +126,26 @@ L<Elasticsearch::Role::Cxn/sniff_timeout>
 =item *
 
 L<Elasticsearch::Role::Cxn/sniff_request_timeout>
+
+=back
+
+=head2 Inherited configuration
+
+From L<Elasticsearch::Role::CxnPool::Sniff>
+
+=over
+
+=item * L<sniff_interval|Elasticsearch::Role::CxnPool::Sniff/"sniff_interval">
+
+=item * L<sniff_max_content_length|Elasticsearch::Role::CxnPool::Sniff/"sniff_max_content_length">
+
+=back
+
+From L<Elasticsearch::Role::CxnPool>
+
+=over
+
+=item * L<randomize_cxns|Elasticsearch::Role::CxnPool/"randomize_cxns">
 
 =back
 
@@ -175,31 +171,53 @@ nodes in the cluster.
 
 Sniffs the cluster and returns C<true> if the sniff was successful.
 
-=head2 C<should_accept_node()>
+=head2 Inherited methods
 
-    $host = $cxn_pool->should_accept_node($host,$node_id,\%node_data)
+From L<Elasticsearch::Role::CxnPool::Sniff>
 
-This method serves as a hook which can be overridden by the user.  When
-a sniff is performed, this method is called with the C<host>
-(eg C<192.168.5.100:9200>), the C<node_id> (the ID assigned to the node
-by Elasticsearch) and the C<node_data> which contains the information
-about the node that Elasticsearch has returned, eg:
+=over
 
-    {
-        "transport_address" => "inet[192.168.5.100/192.168.5.100:9300]",
-        "http" : {
-           "publish_address"    => "inet[/192.168.5.100:9200]",
-           "max_content_length" => "100mb",
-           "bound_address"      => "inet[/0:0:0:0:0:0:0:0:9200]",
-           "max_content_length_in_bytes" : 104857600
-        },
-        "version"       => "0.90.4",
-        "name"          => "Silver Sable",
-        "hostname"      => "search1.domain.com",
-        "http_address"  => "inet[/192.168.5.100:9200]"
-    }
+=item * L<schedule_check()|Elasticsearch::Role::CxnPool::Sniff/"schedule_check()">
 
-If the node should be I<accepted> (ie used to serve data), then it should
-return the C<host> value which to use.  By default, nodes are always
-accepted.
+=item * L<parse_sniff()|Elasticsearch::Role::CxnPool::Sniff/"parse_sniff()">
+
+=item * L<should_accept_node()|Elasticsearch::Role::CxnPool::Sniff/"should_accept_node()">
+
+=back
+
+From L<Elasticsearch::Role::CxnPool>
+
+=item * L<cxn_factory()|Elasticsearch::Role::CxnPool/"cxn_factory()">
+
+=item * L<logger()|Elasticsearch::Role::CxnPool/"logger()">
+
+=item * L<serializer()|Elasticsearch::Role::CxnPool/"serializer()">
+
+=item * L<current_cxn_num()|Elasticsearch::Role::CxnPool/"current_cxn_num()">
+
+=item * L<cxns()|Elasticsearch::Role::CxnPool/"cxns()">
+
+=item * L<seed_nodes()|Elasticsearch::Role::CxnPool/"seed_nodes()">
+
+=item * L<next_cxn_num()|Elasticsearch::Role::CxnPool/"next_cxn_num()">
+
+=item * L<set_cxns()|Elasticsearch::Role::CxnPool/"set_cxns()">
+
+=item * L<request_ok()|Elasticsearch::Role::CxnPool/"request_ok()">
+
+=item * L<request_failed()|Elasticsearch::Role::CxnPool/"request_failed()">
+
+=item * L<should_retry()|Elasticsearch::Role::CxnPool/"should_retry()">
+
+=item * L<should_mark_dead()|Elasticsearch::Role::CxnPool/"should_mark_dead()">
+
+=item * L<cxns_str()|Elasticsearch::Role::CxnPool/"cxns_str()">
+
+=item * L<cxns_seeds_str()|Elasticsearch::Role::CxnPool/"cxns_seeds_str()">
+
+=item * L<retries()|Elasticsearch::Role::CxnPool/"retries()">
+
+=item * L<reset_retries()|Elasticsearch::Role::CxnPool/"reset_retries()">
+
+=back
 

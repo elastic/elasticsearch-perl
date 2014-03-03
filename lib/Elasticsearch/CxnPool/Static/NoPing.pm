@@ -96,6 +96,24 @@ L<Elasticsearch::Role::Cxn/max_dead_timeout>
 
 =back
 
+=head2 Inherited configuration
+
+From L<Elasticsearch::Role::CxnPool::Static::NoPing>
+
+=over
+
+=item * L<max_retries|Elasticsearch::Role::CxnPool::Static::NoPing/"max_retries">
+
+=back
+
+From L<Elasticsearch::Role::CxnPool>
+
+=over
+
+=item * L<randomize_cxns|Elasticsearch::Role::CxnPool/"randomize_cxns">
+
+=back
+
 =head1 METHODS
 
 =head2 C<next_cxn()>
@@ -106,4 +124,53 @@ Returns the next available node  in round robin fashion - either a live node
 which has previously responded successfully, or a previously failed
 node which should be retried. If all nodes are dead, it will throw
 a C<NoNodes> error.
+
+=head2 Inherited methods
+
+From L<Elasticsearch::Role::CxnPool::Static::NoPing>
+
+=over
+
+=item * L<should_mark_dead()|Elasticsearch::Role::CxnPool::Static::NoPing/"should_mark_dead()">
+
+=item * L<schedule_check()|Elasticsearch::Role::CxnPool::Static::NoPing/"schedule_check()">
+
+=back
+
+From L<Elasticsearch::Role::CxnPool>
+
+=item * L<cxn_factory()|Elasticsearch::Role::CxnPool/"cxn_factory()">
+
+=item * L<logger()|Elasticsearch::Role::CxnPool/"logger()">
+
+=item * L<serializer()|Elasticsearch::Role::CxnPool/"serializer()">
+
+=item * L<current_cxn_num()|Elasticsearch::Role::CxnPool/"current_cxn_num()">
+
+=item * L<cxns()|Elasticsearch::Role::CxnPool/"cxns()">
+
+=item * L<seed_nodes()|Elasticsearch::Role::CxnPool/"seed_nodes()">
+
+=item * L<next_cxn_num()|Elasticsearch::Role::CxnPool/"next_cxn_num()">
+
+=item * L<set_cxns()|Elasticsearch::Role::CxnPool/"set_cxns()">
+
+=item * L<request_ok()|Elasticsearch::Role::CxnPool/"request_ok()">
+
+=item * L<request_failed()|Elasticsearch::Role::CxnPool/"request_failed()">
+
+=item * L<should_retry()|Elasticsearch::Role::CxnPool/"should_retry()">
+
+=item * L<should_mark_dead()|Elasticsearch::Role::CxnPool/"should_mark_dead()">
+
+=item * L<cxns_str()|Elasticsearch::Role::CxnPool/"cxns_str()">
+
+=item * L<cxns_seeds_str()|Elasticsearch::Role::CxnPool/"cxns_seeds_str()">
+
+=item * L<retries()|Elasticsearch::Role::CxnPool/"retries()">
+
+=item * L<reset_retries()|Elasticsearch::Role::CxnPool/"reset_retries()">
+
+=back
+
 
