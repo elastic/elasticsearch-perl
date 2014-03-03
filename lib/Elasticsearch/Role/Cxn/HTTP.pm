@@ -150,8 +150,6 @@ implementations which use the HTTP protocol. Cxn instances are created by a
 L<Elasticsearch::Role::CxnPool> implementation, using the
 L<Elasticsearch::Cxn::Factory> class.
 
-This class does L<Elasticsearch::Role::Cxn>.
-
 =head1 CONFIGURATION
 
 The configuration options are as follows:
