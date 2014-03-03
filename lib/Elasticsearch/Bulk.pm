@@ -67,12 +67,13 @@ sub reindex {
     my ( $self, $params ) = parse_params(@_);
     my $src = $params->{source}
         or throw( 'Param', "Missing required param <source>" );
+    $src = {%$src};
 
     my $transform = $self->_doc_transformer($params);
 
     if ( ref $src eq 'HASH' ) {
-        my $scroll = $self->es->scroll_helper(
-            es          => $self->es,
+        my $es = delete $src->{es} || $self->es;
+        my $scroll = $es->scroll_helper(
             search_type => 'scan',
             size        => 500,
             %$src
@@ -521,14 +522,19 @@ By default, L</reindex()> expects the source and destination indices
 to be in the same cluster. To pull data from one cluster and index it into
 another, you can use two separate C<$es> objects:
 
-    $es_local  = Elasticsearch->new( nodes => 'localhost:9200' );
-    $es_remote = Elasticsearch->new( nodes => 'search1:9200' );
+    $es_target  = Elasticsearch->new( nodes => 'localhost:9200' );
+    $es_source  = Elasticsearch->new( nodes => 'search1:9200' );
 
     Elasticsearch::Bulk->new(
-        es => $es_local,
+        es      => $es_target,
         verbose => 1
     )
-    -> reindex( es => $es_remote );
+    -> reindex(
+          source => {
+              es    => $es_source,
+              index => 'my_index'
+          }
+       );
 
 =head2 Parents and routing
 
