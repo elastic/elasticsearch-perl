@@ -19,15 +19,16 @@ sub BUILDARGS {
     my $total = $results->{hits}{total};
 
     return {
-        es         => $es,
-        scroll     => $scroll,
-        facets     => $results->{facets},
-        suggest    => $results->{suggest},
-        took       => $results->{took},
-        total_took => $results->{took},
-        total      => $total,
-        max_score  => $results->{hits}{max_score},
-        _buffer    => $results->{hits}{hits},
+        es           => $es,
+        scroll       => $scroll,
+        aggregations => $results->{aggregations},
+        facets       => $results->{facets},
+        suggest      => $results->{suggest},
+        took         => $results->{took},
+        total_took   => $results->{took},
+        total        => $total,
+        max_score    => $results->{hits}{max_score},
+        _buffer      => $results->{hits}{hits},
         $total
         ? ( _scroll_id => $results->{_scroll_id} )
         : ( is_finished => 1 )
@@ -339,6 +340,10 @@ The total number of documents that matched your query.
 =head2 C<max_score>
 
 The maximum score of any documents in your query.
+
+=head2 C<aggregations>
+
+Any aggregations that were specified, or C<undef>
 
 =head2 C<facets>
 

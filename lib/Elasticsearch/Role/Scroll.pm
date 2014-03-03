@@ -11,6 +11,7 @@ has 'scroll'        => ( is => 'ro' );
 has 'total'         => ( is => 'rwp' );
 has 'max_score'     => ( is => 'rwp' );
 has 'facets'        => ( is => 'rwp' );
+has 'aggregations'  => ( is => 'rwp' );
 has 'suggest'       => ( is => 'rwp' );
 has 'took'          => ( is => 'rwp' );
 has 'total_took'    => ( is => 'rwp' );

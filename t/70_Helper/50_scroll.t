@@ -13,9 +13,11 @@ BEGIN {
     use_ok 'Elasticsearch::Scroll';
 }
 
+my $es_version = $es->info->{version}{number};
+
 $es->indices->delete( index => '_all', ignore => 404 );
 
-if ( $es->info->{version}{number} ge '0.90.5' ) {
+if ( $es_version ge '0.90.5' ) {
     test_scroll(
         "No indices",
         {},
@@ -54,7 +56,7 @@ test_scroll(
 
 SKIP: {
     skip "Bug in Elasticsearch suggest JSON parsing pre 0.90.3", 2
-        if $es->info->{version}{number} lt '0.90.3';
+        if $es_version lt '0.90.3';
 
     test_scroll(
         "Query",
@@ -64,14 +66,16 @@ SKIP: {
                     mysuggest =>
                         { text => 'green', term => { field => 'color' } }
                 },
-                facets => { color => { terms => { field => 'color' } } }
+                facets => { color => { terms => { field => 'color' } } },
+                aggs   => { color => { terms => { field => 'color' } } },
             }
         },
-        total     => 50,
-        max_score => num( 1.6, 0.2 ),
-        facets    => bool(1),
-        suggest   => bool(1),
-        steps     => [
+        total        => 50,
+        max_score    => num( 1.6, 0.2 ),
+        aggregations => $es_version ge '1' ? bool(1) : undef,
+        facets       => bool(1),
+        suggest      => bool(1),
+        steps        => [
             next        => [1],
             next_50     => [49],
             is_finished => 1,
@@ -86,14 +90,16 @@ SKIP: {
                     mysuggest =>
                         { text => 'green', term => { field => 'color' } }
                 },
-                facets => { color => { terms => { field => 'color' } } }
+                facets => { color => { terms => { field => 'color' } } },
+                aggs   => { color => { terms => { field => 'color' } } },
             }
         },
-        total     => 100,
-        max_score => 0,
-        facets    => bool(1),
-        suggest   => bool(1),
-        steps     => [
+        total        => 100,
+        max_score    => 0,
+        aggregations => $es_version ge '1' ? bool(1) : undef,
+        facets       => bool(1),
+        suggest      => bool(1),
+        steps        => [
             buffer_size => 0,
             next        => [1],
             buffer_size => 49,
@@ -131,6 +137,7 @@ $es->indices->delete( index => 'test' );
 sub test_scroll {
 #===================================
     my ( $title, $params, %tests ) = @_;
+    delete $params->{body}{aggs} unless $es_version ge '1';
     subtest $title => sub {
         isa_ok my $s = Elasticsearch::Scroll->new( es => $es, %$params ),
             'Elasticsearch::Scroll', $title;
