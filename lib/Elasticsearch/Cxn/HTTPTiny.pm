@@ -57,7 +57,7 @@ sub error_from_text {
 sub _build_handle {
 #===================================
     my $self = shift;
-    my %args = ( keep_alive => 1,default_headers => $self->default_headers );
+    my %args = ( default_headers => $self->default_headers );
     if ( $self->is_https ) {
         require IO::Socket::SSL;
         $args{SSL_options}{SSL_verify_mode}
