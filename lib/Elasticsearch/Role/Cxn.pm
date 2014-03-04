@@ -150,7 +150,7 @@ sub process_response {
     if ( $body = $self->serializer->decode($body) ) {
         $error_args{body} = $body;
         if ( ref $body ) {
-            $msg = $body->{error} || $msg;
+            $msg = $body->{error} || $msg || $error_type;
         }
         else {
             $msg = $body;
