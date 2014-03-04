@@ -150,7 +150,7 @@ sub process_response {
     if ( $body = $self->serializer->decode($body) ) {
         $error_args{body} = $body;
         if ( ref $body ) {
-            $msg = $body->{error} || $msg || $error_type;
+            $msg = $body->{error} || $msg;
         }
         else {
             $msg = $body;
@@ -160,6 +160,7 @@ sub process_response {
             if $error_type eq 'Conflict'
             and $msg =~ /: version conflict, current \[(\d+)\]/;
     }
+    $msg ||= $error_type;
 
     chomp $msg;
     throw( $error_type, "[" . $self->stringify . "]-[$code] $msg",
