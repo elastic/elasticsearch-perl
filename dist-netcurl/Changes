@@ -1,5 +1,11 @@
 Revision history for Elasticsearch::Cxn::NetCurl
 
+1.05    2014-03-05
+        Deprecated the Elasticsearch namespace in favour of Search::Elasticsearch.
+        See https://github.com/elasticsearch/elasticsearch-perl/issues/20
+
+        Exposed connect_timeout setting for Cxn::NetCurl
+
 1.01    2014-02-09
         Fixed plugin loader to work with latest version of Module::Runtime
         which complains about undefined versions

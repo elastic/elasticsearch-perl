@@ -5,8 +5,8 @@ with 'Elasticsearch::Role::Cxn::HTTP',
     'Elasticsearch::Role::Cxn',
     'Elasticsearch::Role::Is_Sync';
 
-use Elasticsearch 1.01;
-our $VERSION = "1.01";
+use Elasticsearch 1.05;
+our $VERSION = "1.05";
 
 use HTTP::Parser::XS qw(HEADERS_AS_HASHREF parse_http_response);
 use Try::Tiny;
@@ -121,9 +121,24 @@ sub _build_handle { Net::Curl::Easy->new }
 
 1;
 
-# ABSTRACT: A Cxn implementation which uses libcurl via Net::Curl
+# ABSTRACT: DEPRECATED: A Cxn implementation which uses libcurl via Net::Curl
 
 =head1 DESCRIPTION
+
+=head1 DESCRIPTION
+
+B<THIS MODULE IS DEPRECATED.>
+
+******************************************************************************
+
+Because of the name clash between C<ElasticSearch.pm> and C<Elasticsearch.pm>
+this module has been renamed : L<Search::Elasticsearch::Cxn:NetCurl>.
+
+See L<https://github.com/elasticsearch/elasticsearch-perl/issues/20> for details.
+
+This distribution will be removed from CPAN in 2015. Please update your code.
+
+******************************************************************************
 
 Provides an HTTP Cxn class based on L<Net::Curl>.
 The C<NetCurl> Cxn class is very fast and uses persistent connections but

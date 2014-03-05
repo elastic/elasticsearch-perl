@@ -1,5 +1,14 @@
 Revision history for Elasticsearch
 
+1.05    2014-03-05
+
+        Deprecated the Elasticsearch namespace in favour of Search::Elasticsearch.
+        See https://github.com/elasticsearch/elasticsearch-perl/issues/20
+
+        Improved the Bulk->reindex() API. Now accepts a remote $es object.
+        Improved documentation.
+        Added Hijk backend.
+
 1.04    2014-02-27
 
         Changed the default Cxn to HTTPTiny v0.043. Now provides persistent

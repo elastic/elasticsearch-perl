@@ -5,7 +5,7 @@ use Moo 1.003;
 use Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 my %Default_Plugins = (
     client      => [ 'Elasticsearch::Client',       'Direct' ],
@@ -67,76 +67,22 @@ DEPRECATION
 
 __END__
 
-# ABSTRACT: The official client for Elasticsearch
-
-=head1 SYNOPSIS
-
-    use Elasticsearch;
-
-    # Connect to localhost:9200:
-
-    my $e = Elasticsearch->new();
-
-    # Round-robin between two nodes:
-
-    my $e = Elasticsearch->new(
-        nodes => [
-            'search1:9200',
-            'search2:9200'
-        ]
-    );
-
-    # Connect to cluster at search1:9200, sniff all nodes and round-robin between them:
-
-    my $e = Elasticsearch->new(
-        nodes    => 'search1:9200',
-        cxn_pool => 'Sniff'
-    );
-
-    # Index a document:
-
-    $e->index(
-        index   => 'my_app',
-        type    => 'blog_post',
-        id      => 1,
-        body    => {
-            title   => 'Elasticsearch clients',
-            content => 'Interesting content...',
-            date    => '2013-09-24'
-        }
-    );
-
-    # Get the document:
-
-    my $doc = $e->get(
-        index   => 'my_app',
-        type    => 'blog_post',
-        id      => 1
-    );
-
-    # Search:
-
-    my $results = $e->search(
-        index => 'my_app',
-        body  => {
-            query => {
-                match => { title => 'elasticsearch' }
-            }
-        }
-    );
-
-    # Cluster requests:
-
-    $info        = $e->cluster->info;
-    $health      = $e->cluster->health;
-    $node_stats  = $e->cluster->node_stats
-
-    # Index requests:
-
-    $e->indices->create(index=>'my_index');
-    $e->indices->delete(index=>'my_index');
+# ABSTRACT: DEPRECATED: The official client for Elasticsearch
 
 =head1 DESCRIPTION
+
+B<THIS MODULE IS DEPRECATED.>
+
+******************************************************************************
+
+Because of the name clash between C<ElasticSearch.pm> and C<Elasticsearch.pm>
+the official Perl client is now called: L<Search::Elasticsearch>.
+
+See L<https://github.com/elasticsearch/elasticsearch-perl/issues/20> for details.
+
+This distribution will be removed from CPAN in 2015. Please update your code.
+
+******************************************************************************
 
 L<Elasticsearch> is the official Perl client for Elasticsearch, supported
 by L<elasticsearch.com|http://www.elasticsearch.com>.  Elasticsearch
