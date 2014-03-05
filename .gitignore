@@ -3,7 +3,8 @@ foo
 .build
 .includepath
 .project
-Elasticsearch-*
+Search-Elasticsearch-*
+servers/*
 cover_db
 doc
 log

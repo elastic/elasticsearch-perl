@@ -1,5 +1,9 @@
 Revision history for Search::Elasticsearch
 
+1.10    2014-03-05
+        Moved all modules to Search::Elasticsearch namespace.
+        See https://github.com/elasticsearch/elasticsearch-perl/issues/20
+
 1.05    2014-03-05
 
         Deprecated the Elasticsearch namespace in favour of Search::Elasticsearch.
