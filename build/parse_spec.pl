@@ -71,7 +71,7 @@ for ( 'bulk', 'mget', 'mpercolate', 'mtermvectors' ) {
     $API{$_}{index_when_type} = 1;
 }
 
-update_module( shift(@ARGV) || 'lib/Elasticsearch/Role/API.pm' );
+update_module( shift(@ARGV) || 'lib/Search/Elasticsearch/Role/API.pm' );
 
 #===================================
 sub process {

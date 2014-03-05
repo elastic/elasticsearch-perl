@@ -1,8 +1,9 @@
-package Elasticsearch::CxnPool::Static;
+package Search::Elasticsearch::CxnPool::Static;
 
 use Moo;
-with 'Elasticsearch::Role::CxnPool::Static', 'Elasticsearch::Role::Is_Sync';
-use Elasticsearch::Util qw(throw);
+with 'Search::Elasticsearch::Role::CxnPool::Static',
+    'Search::Elasticsearch::Role::Is_Sync';
+use Search::Elasticsearch::Util qw(throw);
 use namespace::clean;
 
 #===================================
@@ -46,7 +47,7 @@ __END__
 =head1 SYNOPSIS
 
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         cxn_pool => 'Static'     # default
         nodes    => [
             'search1:9200',
@@ -56,7 +57,7 @@ __END__
 
 =head1 DESCRIPTION
 
-The L<Static|Elasticsearch::CxnPool::Static> connection pool, which is the
+The L<Static|Search::Elasticsearch::CxnPool::Static> connection pool, which is the
 default, should be used when you don't have direct access to the Elasticsearch
 cluster, eg when you are accessing the cluster through a proxy.  It
 round-robins through the nodes that you specified, and pings each node
@@ -66,8 +67,8 @@ If any node fails, then all nodes are pinged before the next request to
 ensure that they are still alive and responding.  Failed nodes will be
 pinged regularly to check if they have recovered.
 
-This class does L<Elasticsearch::Role::CxnPool::Static> and
-L<Elasticsearch::Role::Is_Sync>.
+This class does L<Search::Elasticsearch::Role::CxnPool::Static> and
+L<Search::Elasticsearch::Role::Is_Sync>.
 
 =head1 CONFIGURATION
 
@@ -75,7 +76,7 @@ L<Elasticsearch::Role::Is_Sync>.
 
 The list of nodes to use to serve requests.  Can accept a single node,
 multiple nodes, and defaults to C<localhost:9200> if no C<nodes> are
-specified. See L<Elasticsearch::Role::Cxn::HTTP/node> for details of the node
+specified. See L<Search::Elasticsearch::Role::Cxn::HTTP/node> for details of the node
 specification.
 
 =head2 See also
@@ -84,29 +85,29 @@ specification.
 
 =item *
 
-L<Elasticsearch::Role::Cxn/request_timeout>
+L<Search::Elasticsearch::Role::Cxn/request_timeout>
 
 =item *
 
-L<Elasticsearch::Role::Cxn/ping_timeout>
+L<Search::Elasticsearch::Role::Cxn/ping_timeout>
 
 =item *
 
-L<Elasticsearch::Role::Cxn/dead_timeout>
+L<Search::Elasticsearch::Role::Cxn/dead_timeout>
 
 =item *
 
-L<Elasticsearch::Role::Cxn/max_dead_timeout>
+L<Search::Elasticsearch::Role::Cxn/max_dead_timeout>
 
 =back
 
 =head2 Inherited configuration
 
-From L<Elasticsearch::Role::CxnPool>
+From L<Search::Elasticsearch::Role::CxnPool>
 
 =over
 
-=item * L<randomize_cxns|Elasticsearch::Role::CxnPool/"randomize_cxns">
+=item * L<randomize_cxns|Search::Elasticsearch::Role::CxnPool/"randomize_cxns">
 
 =back
 
@@ -122,46 +123,46 @@ throws a C<NoNodes> error if no nodes respond to ping requests.
 
 =head2 Inherited methods
 
-From L<Elasticsearch::Role::CxnPool::Static>
+From L<Search::Elasticsearch::Role::CxnPool::Static>
 
 =over
 
-=item * L<schedule_check()|Elasticsearch::Role::CxnPool::Static/"schedule_check()">
+=item * L<schedule_check()|Search::Elasticsearch::Role::CxnPool::Static/"schedule_check()">
 
 =back
 
-From L<Elasticsearch::Role::CxnPool>
+From L<Search::Elasticsearch::Role::CxnPool>
 
-=item * L<cxn_factory()|Elasticsearch::Role::CxnPool/"cxn_factory()">
+=item * L<cxn_factory()|Search::Elasticsearch::Role::CxnPool/"cxn_factory()">
 
-=item * L<logger()|Elasticsearch::Role::CxnPool/"logger()">
+=item * L<logger()|Search::Elasticsearch::Role::CxnPool/"logger()">
 
-=item * L<serializer()|Elasticsearch::Role::CxnPool/"serializer()">
+=item * L<serializer()|Search::Elasticsearch::Role::CxnPool/"serializer()">
 
-=item * L<current_cxn_num()|Elasticsearch::Role::CxnPool/"current_cxn_num()">
+=item * L<current_cxn_num()|Search::Elasticsearch::Role::CxnPool/"current_cxn_num()">
 
-=item * L<cxns()|Elasticsearch::Role::CxnPool/"cxns()">
+=item * L<cxns()|Search::Elasticsearch::Role::CxnPool/"cxns()">
 
-=item * L<seed_nodes()|Elasticsearch::Role::CxnPool/"seed_nodes()">
+=item * L<seed_nodes()|Search::Elasticsearch::Role::CxnPool/"seed_nodes()">
 
-=item * L<next_cxn_num()|Elasticsearch::Role::CxnPool/"next_cxn_num()">
+=item * L<next_cxn_num()|Search::Elasticsearch::Role::CxnPool/"next_cxn_num()">
 
-=item * L<set_cxns()|Elasticsearch::Role::CxnPool/"set_cxns()">
+=item * L<set_cxns()|Search::Elasticsearch::Role::CxnPool/"set_cxns()">
 
-=item * L<request_ok()|Elasticsearch::Role::CxnPool/"request_ok()">
+=item * L<request_ok()|Search::Elasticsearch::Role::CxnPool/"request_ok()">
 
-=item * L<request_failed()|Elasticsearch::Role::CxnPool/"request_failed()">
+=item * L<request_failed()|Search::Elasticsearch::Role::CxnPool/"request_failed()">
 
-=item * L<should_retry()|Elasticsearch::Role::CxnPool/"should_retry()">
+=item * L<should_retry()|Search::Elasticsearch::Role::CxnPool/"should_retry()">
 
-=item * L<should_mark_dead()|Elasticsearch::Role::CxnPool/"should_mark_dead()">
+=item * L<should_mark_dead()|Search::Elasticsearch::Role::CxnPool/"should_mark_dead()">
 
-=item * L<cxns_str()|Elasticsearch::Role::CxnPool/"cxns_str()">
+=item * L<cxns_str()|Search::Elasticsearch::Role::CxnPool/"cxns_str()">
 
-=item * L<cxns_seeds_str()|Elasticsearch::Role::CxnPool/"cxns_seeds_str()">
+=item * L<cxns_seeds_str()|Search::Elasticsearch::Role::CxnPool/"cxns_seeds_str()">
 
-=item * L<retries()|Elasticsearch::Role::CxnPool/"retries()">
+=item * L<retries()|Search::Elasticsearch::Role::CxnPool/"retries()">
 
-=item * L<reset_retries()|Elasticsearch::Role::CxnPool/"reset_retries()">
+=item * L<reset_retries()|Search::Elasticsearch::Role::CxnPool/"reset_retries()">
 
 =back

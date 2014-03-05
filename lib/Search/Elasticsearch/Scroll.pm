@@ -1,12 +1,13 @@
-package Elasticsearch::Scroll;
+package Search::Elasticsearch::Scroll;
 
 use Moo;
-use Elasticsearch::Util qw(parse_params);
+use Search::Elasticsearch::Util qw(parse_params);
 use namespace::clean;
 
 has '_buffer' => ( is => 'ro' );
 
-with 'Elasticsearch::Role::Is_Sync', 'Elasticsearch::Role::Scroll';
+with 'Search::Elasticsearch::Role::Is_Sync',
+    'Search::Elasticsearch::Role::Scroll';
 
 #===================================
 sub BUILDARGS {
@@ -106,12 +107,12 @@ __END__
 
 =head1 SYNOPSIS
 
-    use Elasticsearch;
-    use Elasticsearch::Scroll;
+    use Search::Elasticsearch;
+    use Search::Elasticsearch::Scroll;
 
-    my $es     = Elasticsearch->new;
+    my $es     = Search::Elasticsearch->new;
 
-    my $scroll = Elasticsearch::Scroll->new(
+    my $scroll = Search::Elasticsearch::Scroll->new(
         es          => $es,
         index       => 'my_index',
         search_type => 'scan',
@@ -131,22 +132,22 @@ until there are no more matching results, much like a cursor in an SQL
 database.
 
 Unlike paginating through results (with the C<from> parameter in
-L<search()|Elasticsearch::Client::Direct/search()>),
+L<search()|Search::Elasticsearch::Client::Direct/search()>),
 scrolled searches take a snapshot of the current state of the index. Even
 if you keep adding new documents to the index or updating existing documents,
 a scrolled search will only see the index as it was when the search began.
 
 This module is a helper utility that wraps the functionality of the
-L<search()|Elasticsearch::Client::Direct/search()> and
-L<scroll()|Elasticsearch::Client::Direct/scroll()> methods to make
+L<search()|Search::Elasticsearch::Client::Direct/search()> and
+L<scroll()|Search::Elasticsearch::Client::Direct/scroll()> methods to make
 them easier to use.
 
 B<IMPORTANT>: Deep scrolling can be expensive.  See L</DEEP SCROLLING>
 for more.
 
 
-This class does L<Elasticsearch::Role::Scroll> and
-L<Elasticsearch::Role::Is_Sync>.
+This class does L<Search::Elasticsearch::Role::Scroll> and
+L<Search::Elasticsearch::Role::Is_Sync>.
 
 
 =head1 USE CASES
@@ -163,7 +164,7 @@ list, and return results grouped by C<thread_id>:
 
     my (%groups,@results);
 
-    my $scroll = Elasticsearch::Scroll->new(
+    my $scroll = Search::Elasticsearch::Scroll->new(
         es    => $es,
         index => 'my_emails',
         type  => 'email',
@@ -194,7 +195,7 @@ order, you just want to retrieve all documents which match a query, and do
 something with them. For instance, to retrieve all the docs for a particular
 C<client_id>:
 
-    my $scroll = Elasticsearch::Scroll->new(
+    my $scroll = Search::Elasticsearch::Scroll->new(
         es          => $es,
         index       => 'my_index',
         search_type => 'scan',          # important!
@@ -215,7 +216,7 @@ C<client_id>:
 Very often the I<something> that you will want to do with these results
 involves bulk-indexing them into a new index. The easiest way to
 marry a scrolled search with bulk indexing is to use the
-L<Elasticsearch::Bulk/reindex()> method.
+L<Search::Elasticsearch::Bulk/reindex()> method.
 
 =head1 DEEP SCROLLING
 
@@ -240,7 +241,7 @@ The problem with deep scrolling is the sorting phase.  If we disable sorting,
 then we can happily scroll through millions of documents efficiently.  The
 way to do this is to set C<search_type> to C<scan>:
 
-    $scroll = Elasticsearch::Scroll->new(
+    $scroll = Search::Elasticsearch::Scroll->new(
         es          => $es,
         search_type => 'scan',
         size        => 500,
@@ -256,20 +257,20 @@ are memory constrained, you will need to take this into account.
 
 =head2 C<new()>
 
-    use Elasticsearch;
-    use Elasticsearch::Scroll;
+    use Search::Elasticsearch;
+    use Search::Elasticsearch::Scroll;
 
-    my $es = Elasticsearch->new(...);
-    my $scroll = Elasticsearch::Scroll->new(
+    my $es = Search::Elasticsearch->new(...);
+    my $scroll = Search::Elasticsearch::Scroll->new(
         es      => $es,                         # required
         scroll  => '1m',                        # optional
         %search_params
     );
 
 The C<new()> method returns a new C<$scroll> object.  You must pass your
-Elasticsearch client as the C<es> argument, and you can specify
+Search::Elasticsearch client as the C<es> argument, and you can specify
 a C<scroll> duration (which defaults to C<"1m">).  Any other parameters
-are passed directly to L<Elasticsearch::Client::Direct/search()>.
+are passed directly to L<Search::Elasticsearch::Client::Direct/search()>.
 
 The C<scroll> duration tells Elasticearch how long it should keep the scroll
 alive.  B<Note>: this duration doesn't need to be long enough to process
@@ -365,10 +366,10 @@ How long the original search plus all subsequent batches took, in milliseconds.
 
 =over
 
-=item * L<Elasticsearch::Bulk/reindex()>
+=item * L<Search::Elasticsearch::Bulk/reindex()>
 
-=item * L<Elasticsearch::Client::Direct/search()>
+=item * L<Search::Elasticsearch::Client::Direct/search()>
 
-=item * L<Elasticsearch::Client::Direct/scroll()>
+=item * L<Search::Elasticsearch::Client::Direct/scroll()>
 
 =back

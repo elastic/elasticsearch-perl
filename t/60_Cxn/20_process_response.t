@@ -1,10 +1,11 @@
 use Test::More;
 use Test::Exception;
 use Test::Deep;
-use Elasticsearch;
+use Search::Elasticsearch;
 
-my $c = Elasticsearch->new->transport->cxn_pool->cxns->[0];
-ok $c->does('Elasticsearch::Role::Cxn'), 'Does Elasticsearch::Role::Cxn';
+my $c = Search::Elasticsearch->new->transport->cxn_pool->cxns->[0];
+ok $c->does('Search::Elasticsearch::Role::Cxn'),
+    'Does Search::Elasticsearch::Role::Cxn';
 
 my ( $code, $response );
 

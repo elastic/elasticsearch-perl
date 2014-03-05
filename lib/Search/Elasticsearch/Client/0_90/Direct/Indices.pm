@@ -1,8 +1,8 @@
-package Elasticsearch::Client::0_90::Direct::Indices;
+package Search::Elasticsearch::Client::0_90::Direct::Indices;
 
 use Moo;
-with 'Elasticsearch::Role::API::0_90';
-with 'Elasticsearch::Role::Client::Direct';
+with 'Search::Elasticsearch::Role::API::0_90';
+with 'Search::Elasticsearch::Role::Client::Direct';
 __PACKAGE__->_install_api('indices');
 
 1;
@@ -17,7 +17,7 @@ This module provides methods to make index-level requests, such as
 creating and deleting indices, managing type mappings, index settings,
 warmers, index templates and aliases.
 
-It does L<Elasticsearch::Role::Client::Direct>.
+It does L<Search::Elasticsearch::Role::Client::Direct>.
 
 =head1 INDEX METHODS
 

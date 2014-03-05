@@ -1,8 +1,8 @@
-package Elasticsearch::Logger::LogAny;
+package Search::Elasticsearch::Logger::LogAny;
 
 use Moo;
-with 'Elasticsearch::Role::Logger';
-use Elasticsearch::Util qw(parse_params to_list);
+with 'Search::Elasticsearch::Role::Logger';
+use Search::Elasticsearch::Util qw(parse_params to_list);
 use namespace::clean;
 
 use Log::Any();
@@ -34,7 +34,7 @@ sub _build_trace_handle {
 
 =head1 DESCRIPTION
 
-L<Elasticsearch::Logger::LogAny> provides event logging and the tracing
+L<Search::Elasticsearch::Logger::LogAny> provides event logging and the tracing
 of request/response conversations with Elasticsearch nodes via the
 L<Log::Any> module.
 
@@ -49,15 +49,15 @@ reporting problems.
 =head1 CONFIGURATION
 
 Logging and tracing can be enabled using L<Log::Any::Adapter>, or by
-passing options to L<Elasticsearch/new()>.
+passing options to L<Search::Elasticsearch/new()>.
 
 =head2 USING LOG::ANY::ADAPTER
 
 Send all logging and tracing to C<STDERR>:
 
     use Log::Any::Adapter qw(Stderr);
-    use Elasticsearch;
-    my $e = Elasticsearch->new;
+    use Search::Elasticsearch;
+    my $e = Search::Elasticsearch->new;
 
 Send logging to a file, and tracing to Stderr:
 
@@ -72,23 +72,23 @@ Send logging to a file, and tracing to Stderr:
         'Stderr'
     );
 
-    use Elasticsearch;
-    my $e = Elasticsearch->new;
+    use Search::Elasticsearch;
+    my $e = Search::Elasticsearch->new;
 
 =head2 USING C<log_to> AND C<trace_to>
 
 Send all logging and tracing to C<STDERR>:
 
-    use Elasticsearch;
-    my $e = Elasticsearch->new(
+    use Search::Elasticsearch;
+    my $e = Search::Elasticsearch->new(
         log_to   => 'Stderr',
         trace_to => 'Stderr'
     );
 
 Send logging to a file, and tracing to Stderr:
 
-    use Elasticsearch;
-    my $e = Elasticsearch->new(
+    use Search::Elasticsearch;
+    my $e = Search::Elasticsearch->new(
         log_to   => ['File', '/path/to/file.log'],
         trace_to => 'Stderr'
     );

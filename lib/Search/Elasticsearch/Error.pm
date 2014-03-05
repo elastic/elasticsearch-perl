@@ -1,29 +1,29 @@
-package Elasticsearch::Error;
+package Search::Elasticsearch::Error;
 
 use Moo;
 
 our $DEBUG = 0;
 
-@Elasticsearch::Error::Internal::ISA       = __PACKAGE__;
-@Elasticsearch::Error::Param::ISA          = __PACKAGE__;
-@Elasticsearch::Error::NoNodes::ISA        = __PACKAGE__;
-@Elasticsearch::Error::ClusterBlocked::ISA = __PACKAGE__;
-@Elasticsearch::Error::Request::ISA        = __PACKAGE__;
-@Elasticsearch::Error::Timeout::ISA        = __PACKAGE__;
-@Elasticsearch::Error::Cxn::ISA            = __PACKAGE__;
-@Elasticsearch::Error::Serializer::ISA     = __PACKAGE__;
+@Search::Elasticsearch::Error::Internal::ISA       = __PACKAGE__;
+@Search::Elasticsearch::Error::Param::ISA          = __PACKAGE__;
+@Search::Elasticsearch::Error::NoNodes::ISA        = __PACKAGE__;
+@Search::Elasticsearch::Error::ClusterBlocked::ISA = __PACKAGE__;
+@Search::Elasticsearch::Error::Request::ISA        = __PACKAGE__;
+@Search::Elasticsearch::Error::Timeout::ISA        = __PACKAGE__;
+@Search::Elasticsearch::Error::Cxn::ISA            = __PACKAGE__;
+@Search::Elasticsearch::Error::Serializer::ISA     = __PACKAGE__;
 
-@Elasticsearch::Error::Conflict::ISA
-    = ( 'Elasticsearch::Error::Request', __PACKAGE__ );
+@Search::Elasticsearch::Error::Conflict::ISA
+    = ( 'Search::Elasticsearch::Error::Request', __PACKAGE__ );
 
-@Elasticsearch::Error::Missing::ISA
-    = ( 'Elasticsearch::Error::Request', __PACKAGE__ );
+@Search::Elasticsearch::Error::Missing::ISA
+    = ( 'Search::Elasticsearch::Error::Request', __PACKAGE__ );
 
-@Elasticsearch::Error::ContentLength::ISA
-    = ( __PACKAGE__, 'Elasticsearch::Error::Request' );
+@Search::Elasticsearch::Error::ContentLength::ISA
+    = ( __PACKAGE__, 'Search::Elasticsearch::Error::Request' );
 
-@Elasticsearch::Error::Unavailable::ISA
-    = ( 'Elasticsearch::Error::Cxn', __PACKAGE__ );
+@Search::Elasticsearch::Error::Unavailable::ISA
+    = ( 'Search::Elasticsearch::Error::Cxn', __PACKAGE__ );
 
 use overload (
     '""'  => '_stringify',
@@ -39,7 +39,7 @@ sub new {
     return $type if ref $type;
     $caller ||= 0;
 
-    my $error_class = 'Elasticsearch::Error::' . $type;
+    my $error_class = 'Search::Elasticsearch::Error::' . $type;
     $msg = 'Unknown error' unless defined $msg;
 
     local $DEBUG = 2 if $type eq 'Internal';
@@ -61,7 +61,7 @@ sub is {
 #===================================
     my $self = shift;
     for (@_) {
-        return 1 if $self->isa("Elasticsearch::Error::$_");
+        return 1 if $self->isa("Search::Elasticsearch::Error::$_");
     }
     return 0;
 }
@@ -118,7 +118,7 @@ sub _stack {
             }
         }
         next
-            if $caller[0] =~ /^Elasticsearch/
+            if $caller[0] =~ /^Search::Elasticsearch/
             and $DEBUG < 2 || $caller[3] eq 'Try::Tiny::try';
         push @stack, [ @caller[ 0, 1, 2, 3 ] ];
         last unless $DEBUG > 1;
@@ -144,11 +144,11 @@ sub stacktrace {
 }
 1;
 
-# ABSTRACT: Errors thrown by Elasticsearch
+# ABSTRACT: Errors thrown by Search::Elasticsearch
 
 =head1 DESCRIPTION
 
-Errors thrown by Elasticsearch are error objects, which can include
+Errors thrown by Search::Elasticsearch are error objects, which can include
 a stack trace and information to help debug problems. An error object
 consists of the following:
 
@@ -159,7 +159,7 @@ consists of the following:
         stack => [...],              # a stack trace
     }
 
-The C<$Elasticsearch::Error::DEBUG> variable can be set to C<1> or C<2>
+The C<$Search::Elasticsearch::Error::DEBUG> variable can be set to C<1> or C<2>
 to increase the verbosity of errors.
 
 =head1 ERROR CLASSES
@@ -168,11 +168,11 @@ The following error classes are defined:
 
 =over
 
-=item * C<Elasticsearch::Error::Param>
+=item * C<Search::Elasticsearch::Error::Param>
 
 A bad parameter has been passed to a method.
 
-=item * C<Elasticsearch::Error::Request>
+=item * C<Search::Elasticsearch::Error::Request>
 
 There was some generic error performing your request in Elasticsearch.
 This error is triggered by HTTP status codes C<400> and C<500>. This class
@@ -180,7 +180,7 @@ has the following sub-classes:
 
 =over
 
-=item * C<Elasticsearch::Error::Missing>
+=item * C<Search::Elasticsearch::Error::Missing>
 
 A resource that you requested was not found.  These errors are triggered
 by the C<404> HTTP status code.
@@ -193,18 +193,18 @@ document has already changed, it will throw a C<Conflict> error.  If it can,
 it will include the C<current_version> in the error vars. This error
 is triggered by the C<409> HTTP status code.
 
-=item * C<Elasticsearch::Error::ContentLength>
+=item * C<Search::Elasticsearch::Error::ContentLength>
 
 The request body was longer than the
-L<max_content_length|Elasticsearch::Role::Cxn::HTTP/max_content_length>.
+L<max_content_length|Search::Elasticsearch::Role::Cxn::HTTP/max_content_length>.
 
 =back
 
-=item * C<Elasticsearch::Error::Timeout>
+=item * C<Search::Elasticsearch::Error::Timeout>
 
 The request timed out.
 
-=item * C<Elasticsearch::Error::Cxn>
+=item * C<Search::Elasticsearch::Error::Cxn>
 
 There was an error connecting to a node in the cluster.  This error
 indicates node failure and will be retried on another node.
@@ -212,7 +212,7 @@ This error has the following sub-class:
 
 =over
 
-=item * C<Elasticsearch::Error::Unavailable>
+=item * C<Search::Elasticsearch::Error::Unavailable>
 
 The current node is unable to handle your request at the moment. Your
 request will be retried on another node.  This error is triggered by
@@ -220,13 +220,13 @@ the C<503> HTTP status code.
 
 =back
 
-=item * C<Elasticsearch::Error::ClusterBlocked>
+=item * C<Search::Elasticsearch::Error::ClusterBlocked>
 
 The cluster was unable to process the request because it is currently blocking,
 eg there are not enough master nodes to form a cluster. This error is
 triggered by the C<403> HTTP status code.
 
-=item * C<Elasticsearch::Error::Serializer>
+=item * C<Search::Elasticsearch::Error::Serializer>
 
 There was an error serializing a variable or deserializing a string.
 

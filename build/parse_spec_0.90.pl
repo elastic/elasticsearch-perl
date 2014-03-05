@@ -65,7 +65,7 @@ for ( 'bulk', 'mget' ) {
     $API{$_}{index_when_type} = 1;
 }
 
-update_module( shift(@ARGV) || 'lib/Elasticsearch/Role/API/0_90.pm' );
+update_module( shift(@ARGV) || 'lib/Search/Elasticsearch/Role/API/0_90.pm' );
 
 #===================================
 sub process {

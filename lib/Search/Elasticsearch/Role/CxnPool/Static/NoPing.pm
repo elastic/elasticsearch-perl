@@ -1,7 +1,7 @@
-package Elasticsearch::Role::CxnPool::Static::NoPing;
+package Search::Elasticsearch::Role::CxnPool::Static::NoPing;
 
 use Moo::Role;
-with 'Elasticsearch::Role::CxnPool';
+with 'Search::Elasticsearch::Role::CxnPool';
 requires 'next_cxn';
 use namespace::clean;
 

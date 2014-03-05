@@ -1,9 +1,10 @@
-package Elasticsearch::CxnPool::Sniff;
+package Search::Elasticsearch::CxnPool::Sniff;
 
 use Moo;
-with 'Elasticsearch::Role::CxnPool::Sniff', 'Elasticsearch::Role::Is_Sync';
+with 'Search::Elasticsearch::Role::CxnPool::Sniff',
+    'Search::Elasticsearch::Role::Is_Sync';
 
-use Elasticsearch::Util qw(throw);
+use Search::Elasticsearch::Util qw(throw);
 use namespace::clean;
 
 #===================================
@@ -71,7 +72,7 @@ sub sniff_cxn {
 =head1 SYNOPSIS
 
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         cxn_pool => 'Sniff',
         nodes    => [
             'search1:9200',
@@ -81,7 +82,7 @@ sub sniff_cxn {
 
 =head1 DESCRIPTION
 
-The L<Sniff|Elasticsearch::CxnPool::Sniff> connection pool should be used
+The L<Sniff|Search::Elasticsearch::CxnPool::Sniff> connection pool should be used
 when you B<do> have direct access to the Elasticsearch cluster, eg when
 your web servers and Elasticsearch servers are on the same network.
 The nodes that you specify are used to I<discover> the cluster, which is
@@ -95,12 +96,12 @@ cluster, they will be auto-discovered during a sniff.
 If all sniffed nodes fail, then it falls back to sniffing the original
 I<seed> nodes that you specified in C<new()>.
 
-For L<HTTP Cxn classes|Elasticsearch::Role::Cxn::HTTP>, this module
+For L<HTTP Cxn classes|Search::Elasticsearch::Role::Cxn::HTTP>, this module
 will also dynamically detect the C<max_content_length> which the nodes
 in the cluster will accept.
 
-This class does L<Elasticsearch::Role::CxnPool::Sniff> and
-L<Elasticsearch::Role::Is_Sync>.
+This class does L<Search::Elasticsearch::Role::CxnPool::Sniff> and
+L<Search::Elasticsearch::Role::Is_Sync>.
 
 =head1 CONFIGURATION
 
@@ -108,7 +109,7 @@ L<Elasticsearch::Role::Is_Sync>.
 
 The list of nodes to use to discover the cluster.  Can accept a single node,
 multiple nodes, and defaults to C<localhost:9200> if no C<nodes> are
-specified. See L<Elasticsearch::Role::Cxn::HTTP/node> for details of the node
+specified. See L<Search::Elasticsearch::Role::Cxn::HTTP/node> for details of the node
 specification.
 
 =head2 See also
@@ -117,35 +118,35 @@ specification.
 
 =item *
 
-L<Elasticsearch::Role::Cxn/request_timeout>
+L<Search::Elasticsearch::Role::Cxn/request_timeout>
 
 =item *
 
-L<Elasticsearch::Role::Cxn/sniff_timeout>
+L<Search::Elasticsearch::Role::Cxn/sniff_timeout>
 
 =item *
 
-L<Elasticsearch::Role::Cxn/sniff_request_timeout>
+L<Search::Elasticsearch::Role::Cxn/sniff_request_timeout>
 
 =back
 
 =head2 Inherited configuration
 
-From L<Elasticsearch::Role::CxnPool::Sniff>
+From L<Search::Elasticsearch::Role::CxnPool::Sniff>
 
 =over
 
-=item * L<sniff_interval|Elasticsearch::Role::CxnPool::Sniff/"sniff_interval">
+=item * L<sniff_interval|Search::Elasticsearch::Role::CxnPool::Sniff/"sniff_interval">
 
-=item * L<sniff_max_content_length|Elasticsearch::Role::CxnPool::Sniff/"sniff_max_content_length">
+=item * L<sniff_max_content_length|Search::Elasticsearch::Role::CxnPool::Sniff/"sniff_max_content_length">
 
 =back
 
-From L<Elasticsearch::Role::CxnPool>
+From L<Search::Elasticsearch::Role::CxnPool>
 
 =over
 
-=item * L<randomize_cxns|Elasticsearch::Role::CxnPool/"randomize_cxns">
+=item * L<randomize_cxns|Search::Elasticsearch::Role::CxnPool/"randomize_cxns">
 
 =back
 
@@ -173,51 +174,51 @@ Sniffs the cluster and returns C<true> if the sniff was successful.
 
 =head2 Inherited methods
 
-From L<Elasticsearch::Role::CxnPool::Sniff>
+From L<Search::Elasticsearch::Role::CxnPool::Sniff>
 
 =over
 
-=item * L<schedule_check()|Elasticsearch::Role::CxnPool::Sniff/"schedule_check()">
+=item * L<schedule_check()|Search::Elasticsearch::Role::CxnPool::Sniff/"schedule_check()">
 
-=item * L<parse_sniff()|Elasticsearch::Role::CxnPool::Sniff/"parse_sniff()">
+=item * L<parse_sniff()|Search::Elasticsearch::Role::CxnPool::Sniff/"parse_sniff()">
 
-=item * L<should_accept_node()|Elasticsearch::Role::CxnPool::Sniff/"should_accept_node()">
+=item * L<should_accept_node()|Search::Elasticsearch::Role::CxnPool::Sniff/"should_accept_node()">
 
 =back
 
-From L<Elasticsearch::Role::CxnPool>
+From L<Search::Elasticsearch::Role::CxnPool>
 
-=item * L<cxn_factory()|Elasticsearch::Role::CxnPool/"cxn_factory()">
+=item * L<cxn_factory()|Search::Elasticsearch::Role::CxnPool/"cxn_factory()">
 
-=item * L<logger()|Elasticsearch::Role::CxnPool/"logger()">
+=item * L<logger()|Search::Elasticsearch::Role::CxnPool/"logger()">
 
-=item * L<serializer()|Elasticsearch::Role::CxnPool/"serializer()">
+=item * L<serializer()|Search::Elasticsearch::Role::CxnPool/"serializer()">
 
-=item * L<current_cxn_num()|Elasticsearch::Role::CxnPool/"current_cxn_num()">
+=item * L<current_cxn_num()|Search::Elasticsearch::Role::CxnPool/"current_cxn_num()">
 
-=item * L<cxns()|Elasticsearch::Role::CxnPool/"cxns()">
+=item * L<cxns()|Search::Elasticsearch::Role::CxnPool/"cxns()">
 
-=item * L<seed_nodes()|Elasticsearch::Role::CxnPool/"seed_nodes()">
+=item * L<seed_nodes()|Search::Elasticsearch::Role::CxnPool/"seed_nodes()">
 
-=item * L<next_cxn_num()|Elasticsearch::Role::CxnPool/"next_cxn_num()">
+=item * L<next_cxn_num()|Search::Elasticsearch::Role::CxnPool/"next_cxn_num()">
 
-=item * L<set_cxns()|Elasticsearch::Role::CxnPool/"set_cxns()">
+=item * L<set_cxns()|Search::Elasticsearch::Role::CxnPool/"set_cxns()">
 
-=item * L<request_ok()|Elasticsearch::Role::CxnPool/"request_ok()">
+=item * L<request_ok()|Search::Elasticsearch::Role::CxnPool/"request_ok()">
 
-=item * L<request_failed()|Elasticsearch::Role::CxnPool/"request_failed()">
+=item * L<request_failed()|Search::Elasticsearch::Role::CxnPool/"request_failed()">
 
-=item * L<should_retry()|Elasticsearch::Role::CxnPool/"should_retry()">
+=item * L<should_retry()|Search::Elasticsearch::Role::CxnPool/"should_retry()">
 
-=item * L<should_mark_dead()|Elasticsearch::Role::CxnPool/"should_mark_dead()">
+=item * L<should_mark_dead()|Search::Elasticsearch::Role::CxnPool/"should_mark_dead()">
 
-=item * L<cxns_str()|Elasticsearch::Role::CxnPool/"cxns_str()">
+=item * L<cxns_str()|Search::Elasticsearch::Role::CxnPool/"cxns_str()">
 
-=item * L<cxns_seeds_str()|Elasticsearch::Role::CxnPool/"cxns_seeds_str()">
+=item * L<cxns_seeds_str()|Search::Elasticsearch::Role::CxnPool/"cxns_seeds_str()">
 
-=item * L<retries()|Elasticsearch::Role::CxnPool/"retries()">
+=item * L<retries()|Search::Elasticsearch::Role::CxnPool/"retries()">
 
-=item * L<reset_retries()|Elasticsearch::Role::CxnPool/"reset_retries()">
+=item * L<reset_retries()|Search::Elasticsearch::Role::CxnPool/"reset_retries()">
 
 =back
 

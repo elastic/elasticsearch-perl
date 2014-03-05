@@ -3,12 +3,13 @@ package MockCxn;
 use strict;
 use warnings;
 
-our $VERSION = $Elasticsearch::VERSION;
+our $VERSION = $Search::Elasticsearch::VERSION;
 
 use Data::Dumper;
 use Moo;
-with 'Elasticsearch::Role::Cxn', 'Elasticsearch::Role::Cxn::HTTP',
-    'Elasticsearch::Role::Is_Sync';
+with 'Search::Elasticsearch::Role::Cxn',
+    'Search::Elasticsearch::Role::Cxn::HTTP',
+    'Search::Elasticsearch::Role::Is_Sync';
 
 use Sub::Exporter -setup => {
     exports => [ qw(
@@ -117,7 +118,7 @@ sub _mock_client {
     my $pool   = shift;
     my $params = shift;
     $i = 0;
-    return Elasticsearch->new(
+    return Search::Elasticsearch->new(
         cxn            => '+MockCxn',
         cxn_pool       => $pool,
         mock_responses => \@_,

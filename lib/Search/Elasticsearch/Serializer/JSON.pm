@@ -1,8 +1,8 @@
-package Elasticsearch::Serializer::JSON;
+package Search::Elasticsearch::Serializer::JSON;
 
 use Moo;
 
-use Elasticsearch::Util qw(throw);
+use Search::Elasticsearch::Util qw(throw);
 use JSON();
 use Try::Tiny;
 use Encode qw(encode_utf8 decode_utf8 is_utf8);
@@ -12,7 +12,7 @@ our $JSON = JSON->new->utf8;
 
 has 'mime_type' => ( is => 'ro', default => 'application/json' );
 
-with 'Elasticsearch::Role::Serializer';
+with 'Search::Elasticsearch::Role::Serializer';
 
 #===================================
 sub encode {

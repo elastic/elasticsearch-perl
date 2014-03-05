@@ -1,7 +1,7 @@
 use Test::More;
 use Test::Deep;
 use Test::Exception;
-use Elasticsearch;
+use Search::Elasticsearch;
 use lib 't/lib';
 use MockCxn qw(mock_static_client);
 

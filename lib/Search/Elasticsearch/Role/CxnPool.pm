@@ -1,11 +1,11 @@
-package Elasticsearch::Role::CxnPool;
+package Search::Elasticsearch::Role::CxnPool;
 
 use Moo::Role;
-use Elasticsearch::Util qw(parse_params);
+use Search::Elasticsearch::Util qw(parse_params);
 use List::Util qw(shuffle);
 use IO::Select();
 use Time::HiRes qw(time sleep);
-use Elasticsearch::Util qw(to_list);
+use Search::Elasticsearch::Util qw(to_list);
 use namespace::clean;
 
 requires qw(next_cxn schedule_check);
@@ -14,7 +14,7 @@ has 'cxn_factory'     => ( is => 'ro',  required => 1 );
 has 'logger'          => ( is => 'ro',  required => 1 );
 has 'serializer'      => ( is => 'ro',  required => 1 );
 has 'current_cxn_num' => ( is => 'rwp', default  => 0 );
-has 'cxns'            => ( is => 'rwp',  default  => sub { [] } );
+has 'cxns'            => ( is => 'rwp', default  => sub { [] } );
 has 'seed_nodes'      => ( is => 'ro',  required => 1 );
 has 'retries'         => ( is => 'rw',  default  => 0 );
 has 'randomize_cxns'  => ( is => 'ro',  default  => 1 );
@@ -137,15 +137,15 @@ See the CxnPool implementations:
 
 =item *
 
-L<Elasticsearch::CxnPool::Static>
+L<Search::Elasticsearch::CxnPool::Static>
 
 =item *
 
-L<Elasticsearch::CxnPool::Sniff>
+L<Search::Elasticsearch::CxnPool::Sniff>
 
 =item *
 
-L<Elasticsearch::CxnPool::Static::NoPing>
+L<Search::Elasticsearch::CxnPool::Static::NoPing>
 
 =back
 
@@ -166,22 +166,22 @@ disable.
 
     $factory = $cxn_pool->cxn_factory
 
-Returns the L<Elasticsearch::Cxn::Factory> object for creating a new
+Returns the L<Search::Elasticsearch::Cxn::Factory> object for creating a new
 C<$cxn> instance.
 
 =head2 C<logger()>
 
     $logger = $cxn_pool->logger
 
-Returns the L<Elasticsearch::Role::Logger>-based object, which
-defaults to L<Elasticsearch::Logger::LogAny>.
+Returns the L<Search::Elasticsearch::Role::Logger>-based object, which
+defaults to L<Search::Elasticsearch::Logger::LogAny>.
 
 =head2 C<serializer()>
 
     $serializer = $cxn_pool->serializer
 
-Returns the L<Elasticsearch::Role::Serializer>-based object,
-which defaults to L<Elasticsearch::Serializer::JSON>.
+Returns the L<Search::Elasticsearch::Role::Serializer>-based object,
+which defaults to L<Search::Elasticsearch::Serializer::JSON>.
 
 =head2 C<current_cxn_num()>
 
@@ -194,7 +194,7 @@ the array of cxns set by L</set_cxns()>.
 
     \@cxns = $cxn_pool->cxns;
 
-Returns the current list of L<Elasticsearch::Role::Cxn>-based
+Returns the current list of L<Search::Elasticsearch::Role::Cxn>-based
 cxn objects as set by L</set_cxns()>.
 
 =head2 C<seed_nodes()>
@@ -202,7 +202,7 @@ cxn objects as set by L</set_cxns()>.
     \@seed_nodes = $cxn_pool->seed_nodes
 
 Returns the list of C<nodes> originally specified when calling
-L<Elasticsearch/new()>.
+L<Search::Elasticsearch/new()>.
 
 =head2 C<next_cxn_num()>
 
@@ -215,7 +215,7 @@ the L</current_cxn_num()>.
 
     $cxn_pool->set_cxns(@nodes);
 
-Takes a list of nodes, converts them into L<Elasticsearch::Role::Cxn>-based
+Takes a list of nodes, converts them into L<Search::Elasticsearch::Role::Cxn>-based
 objects and makes them accessible via L</cxns()>.
 
 =head2 C<request_ok()>
@@ -237,7 +237,7 @@ C<1> if the request should be retried or C<0> if it shouldn't.
     $bool = $cxn_pool->should_retry($error);
 
 Examines the error to decide whether the request should be retried or not.
-By default, only L<Elasticsearch::Error/Elasticsearch::Error::Cxn> errors
+By default, only L<Search::Elasticsearch::Error/Search::Elasticsearch::Error::Cxn> errors
 are retried.
 
 =head2 C<should_mark_dead()>
@@ -245,7 +245,7 @@ are retried.
     $bool = $cxn_pool->should_mark_dead($error);
 
 Examines the error to decide whether the C<$cxn> should be marked as dead or not.
-By default, only L<Elasticsearch::Error/Elasticsearch::Error::Cxn> errors
+By default, only L<Search::Elasticsearch::Error/Search::Elasticsearch::Error::Cxn> errors
 cause a C<$cxn> to be marked as dead.
 
 =head2 C<cxns_str()>

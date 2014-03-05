@@ -1,11 +1,11 @@
-package Elasticsearch::Role::CxnPool::Sniff;
+package Search::Elasticsearch::Role::CxnPool::Sniff;
 
 use Moo::Role;
-with 'Elasticsearch::Role::CxnPool';
+with 'Search::Elasticsearch::Role::CxnPool';
 requires 'next_cxn', 'sniff', 'sniff_cxn';
 use namespace::clean;
 
-use Elasticsearch::Util qw(parse_params);
+use Search::Elasticsearch::Util qw(parse_params);
 use List::Util qw(min);
 use Try::Tiny;
 
@@ -92,7 +92,7 @@ have been added to the cluster.  Defaults to `300` seconds.
 =head2 C<sniff_max_content_length>
 
 Whether we should set the
-L<max_content_length|Elasticsearch::Role::Cxn::HTTP/max_content_length>
+L<max_content_length|Search::Elasticsearch::Role::Cxn::HTTP/max_content_length>
 dynamically while sniffing. Defaults to true unless a fixed
 C<max_content_length> was specified.
 
@@ -110,8 +110,8 @@ Schedules a sniff before the next request is processed.
 
 Parses the response from a sniff request and extracts the hostname/ip
 of all listed nodes, filtered through L</should_accept_node()>. If any live
-nodes are found, they are passed to L<Elasticsearch::Role::CxnPool/set_cxns()>.
-The L<max_content_length|Elasticsearch::Role::Cxn::HTTP/max_content_length>
+nodes are found, they are passed to L<Search::Elasticsearch::Role::CxnPool/set_cxns()>.
+The L<max_content_length|Search::Elasticsearch::Role::Cxn::HTTP/max_content_length>
 is also detected if L</sniff_max_content_length> is true.
 
 =head2 C<should_accept_node()>

@@ -3,12 +3,13 @@ use Test::Deep;
 use Test::Exception;
 use strict;
 use warnings;
-use Elasticsearch::Bulk;
+use Search::Elasticsearch::Bulk;
 use lib 't/lib';
 
 my $es = do "es_sync.pl";
 
-my $b = Elasticsearch::Bulk->new( es => $es, index => 'i', type => 't' );
+my $b = Search::Elasticsearch::Bulk->new( es => $es, index => 'i',
+    type => 't' );
 my $s = $b->_serializer;
 $s->_set_canonical;
 

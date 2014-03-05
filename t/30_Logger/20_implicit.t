@@ -1,5 +1,5 @@
 use Test::More;
-use Elasticsearch;
+use Search::Elasticsearch;
 
 use Log::Any::Adapter;
 
@@ -8,7 +8,8 @@ Log::Any::Adapter->set( { category => 'elasticsearch.trace' }, 'Stderr' );
 
 # default
 
-isa_ok my $l = Elasticsearch->new->logger, 'Elasticsearch::Logger::LogAny',
+isa_ok my $l = Search::Elasticsearch->new->logger,
+    'Search::Elasticsearch::Logger::LogAny',
     'Default Logger';
 
 isa_ok $l->log_handle, 'Log::Any::Adapter::Stdout', 'Default - Log to Stdout';
@@ -18,8 +19,9 @@ isa_ok $l->trace_handle, 'Log::Any::Adapter::Stderr',
 # override
 
 isa_ok $l
-    = Elasticsearch->new( log_to => 'Stderr', trace_to => 'Stdout' )->logger,
-    'Elasticsearch::Logger::LogAny',
+    = Search::Elasticsearch->new( log_to => 'Stderr', trace_to => 'Stdout' )
+    ->logger,
+    'Search::Elasticsearch::Logger::LogAny',
     'Override Logger';
 
 isa_ok $l->log_handle, 'Log::Any::Adapter::Stderr',

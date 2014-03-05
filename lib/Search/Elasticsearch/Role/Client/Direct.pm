@@ -1,8 +1,8 @@
-package Elasticsearch::Role::Client::Direct;
+package Search::Elasticsearch::Role::Client::Direct;
 
 use Moo::Role;
-with 'Elasticsearch::Role::Client';
-use Elasticsearch::Util::API::Path qw(path_handler);
+with 'Search::Elasticsearch::Role::Client';
+use Search::Elasticsearch::Util::API::Path qw(path_handler);
 use Try::Tiny;
 use namespace::clean;
 
@@ -110,9 +110,9 @@ sub _install_api {
 =head1 DESCRIPTION
 
 This role provides the single C<parse_request()> method for classes
-which need to parse an API definition from L<Elasticsearch::Role::API>
+which need to parse an API definition from L<Search::Elasticsearch::Role::API>
 and convert it into a request which can be passed to
-L<Elasticsearch::Transport/perform_request()>.
+L<Search::Elasticsearch::Transport/perform_request()>.
 
 =head1 METHODS
 
@@ -120,14 +120,14 @@ L<Elasticsearch::Transport/perform_request()>.
 
     $request = $client->parse_request(\%defn,\%params);
 
-The C<%defn> is a definition returned by L<Elasticsearch::Role::API/api()>
+The C<%defn> is a definition returned by L<Search::Elasticsearch::Role::API/api()>
 with an extra key C<name> which should be the name of the method that
 was called on the client.  For instance if the user calls C<< $client->search >>,
 then the C<name> should be C<"search">.
 
 C<parse_request()> will turn the parameters that have been passed in into
-a C<path> (via L<Elasticsearch::Util::API::Path/path_init()>), a query-string
-hash (via L<Elasticsearch::Util::API::QS/qs_init>) and will through a
+a C<path> (via L<Search::Elasticsearch::Util::API::Path/path_init()>), a query-string
+hash (via L<Search::Elasticsearch::Util::API::QS/qs_init>) and will through a
 C<body> value directly.
 
 B<NOTE:> If a C<path> key is specified in the C<%params> then it will be used

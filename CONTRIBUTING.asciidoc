@@ -1,4 +1,4 @@
-= Contributing to Elasticsearch.pm
+= Contributing to elasticsearch-perl
 
 If you have a bugfix or new feature that you would like to contribute to
 Elasticsearch.pm, please find or open an issue about it first. Talk about
@@ -13,7 +13,7 @@ approach before writing too much code.
 The process for contributing to any of the Elasticsearch repositories is
 similar.
 
-1. Sign the contributor license agreement
+1. *Sign the contributor license agreement*
 +
 Please make sure you have signed the
 http://www.elasticsearch.org/contributor-agreement/[Contributor License Agreement].
@@ -22,18 +22,18 @@ distribute your code without restriction. We ask this of all contributors in
 order to assure our users of the origin and continuing existence of the code.
 You only need to sign the CLA once.
 
-2. Test
+2. *Test*
 +
 Run the full test suite and ensure it completes without errors with your
 changes.
 
-3. Rebase your changes
+3. *Rebase your changes*
 +
 Update your local repository with the most recent code from the main
 `elasticsearch-perl` repository, and rebase your branch on top of the latest
 master branch. We prefer your changes to be squashed into a single commit.
 
-4. Submit a pull request
+4. *Submit a pull request*
 +
 Push your local changes to your forked copy of the repository and
 submit a pull request. In the pull request, describe what your changes
@@ -42,4 +42,4 @@ eg ``Closes #123''.
 
 Then sit back and wait. There will probably be discussion about the
 pull request and, if any changes are needed, we would love to work
-with you to get your pull request merged into Elasticsearch.pm.
+with you to get your pull request merged into Search::Elasticsearch.

@@ -1,8 +1,8 @@
 use Test::More;
 use Test::Deep;
-use Elasticsearch;
+use Search::Elasticsearch;
 
-my $t = Elasticsearch->new( send_get_body_as => 'GET' )->transport;
+my $t = Search::Elasticsearch->new( send_get_body_as => 'GET' )->transport;
 
 test_tidy( 'GET-empty', { path => '/_search' }, {} );
 test_tidy(
@@ -16,7 +16,7 @@ test_tidy(
     }
 );
 
-$t = Elasticsearch->new( send_get_body_as => 'POST' )->transport;
+$t = Search::Elasticsearch->new( send_get_body_as => 'POST' )->transport;
 
 test_tidy( 'POST-empty', { path => '/_search' }, {} );
 test_tidy(
@@ -30,7 +30,7 @@ test_tidy(
     }
 );
 
-$t = Elasticsearch->new( send_get_body_as => 'source' )->transport;
+$t = Search::Elasticsearch->new( send_get_body_as => 'source' )->transport;
 
 test_tidy( 'source-empty', { path => '/_search' }, {} );
 test_tidy(

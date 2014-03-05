@@ -1,9 +1,9 @@
-package Elasticsearch::Role::Cxn::HTTP;
+package Search::Elasticsearch::Role::Cxn::HTTP;
 
 use Moo::Role;
 
 use URI();
-use Elasticsearch::Util qw(parse_params throw);
+use Search::Elasticsearch::Util qw(parse_params throw);
 use namespace::clean;
 
 has 'scheme'             => ( is => 'ro' );
@@ -145,10 +145,10 @@ sub inflate {
 
 =head1 DESCRIPTION
 
-L<Elasticsearch::Role::Cxn::HTTP> provides common functionality to the Cxn
+L<Search::Elasticsearch::Role::Cxn::HTTP> provides common functionality to the Cxn
 implementations which use the HTTP protocol. Cxn instances are created by a
-L<Elasticsearch::Role::CxnPool> implementation, using the
-L<Elasticsearch::Cxn::Factory> class.
+L<Search::Elasticsearch::Role::CxnPool> implementation, using the
+L<Search::Elasticsearch::Cxn::Factory> class.
 
 =head1 CONFIGURATION
 
@@ -156,7 +156,7 @@ The configuration options are as follows:
 
 =head2 C<node>
 
-A single C<node> is passed to C<new()> by the L<Elasticsearch::Cxn::Factory>
+A single C<node> is passed to C<new()> by the L<Search::Elasticsearch::Cxn::Factory>
 class.  It can either be a URI or a hash containing each part.  For instance:
 
     node => 'localhost';                    # equiv of 'http://localhost:80'
@@ -183,7 +183,7 @@ Alternatively, a C<node> can be specified as a hash:
 Similarly, default values can be specified with C<port>, C<path_prefix>,
 C<userinfo> and C<use_https>:
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         port        => 9201,
         path_prefix => '/path',
         userinfo    => 'user:pass',
@@ -197,17 +197,17 @@ By default, Elasticsearch nodes accept a maximum post body of 100MB or
 C<104_857_600> bytes. This client enforces that limit.  The limit can
 be customised with the C<max_content_length> parameter (specified in bytes).
 
-If you're using the L<Elasticsearch::CxnPool::Sniff> module, then the
+If you're using the L<Search::Elasticsearch::CxnPool::Sniff> module, then the
 C<max_content_length> will be automatically retrieved from the live cluster,
 unless you specify a custom C<max_content_length>:
 
     # max_content_length retrieved from cluster
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         cxn_pool => 'Sniff'
     );
 
     # max_content_length fixed at 10,000 bytes
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         cxn_pool           => 'Sniff',
         max_content_length => 10_000
     );
@@ -219,7 +219,7 @@ enabling the C<http.compression> config setting in
 L<Elasticsearch|http://www.elasticsearch.org/guide/reference/modules/http/>
 and setting C<deflate> to C<true>:
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         deflate => 1
     );
 

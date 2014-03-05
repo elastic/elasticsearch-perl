@@ -1,9 +1,9 @@
-package Elasticsearch::Util::API::Path;
+package Search::Elasticsearch::Util::API::Path;
 
 use strict;
 use warnings;
 use Any::URI::Escape qw(uri_escape);
-use Elasticsearch::Util qw(throw);
+use Search::Elasticsearch::Util qw(throw);
 use Sub::Exporter -setup => { exports => ['path_handler'] };
 
 #===================================
@@ -62,14 +62,14 @@ __END__
 
 =head1 DESCRIPTION
 
-This module converts path templates in L<Elasticsearch::Role::API> such as
+This module converts path templates in L<Search::Elasticsearch::Role::API> such as
 C</{index}/{type}/{id}> into real paths such as C</my_index/my_type/123>.
 
 =head1 EXPORTS
 
 =head2 C<path_init()>
 
-    use Elasticsearch::Util::API::Path qw(path_init);
+    use Search::Elasticsearch::Util::API::Path qw(path_init);
 
     $handler = path_init($template);
     $path    = $handler->(\%params);

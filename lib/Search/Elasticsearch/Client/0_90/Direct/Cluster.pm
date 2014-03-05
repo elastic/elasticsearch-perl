@@ -1,8 +1,8 @@
-package Elasticsearch::Client::0_90::Direct::Cluster;
+package Search::Elasticsearch::Client::0_90::Direct::Cluster;
 
 use Moo;
-with 'Elasticsearch::Role::API::0_90';
-with 'Elasticsearch::Role::Client::Direct';
+with 'Search::Elasticsearch::Role::API::0_90';
+with 'Search::Elasticsearch::Role::Client::Direct';
 __PACKAGE__->_install_api('cluster');
 
 1;
@@ -17,7 +17,7 @@ This module provides methods to make cluster-level requests, such as
 getting and setting cluster-level settings, manually rerouting shards,
 and retrieving for monitoring purposes.
 
-It does L<Elasticsearch::Role::Client::Direct>.
+It does L<Search::Elasticsearch::Role::Client::Direct>.
 
 =head1 METHODS
 
@@ -94,7 +94,7 @@ heap memory usage or the current number of threads in use.
 
 Stats can be returned for all nodes, or limited to particular nodes
 with the C<node_id> parameter.
-The L<indices_stats|Elasticsearch::Client::Direct::Indices/indices_stats()>
+The L<indices_stats|Search::Elasticsearch::Client::Direct::Indices/indices_stats()>
 information can also be retrieved on a per-node basis with the C<node_stats()>
 method:
 

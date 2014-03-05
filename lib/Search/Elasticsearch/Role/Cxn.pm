@@ -1,11 +1,11 @@
-package Elasticsearch::Role::Cxn;
+package Search::Elasticsearch::Role::Cxn;
 
 use Moo::Role;
-use Elasticsearch::Util qw(throw);
+use Search::Elasticsearch::Util qw(throw);
 use List::Util qw(min);
 use Try::Tiny;
 use URI();
-use Elasticsearch::Util qw(to_list);
+use Search::Elasticsearch::Util qw(to_list);
 use namespace::clean;
 
 requires qw(protocol perform_request error_from_text);
@@ -173,9 +173,9 @@ sub process_response {
 
 =head1 DESCRIPTION
 
-L<Elasticsearch::Role::Cxn> provides common functionality to the Cxn
-implementations. Cxn instances are created by a L<Elasticsearch::Role::CxnPool>
-implementation, using the L<Elasticsearch::Cxn::Factory> class.
+L<Search::Elasticsearch::Role::Cxn> provides common functionality to the Cxn
+implementations. Cxn instances are created by a L<Search::Elasticsearch::Role::CxnPool>
+implementation, using the L<Search::Elasticsearch::Cxn::Factory> class.
 
 =head1 CONFIGURATION
 
@@ -189,7 +189,7 @@ The configuration parameters are as follows:
 
 =head2 C<request_timeout>
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         request_timeout => 30
     );
 
@@ -197,17 +197,17 @@ How long a normal request (ie not a ping or sniff request) should wait
 before throwing a C<Timeout> error.  Defaults to C<30> seconds.
 
 B<Note:> In production, no request should take 30 seconds to run, other
-than an L<optimize()/Elasticsearch::Client::Direct/optimize()> request.
+than an L<optimize()/Search::Elasticsearch::Client::Direct/optimize()> request.
 A more reasonable value for production would be C<10> seconds or lower.
 
 =head2 C<ping_timeout>
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         ping_timeout => 2
     );
 
 How long a ping request should wait before throwing a C<Timeout> error.
-Defaults to C<2> seconds. The L<Elasticsearch::CxnPool::Static> module
+Defaults to C<2> seconds. The L<Search::Elasticsearch::CxnPool::Static> module
 pings nodes on first use, after any failure, and periodically to ensure
 that nodes are healthy. The C<ping_timeout> should be long enough to allow
 nodes respond in time, but not so long that sick nodes cause delays.
@@ -216,7 +216,7 @@ would be C<0.3>-C<1> seconds.
 
 =head2 C<dead_timeout>
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         dead_timeout => 60
     );
 
@@ -234,7 +234,7 @@ after each failure is as follows:
 
 =head2 C<max_dead_timeout>
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         max_dead_timeout => 3600
     );
 
@@ -246,7 +246,7 @@ every hour by default.
 
 =head2 C<sniff_request_timeout>
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         sniff_request_timeout => 2
     );
 
@@ -256,7 +256,7 @@ C<0.5>-C<2> seconds.
 
 =head2 C<sniff_timeout>
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         sniff_timeout => 1
     );
 
@@ -376,7 +376,7 @@ returns the HTTP status code and the response body (deserialized from JSON)
 or throws an error of the appropriate type.
 
 The C<$params> are the original params passed to
-L<Elasticsearch::Transport/perform_request()>, the C<$code> is the HTTP
+L<Search::Elasticsearch::Transport/perform_request()>, the C<$code> is the HTTP
 status code, the C<$msg> is the error message returned by the backend
 library and the C<$body> is the HTTP response body returned by
 Elasticsearch.

@@ -1,7 +1,7 @@
-package Elasticsearch::Cxn::Factory;
+package Search::Elasticsearch::Cxn::Factory;
 
 use Moo;
-use Elasticsearch::Util qw(parse_params load_plugin);
+use Search::Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
 has 'cxn_class'          => ( is => 'ro', required => 1 );
@@ -16,7 +16,8 @@ sub BUILDARGS {
     my %args = (%$params);
     delete $args{nodes};
 
-    my $cxn_class = load_plugin( 'Elasticsearch::Cxn', delete $args{cxn} );
+    my $cxn_class
+        = load_plugin( 'Search::Elasticsearch::Cxn', delete $args{cxn} );
     $params->{_factory} = sub {
         my ( $self, $node ) = @_;
         $cxn_class->new(
@@ -43,8 +44,8 @@ __END__
 
 =head1 DESCRIPTION
 
-This class is used by the L<Elasticsearch::Role::CxnPool> implementations
-to create new L<Elasticsearch::Role::Cxn>-based instances. It holds on
+This class is used by the L<Search::Elasticsearch::Role::CxnPool> implementations
+to create new L<Search::Elasticsearch::Role::Cxn>-based instances. It holds on
 to all the configuration options passed to L<Elasticsearhch/new()> so
 that new Cxns can use them.
 

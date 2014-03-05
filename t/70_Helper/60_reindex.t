@@ -5,8 +5,8 @@ use lib 't/lib';
 
 use strict;
 use warnings;
-use Elasticsearch::Scroll;
-use Elasticsearch::Bulk;
+use Search::Elasticsearch::Scroll;
+use Search::Elasticsearch::Bulk;
 
 our $es = do "es_sync.pl";
 my $is_0_90 = $es->info->{version}{number} =~ /^0.90/;
@@ -17,7 +17,11 @@ do "index_test_data.pl" or die $!;
 my $b;
 
 # Reindex to new index and new type
-$b = Elasticsearch::Bulk->new( es => $es, index => 'test2', type => 'test2' );
+$b = Search::Elasticsearch::Bulk->new(
+    es    => $es,
+    index => 'test2',
+    type  => 'test2'
+);
 $b->reindex( source => { index => 'test' } );
 $es->indices->refresh;
 
@@ -28,7 +32,7 @@ is $es->count(
     'Reindexed to new index and type';
 
 # Reindex to same index
-$b = Elasticsearch::Bulk->new( es => $es );
+$b = Search::Elasticsearch::Bulk->new( es => $es );
 $b->reindex( source => { index => 'test' } );
 $es->indices->refresh;
 
@@ -44,7 +48,7 @@ is $es->get( index => 'test', type => 'test', id => 1 )->{_version}, 2,
 # Reindex with transform
 $es->indices->delete( index => 'test2' );
 
-$b = Elasticsearch::Bulk->new( es => $es, index => 'test2' );
+$b = Search::Elasticsearch::Bulk->new( es => $es, index => 'test2' );
 $b->reindex(
     source    => { index => 'test' },
     transform => sub {
@@ -105,7 +109,7 @@ for ( 1 .. 5 ) {
 }
 $es->indices->refresh;
 
-$b = Elasticsearch::Bulk->new( es => $es, index => 'test2' );
+$b = Search::Elasticsearch::Bulk->new( es => $es, index => 'test2' );
 ok $b->reindex(
     version_type => 'external',
     source       => {

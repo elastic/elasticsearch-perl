@@ -1,9 +1,9 @@
-package Elasticsearch::Client::Direct::Cat;
+package Search::Elasticsearch::Client::Direct::Cat;
 
 use Moo;
-with 'Elasticsearch::Role::API';
-with 'Elasticsearch::Role::Client::Direct';
-use Elasticsearch::Util qw(parse_params);
+with 'Search::Elasticsearch::Role::API';
+with 'Search::Elasticsearch::Role::Client::Direct';
+use Search::Elasticsearch::Util qw(parse_params);
 use namespace::clean;
 __PACKAGE__->_install_api('cat');
 
@@ -58,7 +58,7 @@ Formats byte-based values as bytes (C<b>), kilobytes (C<k>), megabytes
 
 =back
 
-It does L<Elasticsearch::Role::Client::Direct>.
+It does L<Search::Elasticsearch::Role::Client::Direct>.
 
 =head1 METHODS
 

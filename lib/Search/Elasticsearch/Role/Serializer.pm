@@ -1,4 +1,4 @@
-package Elasticsearch::Role::Serializer;
+package Search::Elasticsearch::Role::Serializer;
 
 use Moo::Role;
 
@@ -38,4 +38,4 @@ C<mime_type()>
 =back
 
 
-See L<Elasticsearch::Serializer::JSON> for more.
+See L<Search::Elasticsearch::Serializer::JSON> for more.

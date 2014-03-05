@@ -1,10 +1,11 @@
 use Test::More;
 use Test::Exception;
-use Elasticsearch;
+use Search::Elasticsearch;
 use lib 't/lib';
 do 'LogCallback.pl';
 
-isa_ok my $l = Elasticsearch->new->logger, 'Elasticsearch::Logger::LogAny',
+isa_ok my $l = Search::Elasticsearch->new->logger,
+    'Search::Elasticsearch::Logger::LogAny',
     'Logger';
 
 test_level($_) for qw(debug info warning error critical trace);

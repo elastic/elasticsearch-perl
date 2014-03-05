@@ -1,8 +1,8 @@
-package Elasticsearch::Client::Direct::Cluster;
+package Search::Elasticsearch::Client::Direct::Cluster;
 
 use Moo;
-with 'Elasticsearch::Role::API';
-with 'Elasticsearch::Role::Client::Direct';
+with 'Search::Elasticsearch::Role::API';
+with 'Search::Elasticsearch::Role::Client::Direct';
 __PACKAGE__->_install_api('cluster');
 
 sub node_info     { _deprecated( 'node_info',     'info' ) }
@@ -29,7 +29,7 @@ This module provides methods to make cluster-level requests, such as
 getting and setting cluster-level settings, manually rerouting shards,
 and retrieving for monitoring purposes.
 
-It does L<Elasticsearch::Role::Client::Direct>.
+It does L<Search::Elasticsearch::Role::Client::Direct>.
 
 =head1 METHODS
 

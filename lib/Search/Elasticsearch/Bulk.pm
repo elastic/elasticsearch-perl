@@ -1,8 +1,9 @@
-package Elasticsearch::Bulk;
+package Search::Elasticsearch::Bulk;
 
 use Moo;
-with 'Elasticsearch::Role::Bulk', 'Elasticsearch::Role::Is_Sync';
-use Elasticsearch::Util qw(parse_params throw);
+with 'Search::Elasticsearch::Role::Bulk',
+    'Search::Elasticsearch::Role::Is_Sync';
+use Search::Elasticsearch::Util qw(parse_params throw);
 use Try::Tiny;
 use namespace::clean;
 
@@ -103,11 +104,11 @@ __END__
 
 =head1 SYNOPSIS
 
-    use Elasticsearch;
-    use Elasticsearch::Bulk;
+    use Search::Elasticsearch;
+    use Search::Elasticsearch::Bulk;
 
-    my $es   = Elasticsearch->new;
-    my $bulk = Elasticsearch::Bulk->new(
+    my $es   = Search::Elasticsearch->new;
+    my $bulk = Search::Elasticsearch::Bulk->new(
         es      => $es,
         index   => 'my_index',
         type    => 'my_type'
@@ -135,7 +136,7 @@ __END__
     $bulk->flush
 
     # Reindex docs:
-    $bulk = Elasticsearch::Bulk->new(
+    $bulk = Search::Elasticsearch::Bulk->new(
         es      => $es,
         index   => 'new_index',
         verbose => 1
@@ -145,26 +146,26 @@ __END__
 
 =head1 DESCRIPTION
 
-This module provides a wrapper for the L<Elasticsearch::Client::Direct/bulk()>
+This module provides a wrapper for the L<Search::Elasticsearch::Client::Direct/bulk()>
 method which makes it easier to run multiple create, index, update or delete
 actions in a single request. It also provides a simple interface
 for L<reindexing documents|/REINDEXING DOCUMENTS>.
 
-The L<Elasticsearch::Bulk> module acts as a queue, buffering up actions
+The L<Search::Elasticsearch::Bulk> module acts as a queue, buffering up actions
 until it reaches a maximum count of actions, or a maximum size of JSON request
 body, at which point it issues a C<bulk()> request.
 
 Once you have finished adding actions, call L</flush()> to force the final
 C<bulk()> request on the items left in the queue.
 
-This class does L<Elasticsearch::Role::Bulk> and
-L<Elasticsearch::Role::Is_Sync>.
+This class does L<Search::Elasticsearch::Role::Bulk> and
+L<Search::Elasticsearch::Role::Is_Sync>.
 
 =head1 CREATING A NEW INSTANCE
 
 =head2 C<new()>
 
-    $bulk = Elasticsearch::Bulk->new(
+    $bulk = Search::Elasticsearch::Bulk->new(
         es          => $es,                 # required
 
         index       => 'default_index',     # optional
@@ -184,12 +185,12 @@ L<Elasticsearch::Role::Is_Sync>.
     );
 
 The C<new()> method returns a new C<$bulk> object.  You must pass your
-Elasticsearch client as the C<es> argument.
+Search::Elasticsearch client as the C<es> argument.
 
 The C<index> and C<type> parameters provide default values for
 C<index> and C<type>, which can be overridden in each action.
 You can also pass any other values which are accepted
-by the L<bulk()|Elasticsearch::Client::Direct/bulk()> method.
+by the L<bulk()|Search::Elasticsearch::Client::Direct/bulk()> method.
 
 See L</flush()> for more information about the other parameters.
 
@@ -200,7 +201,7 @@ See L</flush()> for more information about the other parameters.
     $result = $bulk->flush;
 
 The C<flush()> method sends all buffered actions to Elasticsearch using
-a L<bulk()|Elasticsearch::Client::Direct/bulk()> request.
+a L<bulk()|Search::Elasticsearch::Client::Direct/bulk()> request.
 
 =head2 Auto-flushing
 
@@ -277,7 +278,7 @@ will have C<$i> set to C<0>, the second will have C<$i> set to C<1> etc.
 
 =head3 C<on_success>
 
-    $bulk = Elasticsearch->new(
+    $bulk = Search::Elasticsearch->new(
         es          => $es,
         on_success  => sub {
             my ($action,$response,$i) = @_;
@@ -290,7 +291,7 @@ response.
 
 =head3 C<on_conflict>
 
-    $bulk = Elasticsearch::Bulk->new(
+    $bulk = Search::Elasticsearch::Bulk->new(
         es           => $es,
         on_conflict  => sub {
             my ($action,$response,$i,$version) = @_;
@@ -305,7 +306,7 @@ of the document currently stored in Elasticsearch (if found).
 
 =head3 C<on_error>
 
-    $bulk = Elasticsearch::Bulk->new(
+    $bulk = Search::Elasticsearch::Bulk->new(
         es        => $es,
         on_error  => sub {
             my ($action,$response,$i) = @_;
@@ -322,7 +323,7 @@ If you want to be in control of flushing, and you just want to receive
 the raw response that Elasticsearch sends instead of using callbacks,
 then you can do so as follows:
 
-    $bulk = Elasticsearch::Bulk->new(
+    $bulk = Search::Elasticsearch::Bulk->new(
         es          => $es,
         max_count   => 0,
         max_size    => 0,
@@ -368,7 +369,7 @@ they must be specified either in L</new()> or in every action.
     );
 
 The C<create()> helper method allows you to add multiple C<create> actions.
-It accepts the same parameters as L<Elasticsearch::Client::Direct/create()>
+It accepts the same parameters as L<Search::Elasticsearch::Client::Direct/create()>
 except that the document body should be passed as the C<source> or C<_source>
 parameter, instead of as C<body>.
 
@@ -394,7 +395,7 @@ you can just pass the individual document bodies.
     );
 
 The C<index()> helper method allows you to add multiple C<index> actions.
-It accepts the same parameters as L<Elasticsearch::Client::Direct/index()>
+It accepts the same parameters as L<Search::Elasticsearch::Client::Direct/index()>
 except that the document body should be passed as the C<source> or C<_source>
 parameter, instead of as C<body>.
 
@@ -407,7 +408,7 @@ parameter, instead of as C<body>.
     );
 
 The C<delete()> helper method allows you to add multiple C<delete> actions.
-It accepts the same parameters as L<Elasticsearch::Client::Direct/delete()>.
+It accepts the same parameters as L<Search::Elasticsearch::Client::Direct/delete()>.
 
 =head2 C<delete_ids()>
 
@@ -435,7 +436,7 @@ In this case, all you have to do is to pass in a list of IDs.
 
 
 The C<update()> helper method allows you to add multiple C<update> actions.
-It accepts the same parameters as L<Elasticsearch::Client::Direct/update()>.
+It accepts the same parameters as L<Search::Elasticsearch::Client::Direct/update()>.
 An update can either use a I<partial doc> which gets merged with an existing
 doc (example 1 above), or can use a C<script> to update an existing doc
 (example 2 above).
@@ -444,7 +445,7 @@ doc (example 1 above), or can use a C<script> to update an existing doc
 
 A common use case for bulk indexing is to reindex a whole index when
 changing the type mappings or analysis chain. This typically
-combines bulk indexing with L<scrolled searches|Elasticsearch::Scroll>:
+combines bulk indexing with L<scrolled searches|Search::Elasticsearch::Scroll>:
 the scrolled search pulls all of the data from the source index, and
 the bulk indexer indexes the data into the new index.
 
@@ -462,9 +463,9 @@ the source for the documents which are to be reindexed.
 =head2 Reindexing from another index
 
 If the C<source> argument is a HASH ref, then the hash is passed to
-L<Elasticsearch::Scroll/new()> to create a new scrolled search.
+L<Search::Elasticsearch::Scroll/new()> to create a new scrolled search.
 
-    $bulk = Elasticsearch::Bulk->new(
+    $bulk = Search::Elasticsearch::Bulk->new(
         index   => 'new_index',
         verbose => 1
     );
@@ -522,10 +523,10 @@ By default, L</reindex()> expects the source and destination indices
 to be in the same cluster. To pull data from one cluster and index it into
 another, you can use two separate C<$es> objects:
 
-    $es_target  = Elasticsearch->new( nodes => 'localhost:9200' );
-    $es_source  = Elasticsearch->new( nodes => 'search1:9200' );
+    $es_target  = Search::Elasticsearch->new( nodes => 'localhost:9200' );
+    $es_source  = Search::Elasticsearch->new( nodes => 'search1:9200' );
 
-    Elasticsearch::Bulk->new(
+    Search::Elasticsearch::Bulk->new(
         es      => $es_target,
         verbose => 1
     )

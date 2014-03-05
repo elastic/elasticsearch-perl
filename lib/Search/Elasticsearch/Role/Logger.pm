@@ -1,10 +1,10 @@
-package Elasticsearch::Role::Logger;
+package Search::Elasticsearch::Role::Logger;
 
 use Moo::Role;
 
 use URI();
 use Try::Tiny;
-use Elasticsearch::Util qw(new_error);
+use Search::Elasticsearch::Util qw(new_error);
 use namespace::clean;
 
 has 'serializer' => ( is => 'ro', required => 1 );
@@ -133,15 +133,15 @@ This role provides common functionality to Logger implementations, to enable
 the logging of events and the tracing of request-response conversations
 with Elasticsearch nodes.
 
-See L<Elasticsearch::Logger::LogAny> for the default implementation.
+See L<Search::Elasticsearch::Logger::LogAny> for the default implementation.
 
 =head1 CONFIGURATION
 
 =head2 C<log_to>
 
-Parameters passed to C<log_to> are used by L<Elasticsearch::Role::Logger>
+Parameters passed to C<log_to> are used by L<Search::Elasticsearch::Role::Logger>
 implementations to setup the L</log_handle()>.  See
-L<Elasticsearch::Logger::LogAny/log_to> for details.
+L<Search::Elasticsearch::Logger::LogAny/log_to> for details.
 
 =head2 C<log_as>
 
@@ -151,9 +151,9 @@ category C<"elasticsearch.event">, which can be configured with C<log_as>.
 
 =head2 C<trace_to>
 
-Parameters passed to C<trace_to> are used by L<Elasticsearch::Role::Logger>
+Parameters passed to C<trace_to> are used by L<Search::Elasticsearch::Role::Logger>
 implementations to setup the L</trace_handle()>. See
-L<Elasticsearch::Logger::LogAny/trace_to> for details.
+L<Search::Elasticsearch::Logger::LogAny/trace_to> for details.
 
 =head2 C<trace_as>
 
@@ -194,7 +194,7 @@ took in seconds
 
     $logger->trace_error($cxn,$error);
 
-Logs a failed HTTP response, where C<$error> is an L<Elasticsearch::Error>
+Logs a failed HTTP response, where C<$error> is an L<Search::Elasticsearch::Error>
 object.
 
 =head2 C<trace_comment()>

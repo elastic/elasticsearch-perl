@@ -10,13 +10,14 @@ $es = do "es_sync.pl";
 
 BEGIN {
     $es = do "es_sync.pl";
-    use_ok "Elasticsearch::Bulk";
+    use_ok "Search::Elasticsearch::Bulk";
 }
 
-isa_ok my $b = Elasticsearch::Bulk->new( es => $es ), 'Elasticsearch::Bulk',
+isa_ok my $b = Search::Elasticsearch::Bulk->new( es => $es ),
+    'Search::Elasticsearch::Bulk',
     'Bulk';
 
-isa_ok my $s = $b->_serializer, 'Elasticsearch::Serializer::JSON',
+isa_ok my $s = $b->_serializer, 'Search::Elasticsearch::Serializer::JSON',
     'Serializer';
 
 $s->_set_canonical;

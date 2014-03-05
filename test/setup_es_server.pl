@@ -1,10 +1,10 @@
 #!/usr/bin/env perl
 
 use lib 'lib';
-use Elasticsearch;
+use Search::Elasticsearch;
 use Capture::Tiny qw(capture_merged tee_merged);
 
-my $es = Elasticsearch->new;
+my $es = Search::Elasticsearch->new;
 my $base_url
     = "https://download.elasticsearch.org/elasticsearch/elasticsearch";
 

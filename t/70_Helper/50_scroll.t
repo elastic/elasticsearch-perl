@@ -10,7 +10,7 @@ our $es;
 
 BEGIN {
     $es = do "es_sync.pl";
-    use_ok 'Elasticsearch::Scroll';
+    use_ok 'Search::Elasticsearch::Scroll';
 }
 
 my $es_version = $es->info->{version}{number};
@@ -139,8 +139,9 @@ sub test_scroll {
     my ( $title, $params, %tests ) = @_;
     delete $params->{body}{aggs} unless $es_version ge '1';
     subtest $title => sub {
-        isa_ok my $s = Elasticsearch::Scroll->new( es => $es, %$params ),
-            'Elasticsearch::Scroll', $title;
+        isa_ok my $s
+            = Search::Elasticsearch::Scroll->new( es => $es, %$params ),
+            'Search::Elasticsearch::Scroll', $title;
 
         is $s->total,             $tests{total},     "$title - total";
         cmp_deeply $s->max_score, $tests{max_score}, "$title - max_score";

@@ -52,11 +52,11 @@ our %Test_Types = (
 );
 
 our %Errors = (
-    missing   => 'Elasticsearch::Error::Missing',
-    conflict  => 'Elasticsearch::Error::Conflict',
-    forbidden => 'Elasticsearch::Error::ClusterBlocked',
-    param     => 'Elasticsearch::Error::Param',
-    request   => 'Elasticsearch::Error::Request',
+    missing   => 'Search::Elasticsearch::Error::Missing',
+    conflict  => 'Search::Elasticsearch::Error::Conflict',
+    forbidden => 'Search::Elasticsearch::Error::ClusterBlocked',
+    param     => 'Search::Elasticsearch::Error::Param',
+    request   => 'Search::Elasticsearch::Error::Request',
 );
 
 my $test = shift @ARGV or die "No test specified";
@@ -357,7 +357,7 @@ sub str_version {
 sub request_wrapper {
 #===================================
     return sub { shift(@_) }
-        unless $es->transport->does('Elasticsearch::Role::Is_Async');
+        unless $es->transport->does('Search::Elasticsearch::Role::Is_Async');
 
     return sub {
         my $promise = shift;

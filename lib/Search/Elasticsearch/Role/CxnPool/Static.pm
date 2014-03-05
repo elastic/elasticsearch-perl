@@ -1,7 +1,7 @@
-package Elasticsearch::Role::CxnPool::Static;
+package Search::Elasticsearch::Role::CxnPool::Static;
 
 use Moo::Role;
-with 'Elasticsearch::Role::CxnPool';
+with 'Search::Elasticsearch::Role::CxnPool';
 requires 'next_cxn';
 
 use namespace::clean;
@@ -39,6 +39,6 @@ __END__
 
     $cxn_pool->schedule_check
 
-Forces a ping on each cxn in L<cxns()|Elasticsearch::Role::CxnPool/cxns()>
+Forces a ping on each cxn in L<cxns()|Search::Elasticsearch::Role::CxnPool/cxns()>
 before the next time that cxn is used for a request.
 

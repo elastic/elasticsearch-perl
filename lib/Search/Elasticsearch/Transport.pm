@@ -1,14 +1,15 @@
-package Elasticsearch::Transport;
+package Search::Elasticsearch::Transport;
 
 use Moo;
 
 use URI();
 use Time::HiRes qw(time);
 use Try::Tiny;
-use Elasticsearch::Util qw(upgrade_error);
+use Search::Elasticsearch::Util qw(upgrade_error);
 use namespace::clean;
 
-with 'Elasticsearch::Role::Is_Sync', 'Elasticsearch::Role::Transport';
+with 'Search::Elasticsearch::Role::Is_Sync',
+    'Search::Elasticsearch::Role::Transport';
 
 #===================================
 sub perform_request {
@@ -66,21 +67,21 @@ The Transport class manages the request cycle. It receives parsed requests
 from the (user-facing) client class, and tries to execute the request on a
 node in the cluster, retrying a request if necessary.
 
-This class does L<Elasticsearch::Role::Transport> and
-L<Elasticsearch::Role::Is_Sync>.
+This class does L<Search::Elasticsearch::Role::Transport> and
+L<Search::Elasticsearch::Role::Is_Sync>.
 
 =head1 CONFIGURATION
 
 =head2 C<send_get_body_as>
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         send_get_body_as => 'POST'
     );
 
-Certain endpoints like L<Elasticsearch::Client::Direct/search()> default to
-using a C<GET> method, even when they include a request body.  Some proxy
-servers do not support C<GET> requests with a body.  To work around this,
-the C<send_get_body_as>  parameter accepts the following:
+Certain endpoints like L<Search::Elasticsearch::Client::Direct/search()>
+default to using a C<GET> method, even when they include a request body.
+Some proxy servers do not support C<GET> requests with a body.  To work
+around this, the C<send_get_body_as>  parameter accepts the following:
 
 =over
 

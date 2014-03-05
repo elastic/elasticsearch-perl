@@ -1,11 +1,12 @@
 use Test::More;
-use Elasticsearch;
+use Search::Elasticsearch;
 use File::Temp;
 my $file = File::Temp->new;
 
 # default
 
-isa_ok my $l = Elasticsearch->new->logger, 'Elasticsearch::Logger::LogAny',
+isa_ok my $l = Search::Elasticsearch->new->logger,
+    'Search::Elasticsearch::Logger::LogAny',
     'Default Logger';
 
 is $l->log_as,           'elasticsearch.event',     'Log as';
@@ -16,8 +17,9 @@ isa_ok $l->trace_handle, 'Log::Any::Adapter::Null', 'Default - Trace to NULL';
 # stdout/stderr
 
 isa_ok $l
-    = Elasticsearch->new( log_to => 'Stderr', trace_to => 'Stdout' )->logger,
-    'Elasticsearch::Logger::LogAny',
+    = Search::Elasticsearch->new( log_to => 'Stderr', trace_to => 'Stdout' )
+    ->logger,
+    'Search::Elasticsearch::Logger::LogAny',
     'Std Logger';
 
 isa_ok $l->log_handle,   'Log::Any::Adapter::Stderr', 'Std - Log to Stderr';
@@ -25,10 +27,10 @@ isa_ok $l->trace_handle, 'Log::Any::Adapter::Stdout', 'Std - Trace to Stdout';
 
 # file
 
-isa_ok $l = Elasticsearch->new(
+isa_ok $l = Search::Elasticsearch->new(
     log_to   => [ 'File', $file->filename ],
     trace_to => [ 'File', $file->filename ]
-    )->logger, 'Elasticsearch::Logger::LogAny',
+    )->logger, 'Search::Elasticsearch::Logger::LogAny',
     'File Logger';
 
 isa_ok $l->log_handle,   'Log::Any::Adapter::File', 'File - Log to file';

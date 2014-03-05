@@ -3,7 +3,7 @@ use Test::Deep;
 use strict;
 use warnings;
 use lib 't/lib';
-use Elasticsearch::Bulk;
+use Search::Elasticsearch::Bulk;
 
 my $es = do "es_sync.pl";
 
@@ -60,7 +60,7 @@ sub test_flush {
 #===================================
     my $title  = shift;
     my $params = shift;
-    my $b      = Elasticsearch::Bulk->new(
+    my $b      = Search::Elasticsearch::Bulk->new(
         %$params,
         index => 'test',
         type  => 'test',

@@ -5,7 +5,7 @@ use Test::Exception;
 use strict;
 use warnings;
 use lib 't/lib';
-use Elasticsearch::Bulk;
+use Search::Elasticsearch::Bulk;
 use Log::Any::Adapter;
 
 my $es = do "es_sync.pl";
@@ -151,7 +151,7 @@ $es->indices->delete( index => 'test' );
 sub bulk {
 #===================================
     my $params = shift;
-    my $b      = Elasticsearch::Bulk->new(
+    my $b      = Search::Elasticsearch::Bulk->new(
         es => $es,
         %$params,
     );

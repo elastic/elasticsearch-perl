@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Elasticsearch::Bulk;
+use Search::Elasticsearch::Bulk;
 
 our $es;
 
@@ -8,7 +8,7 @@ $es->indices->delete( index => 'test', ignore => 404 );
 $es->indices->create( index => 'test' );
 $es->cluster->health( wait_for_status => 'yellow' );
 
-my $b = Elasticsearch::Bulk->new(
+my $b = Search::Elasticsearch::Bulk->new(
     es    => $es,
     index => 'test',
     type  => 'test'

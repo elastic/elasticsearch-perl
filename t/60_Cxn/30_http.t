@@ -1,7 +1,7 @@
 use Test::More;
 use Test::Exception;
 use Test::Deep;
-use Elasticsearch;
+use Search::Elasticsearch;
 
 sub is_cxn(@);
 
@@ -129,5 +129,5 @@ sub is_cxn (@) {
 #===================================
 sub new_cxn {
 #===================================
-    return Elasticsearch->new(@_)->transport->cxn_pool->cxns->[0];
+    return Search::Elasticsearch->new(@_)->transport->cxn_pool->cxns->[0];
 }

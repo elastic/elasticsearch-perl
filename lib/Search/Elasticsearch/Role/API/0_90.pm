@@ -1,9 +1,9 @@
-package Elasticsearch::Role::API::0_90;
+package Search::Elasticsearch::Role::API::0_90;
 
 use Moo::Role;
 
-use Elasticsearch::Util qw(throw);
-use Elasticsearch::Util::API::QS qw(qs_init);
+use Search::Elasticsearch::Util qw(throw);
+use Search::Elasticsearch::Util::API::QS qw(qs_init);
 use namespace::clean;
 
 our %API;
@@ -950,7 +950,7 @@ __END__
 =head1 DESCRIPTION
 
 All of the Elasticsearch APIs are defined in this role. The example given below
-is the definition for the L<Elasticsearch::Client::Direct/index()> method:
+is the definition for the L<Search::Elasticsearch::Client::Direct/index()> method:
 
     'index' => {
         body => {
@@ -969,7 +969,7 @@ is the definition for the L<Elasticsearch::Client::Direct/index()> method:
     },
 
 
-These definitions can be used by different L<Elasticsearch::Role::Client>
+These definitions can be used by different L<Search::Elasticsearch::Role::Client>
 implementations to provide distinct user interfaces.
 
 =head1 METHODS
@@ -991,14 +991,14 @@ C<indices> or C<cluster> namespace use the namespace as a prefix, eg:
 
 =item *
 
-L<Elasticsearch::Util::API::Path>
+L<Search::Elasticsearch::Util::API::Path>
 
 =item *
 
-L<Elasticsearch::Util::API::QS>
+L<Search::Elasticsearch::Util::API::QS>
 
 =item *
 
-L<Elasticsearch::Client::Direct>
+L<Search::Elasticsearch::Client::Direct>
 
 =back

@@ -1,13 +1,13 @@
-package Elasticsearch::TestServer;
+package Search::Elasticsearch::TestServer;
 
 use Moo;
-use Elasticsearch();
+use Search::Elasticsearch();
 use POSIX 'setsid';
 use File::Temp();
 use IO::Socket();
 use HTTP::Tiny;
 
-use Elasticsearch::Util qw(parse_params throw);
+use Search::Elasticsearch::Util qw(parse_params throw);
 use namespace::clean;
 
 has 'es_home'   => ( is => 'ro', required => 1 );
@@ -162,21 +162,21 @@ sub DEMOLISH { shift->shutdown }
 
 =head1 DESCRIPTION
 
-The L<Elasticsearch::TestServer> class can be used to launch one or more
+The L<Search::Elasticsearch::TestServer> class can be used to launch one or more
 instances of Elasticsearch for testing purposes.  The nodes will
 be shutdown automatically.
 
 =head1 SYNOPSIS
 
-    use Elasticsearch;
-    use Elasticsearch::TestServer;
+    use Search::Elasticsearch;
+    use Search::Elasticsearch::TestServer;
 
-    my $server = Elasticsearch::TestServer->new(
+    my $server = Search::Elasticsearch::TestServer->new(
         es_home   => '/path/to/elasticsearch',
     );
 
     my $nodes = $server->start;
-    my $es    = Elasticsearch->new( nodes => $nodes );
+    my $es    = Search::Elasticsearch->new( nodes => $nodes );
     # run tests
     $server->shutdown;
 
@@ -184,7 +184,7 @@ be shutdown automatically.
 
 =head2 C<new()>
 
-    my $server = Elasticsearch::TestServer->new(
+    my $server = Search::Elasticsearch::TestServer->new(
         es_home   => '/path/to/elasticsearch',
         instances => 1,
         http_port => 9600,
@@ -222,9 +222,9 @@ Defaults to 9700
     $nodes = $server->start;
 
 Starts the required instances and returns an array ref containing the IP
-and port of each node, suitable for passing to L<Elasticsearch/new()>:
+and port of each node, suitable for passing to L<Search::Elasticsearch/new()>:
 
-    $es = Elasticsearch->new( nodes => $nodes );
+    $es = Search::Elasticsearch->new( nodes => $nodes );
 
 =head1 C<shutdown()>
 

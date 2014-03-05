@@ -1,19 +1,19 @@
-package Elasticsearch;
+package Search::Elasticsearch;
 
 use Moo 1.003;
 
-use Elasticsearch::Util qw(parse_params load_plugin);
+use Search::Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
 our $VERSION = '1.05';
 
 my %Default_Plugins = (
-    client      => [ 'Elasticsearch::Client',       'Direct' ],
-    cxn_factory => [ 'Elasticsearch::Cxn::Factory', '' ],
-    cxn_pool    => [ 'Elasticsearch::CxnPool',      'Static' ],
-    logger      => [ 'Elasticsearch::Logger',       'LogAny' ],
-    serializer  => [ 'Elasticsearch::Serializer',   'JSON' ],
-    transport   => [ 'Elasticsearch::Transport',    '' ],
+    client      => [ 'Search::Elasticsearch::Client',       'Direct' ],
+    cxn_factory => [ 'Search::Elasticsearch::Cxn::Factory', '' ],
+    cxn_pool    => [ 'Search::Elasticsearch::CxnPool',      'Static' ],
+    logger      => [ 'Search::Elasticsearch::Logger',       'LogAny' ],
+    serializer  => [ 'Search::Elasticsearch::Serializer',   'JSON' ],
+    transport   => [ 'Search::Elasticsearch::Transport',    '' ],
 );
 
 my @Load_Order = qw(
@@ -41,51 +41,83 @@ sub new {
     return $params->{client};
 }
 
-package    # hide from pause
-    ElasticSearch::Deprecation;
-
-sub new {
-    my $class = shift;
-    die <<DEPRECATION;
-
-It appears that you are using a case-insensitive filesystem. You tried
-to load "ElasticSearch", but you have loaded "Elasticsearch" instead. See:
-
-    https://metacpan.org/release/Elasticsearch
-
-ElasticSearch has been replaced by the official client: Elasticsearch.
-To ease your transition from old to new, please install Elasticsearch::Compat:
-
-    https://metacpan.org/module/Elasticsearch::Compat
-
-DEPRECATION
-}
-
-@ElasticSearch::ISA = 'ElasticSearch::Deprecation';
-
 1;
 
 __END__
 
-# ABSTRACT: DEPRECATED: The official client for Elasticsearch
+# ABSTRACT: The official client for Elasticsearch
+
+=head1 SYNOPSIS
+
+    use Search::Elasticsearch;
+
+    # Connect to localhost:9200:
+
+    my $e = Search::Elasticsearch->new();
+
+    # Round-robin between two nodes:
+
+    my $e = Search::Elasticsearch->new(
+        nodes => [
+            'search1:9200',
+            'search2:9200'
+        ]
+    );
+
+    # Connect to cluster at search1:9200, sniff all nodes and round-robin between them:
+
+    my $e = Search::Elasticsearch->new(
+        nodes    => 'search1:9200',
+        cxn_pool => 'Sniff'
+    );
+
+    # Index a document:
+
+    $e->index(
+        index   => 'my_app',
+        type    => 'blog_post',
+        id      => 1,
+        body    => {
+            title   => 'Elasticsearch clients',
+            content => 'Interesting content...',
+            date    => '2013-09-24'
+        }
+    );
+
+    # Get the document:
+
+    my $doc = $e->get(
+        index   => 'my_app',
+        type    => 'blog_post',
+        id      => 1
+    );
+
+    # Search:
+
+    my $results = $e->search(
+        index => 'my_app',
+        body  => {
+            query => {
+                match => { title => 'elasticsearch' }
+            }
+        }
+    );
+
+    # Cluster requests:
+
+    $info        = $e->cluster->info;
+    $health      = $e->cluster->health;
+    $node_stats  = $e->cluster->node_stats
+
+    # Index requests:
+
+    $e->indices->create(index=>'my_index');
+    $e->indices->delete(index=>'my_index');
 
 =head1 DESCRIPTION
 
-B<THIS MODULE IS DEPRECATED.>
-
-******************************************************************************
-
-Because of the name clash between C<ElasticSearch.pm> and C<Elasticsearch.pm>
-the official Perl client is now called: L<Search::Elasticsearch>.
-
-See L<https://github.com/elasticsearch/elasticsearch-perl/issues/20> for details.
-
-This distribution will be removed from CPAN in 2015. Please update your code.
-
-******************************************************************************
-
-L<Elasticsearch> is the official Perl client for Elasticsearch, supported
-by L<elasticsearch.com|http://www.elasticsearch.com>.  Elasticsearch
+L<Search::Elasticsearch> is the official Perl client for Elasticsearch,
+supported by L<elasticsearch.com|http://www.elasticsearch.com>.  Elasticsearch
 itself is a flexible and powerful open source, distributed real-time
 search and analytics engine for the cloud.  You can read more about it
 on L<elasticsearch.org|http://www.elasticsearch.org>.
@@ -96,9 +128,9 @@ This version of the client supports the Elasticsearch 1.0 branch by
 default, which is not backwards compatible with the 0.90 branch.
 
 If you need to talk to a version of Elasticsearch before 1.0.0,
-please use L<Elasticsearch::Client::0_90::Direct> as follows:
+please use L<Search::Elasticsearch::Client::0_90::Direct> as follows:
 
-    $es = Elasticsearch->new( client => '0_90::Direct' );
+    $es = Search::Elasticsearch->new( client => '0_90::Direct' );
 
 =head2 Motivation
 
@@ -149,9 +181,9 @@ Good defaults
 =item *
 
 Helper utilities for more complex operations, such as
-L<bulk indexing|Elasticsearch::Bulk>,
-L<scrolled searches|Elasticsearch::Scroll> and
-L<reindexing|Elasticsearch::Bulk/"reindex()">.
+L<bulk indexing|Search::Elasticsearch::Bulk>,
+L<scrolled searches|Search::Elasticsearch::Scroll> and
+L<reindexing|Search::Elasticsearch::Bulk/"reindex()">.
 
 =item *
 
@@ -177,11 +209,11 @@ preferably the Java v7 from Sun.
 
 =head1 CREATING A NEW INSTANCE
 
-The L</new()> method returns a new L<client|Elasticsearch::Client::Direct>
+The L</new()> method returns a new L<client|Search::Elasticsearch::Client::Direct>
 which can be used to run requests against the Elasticsearch cluster.
 
-    use Elasticsearch;
-    my $e = Elasticsearch->new( %params );
+    use Search::Elasticsearch;
+    my $e = Search::Elasticsearch->new( %params );
 
 The most important arguments to L</new()> are the following:
 
@@ -192,13 +224,13 @@ talk to.  It can be a single node, multiples nodes or, if not
 specified, will default to C<localhost:9200>:
 
     # default: localhost:9200
-    $e = Elasticsearch->new();
+    $e = Search::Elasticsearch->new();
 
     # single
-    $e = Elasticsearch->new( nodes => 'search_1:9200');
+    $e = Search::Elasticsearch->new( nodes => 'search_1:9200');
 
     # multiple
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         nodes => [
             'search_1:9200',
             'search_2:9200'
@@ -210,11 +242,11 @@ Each C<node> can be a URL including a scheme, host, port, path and userinfo
 
     https://username:password@search.domain.com:443/prefix/path
 
-See L<Elasticsearch::Role::Cxn::HTTP/node> for more on node specification.
+See L<Search::Elasticsearch::Role::Cxn::HTTP/node> for more on node specification.
 
 =head2 C<cxn_pool>
 
-The L<CxnPool|Elasticsearch::Role::CxnPool> modules manage connections to
+The L<CxnPool|Search::Elasticsearch::Role::CxnPool> modules manage connections to
 nodes in the Elasticsearch cluster.  They handle the load balancing between
 nodes and failover when nodes fail. Which C<CxnPool> you should use depends on
 where your cluster is. There are three choices:
@@ -223,7 +255,7 @@ where your cluster is. There are three choices:
 
 =item * C<Static>
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         cxn_pool => 'Static'     # default
         nodes    => [
             'search1.domain.com:9200',
@@ -231,14 +263,14 @@ where your cluster is. There are three choices:
         ],
     );
 
-The L<Static|Elasticsearch::CxnPool::Static> connection pool, which is the
+The L<Static|Search::Elasticsearch::CxnPool::Static> connection pool, which is the
 default, should be used when you don't have direct access to the Elasticsearch
 cluster, eg when you are accessing the cluster through a proxy.  See
-L<Elasticsearch::CxnPool::Static> for more.
+L<Search::Elasticsearch::CxnPool::Static> for more.
 
 =item * C<Sniff>
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         cxn_pool => 'Sniff',
         nodes    => [
             'search1:9200',
@@ -246,16 +278,16 @@ L<Elasticsearch::CxnPool::Static> for more.
         ],
     );
 
-The L<Sniff|Elasticsearch::CxnPool::Sniff> connection pool should be used
+The L<Sniff|Search::Elasticsearch::CxnPool::Sniff> connection pool should be used
 when you B<do> have direct access to the Elasticsearch cluster, eg when
 your web servers and Elasticsearch servers are on the same network.
 The nodes that you specify are used to I<discover> the cluster, which is
 then I<sniffed> to find the current list of live nodes that the cluster
-knows about. See L<Elasticsearch::CxnPool::Sniff>.
+knows about. See L<Search::Elasticsearch::CxnPool::Sniff>.
 
 =item * C<Static::NoPing>
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         cxn_pool => 'Static::NoPing'
         nodes    => [
             'proxy1.domain.com:80',
@@ -263,11 +295,11 @@ knows about. See L<Elasticsearch::CxnPool::Sniff>.
         ],
     );
 
-The L<Static::NoPing|Elasticsearch::CxnPool::Static::NoPing> connection
+The L<Static::NoPing|Search::Elasticsearch::CxnPool::Static::NoPing> connection
 pool should be used when your access to a remote cluster is so limited
 that you cannot ping individual nodes with a C<HEAD /> request.
 
-See L<Elasticsearch::CxnPool::Static::NoPing> for more.
+See L<Search::Elasticsearch::CxnPool::Static::NoPing> for more.
 
 =back
 
@@ -278,16 +310,16 @@ requests which are sent to the cluster, and the response that is received.
 This can be enabled with the C<trace_to> parameter, as follows:
 
     # To STDERR
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         trace_to => 'Stderr'
     );
 
     # To a file
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         trace_to => ['File','/path/to/filename']
     );
 
-Logging is handled by L<Log::Any>.  See L<Elasticsearch::Logger::LogAny>
+Logging is handled by L<Log::Any>.  See L<Search::Elasticsearch::Logger::LogAny>
 for more information.
 
 =head2 Other
@@ -296,12 +328,12 @@ Other arguments are explained in the respective L<module docs|/MODULES>.
 
 =head1 RUNNING REQUESTS
 
-When you create a new instance of Elasticsearch, it returns a
-L<client|Elasticsearch::Client::Direct> object, which can be used for
+When you create a new instance of Search::Elasticsearch, it returns a
+L<client|Search::Elasticsearch::Client::Direct> object, which can be used for
 running requests.
 
-    use Elasticsearch;
-    my $e = Elasticsearch->new( %params );
+    use Search::Elasticsearch;
+    my $e = Search::Elasticsearch->new( %params );
 
     # create an index
     $e->indices->create( index => 'my_index' );
@@ -318,25 +350,25 @@ running requests.
         }
     );
 
-See L<Elasticsearch::Client::Direct> for more details about the requests that
+See L<Search::Elasticsearch::Client::Direct> for more details about the requests that
 can be run.
 
 =head1 MODULES
 
 Each chunk of functionality is handled by a different module,
 which can be specified in the call to L<new()> as shown in L<cxn_pool> above.
-For instance, the following will use the L<Elasticsearch::CxnPool::Sniff>
+For instance, the following will use the L<Search::Elasticsearch::CxnPool::Sniff>
 module for the connection pool.
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         cxn_pool => 'Sniff'
     );
 
 Custom modules can be named with the appropriate prefix,
-eg C<Elasticsearch::CxnPool::>, or by prefixing the full class name
+eg C<Search::Elasticsearch::CxnPool::>, or by prefixing the full class name
 with C<+>:
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         cxn_pool => '+My::Custom::CxnClass'
     );
 
@@ -353,11 +385,11 @@ See :
 
 =over
 
-=item * L<Elasticsearch::Client::Direct> (default, for 1.0 branch)
+=item * L<Search::Elasticsearch::Client::Direct> (default, for 1.0 branch)
 
-=item * L<Elasticsearch::Client::0_90::Direct> (for 0.90 branch)
+=item * L<Search::Elasticsearch::Client::0_90::Direct> (for 0.90 branch)
 
-=item * L<Elasticsearch::Client::Compat> (for migration from the old
+=item * L<Search::Elasticsearch::Client::Compat> (for migration from the old
 L<ElasticSearch> module)
 
 =back
@@ -370,7 +402,7 @@ retrying after failure where appropriate. See:
 
 =over
 
-=item * L<Elasticsearch::Transport>
+=item * L<Search::Elasticsearch::Transport>
 
 =back
 
@@ -381,13 +413,13 @@ See:
 
 =over
 
-=item * L<Elasticsearch::Cxn::HTTPTiny> (default)
+=item * L<Search::Elasticsearch::Cxn::HTTPTiny> (default)
 
-=item * L<Elasticsearch::Cxn::Hijk>
+=item * L<Search::Elasticsearch::Cxn::Hijk>
 
-=item * L<Elasticsearch::Cxn::LWP>
+=item * L<Search::Elasticsearch::Cxn::LWP>
 
-=item * L<Elasticsearch::Cxn::NetCurl>
+=item * L<Search::Elasticsearch::Cxn::NetCurl>
 
 =back
 
@@ -398,7 +430,7 @@ See:
 
 =over
 
-=item * L<Elasticsearch::Cxn::Factory>
+=item * L<Search::Elasticsearch::Cxn::Factory>
 
 =back
 
@@ -410,11 +442,11 @@ appropriate. See:
 
 =over
 
-=item * L<Elasticsearch::CxnPool::Static> (default)
+=item * L<Search::Elasticsearch::CxnPool::Static> (default)
 
-=item * L<Elasticsearch::CxnPool::Sniff>
+=item * L<Search::Elasticsearch::CxnPool::Sniff>
 
-=item * L<Elasticsearch::CxnPool::Static::NoPing>
+=item * L<Search::Elasticsearch::CxnPool::Static::NoPing>
 
 =back
 
@@ -424,7 +456,7 @@ The class to use for logging events and tracing HTTP requests/responses.  See:
 
 =over
 
-=item * L<Elasticsearch::Logger::LogAny>
+=item * L<Search::Elasticsearch::Logger::LogAny>
 
 =back
 
@@ -435,24 +467,24 @@ bodies.  See:
 
 =over
 
-=item * L<Elasticsearch::Serializer::JSON>
+=item * L<Search::Elasticsearch::Serializer::JSON>
 
 =back
 
 =head1 MIGRATING FROM ElasticSearch.pm
 
-See L<Elasticsearch::Compat>, which allows you to run your old
-L<ElasticSearch> code with the new L<Elasticsearch> module.
+See L<Search::Elasticsearch::Compat>, which allows you to run your old
+L<ElasticSearch> code with the new L<Search::Elasticsearch> module.
 
-The L<Elasticsearch> API is pretty similar to the old L<ElasticSearch> API,
-but there are a few differences.  The most notable are:
+The L<Search::Elasticsearch> API is pretty similar to the old L<ElasticSearch>
+API, but there are a few differences.  The most notable are:
 
 =head2 C<hosts> vs C<servers>
 
-When instantiating a new Elasticsearch instance, use C<nodes> instead of
-C<servers>:
+When instantiating a new Search::Elasticsearch instance, use C<nodes> instead
+of C<servers>:
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         nodes => [ 'search1:9200', 'search2:9200' ]
     );
 
@@ -461,14 +493,14 @@ C<servers>:
 By default, the new client does not sniff the cluster to discover nodes.
 To enable sniffing, use:
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         cxn_pool => 'Sniff',
         nodes    => [ 'search1:9200', 'search2:9200' ]
     );
 
 To disable sniffing (the equivalent of setting C<no_refresh> to C<true>), do:
 
-    $e = Elasticsearch->new(
+    $e = Search::Elasticsearch->new(
         nodes    => [ 'search1:9200', 'search2:9200' ]
     );
 
@@ -501,17 +533,16 @@ The new client uses L<Log::Any> for event logging and request tracing.
 To trace requests/responses in C<curl> format, do:
 
     # To STDERR
-    $e = Elasticsearch->new (trace_to => 'Stderr');
+    $e = Search::Elasticsearch->new (trace_to => 'Stderr');
 
     # To a file
-    $e = Elasticsearch->new (trace_to => ['File','/path/to/file.log']);
+    $e = Search::Elasticsearch->new (trace_to => ['File','/path/to/file.log']);
 
 =head2 SearchBuilder
 
 The old API integrated L<ElasticSearch::SearchBuilder> for an L<SQL::Abstract>
 style of writing queries and filters in Elasticsearch.
-This integration does not exist in the new client, but will be added in a
-future module.
+This integration does not exist in the new client.
 
 =head2 Bulk methods and C<scrolled_search()>
 
@@ -520,9 +551,12 @@ C<bulk_index()> and C<reindex()> have been removed from the main client,
 and the C<bulk()> method itself now simply returns the response from
 Elasticsearch. It doesn't interfere with processing at all.
 
-These helper methods have been replaced by the L<Elasticsearch::Bulk> class.
-Similarly, C<scrolled_search()> has been replaced by the
-L<Elasticsearch::Scroll>.
+These helper methods have been replaced by the L<Search::Elasticsearch::Bulk>
+class. Similarly, C<scrolled_search()> has been replaced by the
+L<Search::Elasticsearch::Scroll>.  These helper classes are accessible as:
+
+    $bulk   = $e->bulk_helper( %args_to_new );
+    $scroll = $e->scroll_helper( %args_to_new );
 
 =head1 TODO
 
@@ -531,11 +565,6 @@ L<Elasticsearch::Scroll>.
 =item * Async support
 
 Add async support using L<Promises> for L<AnyEvent> and perhaps L<Mojo>.
-
-=item * New frontend
-
-Add a new client with a similar less verbose interface to L<ElasticSearch>
-and integration with L<ElasticSearch::SearchBuilder>.
 
 =back
 
@@ -553,7 +582,7 @@ your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Elasticsearch
+    perldoc Search::Elasticsearch
 
 You can also look for information at:
 
@@ -565,12 +594,12 @@ L<http://github.com/elasticsearch/elasticsearch-perl>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Elasticsearch>
+L<http://cpanratings.perl.org/d/Search::Elasticsearch>
 
 
 =item * Search MetaCPAN
 
-L<https://metacpan.org/module/Elasticsearch>
+L<https://metacpan.org/module/Search::Elasticsearch>
 
 =item * IRC
 
@@ -597,4 +626,4 @@ DATA YOU WANT TO KEEP!>
 You can change the Cxn class which is used by setting the C<ES_CXN>
 environment variable:
 
-    ES_CXN=HTTPTiny ES=localhost:9200 make test
+    ES_CXN=Hijk ES=localhost:9200 make test

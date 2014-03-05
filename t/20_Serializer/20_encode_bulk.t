@@ -1,7 +1,7 @@
 use Test::More;
 use Test::Deep;
 use Test::Exception;
-use Elasticsearch;
+use Search::Elasticsearch;
 
 my $utf8_bytes = "彈性搜索";
 my $utf8_str   = $utf8_bytes;
@@ -11,8 +11,8 @@ my $arr       = [ $hash, $hash ];
 my $json_hash = qq({"foo":"$utf8_bytes"});
 my $json_arr  = qq($json_hash\n$json_hash\n);
 
-isa_ok my $s = Elasticsearch->new->transport->serializer,
-    'Elasticsearch::Serializer::JSON', 'Serializer';
+isa_ok my $s = Search::Elasticsearch->new->transport->serializer,
+    'Search::Elasticsearch::Serializer::JSON', 'Serializer';
 
 is $s->encode_bulk(), undef,    #
     'Enc - No args returns undef';

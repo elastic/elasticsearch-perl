@@ -1,4 +1,4 @@
-use Elasticsearch;
+use Search::Elasticsearch;
 use Test::More;
 use strict;
 use warnings;
@@ -16,7 +16,7 @@ my $cxn_pool = $ENV{ES_CXN_POOL} || 'Static';
 
 my $es;
 if ( $ENV{ES} ) {
-    $es = Elasticsearch->new(
+    $es = Search::Elasticsearch->new(
         nodes            => $ENV{ES},
         trace_to         => $trace,
         cxn              => $cxn,

@@ -1,8 +1,8 @@
-package Elasticsearch::Client::Direct::Nodes;
+package Search::Elasticsearch::Client::Direct::Nodes;
 
 use Moo;
-with 'Elasticsearch::Role::API';
-with 'Elasticsearch::Role::Client::Direct';
+with 'Search::Elasticsearch::Role::API';
+with 'Search::Elasticsearch::Role::Client::Direct';
 __PACKAGE__->_install_api('nodes');
 
 1;
@@ -16,7 +16,7 @@ __END__
 This module provides methods to make node-level requests, such as
 retrieving node info and stats.
 
-It does L<Elasticsearch::Role::Client::Direct>.
+It does L<Search::Elasticsearch::Role::Client::Direct>.
 
 =head1 METHODS
 
@@ -80,7 +80,7 @@ Allowed metrics are:
     C<transport>
 
 If the C<indices> metric (or C<_all>) is specified, then
-L<indices_stats|Elasticsearch::Client::Direct::Indices/indices_stats()>
+L<indices_stats|Search::Elasticsearch::Client::Direct::Indices/indices_stats()>
 information is returned on a per-node basis. Which indices stats are
 returned can be controlled with the C<index_metric> parameter:
 

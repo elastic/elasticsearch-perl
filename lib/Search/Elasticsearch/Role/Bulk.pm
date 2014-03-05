@@ -1,9 +1,9 @@
-package Elasticsearch::Role::Bulk;
+package Search::Elasticsearch::Role::Bulk;
 
 use Moo::Role;
 requires 'add_action', 'flush';
 
-use Elasticsearch::Util qw(parse_params throw);
+use Search::Elasticsearch::Util qw(parse_params throw);
 use namespace::clean;
 
 has 'es'          => ( is => 'ro', required => 1 );
@@ -241,4 +241,4 @@ sub _doc_transformer {
 
 1;
 
-# ABSTRACT: Provides common functionality to L<Elasticseach::Bulk> and L<Elasticsearch::Async::Bulk>
+# ABSTRACT: Provides common functionality to L<Elasticseach::Bulk> and L<Search::Elasticsearch::Async::Bulk>

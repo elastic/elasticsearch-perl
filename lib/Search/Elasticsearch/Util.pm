@@ -1,7 +1,7 @@
-package Elasticsearch::Util;
+package Search::Elasticsearch::Util;
 
 use Moo;
-use Elasticsearch::Error();
+use Search::Elasticsearch::Error();
 use Scalar::Util qw(blessed);
 use Module::Runtime qw(compose_module_name is_module_name use_module);
 use Sub::Exporter -setup => {
@@ -68,23 +68,25 @@ sub load_plugin {
 sub throw {
 #===================================
     my ( $type, $msg, $vars ) = @_;
-    die Elasticsearch::Error->new( $type, $msg, $vars, 1 );
+    die Search::Elasticsearch::Error->new( $type, $msg, $vars, 1 );
 }
 
 #===================================
 sub new_error {
 #===================================
     my ( $type, $msg, $vars ) = @_;
-    return Elasticsearch::Error->new( $type, $msg, $vars, 1 );
+    return Search::Elasticsearch::Error->new( $type, $msg, $vars, 1 );
 }
 
 #===================================
 sub upgrade_error {
 #===================================
     my ( $error, $vars ) = @_;
-    return ref($error) && $error->isa('Elasticsearch::Error')
+    return
+        ref($error) && $error->isa('Search::Elasticsearch::Error')
         ? $error
-        : Elasticsearch::Error->new( "Internal", $error, $vars || {}, 1 );
+        : Search::Elasticsearch::Error->new( "Internal", $error, $vars || {},
+        1 );
 }
 
 #===================================
@@ -92,9 +94,9 @@ sub is_compat {
 #===================================
     my ( $attr, $one, $two ) = @_;
     my $role
-        = $one->does('Elasticsearch::Role::Is_Sync')
-        ? 'Elasticsearch::Role::Is_Sync'
-        : 'Elasticsearch::Role::Is_Async';
+        = $one->does('Search::Elasticsearch::Role::Is_Sync')
+        ? 'Search::Elasticsearch::Role::Is_Sync'
+        : 'Search::Elasticsearch::Role::Is_Async';
 
     return if eval { $two->does($role); };
     my $class = ref($two) || $two;
@@ -103,4 +105,4 @@ sub is_compat {
 
 1;
 
-# ABSTRACT: A utility class for internal use by Elasticsearch
+# ABSTRACT: A utility class for internal use by Search::Elasticsearch

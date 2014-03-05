@@ -1,8 +1,8 @@
-package Elasticsearch::Role::Scroll;
+package Search::Elasticsearch::Role::Scroll;
 
 use Moo::Role;
 requires 'finish';
-use Elasticsearch::Util qw(parse_params throw);
+use Search::Elasticsearch::Util qw(parse_params throw);
 use Scalar::Util qw(weaken blessed);
 use namespace::clean;
 
@@ -40,4 +40,4 @@ sub DEMOLISH {
 
 1;
 
-# ABSTRACT: Provides common functionality to L<Elasticseach::Scroll> and L<Elasticsearch::Async::Scroll>
+# ABSTRACT: Provides common functionality to L<Elasticseach::Scroll> and L<Search::Elasticsearch::Async::Scroll>

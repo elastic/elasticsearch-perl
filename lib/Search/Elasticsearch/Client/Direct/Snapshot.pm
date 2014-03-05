@@ -1,8 +1,8 @@
-package Elasticsearch::Client::Direct::Snapshot;
+package Search::Elasticsearch::Client::Direct::Snapshot;
 
 use Moo;
-with 'Elasticsearch::Role::API';
-with 'Elasticsearch::Role::Client::Direct';
+with 'Search::Elasticsearch::Role::API';
+with 'Search::Elasticsearch::Role::Client::Direct';
 __PACKAGE__->_install_api('snapshot');
 
 1;
@@ -17,7 +17,7 @@ This module provides methods to manage snapshot/restore, or backups.
 It can create, get and delete configured backup repositories, and
 create, get, delete and restore snapshots of your cluster or indices.
 
-It does L<Elasticsearch::Role::Client::Direct>.
+It does L<Search::Elasticsearch::Role::Client::Direct>.
 
 =head1 METHODS
 

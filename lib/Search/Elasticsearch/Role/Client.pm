@@ -1,4 +1,4 @@
-package Elasticsearch::Role::Client;
+package Search::Elasticsearch::Role::Client;
 
 use Moo::Role;
 use namespace::clean;
@@ -34,4 +34,4 @@ implementations.
 This method takes whatever arguments it is passed and passes them directly to
 a C<parse_request()> method (which should be provided by Client implementations).
 The C<parse_request()> method should return a request suitable for passing
-to L<Elasticsearch::Transport/perform_request()>.
+to L<Search::Elasticsearch::Transport/perform_request()>.

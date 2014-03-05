@@ -1,10 +1,10 @@
-package Elasticsearch::Client::Direct;
+package Search::Elasticsearch::Client::Direct;
 
 use Moo;
-with 'Elasticsearch::Role::API';
-with 'Elasticsearch::Role::Client::Direct';
+with 'Search::Elasticsearch::Role::API';
+with 'Search::Elasticsearch::Role::Client::Direct';
 
-use Elasticsearch::Util qw(parse_params load_plugin is_compat);
+use Search::Elasticsearch::Util qw(parse_params load_plugin is_compat);
 use namespace::clean;
 
 has 'cluster'             => ( is => 'lazy', init_arg => undef );
@@ -63,7 +63,7 @@ sub _build__scroll_class {
 sub _build_helper {
 #===================================
     my ( $self, $name, $sub_class ) = @_;
-    my $class = load_plugin( 'Elasticsearch', $sub_class );
+    my $class = load_plugin( 'Search::Elasticsearch', $sub_class );
     is_compat( $name . '_helper_class', $self->transport, $class );
     return $class;
 }
@@ -114,8 +114,8 @@ __END__
 
 Create a client:
 
-    use Elasticsearch;
-    my $e = Elasticsearch->new(
+    use Search::Elasticsearch;
+    my $e = Search::Elasticsearch->new(
         client => 'Direct'          # default
     );
 
@@ -189,10 +189,10 @@ Snapshot and restore:
 
 =head1 DESCRIPTION
 
-The L<Elasticsearch::Client::Direct> class provides the default
+The L<Search::Elasticsearch::Client::Direct> class provides the default
 client that is returned by:
 
-    $e = Elasticsearch->new;
+    $e = Search::Elasticsearch->new;
 
 It is intended to be as close as possible to the native REST API that
 Elasticsearch uses, so that it is easy to translate the
@@ -210,9 +210,9 @@ This version of the client supports the Elasticsearch 1.0 branch by
 default, which is not backwards compatible with the 0.90 branch.
 
 If you need to talk to a version of Elasticsearch before 1.0.0,
-please use L<Elasticsearch::Client::0_90::Direct> as follows:
+please use L<Search::Elasticsearch::Client::0_90::Direct> as follows:
 
-    $es = Elasticsearch->new(
+    $es = Search::Elasticsearch->new(
         client => '0_90::Direct'
     );
 
@@ -266,7 +266,7 @@ The request body should be passed in the C<body> key:
 The body can also be a UTF8-decoded string, which will be converted into
 UTF-8 bytes and passed as is:
 
-    $e->analyze( body => "The quick brown fox");
+    $e->indices->analyze( body => "The quick brown fox");
 
 =head2 Ignore parameter
 
@@ -280,7 +280,7 @@ status codes to ignore in the C<ignore> parameter.
     );
 
 This is most useful for
-L<Missing|Elasticsearch::Error/Elasticsearch::Error::Missing> errors, which
+L<Missing|Search::Elasticsearch::Error/Search::Elasticsearch::Error::Missing> errors, which
 are triggered by a C<404> status code when some requested resource does
 not exist.
 
@@ -296,12 +296,12 @@ Multiple error codes can be specified with an array:
 =head2 C<bulk_helper_class>
 
 The class to use for the L</bulk_helper()> method. Defaults to
-L<Elasticsearch::Bulk>.
+L<Search::Elasticsearch::Bulk>.
 
 =head2 C<scroll_helper_class>
 
 The class to use for the L</scroll_helper()> method. Defaults to
-L<Elasticsearch::Scroll>.
+L<Search::Elasticsearch::Scroll>.
 
 =head1 GENERAL METHODS
 
@@ -323,7 +323,7 @@ response, otherwise it throws an error.
 
     $indices_client = $e->indices;
 
-Returns an L<Elasticsearch::Client::Direct::Indices> object which can be used
+Returns an L<Search::Elasticsearch::Client::Direct::Indices> object which can be used
 for managing indices, eg creating, deleting indices, managing mapping,
 index settings etc.
 
@@ -331,21 +331,21 @@ index settings etc.
 
     $cluster_client = $e->cluster;
 
-Returns an L<Elasticsearch::Client::Direct::Cluster> object which can be used
+Returns an L<Search::Elasticsearch::Client::Direct::Cluster> object which can be used
 for managing the cluster, eg cluster-wide settings and cluster health.
 
 =head2 C<nodes()>
 
     $node_client = $e->nodes;
 
-Returns an L<Elasticsearch::Client::Direct::Nodes> object which can be used
+Returns an L<Search::Elasticsearch::Client::Direct::Nodes> object which can be used
 to retrieve node info and stats.
 
 =head2 C<snapshot()>
 
     $snapshot_client = $e->snapshot;
 
-Returns an L<Elasticsearch::Client::Direct::Snapshot> object which
+Returns an L<Search::Elasticsearch::Client::Direct::Snapshot> object which
 is used for managing backup repositories and creating and restoring
 snapshots.
 
@@ -353,7 +353,7 @@ snapshots.
 
     $cat_client = $e->cat;
 
-Returns an L<Elasticsearch::Client::Direct::Cat> object which can be used
+Returns an L<Search::Elasticsearch::Client::Direct::Cat> object which can be used
 to retrieve simple to read text info for debugging and monitoring an
 Elasticsearch cluster.
 
@@ -620,7 +620,7 @@ that need to be made, bulk requests greatly improve performance.
         body    => [ actions ]          # required
     );
 
-See L<Elasticsearch::Bulk> and L</bulk_helper()> for a helper module that makes
+See L<Search::Elasticsearch::Bulk> and L</bulk_helper()> for a helper module that makes
 bulk indexing simpler to use.
 
 The C<bulk()> method can perform multiple L</index()>, L</create()>,
@@ -696,7 +696,7 @@ for more information.
     $bulk_helper = $e->bulk_helper( @args );
 
 Returns a new instance of the class specified in the L</bulk_helper_class>,
-which defaults to L<Elasticsearch::Bulk>.
+which defaults to L<Search::Elasticsearch::Bulk>.
 
 =head2 C<mget()>
 
@@ -905,7 +905,7 @@ Query string parameters:
 See the L<search reference|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-body.html>
 for more information.
 
-Also see L<Elasticsearch::Transport/send_get_body_as>.
+Also see L<Search::Elasticsearch::Transport/send_get_body_as>.
 
 =head2 C<count()>
 
@@ -955,7 +955,7 @@ B<NOTE:> you will almost always want to set the
 C<search_type> to C<scan> in your
 original C<search()> request.
 
-See L</scroll_helper()> and L<Elasticsearch::Scroll> for a helper utility
+See L</scroll_helper()> and L<Search::Elasticsearch::Scroll> for a helper utility
 which makes managing scroll requests much easier.
 
 Query string parameters:
@@ -980,7 +980,7 @@ up resources on the server.
     $scroll_helper = $e->scroll_helper( @args );
 
 Returns a new instance of the class specified in the L</scroll_helper_class>,
-which defaults to L<Elasticsearch::Scroll>.
+which defaults to L<Search::Elasticsearch::Scroll>.
 
 
 =head2 C<msearch()>

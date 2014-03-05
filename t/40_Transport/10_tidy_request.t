@@ -1,8 +1,9 @@
 use Test::More;
 use Test::Deep;
-use Elasticsearch;
+use Search::Elasticsearch;
 
-isa_ok my $t = Elasticsearch->new->transport, 'Elasticsearch::Transport';
+isa_ok my $t = Search::Elasticsearch->new->transport,
+    'Search::Elasticsearch::Transport';
 test_tidy( 'Empty', {}, {} );
 test_tidy( 'Method', { method => 'POST' }, { method => 'POST' } );
 test_tidy( 'Path',   { path   => '/foo' }, { path   => '/foo' } );

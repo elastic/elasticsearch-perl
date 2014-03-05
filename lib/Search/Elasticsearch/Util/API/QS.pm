@@ -1,4 +1,4 @@
-package Elasticsearch::Util::API::QS;
+package Search::Elasticsearch::Util::API::QS;
 
 use strict;
 use warnings;
@@ -246,13 +246,13 @@ __END__
 =head1 DESCRIPTION
 
 This class contains a definition of each query string parameter that
-can be accepted by actions in the L<API|Elasticsearch::Role::API>.
+can be accepted by actions in the L<API|Search::Elasticsearch::Role::API>.
 
 =head1 EXPORTS
 
 =head2 C<qs_init()>
 
-    use Elasticsearch::Util::API::QS qw(qs_init);
+    use Search::Elasticsearch::Util::API::QS qw(qs_init);
     $handler = qs_init( @qs_params );
     $qs_hash = $handler->($params);
 

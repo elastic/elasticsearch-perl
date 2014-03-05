@@ -1,7 +1,7 @@
 use Test::More;
 use Test::Deep;
 use Test::Exception;
-use Elasticsearch;
+use Search::Elasticsearch;
 
 my $utf8_bytes = "彈性搜索";
 my $utf8_str   = $utf8_bytes;
@@ -22,8 +22,8 @@ my $json_arr = <<JSON;
 ]
 JSON
 
-isa_ok my $s = Elasticsearch->new->transport->serializer,
-    'Elasticsearch::Serializer::JSON', 'Serializer';
+isa_ok my $s = Search::Elasticsearch->new->transport->serializer,
+    'Search::Elasticsearch::Serializer::JSON', 'Serializer';
 
 # encode
 is $s->encode_pretty(), undef,    #

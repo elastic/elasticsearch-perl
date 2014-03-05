@@ -1,11 +1,11 @@
-package Elasticsearch::Role::Transport;
+package Search::Elasticsearch::Role::Transport;
 
 use Moo::Role;
 
 requires qw(perform_request);
 
 use Try::Tiny;
-use Elasticsearch::Util qw(parse_params is_compat);
+use Search::Elasticsearch::Util qw(parse_params is_compat);
 use namespace::clean;
 
 has 'serializer'       => ( is => 'ro', required => 1 );
