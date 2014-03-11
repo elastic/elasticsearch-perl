@@ -8,7 +8,7 @@ use Test::Deep;
 use Data::Dumper;
 use File::Basename;
 
-our %Supported = ( regex => 1 );
+our %Supported = ( regex => 1, gtelte => 1 );
 
 use lib qw(lib t/lib);
 
@@ -37,6 +37,14 @@ our %Test_Types = (
     gt => sub {
         my ( $got, $expect, $name ) = @_;
         ok( $got > $expect, $name );
+    },
+    lte => sub {
+        my ( $got, $expect, $name ) = @_;
+        ok( $got <= $expect, $name );
+    },
+    gte => sub {
+        my ( $got, $expect, $name ) = @_;
+        ok( $got >= $expect, $name );
     },
     match => sub {
         my ( $got, $expect, $name ) = @_;
