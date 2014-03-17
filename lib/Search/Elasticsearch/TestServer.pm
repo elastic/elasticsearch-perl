@@ -98,7 +98,7 @@ sub _start_node {
         if ( $pid == 0 ) {
             throw( 'Internal', "Can't start a new session: $!" )
                 if setsid == -1;
-            exec(@config);
+            exec(@config) or die "Couldn't execute @config: $!";
         }
         else {
             for ( 1 .. 5 ) {
@@ -107,7 +107,7 @@ sub _start_node {
             }
             open my $pid_fh, '<', $pid_file->filename;
             my $pid = <$pid_fh>;
-            throw( 'Internal', "ES is running, but no PID found" )
+            throw( 'Internal', "No PID file found for Elasticsearch" )
                 unless $pid;
             chomp $pid;
             push @{ $self->{pids} }, $pid;
