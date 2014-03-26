@@ -1068,6 +1068,16 @@ sub api {
         ],
     },
 
+    'indices.recovery' => {
+        doc   => "indices-recovery",
+        parts => { index => { multi => 1 } },
+        paths => [
+            [ { index => 0 }, "{index}", "_recovery" ],
+            [ {}, "_recovery" ]
+        ],
+        qs => [ "active_only", "detailed", "human" ],
+    },
+
     'indices.refresh' => {
         doc    => "indices-refresh",
         method => "POST",

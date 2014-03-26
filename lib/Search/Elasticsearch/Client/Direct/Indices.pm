@@ -707,6 +707,22 @@ Query string parameters:
 See the L<status docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-status.html>
 for more information.
 
+=head2 C<recovery()>
+
+    $result = $e->indices->recovery(
+        index   => 'index' | \@indices      # optional
+    );
+
+Provides insight into on-going shard recoveries.
+
+Query string parameters:
+    C<active_only>,
+    C<detailed>,
+    C<human>
+
+See the L<recovery docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-recovery.html>
+for more information.
+
 =head2 C<segments()>
 
     $result = $e->indices->segments(
