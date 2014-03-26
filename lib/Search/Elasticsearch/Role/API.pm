@@ -564,6 +564,13 @@ sub api {
         qs    => [ "h", "help", "local", "master_timeout", "v" ],
     },
 
+    'cat.plugins' => {
+        doc   => "cat-plugins",
+        parts => {},
+        paths => [ [ {}, "_cat", "plugins" ] ],
+        qs    => [ "h", "help", "local", "master_timeout", "v" ],
+    },
+
     'cat.recovery' => {
         doc   => "cat-recovery",
         parts => { index => { multi => 1 } },

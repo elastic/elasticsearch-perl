@@ -214,6 +214,22 @@ Query string parameters:
 See the L<cat pending-tasks docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-pending-tasks.html>
 for more information.
 
+=head2 C<plugins()>
+
+    say $e->cat->plugins();
+
+Returns information about plugins installed on each node.
+
+Query string parameters:
+    C<local>,
+    C<master_timeout>,
+    C<h>,
+    C<help>,
+    C<v>
+
+See the L<cat plugins docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-plugins.html>
+for more information.
+
 =head2 C<recovery()>
 
     say $e->cat->recovery(
