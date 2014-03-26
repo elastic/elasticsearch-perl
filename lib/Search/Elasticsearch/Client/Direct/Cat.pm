@@ -245,7 +245,6 @@ Query string parameters:
     C<bytes>,
     C<h>,
     C<help>,
-    C<local>,
     C<master_timeout>,
     C<v>
 

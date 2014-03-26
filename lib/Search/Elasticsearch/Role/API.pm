@@ -578,7 +578,7 @@ sub api {
             [ { index => 2 }, "_cat", "recovery", "{index}" ],
             [ {}, "_cat", "recovery" ],
         ],
-        qs => [ "bytes", "h", "help", "local", "master_timeout", "v" ],
+        qs => [ "bytes", "h", "help", "master_timeout", "v" ],
     },
 
     'cat.shards' => {
