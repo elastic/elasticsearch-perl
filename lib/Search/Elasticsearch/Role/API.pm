@@ -1338,6 +1338,24 @@ sub api {
         qs => [ "master_timeout", "wait_for_completion" ],
     },
 
+    'snapshot.status' => {
+        doc   => "modules-snapshots",
+        parts => { repository => {}, snapshot => { multi => 1 } },
+        paths => [
+            [   { repository => 1, snapshot => 2 }, "_snapshot",
+                "{repository}", "{snapshot}",
+                "_status",
+            ],
+            [   { snapshot => 2 }, "_snapshot",
+                "_all", "{snapshot}",
+                "_status"
+            ],
+            [ { repository => 1 }, "_snapshot", "{repository}", "_status" ],
+            [ {}, "_snapshot", "_status" ],
+        ],
+        qs => ["master_timeout"],
+    },
+
 #=== AUTOGEN - END ===
 
 );

@@ -119,7 +119,7 @@ for more information.
 
     $e->snapshot->restore(
         repository  => 'repository',              # required
-        snapshot    => 'snapshot'                 # required,
+        snapshot    => 'snapshot'                 # required
 
         body        => { what to restore }        # optional
     );
@@ -133,4 +133,17 @@ Query string parameters:
 See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.
 
+=head2 C<status()>
 
+    $result = $e->snapshot->status(
+        repository  => 'repository',              # optional
+        snapshot    => 'snapshot' | \@snapshots   # optional
+    );
+
+Returns status information about the specified snapshots.
+
+Query string parameters:
+    C<master_timeout>
+
+See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+for more information.
