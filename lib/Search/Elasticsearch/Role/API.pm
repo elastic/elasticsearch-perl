@@ -411,6 +411,22 @@ sub api {
         ],
     },
 
+    'search_template' => {
+        body  => {},
+        doc   => "search-search",
+        parts => { index => { multi => 1 }, type => { multi => 1 } },
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_search",
+                "template",
+            ],
+            [ { type => 1 }, "_all", "{type}", "_search", "template" ],
+            [ { index => 0 }, "{index}", "_search", "template" ],
+            [ {}, "_search", "template" ],
+        ],
+        qs => [],
+    },
+
     'suggest' => {
         body   => { required => 1 },
         doc    => "search-search",

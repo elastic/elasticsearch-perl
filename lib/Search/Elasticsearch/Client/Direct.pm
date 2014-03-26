@@ -939,6 +939,37 @@ Query string parameters:
 See the L<count docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-count.html>
 for more information.
 
+=head2 C<search_template()>
+
+    $results = $e->search_template(
+        index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional
+
+        body    => { search params }        # optional
+    );
+
+Perform a search by specifying a template (either predefined or defined
+within the C<body>) and parameters to use with the template, eg:
+
+    $results = $e->search_template(
+        template => {
+            query => {
+                match => {
+                    "{{my_field}}" => "{{my_value}}"
+                }
+            },
+            size => "{{my_size}}"
+        },
+        params => {
+            my_field => 'foo',
+            my_value => 'bar',
+            my_size  => 5
+        }
+    );
+
+See the L<search template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-template.html>
+for more information.
+
 =head2 C<scroll()>
 
     $results = $e->scroll(
