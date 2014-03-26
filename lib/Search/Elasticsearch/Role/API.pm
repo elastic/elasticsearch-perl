@@ -982,10 +982,10 @@ sub api {
             [ {}, "_optimize" ]
         ],
         qs => [
-            "allow_no_indices", "expand_wildcards",
-            "flush",            "ignore_unavailable",
-            "max_num_segments", "only_expunge_deletes",
-            "wait_for_merge",
+            "allow_no_indices",     "expand_wildcards",
+            "flush",                "force",
+            "ignore_unavailable",   "max_num_segments",
+            "only_expunge_deletes", "wait_for_merge",
         ],
     },
 

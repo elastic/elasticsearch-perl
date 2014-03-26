@@ -194,6 +194,7 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<flush>,
+    C<force>,
     C<ignore_unavailable>,
     C<max_num_segments>,
     C<only_expunge_deletes>,
