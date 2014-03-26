@@ -20,6 +20,7 @@ our %Handler = (
 );
 
 our %Params = (
+    active_only      => { type => 'bool' },
     all              => { type => 'bool' },
     allow_no_indices => { type => 'bool' },
     analyze_wildcard => { type => 'bool' },
@@ -38,11 +39,12 @@ our %Params = (
         options => [ 'AND', 'OR' ],
         type    => 'enum'
     },
-    delay            => { type => 'duration' },
-    df               => { type => 'string' },
-    docs             => { type => 'bool' },
-    dry_run          => { type => 'bool' },
-    exit             => { type => 'bool' },
+    delay    => { type => 'duration' },
+    detailed => { type => 'bool' },
+    df       => { type => 'string' },
+    docs     => { type => 'bool' },
+    dry_run  => { type => 'bool' },
+    exit     => { type => 'bool' },
     expand_wildcards => { type => 'enum', options => [ 'open', 'closed' ] },
     explain          => { type => 'bool' },
     field            => { type => 'string' },
