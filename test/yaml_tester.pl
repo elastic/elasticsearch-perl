@@ -32,19 +32,27 @@ our %Test_Types = (
     },
     lt => sub {
         my ( $got, $expect, $name ) = @_;
-        ok( $got < $expect, $name );
+        no warnings 'uninitialized';
+        ok( $got < $expect, $name )
+            or diag "Expected '< $expect', got '$got'";
     },
     gt => sub {
         my ( $got, $expect, $name ) = @_;
-        ok( $got > $expect, $name );
+        no warnings 'uninitialized';
+        ok( $got > $expect, $name )
+            or diag "Expected '> $expect', got '$got'";
     },
     lte => sub {
         my ( $got, $expect, $name ) = @_;
-        ok( $got <= $expect, $name );
+        no warnings 'uninitialized';
+        ok( $got <= $expect, $name )
+            or diag "Expected '<= $expect', got '$got'";
     },
     gte => sub {
         my ( $got, $expect, $name ) = @_;
-        ok( $got >= $expect, $name );
+        no warnings 'uninitialized';
+        ok( $got >= $expect, $name )
+            or diag "Expected '>= $expect', got '$got'";
     },
     match => sub {
         my ( $got, $expect, $name ) = @_;
