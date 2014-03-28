@@ -2,7 +2,7 @@ package Search::Elasticsearch::Role::CxnPool::Sniff;
 
 use Moo::Role;
 with 'Search::Elasticsearch::Role::CxnPool';
-requires 'next_cxn', 'sniff', 'sniff_cxn';
+requires 'next_cxn', 'sniff';
 use namespace::clean;
 
 use Search::Elasticsearch::Util qw(parse_params);

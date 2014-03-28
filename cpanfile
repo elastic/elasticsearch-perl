@@ -1,4 +1,5 @@
 requires "Any::URI::Escape" => "0";
+requires "AnyEvent::HTTP" => "0";
 requires "Data::Dumper" => "0";
 requires "Encode" => "0";
 requires "File::Temp" => "0";
@@ -18,10 +19,12 @@ requires "Log::Any" => "0";
 requires "Log::Any::Adapter" => "0";
 requires "MIME::Base64" => "0";
 requires "Module::Runtime" => "0";
+requires "Mojo::UserAgent" => "0";
 requires "Moo" => "1.003";
 requires "Moo::Role" => "0";
 requires "Net::Curl::Easy" => "0";
 requires "POSIX" => "0";
+requires "Promises" => "0.91";
 requires "Scalar::Util" => "0";
 requires "Sub::Exporter" => "0";
 requires "Time::HiRes" => "0";
@@ -40,6 +43,8 @@ on 'build' => sub {
 };
 
 on 'test' => sub {
+  requires "AE" => "0";
+  requires "EV" => "0";
   requires "Log::Any::Adapter::Callback" => "0";
   requires "Test::Deep" => "0";
   requires "Test::Exception" => "0";
