@@ -17,8 +17,9 @@ my $client
     ? 'es_async.pl'
     : 'es_sync.pl';
 
-my $es = do $client or die $!;
-my $wrapper = request_wrapper();
+my $es        = do $client or die $!;
+my $wrapper   = request_wrapper();
+my $skip_list = load_skip_list();
 
 our %Test_Types = (
     is_true => sub {
@@ -103,6 +104,11 @@ sub test_files {
 
     for my $file (@files) {
         my ($name) = ( $file =~ m{([\w.]+/[\w.]+\.yaml)} );
+        if ( $skip_list->{$name} ) {
+            $es->logger->trace_comment("SKIPPING: $name in skip list");
+        SKIP: { skip "$name in skip list", 1 }
+            next;
+        }
         my (@asts) = eval { LoadFile($file) } or do {
             fail "Error parsing test file ($file): $@";
             next;
@@ -384,4 +390,15 @@ sub request_wrapper {
     };
 }
 
+#===================================
+sub load_skip_list {
+#===================================
+    my $v = $wrapper->( $es->info )->{version};
+    my $version
+        = $v->{build_snapshot} ? $v->{number} . '_SNAPSHOT' : $v->{number};
+    my $skip_list = LoadFile("test/skip_list.yaml")->{$version}
+        or return {};
+    return { map { $_ => 1 } @$skip_list }
+
+}
 1;
