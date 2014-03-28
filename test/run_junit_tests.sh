@@ -24,8 +24,8 @@ run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl --junit
 export JUNIT_OUTPUT_FILE=yaml_netcurl.xml
 run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --junit --cxn NetCurl
 
-export JUNIT_OUTPUT_FILE=yaml_netcurl.xml
-run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --junit --cxn Hijk -v --trace
+export JUNIT_OUTPUT_FILE=yaml_hijk.xml
+run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --junit --cxn Hijk
 
 export ES_BODY='POST'
 
@@ -46,7 +46,7 @@ export ES_BODY='source'
 export JUNIT_OUTPUT_FILE=sync_source.xml
 run 'Sync tests - source body' prove --harness=TAP::Harness::JUnit -l t/*/*.t
 
-export JUNIT_OUTPUT_FILE=yaml_post.xml
+export JUNIT_OUTPUT_FILE=yaml_source.xml
 run 'YAML::HTTPTiny - source body' ./test/run_yaml_tests.pl --junit
 
 #########################
