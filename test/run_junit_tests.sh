@@ -25,7 +25,7 @@ function run {
 #run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --cxn NetCurl
 
 export JUNIT_OUTPUT_FILE=yaml_netcurl.xml
-run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --cxn Hijk --trace elasticsearch/rest-api-spec/test/update/
+run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --cxn Hijk -v elasticsearch/rest-api-spec/test/update/
 
 #export ES_BODY='POST'
 #
