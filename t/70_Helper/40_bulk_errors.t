@@ -14,21 +14,13 @@ my $is_0_90 = $es->info->{version}{number} =~ /^0.90/;
 
 $es->indices->delete( index => '_all' );
 
-my @Bad_Metadata = { index => '_bad', type => '_bad', source => {} };
 my @Std = (
     { id => 1, source => { count => 1 } },
     { id => 1, source => { count => 'foo' } },
     { id => 1, version => 10, source => {} },
 );
 
-my $b;
-
-## Request error - clears buffer
-$b = bulk( {}, @Bad_Metadata );
-throws_ok { $b->flush } qr/Request/, "Request error";
-is $b->_buffer_size, 0, 'Request error - buffer cleared';
-
-my ( $success_count, $error_count, $custom_count, $conflict_count );
+my ( $b, $success_count, $error_count, $custom_count, $conflict_count );
 
 # Cxn error - to not clear buffers
 
