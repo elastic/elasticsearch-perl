@@ -1,19 +1,31 @@
 0.90.12:
+    - create/75_ttl.yaml
+    - index/75_ttl.yaml
     - update/75_ttl.yaml
 
 0.90.13:
+    - create/75_ttl.yaml
+    - index/75_ttl.yaml
     - update/75_ttl.yaml
 
 1.0.0:
+    - create/75_ttl.yaml
+    - index/75_ttl.yaml
     - update/75_ttl.yaml
 
 1.0.1:
+    - create/75_ttl.yaml
+    - index/75_ttl.yaml
     - update/75_ttl.yaml
 
 1.0.2:
+    - create/75_ttl.yaml
+    - index/75_ttl.yaml
     - update/75_ttl.yaml
 
 1.1.0:
+    - create/75_ttl.yaml
+    - index/75_ttl.yaml
     - update/75_ttl.yaml
     - search/40_search_request_template.yaml
 
