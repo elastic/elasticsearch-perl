@@ -19,13 +19,13 @@ export JUNIT_OUTPUT_FILE=sync_tests.xml
 run "Sync tests"        prove --harness=TAP::Harness::JUnit -l t/*/*.t
 
 export JUNIT_OUTPUT_FILE=yaml_lwp.xml
-run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl --junit
+run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl --junit -t
 
 export JUNIT_OUTPUT_FILE=yaml_netcurl.xml
-run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --junit --cxn NetCurl
+run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --junit --cxn NetCurl -t
 
 export JUNIT_OUTPUT_FILE=yaml_hijk.xml
-run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --junit --cxn Hijk
+run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --junit --cxn Hijk -t
 
 export ES_BODY='POST'
 

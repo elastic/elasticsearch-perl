@@ -7,6 +7,7 @@ use Test::More;
 use Test::Deep;
 use Data::Dumper;
 use File::Basename;
+use Time::HiRes qw(gettimeofday);
 
 our %Supported = ( regex => 1, gtelte => 1 );
 
@@ -270,7 +271,16 @@ sub run_cmd {
     for (@methods) {
         $obj = $obj->$_;
     }
-    return $wrapper->( $obj->$final(%$params) );
+
+    $es->logger->trace_comment( "Start: " . timestamp() );
+    my ( $result, $error );
+    eval {
+        $result = $wrapper->( $obj->$final(%$params) );
+        1;
+    } or $error = $@;
+    $es->logger->trace_comment( "End: " . timestamp() );
+    die $error if $error;
+    return $result;
 }
 
 #===================================
@@ -400,5 +410,16 @@ sub load_skip_list {
         or return {};
     return { map { $_ => 1 } @$skip_list }
 
+}
+
+#===================================
+sub timestamp {
+#===================================
+    my ( $time, $ns ) = gettimeofday;
+    my ( $s, $m, $h, $d, $M, $y ) = localtime($time);
+    $M++;
+    $y += 1900;
+    return sprintf "%d-%02d-%02d %02d:%02d:%02d,%d", $y, $M, $d, $h, $m, $s,
+        $ns;
 }
 1;
