@@ -23,7 +23,6 @@ wait_for(
     )
 );
 
-my @Bad_Metadata = { index => '_bad', type => '_bad', source => {} };
 my @Std = (
     { id => 1, source => { count => 1 } },
     { id => 1, source => { count => 'foo' } },
@@ -32,12 +31,6 @@ my @Std = (
 
 my ( $b, $error, $success_count, $error_count, $custom_count,
     $conflict_count );
-
-## Request error - clears buffer
-$b = bulk( {}, @Bad_Metadata );
-wait_for( $b->flush );
-like $error, qr/Request/, "Request error";
-is $b->_buffer_size, 0, 'Request error - buffer cleared';
 
 # Cxn error - to not clear buffers
 

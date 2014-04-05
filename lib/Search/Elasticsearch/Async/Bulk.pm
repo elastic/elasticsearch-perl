@@ -75,7 +75,10 @@ sub flush {
 #===================================
     my $self = shift;
 
-    unless ( $self->_buffer_size ) {
+    my $size  = $self->_buffer_size;
+    my $count = $self->_buffer_count;
+
+    unless ($size) {
         return deferred->resolve( { items => [] } )->promise;
     }
 
@@ -87,11 +90,20 @@ sub flush {
         print ".";
     }
 
-    my $promise = $self->es->bulk( %{ $self->_bulk_args }, body => \@items );
-    $promise->done(
-        sub { $self->_report( \@items, @_ ) },
-        sub { $self->on_fatal->(@_) }
-    );
+    my $promise
+        = $self->es->bulk( %{ $self->_bulk_args }, body => \@items )->catch(
+        sub {
+            my $error = shift;
+            if ( $error->isa('Cxn') ) {
+                push @{ $self->buffer }, @items;
+                $self->_buffer_size( $self->_buffer_size + $size );
+                $self->_buffer_count( $self->_buffer_count + $count );
+            }
+            die $error;
+        }
+        );
+    $promise->then( sub { $self->_report( \@items, @_ ) },
+        sub { $self->on_fatal(@_) } );
     return $promise;
 }
 
@@ -180,66 +192,60 @@ sub _hash_to_scroll {
 
 1;
 
-__END__
-
 # ABSTRACT: A helper module for the Bulk API and for reindexing
 
 =head1 SYNOPSIS
 
-    use Search::Elasticsearch;
-    use Search::Elasticsearch::Bulk;
+    use Search::Elasticsearch::Async;
 
-    my $es   = Search::Elasticsearch->new;
-    my $bulk = Search::Elasticsearch::Bulk->new(
-        es      => $es,
+    my $es   = Search::Elasticsearch::Async->new;
+    my $bulk = $es->bulk_helper(
         index   => 'my_index',
         type    => 'my_type'
     );
 
     # Index docs:
-    $bulk->index({ id => 1, source => { foo => 'bar' }});
-    $bulk->add_action( index => { id => 1, source => { foo=> 'bar' }});
+    $promise = $bulk->index({ id => 1, source => { foo => 'bar' }});
+    $promise = $bulk->add_action( index => { id => 1, source => { foo=> 'bar' }});
 
     # Create docs:
-    $bulk->create({ id => 1, source => { foo => 'bar' }});
-    $bulk->add_action( create => { id => 1, source => { foo=> 'bar' }});
-    $bulk->create_docs({ foo => 'bar' })
+    $promise = $bulk->create({ id => 1, source => { foo => 'bar' }});
+    $promise = $bulk->add_action( create => { id => 1, source => { foo=> 'bar' }});
+    $promise = $bulk->create_docs({ foo => 'bar' })
 
     # Delete docs:
-    $bulk->delete({ id => 1});
-    $bulk->add_action( delete => { id => 1 });
-    $bulk->delete_ids(1,2,3)
+    $promise = $bulk->delete({ id => 1});
+    $promise = $bulk->add_action( delete => { id => 1 });
+    $promise = $bulk->delete_ids(1,2,3)
 
     # Update docs:
-    $bulk->update({ id => 1, script => '...' });
-    $bulk->add_action( update => { id => 1, script => '...' });
+    $promise = $bulk->update({ id => 1, script => '...' });
+    $promise = $bulk->add_action( update => { id => 1, script => '...' });
 
     # Manual flush
-    $bulk->flush
+    $promise = $bulk->flush;
 
     # Reindex docs:
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es      => $es,
+    $bulk = $es->bulk_helper(
         index   => 'new_index',
         verbose => 1
     );
 
-    $bulk->reindex( source => { index => 'old_index' });
+    $promise = $bulk->reindex( source => { index => 'old_index' });
 
 =head1 DESCRIPTION
 
-This module provides a wrapper for the L<Search::Elasticsearch::Client::Direct/bulk()>
+This module provides an async wrapper for the L<Search::Elasticsearch::Client::Direct/bulk()>
 method which makes it easier to run multiple create, index, update or delete
 actions in a single request. It also provides a simple interface
 for L<reindexing documents|/REINDEXING DOCUMENTS>.
 
-The L<Search::Elasticsearch::Bulk> module acts as a queue, buffering up actions
+The L<Search::Elasticsearch::Bulk::Async> module acts as a queue, buffering up actions
 until it reaches a maximum count of actions, or a maximum size of JSON request
 body, at which point it issues a C<bulk()> request.
 
 Once you have finished adding actions, call L</flush()> to force the final
 C<bulk()> request on the items left in the queue.
-
 
 This class does L<Search::Elasticsearch::Role::Bulk> and
 L<Search::Elasticsearch::Role::Is_Async>.
@@ -248,8 +254,7 @@ L<Search::Elasticsearch::Role::Is_Async>.
 
 =head2 C<new()>
 
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es          => $es,                 # required
+    $bulk = $es->bulk_helper(
 
         index       => 'default_index',     # optional
         type        => 'default_type',      # optional
@@ -263,12 +268,12 @@ L<Search::Elasticsearch::Role::Is_Async>.
         on_success  => sub {...},           # optional
         on_error    => sub {...},           # optional
         on_conflict => sub {...},           # optional
-
+        on_fatal    => sub {...},           # optional
 
     );
 
-The C<new()> method returns a new C<$bulk> object.  You must pass your
-Search::Elasticsearch client as the C<es> argument.
+The C<bulk_helper> method loads L<Search::Elasticsearch::Async::Bulk>,
+calls L</new()> with the specified parameters and returns a new C<$bulk> object.
 
 The C<index> and C<type> parameters provide default values for
 C<index> and C<type>, which can be overridden in each action.
@@ -281,10 +286,13 @@ See L</flush()> for more information about the other parameters.
 
 =head2 C<flush()>
 
-    $result = $bulk->flush;
+    $promise = $bulk->flush;
 
 The C<flush()> method sends all buffered actions to Elasticsearch using
-a L<bulk()|Search::Elasticsearch::Client::Direct/bulk()> request.
+a L<bulk()|Search::Elasticsearch::Client::Direct/bulk()> request and returns
+a L<Promise>, which is rejected if the bulk request fails or if any of
+the C<on_success>, C<on_error> or C<on_conflict> callbacks throws an
+exception, otherwise it is resolved with the items that have been flushed.
 
 =head2 Auto-flushing
 
@@ -310,21 +318,17 @@ to C<1_000,000> bytes.
 
 =head2 Errors when flushing
 
-There are three levels of error which can be thrown when L</flush()>
+There are two levels of error which can be thrown when L</flush()>
 is called, either manually or automatically.
 
 =over
 
 =item * Temporary Elasticsearch errors
 
-For instance, a C<NoNodes> error which indicates that your cluster is down.
+A C<Cxn> error like a C<NoNodes> error which indicates that your cluster is down.
 These errors do not clear the buffer, as they can be retried later on.
-
-=item * Request errors
-
-For instance, if one of your actions is malformed (eg you are missing
-a required parameter like C<index>) then the whole L</flush()> request is
-aborted and the buffer is cleared of all actions.
+These errors are reported via the C<on_fatal> callback and by rejecting
+the promise returned by L</flush()>, L</index()> etc.
 
 =item * Action errors
 
@@ -361,8 +365,7 @@ will have C<$i> set to C<0>, the second will have C<$i> set to C<1> etc.
 
 =head3 C<on_success>
 
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es          => $es,
+    $bulk = $e->bulk_helper->new(
         on_success  => sub {
             my ($action,$response,$i) = @_;
             # do something
@@ -374,8 +377,7 @@ response.
 
 =head3 C<on_conflict>
 
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es           => $es,
+    $bulk = $e->bulk_helper->new(
         on_conflict  => sub {
             my ($action,$response,$i,$version) = @_;
             # do something
@@ -389,8 +391,7 @@ of the document currently stored in Elasticsearch (if found).
 
 =head3 C<on_error>
 
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es        => $es,
+    $bulk = $e->bulk_helper->new(
         on_error  => sub {
             my ($action,$response,$i) = @_;
             # do something
@@ -406,21 +407,57 @@ If you want to be in control of flushing, and you just want to receive
 the raw response that Elasticsearch sends instead of using callbacks,
 then you can do so as follows:
 
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es          => $es,
+    $bulk = $e->bulk_helper->new(
         max_count   => 0,
         max_size    => 0,
         on_error    => undef
     );
 
     $bulk->add_actions(....);
-    $response = $bulk->flush;
+    $bulk->flush
+         ->then(
+            sub { my $response = shift; ...},
+            sub { my $error = shift; ....}
+           )
 
 =head1 CREATE, INDEX, UPDATE, DELETE
 
+The L</add_action()>, L</create()>, L</create_docs()>, L</index()>,
+L</delete()>, L</delete_ids()> and L</update()> methods all return a Promise,
+which is resolved once the actions have been added to the queue and
+AFTER the queue has been flushed (if necessary).  It is important
+to wait for the promise to be resolved before continuing to queue more
+items, otherwise the pending requests may fill up your available memory.
+
+For instance:
+
+    use Promises qw(deferred);
+    use Scalar::Util qw(weaken);
+
+    $bulk = $es->bulk_helper;
+
+    sub bulk_index {
+        my $d = deferred;
+        my $weak_cb;
+        my $cb = sub {
+            my @docs = get_next_docs_from_somewhere();
+            unless (@docs) {
+                return $d->resolve;
+            }
+            $bulk->index(@docs)
+                 ->then(
+                      $weak_cb,
+                      sub { $d->reject(@_) }
+                   );
+        };
+        weaken ($weak_cb = $cb);
+        $cb->();
+        $d->promise->then( sub {$b->flush} );
+    }
+
 =head2 C<add_action()>
 
-    $bulk->add_action(
+    $promise = $bulk->add_action(
         create => { ...params... },
         index  => { ...params... },
         update => { ...params... },
@@ -445,7 +482,7 @@ they must be specified either in L</new()> or in every action.
 
 =head2 C<create()>
 
-    $bulk->create(
+    $promise = $bulk->create(
         { index => 'custom_index',         source => { doc body }},
         { type  => 'custom_type', id => 1, source => { doc body }},
         ...
@@ -458,7 +495,7 @@ parameter, instead of as C<body>.
 
 =head2 C<create_docs()>
 
-    $bulk->create_docs(
+    $promise = $bulk->create_docs(
         { doc body },
         { doc body },
         ...
@@ -471,7 +508,7 @@ you can just pass the individual document bodies.
 
 =head2 C<index()>
 
-    $bulk->index(
+    $promise = $bulk->index(
         { index => 'custom_index',         source => { doc body }},
         { type  => 'custom_type', id => 1, source => { doc body }},
         ...
@@ -484,7 +521,7 @@ parameter, instead of as C<body>.
 
 =head2 C<delete()>
 
-    $bulk->delete(
+    $promise = $bulk->delete(
         { index => 'custom_index', id => 1},
         { type  => 'custom_type',  id => 2},
         ...
@@ -503,7 +540,7 @@ In this case, all you have to do is to pass in a list of IDs.
 
 =head2 C<update()>
 
-    $bulk->update(
+    $promise = $bulk->update(
         { id            => 1,
           doc           => { partial doc },
           doc_as_upsert => 1
@@ -534,7 +571,7 @@ the bulk indexer indexes the data into the new index.
 
 =head2 C<reindex()>
 
-    $bulk->reindex(
+    $promise = $bulk->reindex(
         source       => $source,                # required
         transform    => \&transform,            # optional
         version_type => 'external|internal',    # optional
@@ -546,9 +583,9 @@ the source for the documents which are to be reindexed.
 =head2 Reindexing from another index
 
 If the C<source> argument is a HASH ref, then the hash is passed to
-L<Search::Elasticsearch::Scroll/new()> to create a new scrolled search.
+L<Search::Elasticsearch::Async::Scroll/new()> to create a new scrolled search.
 
-    $bulk = Search::Elasticsearch::Bulk->new(
+    $bulk = $es->bulk_helper->new(
         index   => 'new_index',
         verbose => 1
     );
@@ -559,6 +596,9 @@ L<Search::Elasticsearch::Scroll/new()> to create a new scrolled search.
             size        => 500,         # default
             search_type => 'scan'       # default
         }
+    )->then(
+        sub { say "Done"},
+        sub { die @_    }
     );
 
 If a default C<index> or C<type> has been specified in the call to
@@ -575,7 +615,7 @@ This allows you to pass any iterator, wrapped in an anonymous sub:
 
     my $iter = get_iterator_from_somewhere();
 
-    $bulk->reindex(
+    $promise = $bulk->reindex(
         source => sub { $iter->next }
     );
 
@@ -586,7 +626,7 @@ using a callback.  The callback receives the document as the only argument,
 and should return the updated document, or C<undef> if the document should
 not be indexed:
 
-    $bulk->reindex(
+    $promise = $bulk->reindex(
         source      => { index => 'old_index' },
         transform   => sub {
             my $doc = shift;
@@ -606,14 +646,18 @@ By default, L</reindex()> expects the source and destination indices
 to be in the same cluster. To pull data from one cluster and index it into
 another, you can use two separate C<$es> objects:
 
-    $es_local  = Search::Elasticsearch->new( nodes => 'localhost:9200' );
-    $es_remote = Search::Elasticsearch->new( nodes => 'search1:9200' );
+    $es_target  = Search::Elasticsearch::Async->new( nodes => 'localhost:9200' );
+    $es_source  = Search::Elasticsearch::Async->new( nodes => 'search1:9200' );
 
-    Search::Elasticsearch::Bulk->new(
-        es => $es_local,
+    $promise = $es_target->bulk_helper(
         verbose => 1
     )
-    -> reindex( es => $es_remote );
+    -> reindex(
+          source => {
+              es    => $es_source,
+              index => 'my_index'
+          }
+    );
 
 =head2 Parents and routing
 
@@ -621,7 +665,7 @@ If you are using parent-child relationships or custom C<routing> values,
 and you want to preserve these when you reindex your documents, then
 you will need to request these values specifically, as follows:
 
-    $bulk->reindex(
+    $promise = $bulk->reindex(
         source => {
             index   => 'old_index',
             fields  => ['_source','_parent','_routing']
@@ -662,7 +706,7 @@ number is C<version>.
 If you would like to reindex documents from one index to another, preserving
 the C<version> numbers from the original index, then you need the following:
 
-    $bulk->reindex(
+    $promise = $bulk->reindex(
         source => {
             index   => 'old_index',
             version => 1,               # retrieve version numbers in search

@@ -72,28 +72,30 @@ sub perform_request {
 
 1;
 
-__END__
 
-#ABSTRACT: Interface between the client class the Elasticsearch cluster
+#ABSTRACT: Provides async interface between the client class and the Elasticsearch cluster
 
 =head1 DESCRIPTION
 
-The Transport class manages the request cycle. It receives parsed requests
+The Async::Transport class manages the request cycle. It receives parsed requests
 from the (user-facing) client class, and tries to execute the request on a
 node in the cluster, retrying a request if necessary.
+
+This class does L<Search::Elasticsearch::Role::Transport> and
+L<Search::Elasticsearch::Role::Is_Async>.
 
 =head1 CONFIGURATION
 
 =head2 C<send_get_body_as>
 
-    $e = Search::Elasticsearch->new(
+    $e = Search::Elasticsearch::Async->new(
         send_get_body_as => 'POST'
     );
 
-Certain endpoints like L<Search::Elasticsearch::Client::Direct/search()> default to
-using a C<GET> method, even when they include a request body.  Some proxy
-servers do not support C<GET> requests with a body.  To work around this,
-the C<send_get_body_as>  parameter accepts the following:
+Certain endpoints like L<Search::Elasticsearch::Client::Direct/search()>
+default to using a C<GET> method, even when they include a request body.
+Some proxy servers do not support C<GET> requests with a body.  To work
+around this, the C<send_get_body_as>  parameter accepts the following:
 
 =over
 
@@ -121,7 +123,7 @@ Elasticsearch, but usually is around 4kB.
 
 Raw requests can be executed using the transport class as follows:
 
-    $result = $e->transport->perform_request(
+    $promise = $e->transport->perform_request(
         method => 'POST',
         path   => '/_search',
         qs     => { from => 0, size => 10 },
@@ -134,6 +136,9 @@ Raw requests can be executed using the transport class as follows:
         }
     );
 
+C<perform_request()> returns a L<Promise> object, which will be resolved
+(success) or rejected (error) at some point in the future.
+
 Other than the C<method>, C<path>, C<qs> and C<body> parameters, which
 should be self-explanatory, it also accepts:
 
@@ -144,7 +149,7 @@ should be self-explanatory, it also accepts:
 The HTTP error codes which should be ignored instead of throwing an error,
 eg C<404 NOT FOUND>:
 
-    $result = $e->transport->perform_request(
+    $promise = $e->transport->perform_request(
         method => 'GET',
         path   => '/index/type/id'
         ignore => [404],

@@ -52,8 +52,7 @@ sub flush {
     catch {
         my $error = $_;
         $self->clear_buffer
-            if $error->is('Request')
-            and not $error->is('Unavailable');
+            unless $error->is('Cxn');
 
         die $error;
     };
@@ -227,21 +226,15 @@ to C<1_000,000> bytes.
 
 =head2 Errors when flushing
 
-There are three levels of error which can be thrown when L</flush()>
+There are two types of error which can be thrown when L</flush()>
 is called, either manually or automatically.
 
 =over
 
 =item * Temporary Elasticsearch errors
 
-For instance, a C<NoNodes> error which indicates that your cluster is down.
+A C<Cxn> error like a C<NoNodes> error which indicates that your cluster is down.
 These errors do not clear the buffer, as they can be retried later on.
-
-=item * Request errors
-
-For instance, if one of your actions is malformed (eg you are missing
-a required parameter like C<index>) then the whole L</flush()> request is
-aborted and the buffer is cleared of all actions.
 
 =item * Action errors
 

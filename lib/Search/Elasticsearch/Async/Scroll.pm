@@ -44,7 +44,7 @@ sub BUILDARGS {
 #===================================
 sub _build_on_error {
 #===================================
-    sub { warn "Scroll error: @_" }
+    sub { warn "Scroll error: @_"; die @_ }
 }
 
 #===================================
@@ -184,28 +184,45 @@ after 'finish' => sub {
 
 1;
 
-__END__
-
 # ABSTRACT: A helper module for scrolled searches
 
 =head1 SYNOPSIS
 
-    use Search::Elasticsearch;
-    use Search::Elasticearch::Scroll;
+    use Search::Elasticsearch::Async;
 
-    my $es     = Search::Elasticsearch->new;
+    my $es = Search::Elasticsearch::Async->new;
 
-    my $scroll = Search::ElasticSearch::Scroll->new(
-        es          => $es,
+    my $scroll = $es->scroll_helper
         index       => 'my_index',
         search_type => 'scan',
-        size        => 500
+        size        => 500,
+        on_start    => \&on_start,
+        on_result   => \&on_result,
+      | on_results  => \&on_results,
+        on_error    => \&on_error
     );
 
-    say "Total hits: ". $scroll->total;
+    $scroll->start->then( sub {say "Done"}, sub { warn @_ } );
 
-    while (my $doc = $scroll->next) {
-        # do something
+    sub on_start {
+        my $scroll = shift;
+        say "Total hits: ". $scroll->total;
+    }
+
+    sub on_result {
+        my $doc = shift;
+        do_something($doc);
+    }
+
+    sub on_results {
+        for my $doc (@_) {
+            do_something($doc)
+        }
+    }
+
+    sub on_error {
+        my $error = shift;
+        warn "$error";
     }
 
 =head1 DESCRIPTION
@@ -228,6 +245,11 @@ them easier to use.
 B<IMPORTANT>: Deep scrolling can be expensive.  See L</DEEP SCROLLING>
 for more.
 
+
+This class does L<Search::Elasticsearch::Role::Scroll> and
+L<Search::Elasticsearch::Role::Is_Async>.
+
+
 =head1 USE CASES
 
 There are two primary use cases:
@@ -240,28 +262,43 @@ results.  With a scrolled search you can keep pulling more results
 until you have enough.  For instance, you can search emails in a mailing
 list, and return results grouped by C<thread_id>:
 
-    my (%groups,@results);
+    use Promises qw(deferred);
 
-    my $scroll = Search::Elasticsearch::Scroll->new(
-        es    => $es,
-        index => 'my_emails',
-        type  => 'email',
-        body  => { query => {... some query ... }}
-    );
+    sub find_email_threads {
+        my (%groups,@results,$scroll);
 
-    my $doc;
-    while (@results < 10 and $doc = $scroll->next) {
+        my $d = deferred;
 
-        my $thread = $doc->{_source}{thread_id};
+        $scroll = $es->scroll_helper(
+            index     => 'my_emails',
+            type      => 'email',
+            body      => { query => {... some query ... }},
+            on_result => sub {
+                my $doc = shift;
+                my $thread = $doc->{_source}{thread_id};
+                unless ($groups{$thread}) {
+                    $groups{$thread} = [];
+                    push @results, $groups{$thread};
+                }
+                push @{$groups{$thread}},$doc;
 
-        unless ($groups{$thread}) {
-            $groups{$thread} = [];
-            push @results, $groups{$thread};
-        }
-        push @{$groups{$thread}},$doc;
+                # stop collecting if we have 10 results
+                if (@results == 10) {
+                    $scroll->finish;
+                }
+            }
+        );
 
+        $scroll->start->then(
+            # resolve with results if completed successfully
+            sub { $d->resolve(@results) },
+
+            # reject with error if failed
+            sub { $d->reject(@_) }
+        );
+
+        return $d->promise;
     }
-
 
 =head2 Extracting all documents
 
@@ -273,8 +310,7 @@ order, you just want to retrieve all documents which match a query, and do
 something with them. For instance, to retrieve all the docs for a particular
 C<client_id>:
 
-    my $scroll = Search::Elasticsearch::Scroll->new(
-        es          => $es,
+    $es->scroll_helper(
         index       => 'my_index',
         search_type => 'scan',          # important!
         size        => 500,
@@ -284,17 +320,14 @@ C<client_id>:
                     client_id => 123
                 }
             }
-        }
-    );
-
-    while my ( $doc = $scroll->next ) {
-        # do something
-    }
+        },
+        on_result => sub { do_something(@_) }
+    )->start;
 
 Very often the I<something> that you will want to do with these results
 involves bulk-indexing them into a new index. The easiest way to
 marry a scrolled search with bulk indexing is to use the
-L<Search::Elasticsearch::Bulk/reindex()> method.
+L<Search::Elasticsearch::Async::Bulk/reindex()> method.
 
 =head1 DEEP SCROLLING
 
@@ -319,11 +352,10 @@ The problem with deep scrolling is the sorting phase.  If we disable sorting,
 then we can happily scroll through millions of documents efficiently.  The
 way to do this is to set C<search_type> to C<scan>:
 
-    $scroll = Search::Elasticsearch::Scroll->new(
-        es          => $es,
+    $es->scroll_helper(
         search_type => 'scan',
         size        => 500,
-    );
+    )->start;
 
 Scanning disables sorting and will just return C<size> results from each
 shard until there are no more results to return. B<Note>: this means
@@ -335,20 +367,26 @@ are memory constrained, you will need to take this into account.
 
 =head2 C<new()>
 
-    use Search::Elasticsearch;
-    use Search::Elasticsearch::Scroll;
+    use Search::Elasticsearch::Async;
 
-    my $es = Search::Elasticsearch->new(...);
-    my $scroll = Search::Elasticsearch::Scroll->new(
-        es      => $es,                         # required
-        scroll  => '1m',                        # optional
-        %search_params
+    my $es = Search::Elasticsearch::Async->new(...);
+    my $scroll = $es->scroll_helper(
+        scroll      => '1m',                        # optional
+        on_result   => sub {...}                    # required
+      | on_results  => sub {...}                    # required
+        on_start    => sub {...}                    # optional
+        on_error    => sub {...}                    # optional
+        %search_params,
     );
+    $scroll->start;
 
-The C<new()> method returns a new C<$scroll> object.  You must pass your
-Search::Elasticsearch client as the C<es> argument, and you can specify
-a C<scroll> duration (which defaults to C<"1m">).  Any other parameters
-are passed directly to L<Search::Elasticsearch::Client::Direct/search()>.
+The L<Search::Elasticsearch::Client::Direct/scroll_helper()> method loads
+L<Search::Elasticsearch::Async::Scroll> class and calls L</new()>,
+passing in any arguments.
+
+You can specify a C<scroll> duration (which defaults to C<"1m">) and any
+of the listed callbacks.  Any other parameters are passed directly to
+L<Search::Elasticsearch::Client::Direct/search()>.
 
 The C<scroll> duration tells Elasticearch how long it should keep the scroll
 alive.  B<Note>: this duration doesn't need to be long enough to process
@@ -356,64 +394,92 @@ all results, just long enough to process a single B<batch> of results.
 The expiry gets renewed for another C<scroll> period every time new
 a new batch of results is retrieved from the cluster.
 
-=head2 C<next()>
+=head3 Callbacks
 
-    $doc  = $scroll->next;
-    @docs = $scroll->next($num);
+You must specify either an C<on_result> callback or an C<on_results> callback.
 
-The C<next()> method returns the next result, or the next C<$num> results
-(pulling more results if required).  If all results have been exhausted,
-it returns an empty list.
+=head4 C<on_result> and C<on_results>
 
-=head2 C<drain_buffer()>
+The C<on_result> callback is called once for every result that is received.
 
-    @docs = $scroll->drain_buffer;
+    sub on_result {
+        my $doc = shift;
+        do_something($doc);
+    }
 
-The C<drain_buffer()> method returns all of the documents currently in the
-buffer, without fetching any more from the cluster.
+Alternatively, you can specify an C<on_results> callback which is called
+once for every set of results returned by Elasticsearch:
 
-=head2 C<refill_buffer()>
+    sub on_results {
+        for my $doc (@_) {
+            do_something($doc)
+        }
+    }
 
-    $total = $scroll->refill_buffer;
+If either C<on_result> or C<on_results> returns a new L<Promise>, processing
+of further results will be paused until the promise has been rejected or
+resolved.
 
-The C<refill_buffer()> method fetches the next batch of results from the
-cluster, stores them in the buffer, and returns the total number of docs
-currently in the buffer.
+=head4 C<on_start>
 
-=head2 C<buffer_size()>
+The C<on_start> callback is called after the first request has completed,
+at which stage the properties like C<total()>, C<aggregations()>, etc
+will have been populated.
 
-    $total = $scroll->buffer_size;
+=head4 C<on_error>
 
-The C<buffer_size()> method returns the total number of docs currently in
-the buffer.
+The C<on_error> callback is called if any error occurs.  The default
+implementation warns about the error, and rethrows it.
 
-=head2 C<eof()>
+    sub on_error { warn "Scroll error: @_"; die @_ }
 
-    $bool = $scroll->eof;
+If you wish to handle (and surpress) certain errors, then don't call C<die()>,
+eg:
 
-The C<eof()> method reports whether there may be more results to pull from the
-cluster or not.  If it returns C<false> it doesn't mean that there are
-definitely more results, just that we don't yet know.  If it returns
-C<true> then there are definitely no more results to be retrieved from
-the cluster, but there may still be results in local buffer.
+    sub on_error {
+        my $error = shift;
+        if ($error =~/SomeCatchableError/) {
+            # do something to handle error
+        }
+        else {
+            # rethrow error
+            die $error;
+        }
+    }
+
+=head2 C<start()>
+
+    $scroll->start
+           ->then( \&success, \&failure );
+
+The C<start()> method starts the scroll and returns a L<Promise> which
+will be resolved when the scroll completes (or L</finish()> is called),
+or rejected if any errors remain unhandled.
 
 =head2 C<finish()>
 
     $scroll->finish;
 
-The C<finish()> method clears out the buffer, sets L</eof()> to C<true>
+The C<finish()> method clears out the buffer, sets L</is_finished()> to C<true>
 and tries to clear the C<scroll_id> on Elasticsearch.  This API is only
 supported since v0.90.5, but the call to C<clear_scroll> is wrapped in an
 C<eval> so the C<finish()> method can be safely called with any version
 of Elasticsearch.
 
 When the C<$scroll> instance goes out of scope, L</finish()> is called
-automatically unless L</eof()> returns C<true>.
+automatically if required.
+
+=head2 C<is_finished()>
+
+    $bool = $scroll->is_finished;
+
+A flag which returns C<true> if all results have been processed or
+L</finish()> has been called.
 
 =head1 INFO ACCESSORS
 
-The information from the original search is returned via the following
-accessors:
+The information from the original search is returned via the accessors
+below.  These values can be accessed in the C<on_start> callback:
 
 =head2 C<total>
 
@@ -422,6 +488,10 @@ The total number of documents that matched your query.
 =head2 C<max_score>
 
 The maximum score of any documents in your query.
+
+=head2 C<aggregations>
+
+Any aggregations that were specified, or C<undef>
 
 =head2 C<facets>
 
@@ -438,12 +508,13 @@ How long the original search took, in milliseconds
 =head2 C<took_total>
 
 How long the original search plus all subsequent batches took, in milliseconds.
+This value can only be checked once the scroll has completed.
 
 =head1 SEE ALSO
 
 =over
 
-=item * L<Search::Elasticsearch::Bulk/reindex()>
+=item * L<Search::Elasticsearch::Async::Bulk/reindex()>
 
 =item * L<Search::Elasticsearch::Client::Direct/search()>
 
