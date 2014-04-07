@@ -18,35 +18,40 @@ use namespace::clean;
 sub perform_request {
 #===================================
     my ( $self, $params ) = @_;
-    my $uri     = $self->build_uri($params);
+
+    my $uri     = $self->build_uri($params) . '';
     my $method  = $params->{method};
     my %headers = ( %{ $self->default_headers } );
-    my $data    = $params->{data};
+
+    my @args = ( $method, $uri, \%headers );
+    my $data = $params->{data};
     if ( defined $data ) {
         $headers{'Content-Type'} = $params->{mime_type};
+        push @args, $data;
     }
 
-    my $deferred = deferred;
-    my $handle   = $self->handle;
+    my $handle = $self->handle;
     $handle->connect_timeout( $self->connect_timeout );
     $handle->request_timeout( $params->{timeout} || $self->request_timeout );
 
-    $handle->build_tx(
-        $method => $uri,
-        \%headers,
-        $data,
+    my $tx = $handle->build_tx(@args);
+
+    my $deferred = deferred;
+    $tx = $handle->start(
+        $tx,
         sub {
             my ( $ua, $tx ) = @_;
             my $res     = $tx->res;
             my $headers = $res->headers->to_hash;
             $headers->{ lc($_) } = delete $headers->{$_} for keys %{$headers};
+
             try {
                 my ( $code, $response ) = $self->process_response(
-                    $params,        # request
-                    $res->code,     # status
-                    $res->error,    # reason
-                    $res->body,     # content
-                    $headers,       # headers
+                    $params,    # request
+                    ( $res->code || 500 ),    # status
+                    $res->message,            # reason
+                    $res->body,               # content
+                    $headers,                 # headers
                 );
                 $deferred->resolve( $code, $response );
             }
