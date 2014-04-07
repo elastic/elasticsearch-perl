@@ -1,21 +1,39 @@
-package Search::Elasticsearch::CxnPool::Static::NoPing;
+package Search::Elasticsearch::CxnPool::Async::Static::NoPing;
 
 use Moo;
 with 'Search::Elasticsearch::Role::CxnPool::Static::NoPing',
-    'Search::Elasticsearch::Role::Is_Sync';
-use Search::Elasticsearch::Util qw(throw);
+    'Search::Elasticsearch::Role::Is_Async';
+
+use Promises qw(deferred);
+use Try::Tiny;
 use namespace::clean;
+
+#===================================
+around 'next_cxn' => sub {
+#===================================
+    my ( $orig, $self ) = @_;
+
+    my $deferred = deferred;
+    try {
+        my $cxn = $orig->($self);
+        $deferred->resolve($cxn);
+    }
+    catch {
+        $deferred->reject($_);
+    };
+
+    $deferred->promise;
+
+};
 
 1;
 
-__END__
-
-# ABSTRACT: A CxnPool for connecting to a remote cluster without the ability to ping.
+# ABSTRACT: An async CxnPool for connecting to a remote cluster without the ability to ping.
 
 =head1 SYNOPSIS
 
-    $e = Search::Elasticsearch->new(
-        cxn_pool => 'Static::NoPing'
+    $e = Search::Elasticsearch::Async->new(
+        cxn_pool => 'Async::Static::NoPing'
         nodes    => [
             'search1:9200',
             'search2:9200'
@@ -24,12 +42,12 @@ __END__
 
 =head1 DESCRIPTION
 
-The L<Static::NoPing|Search::Elasticsearch::CxnPool::Static::NoPing> connection
-pool (like the L<Static|Search::Elasticsearch::CxnPool::Static> pool) should be used
-when your access to the cluster is limited.  However, the C<Static> pool needs
-to be able to ping nodes in the cluster, with a C<HEAD /> request.  If you
-can't ping your nodes, then you should use the C<Static::NoPing>
-connection pool instead.
+The L<Async::Static::NoPing|Search::Elasticsearch::CxnPool::Async::Static::NoPing>
+connection pool (like the L<Async::Static|Search::Elasticsearch::CxnPool::Async::Static>
+pool) should be used when your access to the cluster is limited.  However, the
+C<Async::Static> pool needs to be able to ping nodes in the cluster, with a
+C<HEAD /> request.  If you can't ping your nodes, then you should use the
+C<Async::Static::NoPing> connection pool instead.
 
 Because the cluster cannot be pinged, this CxnPool cannot use a short
 ping request to determine whether nodes are live or not - it just has to
@@ -43,7 +61,7 @@ itself times out (see L<Search::Elasticsearch::Cxn/request_timeout>).
 Failed nodes will be retried regularly to check if they have recovered.
 
 This class does L<Search::Elasticsearch::Role::CxnPool::Static::NoPing> and
-L<Search::Elasticsearch::Role::Is_Sync>.
+L<Search::Elasticsearch::Role::Is_Async>.
 
 =head1 CONFIGURATION
 
@@ -94,7 +112,7 @@ From L<Search::Elasticsearch::Role::CxnPool>
 
 =head2 C<next_cxn()>
 
-    $cxn = $cxn_pool->next_cxn
+    $cxn_pool->next_cxn->then( sub { my $cxn = shift });
 
 Returns the next available node  in round robin fashion - either a live node
 which has previously responded successfully, or a previously failed

@@ -17,13 +17,17 @@ export ES=localhost:9200
 
 ###### RUN TESTS #######
 
-run "Sync tests"        prove -l t/*/*.t
+run "Module tests"        prove -l t/*/*.t
 
 run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl
 
 run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --cxn NetCurl
 
 run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --cxn Hijk
+
+run 'YAML: AEHTTP'      ./test/run_yaml_tests.pl  --async --cxn AEHTTP
+
+run 'YAML: Mojo'        ./test/run_yaml_tests.pl  --async --cxn Mojo
 
 #########################
 

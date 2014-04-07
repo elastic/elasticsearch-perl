@@ -16,7 +16,7 @@ function run {
 ###### RUN TESTS #######
 
 export JUNIT_OUTPUT_FILE=sync_tests.xml
-run "Sync tests"        prove --harness=TAP::Harness::JUnit -l t/*/*.t
+run "Module tests"        prove --harness=TAP::Harness::JUnit -l t/*/*.t
 
 export JUNIT_OUTPUT_FILE=yaml_lwp.xml
 run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl --junit -t
@@ -27,10 +27,16 @@ run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --junit --cxn NetCurl -t
 export JUNIT_OUTPUT_FILE=yaml_hijk.xml
 run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --junit --cxn Hijk -t
 
+export JUNIT_OUTPUT_FILE=yaml_aehttp.xml
+run 'YAML: AEHTTP'      ./test/run_yaml_tests.pl  --junit --async --cxn AEHTTP
+
+export JUNIT_OUTPUT_FILE=yaml_mojo.xml
+run 'YAML: Mojo'        ./test/run_yaml_tests.pl  --junit --async --cxn Mojo
+
 export ES_BODY='POST'
 
 export JUNIT_OUTPUT_FILE=sync_post.xml
-run 'Sync tests - POST body' prove --harness=TAP::Harness::JUnit -l t/*/*.t
+run 'Module tests - POST body' prove --harness=TAP::Harness::JUnit -l t/*/*.t
 
 export JUNIT_OUTPUT_FILE=yaml_post.xml
 run 'YAML::HTTPTiny - POST body' ./test/run_yaml_tests.pl --junit
@@ -44,7 +50,7 @@ fi
 export ES_BODY='source'
 
 export JUNIT_OUTPUT_FILE=sync_source.xml
-run 'Sync tests - source body' prove --harness=TAP::Harness::JUnit -l t/*/*.t
+run 'Module tests - source body' prove --harness=TAP::Harness::JUnit -l t/*/*.t
 
 export JUNIT_OUTPUT_FILE=yaml_source.xml
 run 'YAML::HTTPTiny - source body' ./test/run_yaml_tests.pl --junit

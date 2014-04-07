@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 use Search::Elasticsearch::Bulk;
+use lib 't/lib';
 
-our $es;
+my $es = do 'es_sync.pl';
 
 $es->indices->delete( index => 'test', ignore => 404 );
 $es->indices->create( index => 'test' );
