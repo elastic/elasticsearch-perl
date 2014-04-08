@@ -13,23 +13,25 @@ with 'Search::Elasticsearch::Role::Is_Sync',
 sub BUILDARGS {
 #===================================
     my ( $class, $params ) = parse_params(@_);
-    my $es      = delete $params->{es};
-    my $scroll  = $params->{scroll} ||= '1m';
-    my $results = $es->search($params);
+    my $es             = delete $params->{es};
+    my $scroll         = $params->{scroll} ||= '1m';
+    my $scroll_in_body = delete $params->{scroll_in_body};
+    my $results        = $es->search($params);
 
     my $total = $results->{hits}{total};
 
     return {
-        es           => $es,
-        scroll       => $scroll,
-        aggregations => $results->{aggregations},
-        facets       => $results->{facets},
-        suggest      => $results->{suggest},
-        took         => $results->{took},
-        total_took   => $results->{took},
-        total        => $total,
-        max_score    => $results->{hits}{max_score},
-        _buffer      => $results->{hits}{hits},
+        es             => $es,
+        scroll         => $scroll,
+        scroll_in_body => $scroll_in_body,
+        aggregations   => $results->{aggregations},
+        facets         => $results->{facets},
+        suggest        => $results->{suggest},
+        took           => $results->{took},
+        total_took     => $results->{took},
+        total          => $total,
+        max_score      => $results->{hits}{max_score},
+        _buffer        => $results->{hits}{hits},
         $total
         ? ( _scroll_id => $results->{_scroll_id} )
         : ( is_finished => 1 )
@@ -71,10 +73,7 @@ sub refill_buffer {
     my $scroll_id = $self->_scroll_id
         || return 0 + @$buffer;
 
-    my $results = $self->es->scroll(
-        scroll    => $self->scroll,
-        scroll_id => $scroll_id,
-    );
+    my $results = $self->scroll_request;
 
     my $hits = $results->{hits}{hits};
     $self->_set_total_took( $self->total_took + $results->{took} );
@@ -108,12 +107,10 @@ __END__
 =head1 SYNOPSIS
 
     use Search::Elasticsearch;
-    use Search::Elasticsearch::Scroll;
 
     my $es     = Search::Elasticsearch->new;
 
-    my $scroll = Search::Elasticsearch::Scroll->new(
-        es          => $es,
+    my $scroll = $es->scroll_helper(
         index       => 'my_index',
         search_type => 'scan',
         size        => 500
@@ -164,8 +161,7 @@ list, and return results grouped by C<thread_id>:
 
     my (%groups,@results);
 
-    my $scroll = Search::Elasticsearch::Scroll->new(
-        es    => $es,
+    my $scroll = $es->scroll_helper(
         index => 'my_emails',
         type  => 'email',
         body  => { query => {... some query ... }}
@@ -195,8 +191,7 @@ order, you just want to retrieve all documents which match a query, and do
 something with them. For instance, to retrieve all the docs for a particular
 C<client_id>:
 
-    my $scroll = Search::Elasticsearch::Scroll->new(
-        es          => $es,
+    my $scroll = $es->scroll_helper(
         index       => 'my_index',
         search_type => 'scan',          # important!
         size        => 500,
@@ -241,8 +236,7 @@ The problem with deep scrolling is the sorting phase.  If we disable sorting,
 then we can happily scroll through millions of documents efficiently.  The
 way to do this is to set C<search_type> to C<scan>:
 
-    $scroll = Search::Elasticsearch::Scroll->new(
-        es          => $es,
+    my $scroll = $es->scroll_helper(
         search_type => 'scan',
         size        => 500,
     );
@@ -258,25 +252,37 @@ are memory constrained, you will need to take this into account.
 =head2 C<new()>
 
     use Search::Elasticsearch;
-    use Search::Elasticsearch::Scroll;
 
     my $es = Search::Elasticsearch->new(...);
-    my $scroll = Search::Elasticsearch::Scroll->new(
-        es      => $es,                         # required
-        scroll  => '1m',                        # optional
+    my $scroll = $es->scroll_helper(
+        scroll         => '1m',            # optional
+        scroll_in_body => 0|1,             # optional
         %search_params
     );
 
-The C<new()> method returns a new C<$scroll> object.  You must pass your
-Search::Elasticsearch client as the C<es> argument, and you can specify
-a C<scroll> duration (which defaults to C<"1m">).  Any other parameters
-are passed directly to L<Search::Elasticsearch::Client::Direct/search()>.
+The L<Search::Elasticsearch::Client::Direct/scroll_helper()> method loads
+L<Search::Elasticsearch::Scroll> class and calls L</new()>,
+passing in any arguments.
+
+You can specify a C<scroll> duration (which defaults to C<"1m">) and
+C<scroll_in_body> (which defaults to C<false>). Any other parameters are
+passed directly to L<Search::Elasticsearch::Client::Direct/search()>.
 
 The C<scroll> duration tells Elasticearch how long it should keep the scroll
 alive.  B<Note>: this duration doesn't need to be long enough to process
 all results, just long enough to process a single B<batch> of results.
 The expiry gets renewed for another C<scroll> period every time new
 a new batch of results is retrieved from the cluster.
+
+By default, the C<scroll_id> is passed in the
+L<scroll|Search::Elasticsearch::Client::Direct/scroll()> request as part
+of the query string. When querying very many indices, the scroll ID can become
+too long for intervening proxies.  To send it in the request body instead,
+set C<scroll_in_body> to a true value.  To send it in the request body
+as a C<POST> request, also set
+L<send_get_body_as|Search::Elasticsearch::Transport/send_get_body_as> to
+C<POST>.
+
 
 =head2 C<next()>
 

@@ -104,11 +104,9 @@ __END__
 =head1 SYNOPSIS
 
     use Search::Elasticsearch;
-    use Search::Elasticsearch::Bulk;
 
     my $es   = Search::Elasticsearch->new;
-    my $bulk = Search::Elasticsearch::Bulk->new(
-        es      => $es,
+    my $bulk = $es->bulk_helper(
         index   => 'my_index',
         type    => 'my_type'
     );
@@ -135,8 +133,7 @@ __END__
     $bulk->flush
 
     # Reindex docs:
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es      => $es,
+    my $bulk = $es->bulk_helper(
         index   => 'new_index',
         verbose => 1
     );
@@ -164,8 +161,7 @@ L<Search::Elasticsearch::Role::Is_Sync>.
 
 =head2 C<new()>
 
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es          => $es,                 # required
+    my $bulk = $es->bulk_helper(
 
         index       => 'default_index',     # optional
         type        => 'default_type',      # optional
@@ -271,8 +267,7 @@ will have C<$i> set to C<0>, the second will have C<$i> set to C<1> etc.
 
 =head3 C<on_success>
 
-    $bulk = Search::Elasticsearch->new(
-        es          => $es,
+    my $bulk = $es->bulk_helper(
         on_success  => sub {
             my ($action,$response,$i) = @_;
             # do something
@@ -284,8 +279,7 @@ response.
 
 =head3 C<on_conflict>
 
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es           => $es,
+    my $bulk = $es->bulk_helper(
         on_conflict  => sub {
             my ($action,$response,$i,$version) = @_;
             # do something
@@ -299,8 +293,7 @@ of the document currently stored in Elasticsearch (if found).
 
 =head3 C<on_error>
 
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es        => $es,
+    my $bulk = $es->bulk_helper(
         on_error  => sub {
             my ($action,$response,$i) = @_;
             # do something
@@ -316,8 +309,7 @@ If you want to be in control of flushing, and you just want to receive
 the raw response that Elasticsearch sends instead of using callbacks,
 then you can do so as follows:
 
-    $bulk = Search::Elasticsearch::Bulk->new(
-        es          => $es,
+    my $bulk = $es->bulk_helper(
         max_count   => 0,
         max_size    => 0,
         on_error    => undef
@@ -458,7 +450,7 @@ the source for the documents which are to be reindexed.
 If the C<source> argument is a HASH ref, then the hash is passed to
 L<Search::Elasticsearch::Scroll/new()> to create a new scrolled search.
 
-    $bulk = Search::Elasticsearch::Bulk->new(
+    my $bulk = $es->bulk_helper(
         index   => 'new_index',
         verbose => 1
     );
@@ -519,8 +511,7 @@ another, you can use two separate C<$es> objects:
     $es_target  = Search::Elasticsearch->new( nodes => 'localhost:9200' );
     $es_source  = Search::Elasticsearch->new( nodes => 'search1:9200' );
 
-    Search::Elasticsearch::Bulk->new(
-        es      => $es_target,
+    my $bulk = $es_targer->bulk_helper(
         verbose => 1
     )
     -> reindex(

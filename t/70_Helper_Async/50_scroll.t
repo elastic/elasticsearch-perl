@@ -78,6 +78,30 @@ SKIP: {
     );
 
     test_scroll(
+        "Scroll in body",
+        {   scroll_in_body => 1,
+            body           => {
+                query   => { term => { color => 'red' } },
+                suggest => {
+                    mysuggest =>
+                        { text => 'green', term => { field => 'color' } }
+                },
+                facets => { color => { terms => { field => 'color' } } },
+                aggs   => { color => { terms => { field => 'color' } } },
+            },
+            size       => 10,
+            on_results => \&on_results
+        },
+        total        => 50,
+        max_score    => num( 1.6, 0.2 ),
+        facets       => bool(1),
+        aggregations => $es_version ge '1' ? bool(1) : undef,
+        suggest      => bool(1),
+        total_seen   => 50,
+        max_seen     => 10
+    );
+
+    test_scroll(
         "Scan",
         {   body => {
                 query   => { term => { color => 'red' } },

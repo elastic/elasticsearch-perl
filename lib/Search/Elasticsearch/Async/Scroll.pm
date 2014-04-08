@@ -22,7 +22,7 @@ sub BUILDARGS {
     my ( $class, $search_params ) = parse_params(@_);
 
     my %params;
-    for (qw(es on_start on_result on_results on_error on_start)) {
+    for (qw(es on_start on_result on_results on_error scroll_in_body)) {
         my $val = delete $search_params->{$_};
         next unless defined $val;
         $params{$_} = $val;
@@ -125,11 +125,7 @@ sub _fetch_loop {
         if ( $self->is_finished ) {
             return $d->resolve;
         }
-        $self->es->scroll(
-            scroll    => $self->scroll,
-            scroll_id => $self->_scroll_id
-
-            )->then( sub { $self->_next_results(@_) } )
+        $self->scroll_request->then( sub { $self->_next_results(@_) } )
             ->done( $weak_loop, sub { $d->reject(@_) } );
     };
     weaken( $weak_loop = $loop );
@@ -371,11 +367,14 @@ are memory constrained, you will need to take this into account.
 
     my $es = Search::Elasticsearch::Async->new(...);
     my $scroll = $es->scroll_helper(
-        scroll      => '1m',                        # optional
-        on_result   => sub {...}                    # required
-      | on_results  => sub {...}                    # required
-        on_start    => sub {...}                    # optional
-        on_error    => sub {...}                    # optional
+        scroll             => '1m',            # optional
+        scroll_in_body     => 0|1,             # optional
+
+        on_result          => sub {...}        # required
+      | on_results         => sub {...}        # required
+
+        on_start           => sub {...}        # optional
+        on_error           => sub {...}        # optional
         %search_params,
     );
     $scroll->start;
@@ -384,15 +383,25 @@ The L<Search::Elasticsearch::Client::Direct/scroll_helper()> method loads
 L<Search::Elasticsearch::Async::Scroll> class and calls L</new()>,
 passing in any arguments.
 
-You can specify a C<scroll> duration (which defaults to C<"1m">) and any
-of the listed callbacks.  Any other parameters are passed directly to
-L<Search::Elasticsearch::Client::Direct/search()>.
+You can specify a C<scroll> duration (which defaults to C<"1m">),
+C<scroll_in_body> (which defaults to C<false>), and any
+of the listed callbacks. Any other parameters are
+passed directly to L<Search::Elasticsearch::Client::Direct/search()>.
 
 The C<scroll> duration tells Elasticearch how long it should keep the scroll
 alive.  B<Note>: this duration doesn't need to be long enough to process
 all results, just long enough to process a single B<batch> of results.
 The expiry gets renewed for another C<scroll> period every time new
 a new batch of results is retrieved from the cluster.
+
+By default, the C<scroll_id> is passed in the
+L<scroll|Search::Elasticsearch::Client::Direct/scroll()> request as part
+of the query string. When querying very many indices, the scroll ID can become
+too long for intervening proxies.  To send it in the request body instead,
+set C<scroll_in_body> to a true value.  To send it in the request body
+as a C<POST> request, also set
+L<send_get_body_as|Search::Elasticsearch::Transport/send_get_body_as> to
+C<POST>.
 
 =head3 Callbacks
 
