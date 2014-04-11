@@ -20,6 +20,11 @@ my $body     = $ENV{ES_BODY} || 'GET';
 my $cxn      = $ENV{ES_CXN} || do "default_async_cxn.pl" || die $!;
 my $cxn_pool = $ENV{ES_CXN_POOL} || 'Async::Static';
 
+if ( $cxn eq 'Mojo' && !eval { require 'Mojo::UserAgent'; 1 } ) {
+    plan skip_all => 'Mojo::UserAgent not installed';
+    exit;
+}
+
 my $es;
 if ( $ENV{ES} ) {
     $es = Search::Elasticsearch::Async->new(

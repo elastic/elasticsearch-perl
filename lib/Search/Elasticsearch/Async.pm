@@ -2,7 +2,7 @@ package Search::Elasticsearch::Async;
 
 use Search::Elasticsearch 1.10;
 
-use Promises 0.91 ();
+use Promises 0.93 ();
 use Moo 1.003;
 extends 'Search::Elasticsearch';
 use Search::Elasticsearch::Util qw(parse_params);
