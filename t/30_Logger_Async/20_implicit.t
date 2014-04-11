@@ -18,9 +18,10 @@ isa_ok $l->trace_handle, 'Log::Any::Adapter::Stderr',
 
 # override
 
-isa_ok $l
-    = Search::Elasticsearch::Async->new( log_to => 'Stderr', trace_to => 'Stdout' )
-    ->logger,
+isa_ok $l = Search::Elasticsearch::Async->new(
+    log_to   => 'Stderr',
+    trace_to => 'Stdout'
+    )->logger,
     'Search::Elasticsearch::Logger::LogAny',
     'Override Logger';
 

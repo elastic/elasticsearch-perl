@@ -2,7 +2,8 @@ use Test::More;
 use Test::Deep;
 use Search::Elasticsearch::Async;
 
-isa_ok my $t = Search::Elasticsearch::Async->new->transport, 'Search::Elasticsearch::Transport::Async';
+isa_ok my $t = Search::Elasticsearch::Async->new->transport,
+    'Search::Elasticsearch::Transport::Async';
 test_tidy( 'Empty', {}, {} );
 test_tidy( 'Method', { method => 'POST' }, { method => 'POST' } );
 test_tidy( 'Path',   { path   => '/foo' }, { path   => '/foo' } );

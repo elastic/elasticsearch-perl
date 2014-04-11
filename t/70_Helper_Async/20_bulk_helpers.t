@@ -8,8 +8,11 @@ use lib 't/lib';
 
 my $es = do "es_async.pl";
 
-my $b
-    = Search::Elasticsearch::Async::Bulk->new( es => $es, index => 'i', type => 't' );
+my $b = Search::Elasticsearch::Async::Bulk->new(
+    es    => $es,
+    index => 'i',
+    type  => 't'
+);
 my $s = $b->_serializer;
 $s->_set_canonical;
 

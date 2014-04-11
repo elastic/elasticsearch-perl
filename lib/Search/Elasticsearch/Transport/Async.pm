@@ -1,7 +1,8 @@
 package Search::Elasticsearch::Transport::Async;
 
 use Moo;
-with 'Search::Elasticsearch::Role::Is_Async', 'Search::Elasticsearch::Role::Transport';
+with 'Search::Elasticsearch::Role::Is_Async',
+    'Search::Elasticsearch::Role::Transport';
 
 use Time::HiRes qw(time);
 use Search::Elasticsearch::Util qw(upgrade_error);
@@ -71,7 +72,6 @@ sub perform_request {
 }
 
 1;
-
 
 #ABSTRACT: Provides async interface between the client class and the Elasticsearch cluster
 

@@ -2,7 +2,8 @@ use Test::More;
 use Search::Elasticsearch::Async;
 
 my $c = Search::Elasticsearch::Async->new->transport->cxn_pool->cxns->[0];
-ok $c->does('Search::Elasticsearch::Role::Cxn::Async'), 'Does Search::Elasticsearch::Role::Cxn::Async';
+ok $c->does('Search::Elasticsearch::Role::Cxn::Async'),
+    'Does Search::Elasticsearch::Role::Cxn::Async';
 
 # MARK LIVE
 

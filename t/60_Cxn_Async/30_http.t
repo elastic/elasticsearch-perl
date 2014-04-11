@@ -129,5 +129,6 @@ sub is_cxn (@) {
 #===================================
 sub new_cxn {
 #===================================
-    return Search::Elasticsearch::Async->new(@_)->transport->cxn_pool->cxns->[0];
+    return Search::Elasticsearch::Async->new(@_)
+        ->transport->cxn_pool->cxns->[0];
 }

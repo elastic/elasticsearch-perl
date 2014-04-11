@@ -9,7 +9,7 @@ use Search::Elasticsearch::Async::Bulk;
 
 my $es = do "es_async.pl";
 
-wait_for($es->indices->delete( index => '_all' ));
+wait_for( $es->indices->delete( index => '_all' ) );
 
 test_flush(
     "max count",    #
@@ -55,7 +55,7 @@ test_flush(
 
 done_testing;
 
-wait_for($es->indices->delete( index => 'test' ));
+wait_for( $es->indices->delete( index => 'test' ) );
 
 #===================================
 sub test_flush {

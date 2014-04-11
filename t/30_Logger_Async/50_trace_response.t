@@ -5,13 +5,15 @@ use lib 't/lib';
 do 'LogCallback.pl';
 
 isa_ok my $e
-    = Search::Elasticsearch::Async->new( nodes => 'https://foo.bar:444/some/path' ),
+    = Search::Elasticsearch::Async->new(
+    nodes => 'https://foo.bar:444/some/path' ),
     'Search::Elasticsearch::Client::Direct',
     'Client';
 
 isa_ok my $l = $e->logger, 'Search::Elasticsearch::Logger::LogAny', 'Logger';
 my $c = $e->transport->cxn_pool->cxns->[0];
-ok $c->does('Search::Elasticsearch::Role::Cxn'), 'Does Search::Elasticsearch::Role::Cxn';
+ok $c->does('Search::Elasticsearch::Role::Cxn'),
+    'Does Search::Elasticsearch::Role::Cxn';
 
 # No body
 

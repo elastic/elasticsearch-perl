@@ -34,7 +34,9 @@ ok $t->perform_sync_request
 # force ping on missing node
 $t->cxn_pool->cxns->[0]->next_ping(-1);
 
-ok $t->perform_sync_request && $t->perform_sync_request && $t->perform_sync_request,
+ok $t->perform_sync_request
+    && $t->perform_sync_request
+    && $t->perform_sync_request,
     'Failed node recovers';
 
 done_testing;

@@ -29,9 +29,9 @@ my $t = mock_sniff_client(
 
     { node => 3, sniff => [ 'one', 'two' ] },
     { node => 4, sniff => [ 'one', 'two' ] },
-    { node => 9, code => 200, content => 1 },
+    { node => 9,  code => 200, content => 1 },
     { node => 10, code => 200, content => 1 },
-    { node => 9, code => 200, content => 1 },
+    { node => 9,  code => 200, content => 1 },
 );
 
 ok $t->perform_sync_request()
@@ -40,6 +40,6 @@ ok $t->perform_sync_request()
     && !eval { $t->perform_sync_request }
     && $@ =~ /NoNodes/
     && $t->perform_sync_request,
-        'Sniff after all nodes fail';
+    'Sniff after all nodes fail';
 
 done_testing;

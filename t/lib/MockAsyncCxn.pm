@@ -134,7 +134,7 @@ sub _mock_client {
         transport      => '+MockAsyncTransport',
         cxn_pool       => $pool,
         mock_responses => \@_,
-        dead_timeout => 500,
+        dead_timeout   => 500,
         randomize_cxns => 0,
         log_to         => $trace,
         %$params,
