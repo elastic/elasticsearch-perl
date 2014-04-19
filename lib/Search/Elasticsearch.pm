@@ -467,7 +467,13 @@ bodies.  See:
 
 =over
 
-=item * L<Search::Elasticsearch::Serializer::JSON>
+=item * L<Search::Elasticsearch::Serializer::JSON> (default)
+
+=item * L<Search::Elasticsearch::Serializer::JSON::Cpanel>
+
+=item * L<Search::Elasticsearch::Serializer::JSON::XS>
+
+=item * L<Search::Elasticsearch::Serializer::JSON::PP>
 
 =back
 

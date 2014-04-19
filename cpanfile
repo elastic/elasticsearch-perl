@@ -12,7 +12,7 @@ requires "IO::Select" => "0";
 requires "IO::Socket" => "0";
 requires "IO::Socket::SSL" => "0";
 requires "IO::Uncompress::Inflate" => "0";
-requires "JSON" => "0";
+requires "JSON::PP" => "0";
 requires "LWP::UserAgent" => "0";
 requires "List::Util" => "0";
 requires "Log::Any" => "0";
@@ -33,9 +33,6 @@ requires "namespace::clean" => "0";
 requires "overload" => "0";
 requires "strict" => "0";
 requires "warnings" => "0";
-recommends "JSON::XS" => "0";
-recommends "Mojo::IOLoop" => "0";
-recommends "Mojo::UserAgent" => "0";
 recommends "URI::Escape::XS" => "0";
 
 on 'build' => sub {
@@ -51,4 +48,11 @@ on 'test' => sub {
   requires "Test::Exception" => "0";
   requires "Test::More" => "0.98";
   requires "lib" => "0";
+};
+
+on 'test' => sub {
+  recommends "Cpanel::JSON::XS" => "0";
+  recommends "JSON::XS" => "0";
+  recommends "Mojo::IOLoop" => "0";
+  recommends "Mojo::UserAgent" => "0";
 };

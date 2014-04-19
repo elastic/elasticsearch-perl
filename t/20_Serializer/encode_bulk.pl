@@ -3,6 +3,7 @@ use Test::Deep;
 use Test::Exception;
 use Search::Elasticsearch;
 
+our $JSON_BACKEND;
 my $utf8_bytes = "彈性搜索";
 my $utf8_str   = $utf8_bytes;
 utf8::decode($utf8_str);
@@ -11,8 +12,10 @@ my $arr       = [ $hash, $hash ];
 my $json_hash = qq({"foo":"$utf8_bytes"});
 my $json_arr  = qq($json_hash\n$json_hash\n);
 
-isa_ok my $s = Search::Elasticsearch->new->transport->serializer,
-    'Search::Elasticsearch::Serializer::JSON', 'Serializer';
+isa_ok my $s
+    = Search::Elasticsearch->new( serializer => $JSON_BACKEND )
+    ->transport->serializer,
+    "Search::Elasticsearch::Serializer::$JSON_BACKEND", 'Serializer';
 
 is $s->encode_bulk(), undef,    #
     'Enc - No args returns undef';
