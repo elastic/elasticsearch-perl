@@ -17,10 +17,7 @@ isa_ok my $b = Search::Elasticsearch::Bulk->new( es => $es ),
     'Search::Elasticsearch::Bulk',
     'Bulk';
 
-isa_ok my $s = $b->_serializer, 'Search::Elasticsearch::Serializer::JSON',
-    'Serializer';
-
-$s->_set_canonical;
+$b->_serializer->_set_canonical;
 
 ## EMPTY
 

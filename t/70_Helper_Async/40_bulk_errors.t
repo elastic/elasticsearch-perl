@@ -9,7 +9,8 @@ use lib 't/lib';
 use Search::Elasticsearch::Async::Bulk;
 use Log::Any::Adapter;
 
-my $es = do "es_async.pl";
+my $es   = do "es_async.pl";
+my $TRUE = $es->transport->serializer->decode('{"true":true}')->{true};
 my ($is_0_90);
 
 my $cv = AE::cv;
@@ -116,7 +117,7 @@ $b = bulk(
                 _id      => 1,
                 _version => 1,
                 status   => 201,
-                ok       => JSON::true(),
+                ok       => $TRUE,
             },
             0
         ),
