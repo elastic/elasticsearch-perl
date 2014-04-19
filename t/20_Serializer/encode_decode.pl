@@ -3,6 +3,7 @@ use Test::Deep;
 use Test::Exception;
 use Search::Elasticsearch;
 
+our $JSON_BACKEND;
 my $utf8_bytes = "彈性搜索";
 my $utf8_str   = $utf8_bytes;
 utf8::decode($utf8_str);
@@ -11,8 +12,10 @@ my $arr       = [$hash];
 my $json_hash = qq({"foo":"$utf8_bytes"});
 my $json_arr  = qq([$json_hash]);
 
-isa_ok my $s = Search::Elasticsearch->new->transport->serializer,
-    'Search::Elasticsearch::Serializer::JSON', 'Serializer';
+isa_ok my $s
+    = Search::Elasticsearch->new( serializer => $JSON_BACKEND )
+    ->transport->serializer,
+    "Search::Elasticsearch::Serializer::$JSON_BACKEND", 'Serializer';
 
 is $s->mime_type, 'application/json', 'Mime type is JSON';
 
@@ -37,6 +40,6 @@ is $s->decode($utf8_bytes), $utf8_str, 'Dec - Unicode bytes returns decoded';
 is $s->decode($utf8_str),   $utf8_str, 'Dec - Unicode string returns same';
 cmp_deeply $s->decode($json_hash), $hash, 'Dec - JSON returns hash';
 cmp_deeply $s->decode($json_arr),  $arr,  'Dec - JSON returns array';
-throws_ok { $s->decode('{') } qr/Serializer/, 'DEc - invalid JSON dies';
+throws_ok { $s->decode('{') } qr/Serializer/, 'Dec - invalid JSON dies';
 
 done_testing;
