@@ -21,7 +21,7 @@ env:
  - ES_VERSION=0.90.13
  - ES_VERSION=1.1.0
 
-install:        "cpanm --installdeps --notest . && ./test/setup_es_server.pl"
+install:        "cpanm --installdeps --with-recommends --notest . && ./test/setup_es_server.pl"
 script:         ./test/run_all_tests.sh
 
 notifications:
