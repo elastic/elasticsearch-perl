@@ -170,6 +170,15 @@ sub _results_iterator {
 }
 
 #===================================
+sub _clear_scroll {
+#===================================
+    my $self = shift;
+    my $scroll_id = $self->_scroll_id or return;
+    $self->_clear_scroll_id;
+    $self->es->clear_scroll( scroll_id => $scroll_id )->catch( sub { } );
+}
+
+#===================================
 after 'finish' => sub {
 #===================================
     my $self = shift;

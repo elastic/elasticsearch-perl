@@ -1,7 +1,7 @@
 package Search::Elasticsearch::Role::Scroll;
 
 use Moo::Role;
-requires 'finish';
+requires '_clear_scroll';
 use Search::Elasticsearch::Util qw(parse_params throw);
 use Scalar::Util qw(weaken blessed);
 use namespace::clean;
@@ -26,11 +26,10 @@ sub finish {
     my $self = shift;
     return if $self->is_finished;
     $self->_set_is_finished(1);
-
-    my $scroll_id = $self->_scroll_id or return;
-    $self->_clear_scroll_id;
-    eval { $self->es->clear_scroll( scroll_id => $scroll_id ) };
+    $self->_clear_scroll;
 }
+
+
 
 #===================================
 sub scroll_request {
