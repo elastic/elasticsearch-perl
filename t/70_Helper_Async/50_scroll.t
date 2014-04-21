@@ -141,31 +141,6 @@ test_scroll(
     max_seen   => 10
 );
 
-if ( $es_version ge '0.90.10' ) {
-
-    my $error = '';
-    local $SIG{__WARN__} = sub {
-        $error = shift();
-    };
-
-    test_scroll(
-        "On error",
-        {   on_results => sub {
-                on_results(@_);
-                $s->es->clear_scroll( scroll_id => $s->_scroll_id )
-                    if $total_seen == 30;
-            },
-            size => 10
-        },
-        total      => 100,
-        max_score  => 1,
-        total_seen => 30,
-        max_seen   => 10
-    );
-
-    like $error, qr/SearchContextMissingException/, "On error caught";
-}
-
 done_testing;
 
 wait_for( $es->indices->delete( index => 'test' ) );
