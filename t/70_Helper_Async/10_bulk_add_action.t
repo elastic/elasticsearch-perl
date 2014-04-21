@@ -21,10 +21,7 @@ isa_ok my $b = Search::Elasticsearch::Async::Bulk->new(
     'Search::Elasticsearch::Async::Bulk',
     'Bulk';
 
-isa_ok my $s = $b->_serializer, 'Search::Elasticsearch::Serializer::JSON',
-    'Serializer';
-
-$s->_set_canonical;
+$b->_serializer->_set_canonical;
 
 ## EMPTY
 

@@ -3,7 +3,8 @@ use Test::Deep;
 use Test::Exception;
 use Search::Elasticsearch::Async;
 
-my $utf8_bytes = "������������";
+our $JSON_BACKEND;
+my $utf8_bytes = "彈性搜索";
 my $utf8_str   = $utf8_bytes;
 utf8::decode($utf8_str);
 my $hash      = { "foo" => "$utf8_str" };
@@ -22,8 +23,10 @@ my $json_arr = <<JSON;
 ]
 JSON
 
-isa_ok my $s = Search::Elasticsearch::Async->new->transport->serializer,
-    'Search::Elasticsearch::Serializer::JSON', 'Serializer';
+isa_ok my $s
+    = Search::Elasticsearch::Async->new( serializer => $JSON_BACKEND )
+    ->transport->serializer,
+    "Search::Elasticsearch::Serializer::$JSON_BACKEND", 'Serializer';
 
 # encode
 is $s->encode_pretty(), undef,    #

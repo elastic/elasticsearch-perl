@@ -1,143 +1,80 @@
 package Search::Elasticsearch::Serializer::JSON;
 
-use Moo;
-
-use Search::Elasticsearch::Util qw(throw);
-use JSON();
-use Try::Tiny;
-use Encode qw(encode_utf8 decode_utf8 is_utf8);
-use namespace::clean;
-
-our $JSON = JSON->new->utf8;
-
-has 'mime_type' => ( is => 'ro', default => 'application/json' );
-
-with 'Search::Elasticsearch::Role::Serializer';
+use strict;
+use warnings;
+use Module::Runtime qw(use_module);
 
 #===================================
-sub encode {
+sub new {
 #===================================
-    my ( $self, $var ) = @_;
-    unless ( ref $var ) {
-        return is_utf8($var)
-            ? encode_utf8($var)
-            : $var;
-    }
-    return try { $JSON->encode($var) }
-    catch { throw( "Serializer", $_, { var => $var } ) };
+    my ( $class, $params ) = @_;
+    my $module = _choose_json_module();
+    $class = __PACKAGE__ . '::' . $module;
+    use_module($class);
+    $class->new($params);
 }
 
 #===================================
-sub encode_bulk {
+sub _choose_json_module {
 #===================================
-    my ( $self, $var ) = @_;
-    unless ( ref $var ) {
-        return is_utf8($var)
-            ? encode_utf8($var)
-            : $var;
-    }
+    return 'Cpanel' if $INC{'Cpanel/JSON/XS.pm'};
+    return 'XS'     if $INC{'JSON/XS.pm'};
 
-    my $json = '';
-    throw( "Param", "Var must be an array ref" )
-        unless ref $var eq 'ARRAY';
-    return try {
-        for (@$var) {
-            $json .= ( ref($_) ? $JSON->encode($_) : $_ ) . "\n";
-        }
-        return $json;
-    }
-    catch { throw( "Serializer", $_, { var => $var } ) };
-}
+    my @err;
 
-#===================================
-sub encode_pretty {
-#===================================
-    my ( $self, $var ) = @_;
-    $JSON->pretty(1);
+    return 'Cpanel' if eval { require Cpanel::JSON::XS; 1; };
+    push @err, "Error loading Cpanel::JSON::XS: $@";
 
-    my $json;
-    try {
-        $json = $self->encode($var);
-    }
-    catch {
-        die "$_";
-    }
-    finally {
-        $JSON->pretty(0);
-    };
+    return 'XS' if eval { require JSON::XS; 1; };
+    push @err, "Error loading JSON::XS: $@";
 
-    return $json;
-}
+    return 'PP' if eval { require JSON::PP; 1 };
+    push @err, "Error loading JSON::PP: $@";
 
-#===================================
-sub decode {
-#===================================
-    my $json = $_[1];
+    die join( "\n", "Couldn't load a JSON module:", @err );
 
-    return unless defined $json;
-
-    return is_utf8($json) ? $json : decode_utf8($json)
-        unless substr( $json, 0, 1 ) =~ /^[\[{]/;
-
-    return try {
-        $JSON->decode($json);
-    }
-    catch {
-        throw( "Serializer", $_, { json => $json } );
-    };
-}
-
-#===================================
-sub _set_canonical {
-#===================================
-    $JSON->canonical(1);
 }
 
 1;
 
-__END__
+# ABSTRACT: The default JSON Serializer
 
-# ABSTRACT: A Serializer for JSON
+=head1 SYNOPSIS
+
+    $e = Search::Elasticsearch(
+        # serializer => 'JSON'
+    );
 
 =head1 DESCRIPTION
 
-This module uses L<JSON> to Perl data structures into JSON strings, and
-to decode JSON strings into Perl data structures.
+This default Serializer class chooses between:
 
-=head1 METHODS
+=over
 
-=head2 C<encode()>
+=item * L<Cpanel::JSON::XS>
 
-    $bytes = $serializer->encode($ref);
-    $bytes = $serializer->encode($str);
+=item * L<JSON::XS>
 
-The L</encode()> method converts array and hash refs into their JSON
-equivalents.  If a string is passed in, it is returned as the UTF8 encoded
-version of itself.  The empty string and C<undef> are returned as is.
+=item * L<JSON::PP>
 
-=head2 C<encode_pretty()>
+=back
 
-    $bytes = $serializer->encode_pretty($ref);
-    $bytes = $serializer->encode_pretty($str);
+First it checks if either L<Cpanel::JSON::XS> or L<JSON::XS> is already
+loaded and, if so, uses the appropriate backend.  Otherwise it tries
+to load L<Cpanel::JSON::XS>, then L<JSON::XS> and finally L<JSON::PP>.
 
-Works exactly as L</encode()> but the JSON output is pretty-printed.
+If you would prefer to specify a particular JSON backend, then you can
+do so by using one of these modules:
 
-=head2 C<encode_bulk()>
+=over
 
-    $bytes = $serializer->encode_bulk([\%hash,\%hash,...]);
-    $bytes = $serializer->encode_bulk([$str,$str,...]);
+=item * L<Search::Elasticsearch::Serializer::JSON::Cpanel>
 
-The L</encode_bulk()> method expects an array ref of hashes or strings.
-Each hash or string is processed by L</encode()> then joined together
-by newline characters, with a final newline character appended to the end.
-This is the special JSON format used for bulk requests.
+=item * L<Search::Elasticsearch::Serializer::JSON::XS>
 
-=head2 C<decode()>
+=item * L<Search::Elasticsearch::Serializer::JSON::PP>
 
-    $var = $serializer->decode($json_bytes);
-    $str = $serializer->decode($bytes);
+=back
 
-If the passed in value looks like JSON (ie starts with a C<{> or C<[>
-character), then it is decoded from JSON, otherwise it is returned as
-the UTF8 decoded version of itself. The empty string and C<undef> are
-returned as is.
+See their documentation for details.
+
