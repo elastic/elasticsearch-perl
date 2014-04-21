@@ -287,7 +287,9 @@ sub run_cmd {
 sub reset_es {
 #===================================
     $es->logger->trace_comment("RESETTING");
+    $es->logger->trace_comment( "Start: " . timestamp() );
     $wrapper->( $es->indices->delete( index => '_all', ignore => 404 ) );
+    $es->logger->trace_comment( "End: " . timestamp() );
 }
 
 #===================================
@@ -416,7 +418,7 @@ sub load_skip_list {
 sub timestamp {
 #===================================
     my ( $time, $ns ) = gettimeofday;
-    my ( $s, $m, $h, $d, $M, $y ) = localtime($time);
+    my ( $s, $m, $h, $d, $M, $y ) = gmtime($time);
     $M++;
     $y += 1900;
     return sprintf "%d-%02d-%02d %02d:%02d:%02d,%d", $y, $M, $d, $h, $m, $s,
