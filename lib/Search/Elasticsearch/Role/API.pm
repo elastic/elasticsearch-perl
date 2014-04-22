@@ -413,7 +413,7 @@ sub api {
 
     'search_template' => {
         body  => {},
-        doc   => "search-search",
+        doc   => "search-template",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
@@ -424,7 +424,12 @@ sub api {
             [ { index => 0 }, "{index}", "_search", "template" ],
             [ {}, "_search", "template" ],
         ],
-        qs => [],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "preference",
+            "routing",            "scroll",
+            "search_type",
+        ],
     },
 
     'suggest' => {

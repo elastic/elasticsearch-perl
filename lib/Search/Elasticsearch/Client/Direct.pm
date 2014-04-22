@@ -970,6 +970,15 @@ within the C<body>) and parameters to use with the template, eg:
 See the L<search template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-template.html>
 for more information.
 
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<preference>,
+    C<scroll>,
+    C<search_type>
+
+
 =head2 C<scroll()>
 
     $results = $e->scroll(
