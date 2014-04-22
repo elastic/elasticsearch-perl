@@ -1012,6 +1012,13 @@ for more information.
         scroll_id => $id | \@ids    # required
     );
 
+Or
+
+    $response = $e->clear_scroll(
+        body => $id
+    );
+
+
 The C<clear_scroll()> method can clear unfinished scroll requests, freeing
 up resources on the server.
 

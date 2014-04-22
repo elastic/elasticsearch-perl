@@ -39,11 +39,14 @@ sub api {
     },
 
     'clear_scroll' => {
+        body   => {},
         doc    => "search-request-scroll",
         method => "DELETE",
-        parts  => { scroll_id => { multi => 1, required => 1 } },
-        paths =>
-            [ [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ] ],
+        parts  => { scroll_id => { multi => 1 } },
+        paths  => [
+            [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ],
+            [ {}, "_search", "scroll" ],
+        ],
         qs => [],
     },
 

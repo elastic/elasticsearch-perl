@@ -104,7 +104,11 @@ sub _clear_scroll {
     my $self = shift;
     my $scroll_id = $self->_scroll_id or return;
     $self->_clear_scroll_id;
-    eval { $self->es->clear_scroll( scroll_id => $scroll_id ) };
+
+    my %args = $self->scroll_in_body
+        ? ( body => $scroll_id )
+        : ( scroll_id => $scroll_id );
+    eval { $self->es->clear_scroll(%args) };
 }
 
 1;
