@@ -207,6 +207,7 @@ our %Params = (
     type            => { type => 'string' },
     types           => { type => 'list' },
     v               => { type => 'bool' },
+    verbose         => { type => 'bool' },
     version         => { type => 'number' },
     version_type    => {
         type    => 'enum',

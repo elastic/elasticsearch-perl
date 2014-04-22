@@ -148,6 +148,7 @@ sub _command_line {
             'discovery.zen.ping.unicast.hosts=127.0.0.1:' . $self->es_port,
             'transport.tcp.port=' . $transport,
             'http.port=' . $http,
+            'node.bench=true'
         )
     );
 }

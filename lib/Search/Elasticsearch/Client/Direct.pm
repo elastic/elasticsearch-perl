@@ -1304,3 +1304,65 @@ Query string parameters:
 See the L<mlt docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-more-like-this.html>
 for more information.
 
+=head1 BENCHMARK METHODS
+
+=head2 C<benchmark()>
+
+    $results = $e->benchamrk(
+        index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional
+
+        body    => { search params }        # optional
+    );
+
+Run a search benchmark comparing query variations or the performance of
+different index settings, eg:
+
+    $results = $e->benchmark(
+        index => 'test_index',
+        type  => 'test_type',
+        body  => {
+            name        => 'test_query',
+            competitors => [
+                {
+                    name => 'term_query',
+                    requests =>[
+                        { query => { term => { my_field => 'bar' }}}
+                    ]
+                },
+                {
+                    name => 'match_query',
+                    requests =>[
+                        { query => { match => { my_field => 'bar' }}}
+                    ]
+                },
+            ]
+        }
+    );
+
+See the L<benchamrk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-benchmark.html> for more.
+
+Query string parameters:
+    C<verbose>
+
+=head2 C<list_benchmarks()>
+
+    $results = $e->list_benchmarks(
+        index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional
+    )
+
+Lists any currently running benchmarks.
+
+See the L<benchamrk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-benchmark.html> for more.
+
+=head2 L<abort_benchmark>
+
+    $response = $e->abort_benchmark(
+        name => $name                       # required
+    );
+
+Aborts the named benchmark
+
+See the L<benchamrk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-benchmark.html> for more.
+
