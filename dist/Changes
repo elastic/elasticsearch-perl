@@ -1,5 +1,19 @@
 Revision history for Search::Elasticsearch
 
+1.11    2014-04-23
+        Switched default Serializer::JSON to use JSON::MaybeXS, and added
+        Serializer backends for Cpanel::JSON::XS, JSON::XS and JSON::PP
+
+        Added scroll_in_body flag for Scroll helper
+
+        Added support for:
+          * search_template()
+          * snapshot->status()
+          * indices->recovery()
+          * benchmark()
+          * list_benchmarks()
+          * abort_benchmark()
+
 1.10    2014-03-05
         Moved all modules to Search::Elasticsearch namespace.
         See https://github.com/elasticsearch/elasticsearch-perl/issues/20

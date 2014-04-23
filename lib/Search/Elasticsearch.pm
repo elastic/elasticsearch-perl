@@ -5,7 +5,7 @@ use Moo 1.003;
 use Search::Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
-our $VERSION = '1.10';
+our $VERSION = '1.11';
 
 my %Default_Plugins = (
     client      => [ 'Search::Elasticsearch::Client',       'Direct' ],
@@ -166,8 +166,8 @@ Full support for all Elasticsearch APIs
 
 =item *
 
-HTTP backend (currently synchronous only - L<Any::Event> support will be added
-later)
+HTTP backend (for an async backend using L<Promises>, see
+L<Search::Elasticsearch::Async>)
 
 =item *
 
@@ -563,16 +563,6 @@ L<Search::Elasticsearch::Scroll>.  These helper classes are accessible as:
 
     $bulk   = $e->bulk_helper( %args_to_new );
     $scroll = $e->scroll_helper( %args_to_new );
-
-=head1 TODO
-
-=over
-
-=item * Async support
-
-Add async support using L<Promises> for L<AnyEvent> and perhaps L<Mojo>.
-
-=back
 
 =head1 BUGS
 
