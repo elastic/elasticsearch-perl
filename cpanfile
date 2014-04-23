@@ -12,6 +12,7 @@ requires "IO::Select" => "0";
 requires "IO::Socket" => "0";
 requires "IO::Socket::SSL" => "0";
 requires "IO::Uncompress::Inflate" => "0";
+requires "JSON::MaybeXS" => "1.002000";
 requires "JSON::PP" => "0";
 requires "LWP::UserAgent" => "0";
 requires "List::Util" => "0";

@@ -10,8 +10,8 @@ BEGIN {
 
 use Search::Elasticsearch;
 
-my $s = Search::Elasticsearch->new()->transport->serializer;
-isa_ok $s, "Search::Elasticsearch::Serializer::JSON::XS", 'JSON::XS';
+my $s = Search::Elasticsearch->new()->transport->serializer->JSON;
+isa_ok $s, "JSON::XS", 'JSON::XS';
 
 done_testing;
 

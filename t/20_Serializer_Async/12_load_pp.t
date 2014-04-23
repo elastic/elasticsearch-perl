@@ -6,15 +6,15 @@ use lib sub {
     return undef;
 };
 
-use Search::Elasticsearch::Async;
+use Search::Elasticsearch;
 
-my $s = Search::Elasticsearch::Async->new()->transport->serializer;
+my $s = Search::Elasticsearch->new()->transport->serializer->JSON;
 
 SKIP: {
     skip 'JSON::PP not installed' => 1
         unless eval { require JSON::PP; 1 };
 
-    isa_ok $s, "Search::Elasticsearch::Serializer::JSON::PP", 'JSON::PP';
+    isa_ok $s, "JSON::PP", 'JSON::PP';
 }
 
 done_testing;

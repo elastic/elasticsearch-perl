@@ -1,43 +1,16 @@
 package Search::Elasticsearch::Serializer::JSON;
 
-use strict;
-use warnings;
-use Module::Runtime qw(use_module);
+use Moo;
+use JSON::MaybeXS 1.002000 ();
 
-#===================================
-sub new {
-#===================================
-    my ( $class, $params ) = @_;
-    my $module = _choose_json_module();
-    $class = __PACKAGE__ . '::' . $module;
-    use_module($class);
-    $class->new($params);
-}
+has 'JSON' => ( is => 'ro', default => sub { JSON::MaybeXS->new->utf8(1) } );
 
-#===================================
-sub _choose_json_module {
-#===================================
-    return 'Cpanel' if $INC{'Cpanel/JSON/XS.pm'};
-    return 'XS'     if $INC{'JSON/XS.pm'};
-
-    my @err;
-
-    return 'Cpanel' if eval { require Cpanel::JSON::XS; 1; };
-    push @err, "Error loading Cpanel::JSON::XS: $@";
-
-    return 'XS' if eval { require JSON::XS; 1; };
-    push @err, "Error loading JSON::XS: $@";
-
-    return 'PP' if eval { require JSON::PP; 1 };
-    push @err, "Error loading JSON::PP: $@";
-
-    die join( "\n", "Couldn't load a JSON module:", @err );
-
-}
+with 'Search::Elasticsearch::Role::Serializer::JSON';
+use namespace::clean;
 
 1;
 
-# ABSTRACT: The default JSON Serializer
+# ABSTRACT: The default JSON Serializer, using JSON::MaybeXS
 
 =head1 SYNOPSIS
 

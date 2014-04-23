@@ -8,10 +8,10 @@ BEGIN {
         }
 }
 
-use Search::Elasticsearch::Async;
+use Search::Elasticsearch;
 
-my $s = Search::Elasticsearch::Async->new()->transport->serializer;
-isa_ok $s, "Search::Elasticsearch::Serializer::JSON::Cpanel", 'Cpanel';
+my $s = Search::Elasticsearch->new()->transport->serializer->JSON;
+isa_ok $s, "Cpanel::JSON::XS", 'Cpanel';
 
 done_testing;
 

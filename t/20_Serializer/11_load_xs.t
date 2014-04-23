@@ -7,13 +7,13 @@ use lib sub {
 
 use Search::Elasticsearch;
 
-my $s = Search::Elasticsearch->new()->transport->serializer;
+my $s = Search::Elasticsearch->new()->transport->serializer->JSON;
 
 SKIP: {
     skip 'JSON::XS not installed' => 1
         unless eval { require JSON::XS; 1 };
 
-    isa_ok $s, "Search::Elasticsearch::Serializer::JSON::XS", 'JSON::XS';
+    isa_ok $s, "JSON::XS", 'JSON::XS';
 }
 
 done_testing;
