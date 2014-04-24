@@ -537,8 +537,8 @@ bodies.  See:
 
 =head1 HELPER MODULES
 
-L<Elasticsearch::Async::Bulk> and L<Elasticsearch::Async::Scroll> are helper
-modules which assist with bulk indexing and scrolled searching, eg:
+L<Search::Elasticsearch::Async::Bulk> and L<Search::Elasticsearch::Async::Scroll>
+are helper modules which assist with bulk indexing and scrolled searching, eg:
 
     $es->scroll_helper(
         index     => 'myindex',
