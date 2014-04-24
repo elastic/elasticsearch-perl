@@ -448,6 +448,24 @@ sub api {
         ],
     },
 
+    'search_shards' => {
+        doc   => "search-shards",
+        parts => { index => {}, type => {} },
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_search_shards",
+            ],
+            [ { type => 1 }, "_all", "{type}", "_search_shards" ],
+            [ { index => 0 }, "{index}", "_search_shards" ],
+            [ {}, "_search_shards" ],
+        ],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "local",
+            "preference",         "routing",
+        ],
+    },
+
     'search_template' => {
         body  => {},
         doc   => "search-template",

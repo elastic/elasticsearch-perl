@@ -1110,6 +1110,29 @@ Query string parameters:
 See the L<explain docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-explain.html>
 for more information.
 
+=head2 C<search_shards()>
+
+    $response = $e->search_shards(
+        index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional
+    )
+
+The C<search_shards()> method returns information about which shards on
+which nodes will execute a search request.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<local>,
+    C<preference>,
+    C<routing>
+
+See the L<search-shards docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-shards.html>
+for more information.
+
+=head1 PERCOLATION METHODS
+
 =head2 C<percolate()>
 
     $results = $e->percolate(
