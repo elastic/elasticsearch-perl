@@ -16,6 +16,7 @@ has 'http_port' => ( is => 'ro', default  => 9600 );
 has 'es_port'   => ( is => 'ro', default  => 9700 );
 has 'pids'      => ( is => 'ro', default  => sub { [] }, clearer => 1 );
 has 'dir'       => ( is => 'ro', clearer  => 1 );
+has 'conf' => ( is => 'ro', default => sub { [] } );
 
 #===================================
 sub start {
@@ -148,7 +149,7 @@ sub _command_line {
             'discovery.zen.ping.unicast.hosts=127.0.0.1:' . $self->es_port,
             'transport.tcp.port=' . $transport,
             'http.port=' . $http,
-            'node.bench=true'
+            @{ $self->conf }
         )
     );
 }
@@ -190,6 +191,7 @@ be shutdown automatically.
         instances => 1,
         http_port => 9600,
         es_port   => 9700,
+        conf      => ['node.bench=true','script.disable_dynamic=false'],
     );
 
 Params:
@@ -215,6 +217,11 @@ will be incremented for each subsequent instance. Defaults to 9600.
 The port to use for Elasticsearch's internal transport. If multiple instances
 are started, the C<es_port> will be incremented for each subsequent instance.
 Defaults to 9700
+
+=item * C<conf>
+
+An array containing any extra startup options that should be passed
+to Elasticsearch.
 
 =back
 
