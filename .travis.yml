@@ -6,20 +6,9 @@ perl:
   - "5.14"
   - "5.12"
 env:
- - ES_VERSION=0.90.0
- - ES_VERSION=0.90.1
- - ES_VERSION=0.90.2
- - ES_VERSION=0.90.3
- - ES_VERSION=0.90.4
- - ES_VERSION=0.90.5
- - ES_VERSION=0.90.6
- - ES_VERSION=0.90.7
- - ES_VERSION=0.90.8
- - ES_VERSION=0.90.9
- - ES_VERSION=0.90.10
  - ES_VERSION=0.90.12
  - ES_VERSION=0.90.13
- - ES_VERSION=1.1.0
+ - ES_VERSION=1.1.1
 
 install:        "cpanm --installdeps --with-recommends --notest . && ./test/setup_es_server.pl"
 script:         ./test/run_all_tests.sh
