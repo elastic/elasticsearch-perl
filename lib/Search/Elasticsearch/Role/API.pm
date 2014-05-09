@@ -741,8 +741,8 @@ sub api {
         paths =>
             [ [ { index => 0 }, "{index}", "_analyze" ], [ {}, "_analyze" ] ],
         qs => [
-            "analyzer",     "field", "filters", "format",
-            "prefer_local", "text",  "tokenizer",
+            "analyzer", "char_filters", "field", "filters",
+            "format",   "prefer_local", "text",  "tokenizer",
         ],
     },
 
