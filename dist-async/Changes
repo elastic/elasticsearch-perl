@@ -1,4 +1,8 @@
 Revision history for Search::Elasticsearch::Async
 
+1.12    2014-05-09
+        Fixed bug when trying to reindex from a subref
+        Now requires Search::Elasticsearch v1.12
+
 1.11    2014-04-23
         First release

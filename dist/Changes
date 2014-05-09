@@ -1,5 +1,12 @@
 Revision history for Search::Elasticsearch
 
+1.12    2014-05-09
+        Fixed bug when trying to reindex from a subref
+        Added search_shards()
+        Added char_filters to indices.analyze()
+        Removed index_templates from cluster.state()
+        Added conf to TestServer for passing arbitrary config
+
 1.11    2014-04-23
         Switched default Serializer::JSON to use JSON::MaybeXS, and added
         Serializer backends for Cpanel::JSON::XS, JSON::XS and JSON::PP
