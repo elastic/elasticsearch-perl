@@ -579,6 +579,16 @@ sub api {
         qs => [ "h", "help", "local", "master_timeout", "v" ],
     },
 
+    'cat.fielddata' => {
+        doc   => "cat-fielddata",
+        parts => { fields => { multi => 1 } },
+        paths => [
+            [ { fields => 2 }, "_cat", "fielddata", "{fields}" ],
+            [ {}, "_cat", "fielddata" ],
+        ],
+        qs => [ "bytes", "h", "help", "local", "master_timeout", "v" ],
+    },
+
     'cat.health' => {
         doc   => "cat-health",
         parts => {},

@@ -126,6 +126,26 @@ Query string parameters:
 See the L<cat count docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-count.html>
 for more information.
 
+=head2 C<fielddata()>
+
+    say $e->cat->fielddata(
+        fields => 'field' | \@fields    # optional
+    );
+
+Shows the amount of memory used by each of the specified `fields` (or all
+fields) loaded into fielddata.
+
+Query string parameters:
+    C<bytes>,
+    C<h>,
+    C<help>,
+    C<local>,
+    C<master_timeout>,
+    C<v>
+
+See the L<cat fielddata docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-fielddata.html>
+for more information.
+
 =head2 C<health()>
 
     say $e->cat->health();
