@@ -9,9 +9,11 @@ my $base_url
     = "https://download.elasticsearch.org/elasticsearch/elasticsearch";
 
 my @startup_opts = qw(
-    -Des.network.host=localhost \
-    -Des.discovery.zen.ping.multicast.enabled=false \
+    -Des.network.host=localhost
+    -Des.discovery.zen.ping.multicast.enabled=false
     -Des.discovery.zen.ping_timeout=1
+    -Des.node.bench=true
+    -Des.script.disable_dynamic=false
 );
 
 sub run(@);
