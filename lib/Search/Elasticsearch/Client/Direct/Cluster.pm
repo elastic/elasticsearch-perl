@@ -121,7 +121,6 @@ or from the responding node if C<local> is set to C<true>.
 It returns all metrics by default, but these can be limited to any of:
     C<_all>,
     C<blocks>,
-    C<index_templates>,
     C<metadata>,
     C<nodes>,
     C<routing_table>
