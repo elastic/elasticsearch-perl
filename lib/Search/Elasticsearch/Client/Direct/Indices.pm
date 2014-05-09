@@ -203,22 +203,6 @@ Query string parameters:
 See the L<optimize index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-optimize.html>
 for more information.
 
-=head2 C<snapshot_index()>
-
-    $response = $e->indices->snapshot_index(
-        index => 'index' | \@indices    # optional
-    );
-
-Deprecated.
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<expand_wildcards>,
-    C<ignore_unavailable>
-
-See the L<snapshot_index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/>
-for more information.
-
 =head1 MAPPING METHODS
 
 =head2 C<put_mapping()>
@@ -686,25 +670,6 @@ Query string parameters:
     C<types>
 
 See the L<stats docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-stats.html>
-for more information.
-
-=head2 C<status()>
-
-    $result = $e->indices->status(
-        index   => 'index' | \@indices      # optional
-    );
-
-Deprecated.
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<expand_wildcards>,
-    C<human>,
-    C<ignore_unavailable>,
-    C<recovery>,
-    C<snapshot>
-
-See the L<status docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-status.html>
 for more information.
 
 =head2 C<recovery()>
