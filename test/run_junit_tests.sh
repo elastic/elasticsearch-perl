@@ -19,13 +19,13 @@ export JUNIT_OUTPUT_FILE=sync_tests.xml
 run "Module tests"        prove --harness=TAP::Harness::JUnit -l t/*/*.t
 
 export JUNIT_OUTPUT_FILE=yaml_lwp.xml
-run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl --junit -t
+run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl --junit
 
 export JUNIT_OUTPUT_FILE=yaml_netcurl.xml
-run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --junit --cxn NetCurl -t
+run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --junit --cxn NetCurl
 
 export JUNIT_OUTPUT_FILE=yaml_hijk.xml
-run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --junit --cxn Hijk -t
+run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --junit --cxn Hijk
 
 export JUNIT_OUTPUT_FILE=yaml_aehttp.xml
 run 'YAML: AEHTTP'      ./test/run_yaml_tests.pl  --junit --async --cxn AEHTTP
