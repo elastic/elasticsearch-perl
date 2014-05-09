@@ -1,7 +1,7 @@
 package Search::Elasticsearch::Serializer::JSON;
 
 use Moo;
-use JSON::MaybeXS 1.002000 ();
+use JSON::MaybeXS 1.002002 ();
 
 has 'JSON' => ( is => 'ro', default => sub { JSON::MaybeXS->new->utf8(1) } );
 
