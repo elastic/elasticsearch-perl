@@ -118,7 +118,7 @@ sub reindex {
     my $transform = $self->_doc_transformer($params);
 
     if ( ref $src eq 'HASH' ) {
-        $src = $self->_hash_to_scroll( $src, $transform );
+        $src = $self->_hash_to_scroll( {%$src}, $transform );
     }
     elsif ( blessed($src) && $src->isa('Search::Elasticsearch::Scroll') ) {
         my $scroll = $src;
@@ -140,7 +140,7 @@ sub reindex {
         my $deferred = deferred;
         my $weak_cb;
         my $cb = sub {
-            my @docs = $src->();
+            my @docs = grep {defined} $src->();
             return $deferred->resolve
                 unless @docs;
             $self->index( grep {$_} map { $transform->($_) } @docs )

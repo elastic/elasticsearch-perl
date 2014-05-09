@@ -67,11 +67,11 @@ sub reindex {
     my ( $self, $params ) = parse_params(@_);
     my $src = $params->{source}
         or throw( 'Param', "Missing required param <source>" );
-    $src = {%$src};
 
     my $transform = $self->_doc_transformer($params);
 
     if ( ref $src eq 'HASH' ) {
+        $src = {%$src};
         my $es = delete $src->{es} || $self->es;
         my $scroll = $es->scroll_helper(
             search_type => 'scan',
@@ -88,7 +88,7 @@ sub reindex {
             if $self->verbose;
     }
 
-    while ( my @docs = $src->() ) {
+    while ( my @docs = grep {defined} $src->() ) {
         $self->index( grep {$_} map { $transform->($_) } @docs );
     }
     $self->flush;

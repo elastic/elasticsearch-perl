@@ -45,6 +45,24 @@ is $es->count(
 is $es->get( index => 'test', type => 'test', id => 1 )->{_version}, 2,
     "Reindexed to same index - version updated";
 
+# Reindex from generic source
+
+my @docs = map {
+    { _index => 'foo', _type => 'bar', _id => $_, _source => { num => $_ } }
+} ( 1 .. 10 );
+
+$es->indices->delete( index => 'test2' );
+
+$b = Search::Elasticsearch::Bulk->new( es => $es, index => 'test2' );
+$b->reindex( index => 'test2', source => sub { shift @docs } );
+$es->indices->refresh;
+
+is $es->count(
+    index => 'test2',
+    type  => 'bar'
+    )->{count}, 10,
+    'Reindexed from generic source';
+
 # Reindex with transform
 $es->indices->delete( index => 'test2' );
 

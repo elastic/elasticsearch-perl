@@ -21,7 +21,7 @@ wait_for( $es->indices->delete( index => '_all', ignore => 404 )
 
 do "index_test_data.pl" or die $!;
 
-my $b;
+my ( $b, $s );
 
 # Reindex to new index and new type
 $b = Search::Elasticsearch::Async::Bulk->new(
@@ -56,6 +56,25 @@ is wait_for(
 is wait_for( $es->get( index => 'test', type => 'test', id => 1 ) )
     ->{_version}, 2,
     "Reindexed to same index - version updated";
+
+my @docs = map {
+    { _index => 'foo', _type => 'bar', _id => $_, _source => { num => $_ } }
+} ( 1 .. 10 );
+
+# Reindex from generic source
+wait_for( $es->indices->delete( index => 'test2' ) );
+
+$b = Search::Elasticsearch::Async::Bulk->new( es => $es, index => 'test2' );
+wait_for( $b->reindex( index => 'test2', source => sub { shift @docs } )
+        ->then( sub { $es->indices->refresh } ) );
+
+is wait_for(
+    $es->count(
+        index => 'test2',
+        type  => 'bar'
+    )
+    )->{count}, 10,
+    'Reindexed from generic source';
 
 # Reindex with transform
 wait_for( $es->indices->delete( index => 'test2' ) );
@@ -106,7 +125,6 @@ is wait_for(
 wait_for( $es->indices->delete( index => 'test2' ) );
 
 $b = Search::Elasticsearch::Async::Bulk->new( es => $es, index => 'test2' );
-my $s;
 {
     local $ENV{CXN};
     local $ENV{CXN_POOL};
