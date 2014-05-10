@@ -24,7 +24,8 @@ our %Supported = (
     regex     => 1,
     gtelte    => 1,
     benchmark => sub {
-        grep { $_->{settings}{node}{bench} }
+        no warnings;
+        grep { $_->{settings}{node}{bench} eq 'true' }
             values %{ $es->nodes->info( metric => 'settings' )->{nodes} };
     },
 );
