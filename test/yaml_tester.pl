@@ -9,8 +9,6 @@ use Data::Dumper;
 use File::Basename;
 use Time::HiRes qw(gettimeofday);
 
-our %Supported = ( regex => 1, gtelte => 1 );
-
 use lib qw(lib t/lib);
 
 my $client
@@ -21,6 +19,15 @@ my $client
 my $es        = do $client or die $!;
 my $wrapper   = request_wrapper();
 my $skip_list = load_skip_list();
+
+our %Supported = (
+    regex     => 1,
+    gtelte    => 1,
+    benchmark => sub {
+        grep { $_->{settings}{node}{bench} }
+            values %{ $es->nodes->info( metric => 'settings' )->{nodes} };
+    },
+);
 
 our %Test_Types = (
     is_true => sub {
@@ -358,8 +365,10 @@ sub skip_feature {
     my $features = shift()->{features} or return;
     $features = [$features] unless ref $features;
     for (@$features) {
+        my $supported = $Supported{$_};
+        $supported = $supported->() if ref $supported;
         return "Feature not supported: $_"
-            unless $Supported{$_};
+            unless $supported;
     }
     return;
 
