@@ -262,7 +262,7 @@ sub get_val {
             $val = $val->{$next};
             next;
         }
-        last;
+        return undef;
     }
     return $val;
 }
