@@ -1107,7 +1107,11 @@ sub api {
         method => "PUT",
         parts => { name => { required => 1 } },
         paths => [ [ { name => 1 }, "_template", "{name}" ] ],
-        qs => [ "flat_settings", "master_timeout", "order", "timeout" ],
+        qs => [
+            "create",         "flat_settings",
+            "master_timeout", "order",
+            "timeout"
+        ],
     },
 
     'indices.put_warmer' => {

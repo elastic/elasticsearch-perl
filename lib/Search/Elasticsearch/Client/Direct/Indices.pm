@@ -508,6 +508,7 @@ for more information.
 The C<put_template()> method is used to create or update index templates.
 
 Query string parameters:
+    C<create>,
     C<flat_settings>,
     C<master_timeout>,
     C<order>,

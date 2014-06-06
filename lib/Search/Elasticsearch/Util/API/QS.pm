@@ -27,14 +27,15 @@ our %Params = (
     analyzer         => { type => 'string' },
     boost_terms      => { type => 'number' },
     bytes            => { type => 'enum', options => [ 'b', 'k', 'm', 'g' ] },
-    char_filters      => { type => 'list' },
-    clear             => { type => 'bool' },
-    completion        => { type => 'bool' },
+    char_filters     => { type => 'list' },
+    clear            => { type => 'bool' },
+    completion       => { type => 'bool' },
     completion_fields => { type => 'list' },
     consistency       => {
         options => [ 'one', 'quorum', 'all' ],
         type    => 'enum'
     },
+    create           => { type => 'bool' },
     default_operator => {
         default => 'OR',
         options => [ 'AND', 'OR' ],
