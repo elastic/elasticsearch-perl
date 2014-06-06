@@ -883,7 +883,6 @@ Query string parameters:
     C<fields>,
     C<from>,
     C<ignore_unavailable>,
-    C<indices_boost>,
     C<lenient>,
     C<lowercase_expanded_terms>,
     C<preference>,

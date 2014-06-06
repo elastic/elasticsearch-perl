@@ -97,7 +97,6 @@ our %Params = (
     index_templates    => { type => 'list' },
     indexing           => { type => 'bool' },
     indices            => { type => 'bool' },
-    indices_boost      => { type => 'list' },
     interval           => { type => 'duration' },
     jvm                => { type => 'bool' },
     lang               => { type => 'string' },
