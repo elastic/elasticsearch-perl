@@ -1,5 +1,6 @@
 language: perl
 perl:
+  - "5.20"
   - "5.19"
   - "5.18"
   - "5.16"
@@ -9,6 +10,7 @@ env:
  - ES_VERSION=0.90.12
  - ES_VERSION=0.90.13
  - ES_VERSION=1.1.1
+ - ES_VERSION=1.2.1
 
 install:        "cpanm --installdeps --with-recommends --notest . && ./test/setup_es_server.pl"
 script:         ./test/run_all_tests.sh
