@@ -130,7 +130,6 @@ parameter.
 
 Query string parameters:
     C<flat_settings>,
-    <index_templates>,
     C<local>,
     C<master_timeout>
 
