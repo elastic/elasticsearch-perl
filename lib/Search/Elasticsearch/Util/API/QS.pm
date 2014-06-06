@@ -136,6 +136,7 @@ our %Params = (
     payloads               => { type => 'bool' },
     percent_terms_to_match => { type => 'number' },
     percolate              => { type => 'string' },
+    percolate_format       => { type => 'string' },
     percolate_index        => { type => 'string' },
     percolate_type         => { type => 'string' },
     plugin                 => { type => 'bool' },

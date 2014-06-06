@@ -1165,6 +1165,7 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<ignore_unavailable>,
+    C<percolate_format>,
     C<percolate_index>,
     C<percolate_type>,
     C<preference>,
