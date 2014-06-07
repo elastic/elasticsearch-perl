@@ -13,6 +13,7 @@
     - indices.delete_mapping/all_path_options.yaml
 
 1.0.0:
+    - cluster.state/20_filtering.yaml
     - create/75_ttl.yaml
     - index/75_ttl.yaml
     - update/75_ttl.yaml
@@ -20,6 +21,7 @@
     - indices.delete_mapping/all_path_options.yaml
 
 1.0.1:
+    - cluster.state/20_filtering.yaml
     - create/75_ttl.yaml
     - index/75_ttl.yaml
     - update/75_ttl.yaml
@@ -27,6 +29,7 @@
     - indices.delete_mapping/all_path_options.yaml
 
 1.0.2:
+    - cluster.state/20_filtering.yaml
     - create/75_ttl.yaml
     - index/75_ttl.yaml
     - update/75_ttl.yaml
@@ -34,15 +37,21 @@
     - indices.delete_mapping/all_path_options.yaml
 
 1.0.3:
+    - cluster.state/20_filtering.yaml
     - indices.delete_mapping/10_basic.yaml
     - indices.delete_mapping/all_path_options.yaml
 
 1.1.0:
+    - cluster.state/20_filtering.yaml
     - create/75_ttl.yaml
     - index/75_ttl.yaml
     - update/75_ttl.yaml
     - search/40_search_request_template.yaml
 
 1.1.1:
+    - cluster.state/20_filtering.yaml
     - indices.delete_mapping/10_basic.yaml
     - indices.delete_mapping/all_path_options.yaml
+
+1.1.2:
+    - cluster.state/20_filtering.yaml
