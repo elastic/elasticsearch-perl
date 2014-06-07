@@ -297,6 +297,7 @@ sub reset_es {
     $es->logger->trace_comment("RESETTING");
     $es->logger->trace_comment( "Start: " . timestamp() );
     $wrapper->( $es->indices->delete( index => '_all', ignore => 404 ) );
+    eval { $wrapper->( $es->indices->delete_template( name => '*' ) ) };
     $es->logger->trace_comment( "End: " . timestamp() );
 }
 
