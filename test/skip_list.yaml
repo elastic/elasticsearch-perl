@@ -41,6 +41,9 @@
     - indices.delete_mapping/10_basic.yaml
     - indices.delete_mapping/all_path_options.yaml
 
+1.0.4_SNAPSHOT:
+    - cluster.state/20_filtering.yaml
+
 1.1.0:
     - cluster.state/20_filtering.yaml
     - create/75_ttl.yaml
