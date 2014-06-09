@@ -58,3 +58,7 @@
 
 1.1.2:
     - cluster.state/20_filtering.yaml
+
+1.1.3_SNAPSHOT:
+    - cluster.state/20_filtering.yaml
+
