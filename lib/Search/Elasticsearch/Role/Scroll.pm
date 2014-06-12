@@ -7,18 +7,18 @@ use Scalar::Util qw(weaken blessed);
 use namespace::clean;
 
 has 'es' => ( is => 'ro', required => 1 );
-has 'scroll'         => ( is => 'ro' );
-has 'scroll_in_body' => ( is => 'ro' );
-has 'total'          => ( is => 'rwp' );
-has 'max_score'      => ( is => 'rwp' );
-has 'facets'         => ( is => 'rwp' );
-has 'aggregations'   => ( is => 'rwp' );
-has 'suggest'        => ( is => 'rwp' );
-has 'took'           => ( is => 'rwp' );
-has 'total_took'     => ( is => 'rwp' );
-has 'search_params'  => ( is => 'ro' );
-has 'is_finished'    => ( is => 'rwp', default => '' );
-has '_scroll_id'     => ( is => 'rwp', clearer => 1, predicate => 1 );
+has 'scroll'        => ( is => 'ro' );
+has 'scroll_in_qs'  => ( is => 'ro' );
+has 'total'         => ( is => 'rwp' );
+has 'max_score'     => ( is => 'rwp' );
+has 'facets'        => ( is => 'rwp' );
+has 'aggregations'  => ( is => 'rwp' );
+has 'suggest'       => ( is => 'rwp' );
+has 'took'          => ( is => 'rwp' );
+has 'total_took'    => ( is => 'rwp' );
+has 'search_params' => ( is => 'ro' );
+has 'is_finished'   => ( is => 'rwp', default => '' );
+has '_scroll_id'    => ( is => 'rwp', clearer => 1, predicate => 1 );
 
 #===================================
 sub finish {
@@ -29,18 +29,16 @@ sub finish {
     $self->_clear_scroll;
 }
 
-
-
 #===================================
 sub scroll_request {
 #===================================
     my $self = shift;
     my %args = ( scroll => $self->scroll );
-    if ( $self->scroll_in_body ) {
-        $args{body} = $self->_scroll_id;
+    if ( $self->scroll_in_qs ) {
+        $args{scroll_id} = $self->_scroll_id;
     }
     else {
-        $args{scroll_id} = $self->_scroll_id;
+        $args{body} = $self->_scroll_id;
     }
     $self->es->scroll(%args);
 }

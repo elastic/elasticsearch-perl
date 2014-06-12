@@ -83,9 +83,9 @@ SKIP: {
     );
 
     test_scroll(
-        "Scroll in body",
-        {   scroll_in_body => 1,
-            body           => {
+        "Scroll in qs",
+        {   scroll_in_qs => 1,
+            body         => {
                 query   => { term => { color => 'red' } },
                 suggest => {
                     mysuggest =>
