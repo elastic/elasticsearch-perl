@@ -443,7 +443,8 @@ sub api {
             "source",                   "stats",
             "suggest_field",            "suggest_mode",
             "suggest_size",             "suggest_text",
-            "timeout",                  "version",
+            "timeout",                  "track_scores",
+            "version",
         ],
     },
 

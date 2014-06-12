@@ -899,6 +899,7 @@ Query string parameters:
     C<suggest_size>,
     C<suggest_text>,
     C<timeout>,
+    C<track_scores>,
     C<version>
 
 See the L<search reference|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-body.html>

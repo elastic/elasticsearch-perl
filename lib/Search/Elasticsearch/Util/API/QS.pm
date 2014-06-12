@@ -203,6 +203,7 @@ our %Params = (
     timeout         => { type => 'duration' },
     timestamp       => { type => 'datetime' },
     tokenizer       => { type => 'string' },
+    track_scores    => { type => 'bool' },
     transport       => { type => 'bool' },
     ts              => { type => 'bool' },
     ttl             => { type => 'duration' },
