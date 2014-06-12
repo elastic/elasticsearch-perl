@@ -27,7 +27,7 @@ for my $child ( 1 .. $Kids ) {
 }
 
 my $ok = 0;
-for ( 1 .. 5 ) {
+for ( 1 .. 10 ) {
     my $pid = waitpid( -1, WNOHANG );
     if ( $pid > 0 ) {
         delete $pids{$pid};
