@@ -1,6 +1,4 @@
 use Test::More;
-use Test::SharedFork;
-use Search::Elasticsearch;
 use POSIX ":sys_wait_h";
 use AE;
 use Promises qw(deferred);

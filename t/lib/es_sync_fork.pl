@@ -1,6 +1,4 @@
 use Test::More;
-use Test::SharedFork;
-use Search::Elasticsearch;
 use POSIX ":sys_wait_h";
 
 my $es        = do "es_sync.pl";
