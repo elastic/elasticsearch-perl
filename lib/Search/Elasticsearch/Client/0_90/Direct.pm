@@ -43,6 +43,15 @@ sub _index {
 }
 
 #===================================
+around 'clear_scroll' => sub {
+#===================================
+    my $orig = shift;
+    my ( $self, $params ) = parse_params(@_);
+    $params->{scroll_id}||=delete $params->{body};
+    $orig->( $self, $params );
+};
+
+#===================================
 sub _build__bulk_class {
 #===================================
     my $self = shift;
