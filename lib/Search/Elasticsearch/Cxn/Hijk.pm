@@ -10,7 +10,7 @@ use Try::Tiny;
 use namespace::clean;
 
 has 'connect_timeout' => ( is => 'ro', default => 2 );
-has '_socket_cache' => ( is => 'ro', default => sub { {} } );
+has '_socket_cache' => ( is => 'rw', default => sub { {} } );
 
 my $Cxn_Error = qr/ Connection.(?:timed.out|re(?:set|fused))
                        | connect:.timeout
@@ -73,6 +73,12 @@ sub perform_request {
     );
 }
 
+#===================================
+sub clear_handle {
+#===================================
+    my $self = shift;
+    $self->_socket_cache( {} );
+}
 #===================================
 sub error_from_text {
 #===================================

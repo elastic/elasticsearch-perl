@@ -48,6 +48,7 @@ on 'test' => sub {
   requires "Test::Deep" => "0";
   requires "Test::Exception" => "0";
   requires "Test::More" => "0.98";
+  requires "Test::SharedFork" => "0";
   requires "lib" => "0";
 };
 

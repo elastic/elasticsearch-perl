@@ -32,6 +32,7 @@ sub perform_request {
         timeout => $params->{timeout} || $self->request_timeout,
         body => $data,
         persistent => 0,
+        session    => $self->_pid,
         sub {
             my ( $body, $headers ) = @_;
             try {

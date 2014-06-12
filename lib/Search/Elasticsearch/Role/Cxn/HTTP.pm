@@ -11,7 +11,8 @@ has 'is_https'           => ( is => 'ro' );
 has 'userinfo'           => ( is => 'ro' );
 has 'max_content_length' => ( is => 'ro' );
 has 'default_headers'    => ( is => 'ro' );
-has 'handle'             => ( is => 'lazy' );
+has 'handle'             => ( is => 'lazy', clearer => 1 );
+has '_pid'               => ( is => 'rw', default => $$ );
 
 #===================================
 sub protocol     {'http'}
@@ -106,6 +107,16 @@ before 'perform_request' => sub {
     $self->logger->throw_error( 'ContentLength',
         "Body is longer than max_content_length ($max)",
     );
+};
+
+#===================================
+before 'handle' => sub {
+#===================================
+    my $self = shift;
+    if ( $$ != $self->_pid ) {
+        $self->clear_handle;
+        $self->_pid($$);
+    }
 };
 
 #===================================
