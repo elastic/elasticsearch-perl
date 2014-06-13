@@ -1,5 +1,7 @@
 Revision history for Search::Elasticsearch::Cxn::NetCurl
 
+1.13    The NetCurl backend is now fork safe.
+
 1.10    2014-03-05
         Moved all modules to Search::Elasticsearch namespace.
         See https://github.com/elasticsearch/elasticsearch-perl/issues/20

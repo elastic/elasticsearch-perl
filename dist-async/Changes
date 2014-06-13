@@ -1,5 +1,16 @@
 Revision history for Search::Elasticsearch::Async
 
+1.13    2014-06-13
+        Breaking change:
+            The Async::Scroll helper used to pass the scroll ID to
+            scroll() and clear_scroll() in the query string by default,
+            with the scroll_in_body parameter to change the behaviour.
+            This was causing frequent errors with long scroll IDs, so
+            the new default behaviour is to pass the scroll ID in the
+            body, with the scroll_in_qs parameter to change that
+            behaviour.
+        All Search::Elasticsearch::Async HTTP backends are now fork safe.
+
 1.12    2014-05-09
         Fixed bug when trying to reindex from a subref
         Now requires Search::Elasticsearch v1.12
