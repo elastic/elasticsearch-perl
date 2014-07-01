@@ -46,7 +46,7 @@ __END__
 
 This class is used by the L<Search::Elasticsearch::Role::CxnPool> implementations
 to create new L<Search::Elasticsearch::Role::Cxn>-based instances. It holds on
-to all the configuration options passed to L<Elasticsearhch/new()> so
+to all the configuration options passed to L<Elasticsearch/new()> so
 that new Cxns can use them.
 
 It contains no user serviceable parts.
