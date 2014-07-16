@@ -159,6 +159,14 @@ sub api {
         ],
     },
 
+    'delete_script' => {
+        doc    => "modules-scripting",
+        method => "DELETE",
+        parts  => { id => { required => 1 }, lang => { required => 1 } },
+        paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
+        qs    => [],
+    },
+
     'exists' => {
         doc    => "docs-get",
         method => "HEAD",
@@ -221,6 +229,13 @@ sub api {
             "routing",         "version",
             "version_type",
         ],
+    },
+
+    'get_script' => {
+        doc   => "modules-scripting",
+        parts => { id => { required => 1 }, lang => { required => 1 } },
+        paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
+        qs    => [],
     },
 
     'get_source' => {
@@ -405,6 +420,15 @@ sub api {
         parts  => {},
         paths  => [ [ {} ] ],
         qs     => []
+    },
+
+    'put_script' => {
+        body   => { required => 1 },
+        doc    => "modules-scripting",
+        method => "PUT",
+        parts => { id => { required => 1 }, lang => { required => 1 } },
+        paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
+        qs => [],
     },
 
     'scroll' => {

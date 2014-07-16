@@ -1328,6 +1328,59 @@ Query string parameters:
 See the L<mlt docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-more-like-this.html>
 for more information.
 
+=HEAD1 INDEXED SCRIPT METHODS
+
+If dynamic scripting is enabled, Elasticsearch allows you to store scripts in an internal index known as
+C<.scripts> and reference them by id. The methods to manage indexed scripts are as follows:
+
+=head2 C<put_script()>
+
+    $result  = $e->put_script(
+        lang => 'lang',     # required
+        id   => 'id',       # required
+        body => { script }  # required
+    );
+
+The C<put_script()> method is used to store a script in the C<.scripts> index. For instance:
+
+    $result  = $e->put_scripts(
+        lang => 'groovy',
+        id   => 'hello_world',
+        body => {
+          script => q(return "hello world");
+        }
+    );
+
+Query string parameters: None
+
+See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
+
+=head2 C<get_script()>
+
+    $script = $e->get_script(
+        lang => 'lang',     # required
+        id   => 'id',       # required
+    );
+
+Retrieve the indexed script from the C<.scripts> index.
+
+Query string parameters: None
+
+See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
+
+=head2 C<delete_script()>
+
+    $script = $e->delete_script(
+        lang => 'lang',     # required
+        id   => 'id',       # required
+    );
+
+Delete the indexed script from the C<.scripts> index.
+
+Query string parameters: None
+
+See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
+
 =head1 BENCHMARK METHODS
 
 =head2 C<benchmark()>
