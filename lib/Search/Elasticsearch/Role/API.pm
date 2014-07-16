@@ -167,6 +167,14 @@ sub api {
         qs    => [],
     },
 
+    'delete_template' => {
+        doc    => "search-template",
+        method => "DELETE",
+        parts  => { id => {} },
+        paths  => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
+        qs     => [],
+    },
+
     'exists' => {
         doc    => "docs-get",
         method => "HEAD",
@@ -257,6 +265,14 @@ sub api {
             "refresh",         "routing",
             "version",         "version_type",
         ],
+    },
+
+    'get_template' => {
+        body  => {},
+        doc   => "search-template",
+        parts => { id => { required => 1 } },
+        paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
+        qs    => [],
     },
 
     'index' => {
@@ -428,6 +444,15 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
+        qs => [],
+    },
+
+    'put_template' => {
+        body   => { required => 1 },
+        doc    => "search-template",
+        method => "PUT",
+        parts => { id => { required => 1 } },
+        paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
         qs => [],
     },
 
