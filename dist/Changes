@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch
 
+1.14    2014-07-24
+        Added support for indexed scripts and indexed templates.
+
 1.13    2014-06-13
         Breaking change:
             The Scroll helper used to pass the scroll ID to
