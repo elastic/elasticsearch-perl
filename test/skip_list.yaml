@@ -62,5 +62,14 @@
 1.1.3_SNAPSHOT:
     - cluster.state/20_filtering.yaml
 
+1.3.0:
+    - search.aggregation/10_histogram.yaml
+
+1.3.1:
+    - search.aggregation/10_histogram.yaml
+
+1.3.2:
+    - search.aggregation/10_histogram.yaml
+
 1.3.0_SNAPSHOT:
     - search.aggregation/10_histogram.yaml
