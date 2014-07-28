@@ -73,3 +73,10 @@
 
 1.3.0_SNAPSHOT:
     - search.aggregation/10_histogram.yaml
+
+1.3.1_SNAPSHOT:
+  - search.aggregation/10_histogram.yaml
+
+1.3.2_SNAPSHOT:
+  - search.aggregation/10_histogram.yaml
+
