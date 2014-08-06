@@ -43,8 +43,6 @@ on 'build' => sub {
 
 on 'test' => sub {
   requires "AE" => "0";
-  requires "Cwd" => "0";
-  requires "Data::Dump" => "0";
   requires "EV" => "0";
   requires "Log::Any::Adapter::Callback" => "0";
   requires "Test::Deep" => "0";
@@ -55,7 +53,7 @@ on 'test' => sub {
 
 on 'test' => sub {
   recommends "Cpanel::JSON::XS" => "0";
-  recommends "JSON::XS" => "0";
+  recommends "JSON::XS" => "2.26";
   recommends "Mojo::IOLoop" => "0";
   recommends "Mojo::UserAgent" => "0";
 };

@@ -1,7 +1,7 @@
 package Search::Elasticsearch::Serializer::JSON::XS;
 
 use Moo;
-use JSON::XS;
+use JSON::XS 2.26;
 
 has 'JSON' => ( is => 'ro', default => sub { JSON::XS->new->utf8(1) } );
 
