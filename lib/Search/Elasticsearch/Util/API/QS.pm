@@ -227,7 +227,8 @@ our %Params = (
         options => [ 'green', 'yellow', 'red' ],
         type    => 'enum'
     },
-    warmer => { type => 'bool' }
+    wait_if_ongoing => { type => 'bool' },
+    warmer          => { type => 'bool' }
 );
 
 #===================================

@@ -176,7 +176,8 @@ Query string parameters:
     C<expand_wildcards>,
     C<force>,
     C<full>,
-    C<ignore_unavailable>
+    C<ignore_unavailable>,
+    C<wait_if_ongoing>
 
 See the L<flush index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-flush.html>
 for more information.
