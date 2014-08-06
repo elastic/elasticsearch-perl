@@ -568,6 +568,8 @@ Query string parameters:
     C<retry_on_conflict>,
     C<routing>,
     C<script>,
+    C<script_id>,
+    C<scripted_upsert>,
     C<timeout>,
     C<timestamp>,
     C<ttl>,
