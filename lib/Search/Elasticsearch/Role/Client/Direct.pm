@@ -4,6 +4,7 @@ use Moo::Role;
 with 'Search::Elasticsearch::Role::Client';
 use Search::Elasticsearch::Util::API::Path qw(path_handler);
 use Try::Tiny;
+use Package::Stash();
 use namespace::clean;
 
 #===================================
