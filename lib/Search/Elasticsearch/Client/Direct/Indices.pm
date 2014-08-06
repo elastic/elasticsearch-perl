@@ -136,6 +136,7 @@ Query string parameters:
     C<id>,
     C<id_cache>,
     C<ignore_unavailable>,
+    C<query_cache>,
     C<recycler>
 
 See the L<clear_cache docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-clearcache.html>
@@ -654,6 +655,7 @@ Allowed metrics are:
     C<indexing>,
     C<merge>,
     C<percolate>,
+    C<query_cache>,
     C<refresh>,
     C<search>,
     C<segments>,

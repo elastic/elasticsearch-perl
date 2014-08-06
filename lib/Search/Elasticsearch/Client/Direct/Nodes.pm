@@ -102,6 +102,7 @@ Allowed index metrics are:
     C<indexing>,
     C<merge>,
     C<percolate>,
+    C<query_cache>,
     C<refresh>,
     C<search>,
     C<segments>,
