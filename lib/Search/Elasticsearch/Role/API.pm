@@ -496,6 +496,26 @@ sub api {
             "track_scores",             "version",
         ],
     },
+
+    'search_exists' => {
+        body   => {},
+        doc    => "exists",
+        method => "POST",
+        parts  => { index => { multi => 1 }, type => { multi => 1 } },
+        paths  => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_search",
+                "exists",
+            ],
+            [ { type => 1 }, "_all", "{type}", "_search", "exists" ],
+            [ { index => 0 }, "{index}", "_search", "exists" ],
+            [ {}, "_search", "exists" ],
+        ],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "min_score",
+            "preference",         "routing",
+            "source",
         ],
     },
 

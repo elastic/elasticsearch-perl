@@ -908,6 +908,31 @@ for more information.
 
 Also see L<Search::Elasticsearch::Transport/send_get_body_as>.
 
+=head2 C<search_exists()>
+
+The C<search_exists()> method is a quick version of search which can be 
+used to find out whether there are matching search results or not.
+It doesn't return any results itself.
+
+    $results = $e->search_exists(
+        index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional
+
+        body    => { search params }        # optional
+    );
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<min_score>,
+    C<preference>,
+    C<routing>,
+    C<source>
+
+See the L<search exists reference|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-exists.html>
+for more information.
+
 =head2 C<count()>
 
     $results = $e->count(
