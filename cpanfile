@@ -24,6 +24,7 @@ requires "Moo" => "1.003";
 requires "Moo::Role" => "0";
 requires "Net::Curl::Easy" => "0";
 requires "POSIX" => "0";
+requires "Package::Stash" => "0";
 requires "Promises" => "0.93";
 requires "Scalar::Util" => "0";
 requires "Sub::Exporter" => "0";
