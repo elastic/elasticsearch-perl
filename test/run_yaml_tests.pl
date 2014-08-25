@@ -41,7 +41,7 @@ my $tap = $harness->new(
 
 my @tests = @ARGV;
 if (@tests) {
-    @tests = grep { -d || /\.yaml$/ } @tests;
+    @tests = grep { -d || /\.ya?ml$/ } @tests;
 }
 else {
     @tests = grep {-d} glob("elasticsearch/rest-api-spec/test/*");

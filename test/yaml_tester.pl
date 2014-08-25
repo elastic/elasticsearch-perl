@@ -99,7 +99,7 @@ sub test_dir {
     my $dir = shift;
     plan tests   => 1;
     subtest $dir => sub {
-        test_files( glob "$dir/*.yaml" );
+        test_files( glob "$dir/*.y*ml" );
     };
 }
 
@@ -112,7 +112,7 @@ sub test_files {
     plan tests => 0 + @files;
 
     for my $file (@files) {
-        my ($name) = ( $file =~ m{([\w.]+/[\w.]+\.yaml)} );
+        my ($name) = ( $file =~ m{([\w.]+/[\w.]+\.y.?ml)} );
         if ( $skip_list->{$name} ) {
             $es->logger->trace_comment("SKIPPING: $name in skip list");
         SKIP: { skip "$name in skip list", 1 }
