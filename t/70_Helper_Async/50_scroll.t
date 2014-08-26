@@ -68,13 +68,13 @@ SKIP: {
             size       => 10,
             on_results => \&on_results
         },
-        total        => 50,
-        max_score    => num( 1.6, 0.2 ),
-        facets       => bool(1),
-        aggregations => $es_version ge '1' ? bool(1) : undef,
-        suggest      => bool(1),
-        total_seen   => 50,
-        max_seen     => 10
+        total      => 50,
+        max_score  => num( 1.6, 0.2 ),
+        facets     => bool(1),
+        aggs       => bool(1),
+        suggest    => bool(1),
+        total_seen => 50,
+        max_seen   => 10
     );
 
     test_scroll(
@@ -92,13 +92,13 @@ SKIP: {
             size       => 10,
             on_results => \&on_results
         },
-        total        => 50,
-        max_score    => num( 1.6, 0.2 ),
-        facets       => bool(1),
-        aggregations => $es_version ge '1' ? bool(1) : undef,
-        suggest      => bool(1),
-        total_seen   => 50,
-        max_seen     => 10
+        total      => 50,
+        max_score  => num( 1.6, 0.2 ),
+        facets     => bool(1),
+        aggs       => bool(1),
+        suggest    => bool(1),
+        total_seen => 50,
+        max_seen   => 10
     );
 
     test_scroll(
@@ -116,13 +116,13 @@ SKIP: {
             on_results  => \&on_results,
             search_type => 'scan'
         },
-        total        => 50,
-        max_score    => 0,
-        facets       => bool(1),
-        aggregations => $es_version ge '1' ? bool(1) : undef,
-        suggest      => bool(1),
-        total_seen   => 50,
-        max_seen     => 25
+        total      => 50,
+        max_score  => 0,
+        facets     => bool(1),
+        aggs       => bool(1),
+        suggest    => bool(1),
+        total_seen => 50,
+        max_seen   => 25
     );
 
 }
@@ -150,7 +150,7 @@ sub test_scroll {
 #===================================
     my ( $title, $params, %tests ) = @_;
     $max_seen = $total_seen = 0;
-    delete $params->{body}{aggs} unless $es_version ge '1';
+    delete $params->{body}{ $es_version ge '1' ? 'facets' : 'aggs' };
     subtest $title => sub {
         isa_ok $s = Search::Elasticsearch::Async::Scroll->new(
             es       => $es,
@@ -172,8 +172,10 @@ sub test_start {
     my ( $title, $tests, $s ) = @_;
     is $s->total,             $tests->{total},     "$title - total";
     cmp_deeply $s->max_score, $tests->{max_score}, "$title - max_score";
-    cmp_deeply $s->facets,    $tests->{facets},    "$title - facets";
     cmp_deeply $s->suggest,   $tests->{suggest},   "$title - suggest";
+    $es_version ge 1
+        ? cmp_deeply $s->aggregations, $tests->{aggs}, "$title - aggs"
+        : cmp_deeply $s->facets, $tests->{facets}, "$title - facets";
 
 }
 
