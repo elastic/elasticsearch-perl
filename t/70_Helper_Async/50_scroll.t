@@ -110,7 +110,6 @@ SKIP: {
                         { text => 'green', term => { field => 'color' } }
                 },
                 facets => { color => { terms => { field => 'color' } } },
-                aggs   => { color => { terms => { field => 'color' } } },
             },
             size        => 5,
             on_results  => \&on_results,
@@ -119,7 +118,6 @@ SKIP: {
         total      => 50,
         max_score  => 0,
         facets     => bool(1),
-        aggs       => bool(1),
         suggest    => bool(1),
         total_seen => 50,
         max_seen   => 25
