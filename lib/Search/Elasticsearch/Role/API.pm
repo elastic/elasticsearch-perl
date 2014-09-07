@@ -936,8 +936,8 @@ sub api {
         parts  => { index => { multi => 1 }, name => { multi => 1 } },
         paths  => [
             [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ],
-            [ { name  => 1 }, "_alias",  "{name}" ],
             [ { index => 0 }, "{index}", "_alias" ],
+            [ { name  => 1 }, "_alias",  "{name}" ],
         ],
         qs => [
             "allow_no_indices",   "expand_wildcards",
@@ -985,8 +985,8 @@ sub api {
         parts => { index => { multi => 1 }, name => { multi => 1 } },
         paths => [
             [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ],
-            [ { name  => 1 }, "_alias",  "{name}" ],
             [ { index => 0 }, "{index}", "_alias" ],
+            [ { name  => 1 }, "_alias",  "{name}" ],
             [ {}, "_alias" ],
         ],
         qs => [
@@ -1000,8 +1000,8 @@ sub api {
         parts => { index => { multi => 1 }, name => { multi => 1 } },
         paths => [
             [ { index => 0, name => 2 }, "{index}", "_aliases", "{name}" ],
-            [ { name  => 1 }, "_aliases", "{name}" ],
             [ { index => 0 }, "{index}",  "_aliases" ],
+            [ { name  => 1 }, "_aliases", "{name}" ],
             [ {}, "_aliases" ],
         ],
         qs => [ "local", "timeout" ],
@@ -1041,8 +1041,8 @@ sub api {
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ],
-            [ { type  => 1 }, "_mapping", "{type}" ],
             [ { index => 0 }, "{index}",  "_mapping" ],
+            [ { type  => 1 }, "_mapping", "{type}" ],
             [ {}, "_mapping" ],
         ],
         qs => [
@@ -1056,8 +1056,8 @@ sub api {
         parts => { index => { multi => 1 }, name => { multi => 1 } },
         paths => [
             [ { index => 0, name => 2 }, "{index}", "_settings", "{name}" ],
-            [ { name  => 1 }, "_settings", "{name}" ],
             [ { index => 0 }, "{index}",   "_settings" ],
+            [ { name  => 1 }, "_settings", "{name}" ],
             [ {}, "_settings" ],
         ],
         qs => [
@@ -1091,8 +1091,8 @@ sub api {
                 "{name}"
             ],
             [ { index => 0, name => 2 }, "{index}", "_warmer", "{name}" ],
-            [ { name  => 1 }, "_warmer", "{name}" ],
             [ { index => 0 }, "{index}", "_warmer" ],
+            [ { name  => 1 }, "_warmer", "{name}" ],
             [ {}, "_warmer" ],
         ],
         qs => [
@@ -1264,8 +1264,8 @@ sub api {
         parts => { index => { multi => 1 }, metric => { multi => 1 } },
         paths => [
             [ { index => 0, metric => 2 }, "{index}", "_stats", "{metric}" ],
-            [ { metric => 1 }, "_stats",  "{metric}" ],
             [ { index  => 0 }, "{index}", "_stats" ],
+            [ { metric => 1 }, "_stats",  "{metric}" ],
             [ {}, "_stats" ],
         ],
         qs => [

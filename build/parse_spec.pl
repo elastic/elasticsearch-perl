@@ -8,7 +8,7 @@ use Path::Class;
 use Perl::Tidy;
 use JSON::XS;
 
-my @files = map { file($_) } glob 'elasticsearch/rest-api-spec/api/*.json';
+my @files = map { file($_) } glob '../elasticsearch/rest-api-spec/api/*.json';
 
 my ( %API, %seen, %seen_combo, %Forbidden );
 
@@ -140,7 +140,9 @@ sub process_paths {
 
     # generate paths with _all
     my @paths;
-    for my $path ( sort { $a->{max} <=> $b->{max} } values %sigs ) {
+    for my $path ( sort { $a->{max} <=> $b->{max} or $b->{sig} cmp $a->{sig} }
+        values %sigs )
+    {
         next if $path->{max} < 2;
 
         # find /{var1}/{var2} -> {var1} need _all
