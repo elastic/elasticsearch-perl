@@ -164,7 +164,7 @@ sub api {
         method => "DELETE",
         parts  => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs    => [],
+        qs => [ "version", "version_type" ],
     },
 
     'delete_template' => {
@@ -243,7 +243,7 @@ sub api {
         doc   => "modules-scripting",
         parts => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs    => [],
+        qs => [ "version", "version_type" ],
     },
 
     'get_source' => {
@@ -268,11 +268,10 @@ sub api {
     },
 
     'get_template' => {
-        body  => {},
         doc   => "search-template",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs    => [],
+        qs => [ "version", "version_type" ],
     },
 
     'index' => {
@@ -444,7 +443,7 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs => [],
+        qs => [ "op_type", "version", "version_type" ],
     },
 
     'put_template' => {

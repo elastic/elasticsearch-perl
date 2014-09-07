@@ -912,7 +912,7 @@ Also see L<Search::Elasticsearch::Transport/send_get_body_as>.
 
 =head2 C<search_exists()>
 
-The C<search_exists()> method is a quick version of search which can be 
+The C<search_exists()> method is a quick version of search which can be
 used to find out whether there are matching search results or not.
 It doesn't return any results itself.
 
@@ -1379,7 +1379,10 @@ The C<put_script()> method is used to store a script in the C<.scripts> index. F
         }
     );
 
-Query string parameters: None
+Query string parameters:
+    C<op_type>,
+    C<version>,
+    C<version_type>
 
 See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
@@ -1392,7 +1395,9 @@ See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsear
 
 Retrieve the indexed script from the C<.scripts> index.
 
-Query string parameters: None
+Query string parameters:
+    C<version>,
+    C<version_type>
 
 See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
@@ -1405,7 +1410,9 @@ See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsear
 
 Delete the indexed script from the C<.scripts> index.
 
-Query string parameters: None
+Query string parameters:
+    C<version>,
+    C<version_type>
 
 See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
@@ -1450,7 +1457,9 @@ See the L<indexed search template docs|http://www.elasticsearch.org/guide/en/ela
 
 Retrieve the indexed template from the C<.scripts> index.
 
-Query string parameters: None
+Query string parameters:
+    C<version>,
+    C<version_type>
 
 See the L<indexed search template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
 
