@@ -783,11 +783,7 @@ sub api {
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_cluster", "reroute" ] ],
-        qs     => [
-            "dry_run",         "explain",
-            "filter_metadata", "master_timeout",
-            "timeout",
-        ],
+        qs => [ "dry_run", "explain", "master_timeout", "metric", "timeout" ],
     },
 
     'cluster.state' => {
