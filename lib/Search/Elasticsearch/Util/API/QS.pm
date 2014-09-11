@@ -114,18 +114,25 @@ our %Params = (
     max_query_terms          => { type => 'number' },
     max_word_len             => { type => 'number' },     # depr 0.90
     max_word_length          => { type => 'number' },
-    merge                    => { type => 'bool' },
-    min_doc_freq             => { type => 'number' },
-    min_score                => { type => 'number' },
-    min_term_freq            => { type => 'number' },
-    min_word_len             => { type => 'number' },     # depr 0.90
-    min_word_length          => { type => 'number' },
-    mlt_fields               => { type => 'list' },
-    name                     => { type => 'list' },
-    network                  => { type => 'bool' },
-    offsets                  => { type => 'bool' },
-    only_expunge_deletes     => { type => 'bool' },
-    op_type                  => {
+    metric                   => {
+        type    => 'enum',
+        options => [
+            "_all",          "blocks",      "metadata", "nodes",
+            "routing_table", "master_node", "version"
+        ]
+    },
+    merge                => { type => 'bool' },
+    min_doc_freq         => { type => 'number' },
+    min_score            => { type => 'number' },
+    min_term_freq        => { type => 'number' },
+    min_word_len         => { type => 'number' },         # depr 0.90
+    min_word_length      => { type => 'number' },
+    mlt_fields           => { type => 'list' },
+    name                 => { type => 'list' },
+    network              => { type => 'bool' },
+    offsets              => { type => 'bool' },
+    only_expunge_deletes => { type => 'bool' },
+    op_type              => {
         default => 'index',
         options => [ 'index', 'create' ],
         type    => 'enum'
