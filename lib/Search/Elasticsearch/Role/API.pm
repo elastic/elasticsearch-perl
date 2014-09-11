@@ -976,6 +976,22 @@ sub api {
         ],
     },
 
+    'indices.get' => {
+        doc   => "indices-get",
+        parts => {
+            feature => { multi => 1 },
+            index   => { multi => 1, required => 1 }
+        },
+        paths => [
+            [ { feature => 1, index => 0 }, "{index}", "{feature}" ],
+            [ { index => 0 }, "{index}" ],
+        ],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "local",
+        ],
+    },
+
     'indices.get_alias' => {
         doc   => "indices-aliases",
         parts => { index => { multi => 1 }, name => { multi => 1 } },

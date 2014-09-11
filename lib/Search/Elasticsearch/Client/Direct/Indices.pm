@@ -43,6 +43,25 @@ Query string parameters:
 See the L<create index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-create-index.html>
 for more information.
 
+=head2 C<get()>
+
+    $response = $e->indices->get(
+        index   => 'index'   | \@indices    # optional
+        feature => 'feature' | \@features   # optional
+    );
+
+Returns the aliases, settings, mappings, and warmers for the specified indices.
+The C<feature> parameter can be set to none or more of: C<_settings>, C<_mappings>,
+C<_warmers> and C<_aliases>.
+
+See the L<get index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-index.html>.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<local>
+
 =head2 C<exists()>
 
     $bool = $e->indices->exists(
