@@ -188,7 +188,7 @@ for more information.
 
 =head2 C<master()>
 
-    say $e->cat->indices();
+    say $e->cat->master();
 
 Displays the master’s node ID, bound IP address, and node name.
 
