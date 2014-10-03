@@ -916,7 +916,7 @@ sub api {
     },
 
     'indices.exists' => {
-        doc    => "indices-get-settings",
+        doc    => "indices-exists",
         method => "HEAD",
         parts  => { index => { multi => 1, required => 1 } },
         paths => [ [ { index => 0 }, "{index}" ] ],
@@ -977,7 +977,7 @@ sub api {
     },
 
     'indices.get' => {
-        doc   => "indices-get",
+        doc   => "indices-get-index",
         parts => {
             feature => { multi => 1 },
             index   => { multi => 1, required => 1 }
