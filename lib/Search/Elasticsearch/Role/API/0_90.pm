@@ -249,7 +249,7 @@ sub api {
             "min_word_len",           "mlt_fields",
             "percent_terms_to_match", "routing",
             "search_from",            "search_indices",
-            "search_query_hint",      "search_scroll",
+            "search_scroll",
             "search_size",            "search_source",
             "search_type",            "search_types",
             "stop_words",
