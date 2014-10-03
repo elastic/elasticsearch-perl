@@ -400,7 +400,8 @@ sub api {
             "ids",              "offsets",
             "parent",           "payloads",
             "positions",        "preference",
-            "routing",          "term_statistics",
+            "realtime",         "routing",
+            "term_statistics",
         ],
     },
 
@@ -588,8 +589,8 @@ sub api {
             "field_statistics", "fields",
             "offsets",          "parent",
             "payloads",         "positions",
-            "preference",       "routing",
-            "term_statistics",
+            "preference",       "realtime",
+            "routing",          "term_statistics",
         ],
     },
 

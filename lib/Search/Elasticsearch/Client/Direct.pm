@@ -601,6 +601,7 @@ Query string parameters:
     C<payloads>,
     C<positions>,
     C<preference>,
+    C<realtime>,
     C<routing>,
     C<term_statistics>
 
@@ -823,6 +824,7 @@ Query string parameters:
     C<payloads>,
     C<positions>,
     C<preference>,
+    C<realtime>,
     C<routing>,
     C<term_statistics>
 
