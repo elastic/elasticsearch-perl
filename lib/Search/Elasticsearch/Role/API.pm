@@ -1087,6 +1087,17 @@ sub api {
         qs => [ "flat_settings", "local" ],
     },
 
+    'indices.get_upgrade' => {
+        doc   => "indices-upgrade",
+        parts => { index => { multi => 1 } },
+        paths =>
+            [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
+        qs => [
+            "allow_no_indices", "expand_wildcards",
+            "human",            "ignore_unavailable",
+        ],
+    },
+
     'indices.get_warmer' => {
         doc   => "indices-warmers",
         parts => {
@@ -1307,6 +1318,19 @@ sub api {
         parts  => {},
         paths => [ [ {}, "_aliases" ] ],
         qs => [ "master_timeout", "timeout" ],
+    },
+
+    'indices.upgrade' => {
+        doc    => "indices-upgrade",
+        method => "POST",
+        parts  => { index => { multi => 1 } },
+        paths =>
+            [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
+        qs => [
+            "allow_no_indices", "expand_wildcards",
+            "flush",            "ignore_unavailable",
+            "max_num_segments", "wait_for_completion",
+        ],
     },
 
     'indices.validate_query' => {
