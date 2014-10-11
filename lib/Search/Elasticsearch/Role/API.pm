@@ -1327,9 +1327,8 @@ sub api {
         paths =>
             [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
         qs => [
-            "allow_no_indices", "expand_wildcards",
-            "flush",            "ignore_unavailable",
-            "max_num_segments", "wait_for_completion",
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "wait_for_completion",
         ],
     },
 

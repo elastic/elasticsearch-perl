@@ -252,9 +252,7 @@ The C<upgrade()> method upgrades all segments in the specified indices to the la
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<flush>,
     C<ignore_unavailable>,
-    C<max_num_segments>,
     C<wait_for_completion>
 
 See the L<upgrade docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-upgrade.html>
