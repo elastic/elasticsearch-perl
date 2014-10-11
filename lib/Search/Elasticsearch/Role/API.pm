@@ -1451,7 +1451,7 @@ sub api {
         method => "PUT",
         parts => { repository => { required => 1 } },
         paths => [ [ { repository => 1 }, "_snapshot", "{repository}" ] ],
-        qs => [ "master_timeout", "timeout" ],
+        qs => [ "master_timeout", "timeout", "verify" ],
     },
 
     'snapshot.delete' => {
@@ -1534,6 +1534,16 @@ sub api {
             [ {}, "_snapshot", "_status" ],
         ],
         qs => ["master_timeout"],
+    },
+
+    'snapshot.verify_repository' => {
+        doc    => "modules-snapshots",
+        method => "POST",
+        parts  => { repository => { required => 1 } },
+        paths  => [
+            [ { repository => 1 }, "_snapshot", "{repository}", "_verify" ],
+        ],
+        qs => [ "master_timeout", "timeout" ],
     },
 
 #=== AUTOGEN - END ===

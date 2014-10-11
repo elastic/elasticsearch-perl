@@ -33,7 +33,8 @@ Create a repository for backups.
 
 Query string parameters:
     C<master_timeout>,
-    C<timeout>
+    C<timeout>,
+    C<verify>
 
 See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.
@@ -49,6 +50,21 @@ Retrieve existing repositories.
 Query string parameters:
     C<local>,
     C<master_timeout>
+
+See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+for more information.
+
+=head2 C<verify_repository()>
+
+    $e->snapshot->verify_repository(
+        repository  => 'repository' # required
+    );
+
+Verify existing repository.
+
+Query string parameters:
+    C<master_timeout>,
+    C<timeout>
 
 See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.
