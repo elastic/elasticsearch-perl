@@ -1057,7 +1057,6 @@ Query string parameters:
     C<routing>,
     C<search_from>,
     C<search_indices>,
-    C<search_query_hint>,
     C<search_scroll>,
     C<search_size>,
     C<search_source>,

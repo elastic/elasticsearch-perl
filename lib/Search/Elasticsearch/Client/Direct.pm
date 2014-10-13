@@ -601,6 +601,7 @@ Query string parameters:
     C<payloads>,
     C<positions>,
     C<preference>,
+    C<realtime>,
     C<routing>,
     C<term_statistics>
 
@@ -823,6 +824,7 @@ Query string parameters:
     C<payloads>,
     C<positions>,
     C<preference>,
+    C<realtime>,
     C<routing>,
     C<term_statistics>
 
@@ -1345,7 +1347,6 @@ Query string parameters:
     C<routing>,
     C<search_from>,
     C<search_indices>,
-    C<search_query_hint>,
     C<search_scroll>,
     C<search_size>,
     C<search_source>,

@@ -125,7 +125,7 @@ our %Params = (
     min_doc_freq         => { type => 'number' },
     min_score            => { type => 'number' },
     min_term_freq        => { type => 'number' },
-    min_word_len         => { type => 'number' },         # depr 0.90
+    min_word_len         => { type => 'number' },    # depr 0.90
     min_word_length      => { type => 'number' },
     mlt_fields           => { type => 'list' },
     name                 => { type => 'list' },
@@ -173,7 +173,6 @@ our %Params = (
     search            => { type => 'bool' },
     search_from       => { type => 'number' },
     search_indices    => { type => 'list' },
-    search_query_hint => { type => 'string' },
     search_scroll     => { type => 'string' },
     search_size       => { type => 'number' },
     search_source     => { type => 'string' },
@@ -221,6 +220,7 @@ our %Params = (
     types           => { type => 'list' },
     v               => { type => 'bool' },
     verbose         => { type => 'bool' },
+    verify          => { type => 'bool' },
     version         => { type => 'number' },
     version_type    => {
         type    => 'enum',

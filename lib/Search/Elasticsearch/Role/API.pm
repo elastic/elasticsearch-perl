@@ -348,10 +348,9 @@ sub api {
             "min_word_length",        "mlt_fields",
             "percent_terms_to_match", "routing",
             "search_from",            "search_indices",
-            "search_query_hint",      "search_scroll",
-            "search_size",            "search_source",
-            "search_type",            "search_types",
-            "stop_words",
+            "search_scroll",          "search_size",
+            "search_source",          "search_type",
+            "search_types",           "stop_words",
         ],
     },
 
@@ -401,7 +400,8 @@ sub api {
             "ids",              "offsets",
             "parent",           "payloads",
             "positions",        "preference",
-            "routing",          "term_statistics",
+            "realtime",         "routing",
+            "term_statistics",
         ],
     },
 
@@ -589,8 +589,8 @@ sub api {
             "field_statistics", "fields",
             "offsets",          "parent",
             "payloads",         "positions",
-            "preference",       "routing",
-            "term_statistics",
+            "preference",       "realtime",
+            "routing",          "term_statistics",
         ],
     },
 
@@ -916,7 +916,7 @@ sub api {
     },
 
     'indices.exists' => {
-        doc    => "indices-get-settings",
+        doc    => "indices-exists",
         method => "HEAD",
         parts  => { index => { multi => 1, required => 1 } },
         paths => [ [ { index => 0 }, "{index}" ] ],
@@ -977,7 +977,7 @@ sub api {
     },
 
     'indices.get' => {
-        doc   => "indices-get",
+        doc   => "indices-get-index",
         parts => {
             feature => { multi => 1 },
             index   => { multi => 1, required => 1 }
@@ -1085,6 +1085,17 @@ sub api {
         paths =>
             [ [ { name => 1 }, "_template", "{name}" ], [ {}, "_template" ] ],
         qs => [ "flat_settings", "local" ],
+    },
+
+    'indices.get_upgrade' => {
+        doc   => "indices-upgrade",
+        parts => { index => { multi => 1 } },
+        paths =>
+            [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
+        qs => [
+            "allow_no_indices", "expand_wildcards",
+            "human",            "ignore_unavailable",
+        ],
     },
 
     'indices.get_warmer' => {
@@ -1309,6 +1320,18 @@ sub api {
         qs => [ "master_timeout", "timeout" ],
     },
 
+    'indices.upgrade' => {
+        doc    => "indices-upgrade",
+        method => "POST",
+        parts  => { index => { multi => 1 } },
+        paths =>
+            [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
+        qs => [
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "wait_for_completion",
+        ],
+    },
+
     'indices.validate_query' => {
         body  => {},
         doc   => "search-validate",
@@ -1427,7 +1450,7 @@ sub api {
         method => "PUT",
         parts => { repository => { required => 1 } },
         paths => [ [ { repository => 1 }, "_snapshot", "{repository}" ] ],
-        qs => [ "master_timeout", "timeout" ],
+        qs => [ "master_timeout", "timeout", "verify" ],
     },
 
     'snapshot.delete' => {
@@ -1510,6 +1533,16 @@ sub api {
             [ {}, "_snapshot", "_status" ],
         ],
         qs => ["master_timeout"],
+    },
+
+    'snapshot.verify_repository' => {
+        doc    => "modules-snapshots",
+        method => "POST",
+        parts  => { repository => { required => 1 } },
+        paths  => [
+            [ { repository => 1 }, "_snapshot", "{repository}", "_verify" ],
+        ],
+        qs => [ "master_timeout", "timeout" ],
     },
 
 #=== AUTOGEN - END ===

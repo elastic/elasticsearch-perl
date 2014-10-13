@@ -215,13 +215,47 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<flush>,
-    C<force>,
     C<ignore_unavailable>,
     C<max_num_segments>,
     C<only_expunge_deletes>,
     C<wait_for_merge>
 
 See the L<optimize index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-optimize.html>
+for more information.
+
+=head2 C<get_upgrade()>
+
+    $response = $e->indices->get_upgrade(
+        index => 'index' | \@indices    # optional
+    );
+
+The C<get_upgrade()> method returns information about which indices need to be
+upgraded, which can be done with the C<upgrade()> method.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<human>,
+    C<ignore_unavailable>
+
+See the L<upgrade docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-upgrade.html>
+for more information.
+
+=head2 C<upgrade()>
+
+    $response = $e->indices->upgrade(
+        index => 'index' | \@indices    # optional
+    );
+
+The C<upgrade()> method upgrades all segments in the specified indices to the latest format.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<wait_for_completion>
+
+See the L<upgrade docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-upgrade.html>
 for more information.
 
 =head1 MAPPING METHODS
