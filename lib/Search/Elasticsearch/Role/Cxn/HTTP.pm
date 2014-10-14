@@ -71,7 +71,7 @@ sub BUILDARGS {
     }
 
     $params->{scheme}          = $scheme;
-    $params->{is_http}         = $scheme eq 'https';
+    $params->{is_https}        = $scheme eq 'https';
     $params->{host}            = $host;
     $params->{port}            = $port;
     $params->{path}            = $path;
