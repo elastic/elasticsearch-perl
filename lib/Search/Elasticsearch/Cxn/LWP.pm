@@ -70,7 +70,11 @@ sub _build_handle {
         parse_head => 0
     );
     if ( $self->is_https ) {
-        $args{ssl_opts} = { verify_hostname => 0 };
+        if ( $self->ssl_options ) {
+            $args{ssl_opts} = $self->ssl_options();
+        } else {
+            $args{ssl_opts} = { verify_hostname => 0 };
+        }
     }
     return LWP::UserAgent->new( %args, %{ $self->handle_args } );
 }
