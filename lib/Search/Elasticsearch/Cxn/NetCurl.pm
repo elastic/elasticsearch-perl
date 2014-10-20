@@ -70,6 +70,10 @@ sub perform_request {
         if %headers;
 
     if ( $self->is_https ) {
+        if ( $self->ssl_options ) {
+            die("NetCurl does not support ssl_options");
+        }
+
         $handle->setopt( CURLOPT_SSL_VERIFYPEER, 0 );
         $handle->setopt( CURLOPT_SSL_VERIFYHOST, 0 );
     }
