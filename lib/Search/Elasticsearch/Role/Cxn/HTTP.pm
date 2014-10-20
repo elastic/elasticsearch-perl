@@ -11,6 +11,7 @@ has 'is_https'           => ( is => 'ro' );
 has 'userinfo'           => ( is => 'ro' );
 has 'max_content_length' => ( is => 'ro' );
 has 'default_headers'    => ( is => 'ro' );
+has 'ssl_options'        => ( is => 'ro' );
 has 'handle'             => ( is => 'lazy', clearer => 1 );
 has '_pid'               => ( is => 'rw', default => $$ );
 
@@ -71,7 +72,7 @@ sub BUILDARGS {
     }
 
     $params->{scheme}          = $scheme;
-    $params->{is_http}         = $scheme eq 'https';
+    $params->{is_https}        = $scheme eq 'https';
     $params->{host}            = $host;
     $params->{port}            = $port;
     $params->{path}            = $path;
@@ -244,6 +245,12 @@ documented for those who are writing alternative implementations only.
     $scheme = $cxn->scheme;
 
 Returns the scheme of the connection, ie C<http> or C<https>.
+
+=head2 C<ssl_options()>
+
+    $ssl_options = $cxn->ssl_options
+
+The SSL options that are passed with each request to C<IO::Socket::SSL> or C<LWP::UserAgent>.
 
 =head2 C<is_https()>
 

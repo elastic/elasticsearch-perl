@@ -31,6 +31,8 @@ use overload (
 );
 
 use Data::Dumper();
+our $StackTracePackage = "Devel::StackTrace";
+our $StackTraceOptions = [];
 
 #===================================
 sub new {
@@ -44,17 +46,20 @@ sub new {
 
     local $DEBUG = 2 if $type eq 'Internal';
 
-    my $stack = $class->_stack;
-
     my $self = bless {
         type  => $type,
         text  => $msg,
         vars  => $vars,
-        stack => $stack,
     }, $error_class;
+
+    if (our $StackTrace) {
+        require $StackTracePackage;
+        $self->{stack} = $StackTracePackage->new(@$StackTraceOptions);
+    }
 
     return $self;
 }
+
 
 #===================================
 sub is {
@@ -74,21 +79,17 @@ sub _stringify {
     local $Data::Dumper::Indent = !!$DEBUG;
 
     unless ( $self->{msg} ) {
-        my $stack  = $self->{stack};
-        my $caller = $stack->[0];
-        $self->{msg}
-            = sprintf( "[%s] ** %s, called from sub %s at %s line %d.",
-            $self->{type}, $self->{text}, @{$caller}[ 3, 1, 2 ] );
+        $self->{msg} = sprintf( "[%s] ** %s", $self->{type}, $self->{text});
 
         if ( $self->{vars} ) {
             $self->{msg} .= sprintf( " With vars: %s\n",
                 Data::Dumper::Dumper $self->{vars} );
         }
 
-        if ( @$stack > 1 ) {
-            $self->{msg}
-                .= sprintf( "Stacktrace:\n%s\n", $self->stacktrace($stack) );
+        if ( $self->{stack} ) {
+            $self->{msg} .= sprintf( "Stacktrace:\n%s\n", $self->{stack}->as_string() );
         }
+
     }
     return $self->{msg};
 
@@ -103,45 +104,6 @@ sub _compare {
     return $self cmp $other;
 }
 
-#===================================
-sub _stack {
-#===================================
-    my $self = shift;
-    my $caller = shift() || 2;
-
-    my @stack;
-    while ( my @caller = caller( ++$caller ) ) {
-        if ( $caller[0] eq 'Try::Tiny' or $caller[0] eq 'main' ) {
-            next if $caller[3] eq '(eval)';
-            if ( $caller[3] =~ /^(.+)::__ANON__\[(.+):(\d+)\]$/ ) {
-                @caller = ( $1, $2, $3, '(ANON)' );
-            }
-        }
-        next
-            if $caller[0] =~ /^Search::Elasticsearch/
-            and $DEBUG < 2 || $caller[3] eq 'Try::Tiny::try';
-        push @stack, [ @caller[ 0, 1, 2, 3 ] ];
-        last unless $DEBUG > 1;
-    }
-    return \@stack;
-}
-
-#===================================
-sub stacktrace {
-#===================================
-    my $self = shift;
-    my $stack = shift || $self->_stack();
-
-    my $o = sprintf "%s\n%-4s %-40s %-5s %s\n%s\n",
-        '-' x 60, '#', 'Package', 'Line', 'Sub-routine', '-' x 60;
-
-    my $i = 1;
-    for (@$stack) {
-        $o .= sprintf "%-4d %-40s %4d  %s\n", $i++, @{$_}[ 0, 2, 3 ];
-    }
-
-    return $o .= ( '-' x 60 ) . "\n";
-}
 1;
 
 # ABSTRACT: Errors thrown by Search::Elasticsearch
@@ -156,7 +118,12 @@ consists of the following:
         type  => $type,              # eg Missing
         text  => 'Error message',
         vars  => {...},              # vars which may help to explain the error
-        stack => [...],              # a stack trace
+        stack => [...],              # a Devel::StackTrace if $ElasticSearch::Error::StackTrace is true
+                                     # customize the trace type with $ElasticSearch::Error::StackTracePackage e.g.
+                                     # "Devel::StackTrace::WithLexicals"
+                                     # trace parameters are set via $ElasticSearch::Error::StackTraceOptions as 
+                                     # an array ref that is de-refed and passed to the call to new of the 
+                                     # stack trace package.
     }
 
 The C<$Search::Elasticsearch::Error::DEBUG> variable can be set to C<1> or C<2>

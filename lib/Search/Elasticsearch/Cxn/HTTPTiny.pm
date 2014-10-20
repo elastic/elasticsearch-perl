@@ -60,8 +60,12 @@ sub _build_handle {
     my %args = ( default_headers => $self->default_headers );
     if ( $self->is_https ) {
         require IO::Socket::SSL;
-        $args{SSL_options}{SSL_verify_mode}
-            = IO::Socket::SSL::SSL_VERIFY_NONE();
+        if ( $self->ssl_options ) {
+            $args{SSL_options} = $self->ssl_options();
+        } else {
+            $args{SSL_options}{SSL_verify_mode}
+                = IO::Socket::SSL::SSL_VERIFY_NONE();
+        }
     }
 
     return HTTP::Tiny->new( %args, %{ $self->handle_args } );
