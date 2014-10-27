@@ -11,6 +11,7 @@ has 'is_https'           => ( is => 'ro' );
 has 'userinfo'           => ( is => 'ro' );
 has 'max_content_length' => ( is => 'ro' );
 has 'default_headers'    => ( is => 'ro' );
+has 'ssl_options'        => ( is => 'ro', predicate => 'has_ssl_options' );
 has 'handle'             => ( is => 'lazy', clearer => 1 );
 has '_pid'               => ( is => 'rw', default => $$ );
 
@@ -201,6 +202,16 @@ C<userinfo> and C<use_https>:
         use_https   => 1,
         nodes       => [ 'search1', 'search2' ]
     )
+
+=head2 C<ssl_options>
+
+By default, all backends that support HTTPS disable verification of
+the host they are connecting to.  Use C<ssl_options> to configure
+the type of verification that you would like the client to perform,
+or to configure the client to present its own certificate.
+
+The values accepted by C<ssl_options> depend on the C<Cxn> class.  See the
+documentation for the C<Cxn> class that you are using.
 
 =head2 C<max_content_length>
 

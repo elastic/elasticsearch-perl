@@ -137,7 +137,7 @@ sub process_response {
 
     my $error_type = $Code_To_Error{$code};
     unless ($error_type) {
-        if ( defined $body ) {
+        if ( defined $body and length $body ) {
             $msg  = $body;
             $body = undef;
         }

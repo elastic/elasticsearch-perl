@@ -58,10 +58,8 @@ sub _build_handle {
 #===================================
     my $self = shift;
     my %args = ( default_headers => $self->default_headers );
-    if ( $self->is_https ) {
-        require IO::Socket::SSL;
-        $args{SSL_options}{SSL_verify_mode}
-            = IO::Socket::SSL::SSL_VERIFY_NONE();
+    if ( $self->is_https && $self->has_ssl_options ) {
+        $args{SSL_options} = $self->ssl_options;
     }
 
     return HTTP::Tiny->new( %args, %{ $self->handle_args } );
@@ -116,6 +114,52 @@ From L<Search::Elasticsearch::Role::Cxn>
 =item * L<handle_args|Search::Elasticsearch::Role::Cxn/"handle_args">
 
 =back
+
+=head1 SSL/TLS
+
+L<Search::Elasticsearch::Cxn::HTTPTiny> uses L<IO::Socket::SSL> to support
+HTTPS.  By default, no validation of the remote host is performed.
+
+This behaviour can be changed by passing the C<ssl_options> parameter
+with any options accepted by L<IO::Socket::SSL>. For instance, to check
+that the remote host has a trusted certificate, and to avoid man-in-the-middle
+attacks, you could do the following:
+
+    use Search::Elasticsearch;
+    use IO::Socket::SSL;
+
+    my $es = Search::Elasticsearch->new(
+        nodes => [
+            "https://node1.mydomain.com:9200",
+            "https://node2.mydomain.com:9200",
+        ],
+        ssl_options => {
+            SSL_verify_mode     => SSL_VERIFY_PEER,
+            SSL_ca_file         => '/path/to/cacert.pem',
+            SSL_verifycn_scheme => 'http',
+        }
+    );
+
+If you want your client to present its own certificate to the remote
+server, then use:
+
+    use Search::Elasticsearch;
+    use IO::Socket::SSL;
+
+    my $es = Search::Elasticsearch->new(
+        nodes => [
+            "https://node1.mydomain.com:9200",
+            "https://node2.mydomain.com:9200",
+        ],
+        ssl_options => {
+            SSL_verify_mode     => SSL_VERIFY_PEER,
+            SSL_ca_file         => '/path/to/cacert.pem',
+            SSL_verifycn_scheme => 'http',
+            SSL_cert_file       => '/path/to/client.pem',
+            SSL_key_file        => '/path/to/client.pem',
+        }
+    );
+
 
 =head1 METHODS
 

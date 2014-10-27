@@ -155,6 +155,10 @@ From L<Search::Elasticsearch::Role::Cxn>
 
 =back
 
+=head1 SSL/TLS
+
+L<Search::Elasticsearch::Cxn::Hijk> does not support HTTPS.
+
 =head1 METHODS
 
 =head2 C<perform_request()>

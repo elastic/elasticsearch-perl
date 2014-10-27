@@ -10,7 +10,18 @@ with 'Search::Elasticsearch::Role::Cxn::HTTP',
     'Search::Elasticsearch::Role::Cxn',
     'Search::Elasticsearch::Role::Is_Async';
 
+has '_tls_ctx' => ( is => 'lazy' );
+
 use namespace::clean;
+
+#===================================
+sub _build__tls_ctx {
+#===================================
+    my $self = shift;
+    return 'low' unless $self->has_ssl_options;
+    require AnyEvent::TLS;
+    return AnyEvent::TLS->new( %{ $self->ssl_options } );
+}
 
 #===================================
 sub perform_request {
@@ -33,6 +44,7 @@ sub perform_request {
         body => $data,
         persistent => 0,
         session    => $self->_pid,
+        ( $self->is_https ? ( tls_ctx => $self->_tls_ctx ) : () ),
         sub {
             my ( $body, $headers ) = @_;
             try {
@@ -113,6 +125,49 @@ From L<Search::Elasticsearch::Role::Cxn>
 =item * L<handle_args|Search::Elasticsearch::Role::Cxn/"handle_args">
 
 =back
+
+=head1 SSL/TLS
+
+L<Search::Elasticsearch::Cxn::AEHTTP> uses L<AnyEvent::TLS> to support
+HTTPS.  By default, no validation of the remote host is performed.
+
+This behaviour can be changed by passing the C<ssl_options> parameter
+with any options accepted by L<AnyEvent::TLS>. For instance, to check
+that the remote host has a trusted certificate, and to avoid man-in-the-middle
+attacks, you could do the following:
+
+    use Search::Elasticsearch::Async;
+
+    my $es = Search::Elasticsearch::Async->new(
+        nodes => [
+            "https://node1.mydomain.com:9200",
+            "https://node2.mydomain.com:9200",
+        ],
+        ssl_options => {
+            verify              => 1,
+            verify_peername     => 'https'
+            ca_file             => '/path/to/cacert.pem'
+        }
+    );
+
+If you want your client to present its own certificate to the remote
+server, then use:
+
+    use Search::Elasticsearch::Async;
+
+    my $es = Search::Elasticsearch::Async->new(
+        nodes => [
+            "https://node1.mydomain.com:9200",
+            "https://node2.mydomain.com:9200",
+        ],
+        ssl_options => {
+            verify              => 1,
+            verify_peername     => 'https'
+            ca_file             => '/path/to/cacert.pem'
+            cert_file           => '/path/to/client.pem',
+        }
+    );
+
 
 =head1 METHODS
 

@@ -74,9 +74,18 @@ sub error_from_text {
 }
 
 #===================================
-sub _build_handle { Mojo::UserAgent->new }
+sub _build_handle {
 #===================================
-
+    my $self = shift;
+    my $ua   = Mojo::UserAgent->new;
+    if ( $self->is_https && $self->has_ssl_options ) {
+        my %opts = %{ $self->ssl_options };
+        for ( keys %opts ) {
+            $ua = $ua->$_( $opts{$_} );
+        }
+    }
+    return $ua;
+}
 1;
 
 # ABSTRACT: An async Cxn implementation which uses Mojo::UserAgent
@@ -132,6 +141,47 @@ From L<Search::Elasticsearch::Role::Cxn>
 =item * L<handle_args|Search::Elasticsearch::Role::Cxn/"handle_args">
 
 =back
+
+=head1 SSL/TLS
+
+L<Search::Elasticsearch::Cxn::Mojo> does no validation of the remote host by default.
+
+This behaviour can be changed by passing the C<ssl_options> parameter
+with the C<ca>, C<cert>, and C<key> options. For instance, to check
+that the remote host has a trusted certificate, and to avoid man-in-the-middle
+attacks, you could do the following:
+
+    use Search::Elasticsearch::Async;
+
+    my $es = Search::Elasticsearch::Async->new(
+        cxn   => 'Mojo',
+        nodes => [
+            "https://node1.mydomain.com:9200",
+            "https://node2.mydomain.com:9200",
+        ],
+        ssl_options => {
+            ca  => '/path/to/cacert.pem'
+        }
+    );
+
+If you want your client to present its own certificate to the remote
+server, then use:
+
+    use Search::Elasticsearch::Async;
+
+    my $es = Search::Elasticsearch::Async->new(
+        cxn   => 'Mojo',
+        nodes => [
+            "https://node1.mydomain.com:9200",
+            "https://node2.mydomain.com:9200",
+        ],
+        ssl_options => {
+            ca   => '/path/to/cacert.pem'
+            cert => '/path/to/client.pem',
+            key  => '/path/to/client.pem'
+        }
+    );
+
 
 =head1 METHODS
 

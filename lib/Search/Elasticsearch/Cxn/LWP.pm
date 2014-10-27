@@ -70,7 +70,10 @@ sub _build_handle {
         parse_head => 0
     );
     if ( $self->is_https ) {
-        $args{ssl_opts} = { verify_hostname => 0 };
+        $args{ssl_opts}
+            = $self->has_ssl_options
+            ? $self->ssl_options
+            : { verify_hostname => 0 };
     }
     return LWP::UserAgent->new( %args, %{ $self->handle_args } );
 }
@@ -123,6 +126,54 @@ From L<Search::Elasticsearch::Role::Cxn>
 =item * L<handle_args|Search::Elasticsearch::Role::Cxn/"handle_args">
 
 =back
+
+=head1 SSL/TLS
+
+L<Search::Elasticsearch::Cxn::LWP> uses L<IO::Socket::SSL> to support
+HTTPS.  By default, no validation of the remote host is performed.
+
+This behaviour can be changed by passing the C<ssl_options> parameter
+with any options accepted by L<IO::Socket::SSL>. For instance, to check
+that the remote host has a trusted certificate, and to avoid man-in-the-middle
+attacks, you could do the following:
+
+    use Search::Elasticsearch;
+    use IO::Socket::SSL;
+
+    my $es = Search::Elasticsearch->new(
+        cxn   => 'LWP',
+        nodes => [
+            "https://node1.mydomain.com:9200",
+            "https://node2.mydomain.com:9200",
+        ],
+        ssl_options => {
+            SSL_verify_mode     => SSL_VERIFY_PEER,
+            SSL_ca_file         => '/path/to/cacert.pem',
+            SSL_verifycn_scheme => 'http',
+        }
+    );
+
+If you want your client to present its own certificate to the remote
+server, then use:
+
+    use Search::Elasticsearch;
+    use IO::Socket::SSL;
+
+    my $es = Search::Elasticsearch->new(
+        cxn   => 'LWP',
+        nodes => [
+            "https://node1.mydomain.com:9200",
+            "https://node2.mydomain.com:9200",
+        ],
+        ssl_options => {
+            SSL_verify_mode     => SSL_VERIFY_PEER,
+            SSL_ca_file         => '/path/to/cacert.pem',
+            SSL_verifycn_scheme => 'http',
+            SSL_cert_file       => '/path/to/client.pem',
+            SSL_key_file        => '/path/to/client.pem',
+        }
+    );
+
 
 =head1 METHODS
 
