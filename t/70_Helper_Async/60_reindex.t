@@ -126,8 +126,8 @@ wait_for( $es->indices->delete( index => 'test2' ) );
 
 $b = Search::Elasticsearch::Async::Bulk->new( es => $es, index => 'test2' );
 {
-    local $ENV{CXN};
-    local $ENV{CXN_POOL};
+    local $ENV{ES_CXN};
+    local $ENV{ES_CXN_POOL};
     my $sync = do 'es_sync.pl';
     $s = $sync->scroll_helper( index => 'test' )
 }

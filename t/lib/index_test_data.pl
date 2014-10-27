@@ -3,6 +3,8 @@ use warnings;
 use Search::Elasticsearch::Bulk;
 use lib 't/lib';
 
+local $ENV{ES_CXN};
+local $ENV{ES_CXN_POOL};
 my $es = do 'es_sync.pl';
 
 $es->indices->delete( index => 'test', ignore => 404 );
