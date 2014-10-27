@@ -42,14 +42,14 @@ sub perform_request {
         sub {
             my ( $ua, $tx ) = @_;
             my $res     = $tx->res;
+            my $error   = $res->error || {};
             my $headers = $res->headers->to_hash;
             $headers->{ lc($_) } = delete $headers->{$_} for keys %{$headers};
-
             try {
                 my ( $code, $response ) = $self->process_response(
                     $params,    # request
                     ( $res->code || 500 ),    # status
-                    $res->message,            # reason
+                    $error->{message},        # reason
                     $res->body,               # content
                     $headers,                 # headers
                 );
