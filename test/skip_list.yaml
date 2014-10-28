@@ -40,7 +40,6 @@
     - cluster.state/20_filtering.yaml
     - indices.delete_mapping/10_basic.yaml
     - indices.delete_mapping/all_path_options.yaml
-    - indices.put_alias/all_path_options.yaml
 
 1.0.4_SNAPSHOT:
     - cluster.state/20_filtering.yaml
@@ -59,13 +58,9 @@
 
 1.1.2:
     - cluster.state/20_filtering.yaml
-    - indices.put_alias/all_path_options.yaml
 
 1.1.3_SNAPSHOT:
     - cluster.state/20_filtering.yaml
-
-1.2.4:
-    - indices.put_alias/all_path_options.yaml
 
 1.3.0:
     - search.aggregation/10_histogram.yaml
@@ -81,21 +76,12 @@
 
 1.3.4:
     - search.aggregation/10_histogram.yaml
-    - indices.put_alias/all_path_options.yaml
 
 1.3.5:
     - search.aggregation/10_histogram.yaml
-    - indices.put_alias/all_path_options.yaml
 
 1.3.5_SNAPSHOT:
     - search.aggregation/10_histogram.yaml
-    - indices.put_alias/all_path_options.yaml
-
-1.4.0:
-    - indices.put_alias/all_path_options.yaml
-
-1.4.0_SNAPSHOT:
-    - indices.put_alias/all_path_options.yaml
 
 
 
