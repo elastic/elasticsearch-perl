@@ -41,15 +41,20 @@ sub perform_request {
         $tx,
         sub {
             my ( $ua, $tx ) = @_;
-            my $res     = $tx->res;
-            my $error   = $res->error || {};
+            my $res = $tx->res;
+            my $error;
+            if ( $error = $res->error ) {
+                $error = $error->{message}
+                    if ref $error eq 'HASH';
+            }
+
             my $headers = $res->headers->to_hash;
             $headers->{ lc($_) } = delete $headers->{$_} for keys %{$headers};
             try {
                 my ( $code, $response ) = $self->process_response(
                     $params,    # request
                     ( $res->code || 500 ),    # status
-                    $error->{message},        # reason
+                    $error,                   # reason
                     $res->body,               # content
                     $headers,                 # headers
                 );
