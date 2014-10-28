@@ -1157,11 +1157,12 @@ sub api {
         body   => {},
         doc    => "indices-aliases",
         method => "PUT",
-        parts  => { index => { multi => 1 }, name => { required => 1 } },
-        paths  => [
-            [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ],
-            [ { name => 1 }, "_alias", "{name}" ],
-        ],
+        parts  => {
+            index => { multi    => 1, required => 1 },
+            name  => { required => 1 }
+        },
+        paths =>
+            [ [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ] ],
         qs => [ "master_timeout", "timeout" ],
     },
 

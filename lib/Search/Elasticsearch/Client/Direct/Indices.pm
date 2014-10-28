@@ -407,7 +407,7 @@ for more information.
 =head2 C<get_aliases()>
 
     $result = $e->indices->get_aliases(
-        index   => 'index' | \@indices      # optional
+        index   => 'index' | \@indices,     # optional
         alias   => 'alias' | \@aliases      # optional
     );
 
@@ -424,7 +424,7 @@ for more information.
 =head2 C<put_alias()>
 
     $response = $e->indices->put_alias(
-        index => 'index' | \@indices        # optional,
+        index => 'index' | \@indices,       # required
         name  => 'alias',                   # required
 
         body  => { alias defn }             # optional
