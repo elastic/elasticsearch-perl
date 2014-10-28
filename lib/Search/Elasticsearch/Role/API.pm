@@ -586,11 +586,12 @@ sub api {
             ],
         ],
         qs => [
-            "field_statistics", "fields",
-            "offsets",          "parent",
-            "payloads",         "positions",
-            "preference",       "realtime",
-            "routing",          "term_statistics",
+            "dfs",       "field_statistics",
+            "fields",    "offsets",
+            "parent",    "payloads",
+            "positions", "preference",
+            "realtime",  "routing",
+            "term_statistics",
         ],
     },
 

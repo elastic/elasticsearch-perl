@@ -594,6 +594,7 @@ offsets and payloads for the specified document, assuming that termvectors
 have been enabled.
 
 Query string parameters:
+    C<dfs>,
     C<field_statistics>,
     C<fields>,
     C<offsets>,
