@@ -91,3 +91,11 @@
     - search.aggregation/10_histogram.yaml
     - indices.put_alias/all_path_options.yaml
 
+1.4.0:
+    - indices.put_alias/all_path_options.yaml
+
+1.4.0_SNAPSHOT:
+    - indices.put_alias/all_path_options.yaml
+
+
+
