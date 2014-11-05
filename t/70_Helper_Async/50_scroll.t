@@ -69,7 +69,7 @@ SKIP: {
             on_results => \&on_results
         },
         total      => 50,
-        max_score  => num( 1.6, 0.2 ),
+        max_score  => num( 1.6, 0.5 ),
         facets     => bool(1),
         aggs       => bool(1),
         suggest    => bool(1),
@@ -93,7 +93,7 @@ SKIP: {
             on_results => \&on_results
         },
         total      => 50,
-        max_score  => num( 1.6, 0.2 ),
+        max_score  => num( 1.6, 0.5 ),
         facets     => bool(1),
         aggs       => bool(1),
         suggest    => bool(1),

@@ -71,7 +71,7 @@ SKIP: {
             }
         },
         total     => 50,
-        max_score => num( 1.6, 0.2 ),
+        max_score => num( 1.6, 0.5 ),
         aggs      => bool(1),
         facets    => bool(1),
         suggest   => bool(1),
@@ -96,7 +96,7 @@ SKIP: {
             }
         },
         total     => 50,
-        max_score => num( 1.6, 0.2 ),
+        max_score => num( 1.6, 0.5 ),
         aggs      => bool(1),
         facets    => bool(1),
         suggest   => bool(1),
