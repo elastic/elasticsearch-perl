@@ -34,13 +34,15 @@ sub index {
     $self->_index( 'index', $params );
 }
 
+my $index_with_id = { %{ __PACKAGE__->api->{index} }, method => 'PUT' };
+
 #===================================
 sub _index {
 #===================================
     my ( $self, $name, $params ) = @_;
     my $defn = $self->api->{index};
-    unless ( defined $params->{id} and length $params->{id} ) {
-        $defn = { %$defn, method => 'POST' };
+    if ( defined $params->{id} and length $params->{id} ) {
+        $defn = $index_with_id;
     }
     $self->perform_request( { %$defn, name => $name }, $params );
 }
