@@ -1,5 +1,12 @@
 Revision history for Search::Elasticsearch::Async
 
+1.15    2014-11-05
+        Enhancements:
+         *  All async backends now default to not verifying
+            SSL identities, but accept ssl_options to allow
+            backend-specific configuration
+         *  Improved Mojo exceptions
+
 1.13    2014-06-13
         Breaking change:
             The Async::Scroll helper used to pass the scroll ID to

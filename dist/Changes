@@ -1,5 +1,47 @@
 Revision history for Search::Elasticsearch
 
+1.15    2014-11-05
+        Enhancements:
+         *  All backends (except Hijk) now default to not verifying
+            SSL identities, but accept ssl_options to allow
+            backend-specific configuration
+         *  Improved Mojo exceptions
+
+        Bug fix:
+         *  is_https() didn't work
+
+        Changed:
+         *  index param to put_alias() is now required
+
+        Added methods:
+         *  index.get()
+         *  search_exists()
+         *  indices.upgrade()
+         *  indices.get_upgrade()
+         *  snapshot.verify_repository()
+
+        Added parameters:
+         *  query_cache to search(), clear_cache(), stats()
+         *  wait_if_ongoing to flush()
+         *  script_id and scripted_upsert to update()
+         *  version and version_type to put_script(), get_script(),
+            delete_script(), put_template(), get_template(), and
+            delete_template()
+         *  op_type to put_script() and put_template()
+         *  metric to cluster_reroute()
+         *  realtime to termvector() and mtermvector()
+         *  dfs to termvector()
+
+        Removed parameters:
+         *  filter_metadata from cluster_reroute()
+         *  search_query_hint from mlt()
+
+        Bumped versions:
+            JSON::XS        2.26
+            Package::Stash  0.34
+            Log::Any        0.15
+
+
 1.14    2014-07-24
         Added support for indexed scripts and indexed templates.
 

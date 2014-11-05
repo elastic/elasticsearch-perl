@@ -1,5 +1,9 @@
 Revision history for Search::Elasticsearch::Cxn::NetCurl
 
+1.15    2014-11-05
+        Now defaults to not verifying SSL identities, but accepts
+        ssl_options to allow backend-specific configuration
+
 1.13    The NetCurl backend is now fork safe.
 
 1.10    2014-03-05
