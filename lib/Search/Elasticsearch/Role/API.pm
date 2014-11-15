@@ -866,8 +866,8 @@ sub api {
     'indices.delete' => {
         doc    => "indices-delete-index",
         method => "DELETE",
-        parts  => { index => { multi => 1 } },
-        paths  => [ [ { index => 0 }, "{index}" ] ],
+        parts  => { index => { multi => 1, required => 1 } },
+        paths => [ [ { index => 0 }, "{index}" ] ],
         qs => [ "master_timeout", "timeout" ],
     },
 
