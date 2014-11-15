@@ -1,5 +1,15 @@
 Revision history for Search::Elasticsearch
 
+1.16    2014-11-15
+        Added dependency on Pod::Simple, which was causing
+        installation on perl 5.8 to fail
+
+        Added params:
+        * percolate_preference and percolate_routing to percolate()
+
+        Bug fix:
+        * the index param is now required for indices.delete()
+
 1.15    2014-11-05
         Enhancements:
          *  All backends (except Hijk) now default to not verifying
