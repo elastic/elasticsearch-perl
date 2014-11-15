@@ -146,6 +146,8 @@ our %Params = (
     percolate              => { type => 'string' },
     percolate_format       => { type => 'string' },
     percolate_index        => { type => 'string' },
+    percolate_preference   => { type => 'string' },
+    percolate_routing      => { type => 'list' },
     percolate_type         => { type => 'string' },
     plugin                 => { type => 'bool' },
     positions              => { type => 'bool' },

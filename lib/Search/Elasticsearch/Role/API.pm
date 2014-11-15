@@ -423,7 +423,8 @@ sub api {
         qs => [
             "allow_no_indices",   "expand_wildcards",
             "ignore_unavailable", "percolate_format",
-            "percolate_index",    "percolate_type",
+            "percolate_index",    "percolate_preference",
+            "percolate_routing",  "percolate_type",
             "preference",         "routing",
             "version",            "version_type",
         ],

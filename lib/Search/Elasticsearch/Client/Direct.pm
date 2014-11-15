@@ -1200,6 +1200,8 @@ Query string parameters:
     C<ignore_unavailable>,
     C<percolate_format>,
     C<percolate_index>,
+    C<percolate_preference>,
+    C<percolate_routing>,
     C<percolate_type>,
     C<preference>,
     C<routing>,
