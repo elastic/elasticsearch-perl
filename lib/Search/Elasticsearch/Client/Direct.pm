@@ -581,9 +581,9 @@ Query string parameters:
 See the L<update docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-update.html>
 for more information.
 
-=head2 C<termvector()>
+=head2 C<termvectosr()>
 
-    $results = $e->termvector(
+    $results = $e->termvectors(
         index   => $index,          # required
         type    => $type,           # required
         id      => $id,             # required
@@ -591,7 +591,7 @@ for more information.
         body    => {...}            # optional
     )
 
-The C<termvector()> method retrieves term and field statistics, positions,
+The C<termvectors()> method retrieves term and field statistics, positions,
 offsets and payloads for the specified document, assuming that termvectors
 have been enabled.
 

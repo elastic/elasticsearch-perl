@@ -596,6 +596,30 @@ sub api {
         ],
     },
 
+    'termvectors' => {
+        body  => {},
+        doc   => "docs-termvectors",
+        parts => {
+            id    => { required => 1 },
+            index => { required => 1 },
+            type  => { required => 1 },
+        },
+        paths => [
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}",
+                "_termvectors",
+            ],
+        ],
+        qs => [
+            "dfs",       "field_statistics",
+            "fields",    "offsets",
+            "parent",    "payloads",
+            "positions", "preference",
+            "realtime",  "routing",
+            "term_statistics",
+        ],
+    },
+
     'update' => {
         body   => {},
         doc    => "docs-update",
