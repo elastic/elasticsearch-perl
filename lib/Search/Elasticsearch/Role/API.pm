@@ -172,7 +172,7 @@ sub api {
         method => "DELETE",
         parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs     => [],
+        qs => [ "version", "version_type" ],
     },
 
     'exists' => {
@@ -453,7 +453,7 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs => [],
+        qs => [ "op_type", "version", "version_type" ],
     },
 
     'scroll' => {

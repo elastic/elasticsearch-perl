@@ -566,8 +566,11 @@ Query string parameters:
     C<create>,
     C<flat_settings>,
     C<master_timeout>,
+    C<op_type>,
     C<order>,
-    C<timeout>
+    C<timeout>,
+    C<version>,
+    C<version_type>
 
 See the L<put_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
@@ -611,7 +614,9 @@ The C<delete_template()> method is used to delete a named template.
 
 Query string parameters:
     C<master_timeout>,
-    C<timeout>
+    C<timeout>,
+    C<version>,
+    C<version_type>
 
 See the L<delete_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
