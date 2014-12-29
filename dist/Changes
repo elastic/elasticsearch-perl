@@ -1,5 +1,25 @@
 Revision history for Search::Elasticsearch
 
+1.17    2014-12-29
+
+        Bug fix:
+        * handle_args were not being passed to all backends,
+          meaning that (eg) cookies could not be used
+
+        Dependency bump:
+        * Log::Any 1.02 broke bwc - fixed to work with new version
+
+        Added params:
+        * op_type, version, version_type to indices.put_template
+        * version, version_type to indices.delete_template
+        * version, version_type to termvectors
+        * master_timeout, timeout to cluster.put_settings
+        * ignore_idle_threads to nodes.hot_threads
+        * terminate_after to search
+
+        Deprecated:
+        * termvector in favour of termvectors (but old method still works for now)
+
 1.16    2014-11-15
         Added dependency on Pod::Simple, which was causing
         installation on perl 5.8 to fail

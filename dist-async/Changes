@@ -1,5 +1,11 @@
 Revision history for Search::Elasticsearch::Async
 
+1.17    2014-12-29
+
+        Bug fix:
+        * handle_args were not being passed to all backends,
+          meaning that (eg) cookies could not be used
+
 1.15    2014-11-05
         Enhancements:
          *  All async backends now default to not verifying
