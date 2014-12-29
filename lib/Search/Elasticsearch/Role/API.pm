@@ -501,7 +501,7 @@ sub api {
 
     'search_exists' => {
         body   => {},
-        doc    => "exists",
+        doc    => "search-exists",
         method => "POST",
         parts  => { index => { multi => 1 }, type => { multi => 1 } },
         paths  => [
@@ -562,7 +562,7 @@ sub api {
 
     'suggest' => {
         body   => { required => 1 },
-        doc    => "search-search",
+        doc    => "search-suggesters",
         method => "POST",
         parts => { index => { multi => 1 } },
         paths =>
@@ -653,7 +653,7 @@ sub api {
     },
 
     'cat.aliases' => {
-        doc   => "cat-aliases",
+        doc   => "cat-alias",
         parts => { name => { multi => 1 } },
         paths => [
             [ { name => 2 }, "_cat", "aliases", "{name}" ],
@@ -1096,7 +1096,7 @@ sub api {
     },
 
     'indices.get_settings' => {
-        doc   => "indices-get-mapping",
+        doc   => "indices-get-settings",
         parts => { index => { multi => 1 }, name => { multi => 1 } },
         paths => [
             [ { index => 0, name => 2 }, "{index}", "_settings", "{name}" ],
