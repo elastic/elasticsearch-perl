@@ -12,8 +12,9 @@ isa_ok my $l = Search::Elasticsearch::Async->new->logger,
     'Search::Elasticsearch::Logger::LogAny',
     'Default Logger';
 
-isa_ok $l->log_handle, 'Log::Any::Adapter::Stdout', 'Default - Log to Stdout';
-isa_ok $l->trace_handle, 'Log::Any::Adapter::Stderr',
+isa_ok $l->log_handle->adapter, 'Log::Any::Adapter::Stdout',
+    'Default - Log to Stdout';
+isa_ok $l->trace_handle->adapter, 'Log::Any::Adapter::Stderr',
     'Default - Trace to Stderr';
 
 # override
@@ -25,9 +26,9 @@ isa_ok $l = Search::Elasticsearch::Async->new(
     'Search::Elasticsearch::Logger::LogAny',
     'Override Logger';
 
-isa_ok $l->log_handle, 'Log::Any::Adapter::Stderr',
+isa_ok $l->log_handle->adapter, 'Log::Any::Adapter::Stderr',
     'Override - Log to Stderr';
-isa_ok $l->trace_handle, 'Log::Any::Adapter::Stdout',
+isa_ok $l->trace_handle->adapter, 'Log::Any::Adapter::Stdout',
     'Override - Trace to Stdout';
 
 done_testing;

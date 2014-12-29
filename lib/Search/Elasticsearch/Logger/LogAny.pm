@@ -5,7 +5,7 @@ with 'Search::Elasticsearch::Role::Logger';
 use Search::Elasticsearch::Util qw(parse_params to_list);
 use namespace::clean;
 
-use Log::Any 0.15 ();
+use Log::Any 1.02 ();
 use Log::Any::Adapter();
 
 #===================================

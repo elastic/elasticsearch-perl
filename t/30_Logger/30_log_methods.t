@@ -21,26 +21,22 @@ sub test_level {
     my $is_level = 'is_' . $level;
 
     # ->debug
-    ( $method, $format, @params ) = ();
-    ok $l->$level( "foo", 42 ), "$level";
+    ( $method, $format ) = ();
+    ok $l->$level("foo"), "$level";
     is $method, $level, "$level - method";
     is $format, "foo", "$level - format";
-    is $params[0], 42, "$level - params";
 
     # ->debugf
-    ( $method, $format, @params ) = ();
+    ( $method, $format ) = ();
     ok $l->$levelf( "foo %s", "bar", 42 ), "$levelf";
     is $method, $level, "$levelf - method";
     is $format, "foo bar", "$levelf - format";
-    is scalar @params, 0, "$levelf - params";
 
     # ->is_debug
-    ( $method, $format, @params ) = ();
+    ( $method, $format ) = ();
     ok $l->$is_level(), "$is_level";
     is $method, $is_level, "$is_level - method";
     is $format, undef, "$is_level - format";
-    is scalar @params, 0, "$is_level - params";
-
 }
 
 #===================================
@@ -49,13 +45,12 @@ sub test_throw {
     my $level = shift;
     my $throw = 'throw_' . $level;
     my $re    = qr/\[Request\] \*\* Foo/;
-    ( $method, $format, @params ) = ();
+    ( $method, $format ) = ();
 
     throws_ok { $l->$throw( 'Request', 'Foo', 42 ) } $re, $throw;
 
     is $@->{vars}, 42, "$throw - vars";
     is $method,   $level, "$throw - method";
     like $format, $re,    "$throw - format";
-    is scalar @params, 0, "$throw - params";
 
 }
