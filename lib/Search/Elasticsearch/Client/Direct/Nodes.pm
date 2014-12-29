@@ -132,6 +132,7 @@ The C<hot_threads()> method is a useful tool for diagnosing busy nodes. It
 takes a snapshot of which threads are consuming the most CPU.
 
 Query string parameters:
+    C<ignore_idle_threads>,
     C<interval>,
     C<snapshots>,
     C<threads>,
