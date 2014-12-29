@@ -910,6 +910,7 @@ Query string parameters:
     C<suggest_mode>,
     C<suggest_size>,
     C<suggest_text>,
+    C<terminate_after>,
     C<timeout>,
     C<track_scores>,
     C<version>

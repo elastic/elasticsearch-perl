@@ -210,6 +210,7 @@ our %Params = (
     suggest_size    => { type => 'number' },
     suggest_text    => { type => 'string' },
     term_statistics => { type => 'bool' },
+    terminate_after => { type => 'number' },
     text            => { type => 'string' },
     thread_pool     => { type => 'bool' },
     threads         => { type => 'number' },
