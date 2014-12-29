@@ -581,7 +581,7 @@ Query string parameters:
 See the L<update docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-update.html>
 for more information.
 
-=head2 C<termvectosr()>
+=head2 C<termvectors()>
 
     $results = $e->termvectors(
         index   => $index,          # required
@@ -606,7 +606,9 @@ Query string parameters:
     C<preference>,
     C<realtime>,
     C<routing>,
-    C<term_statistics>
+    C<term_statistics>,
+    C<version>,
+    C<version_type>
 
 See the L<termvector docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-termvectors.html>
 for more information.
@@ -829,7 +831,9 @@ Query string parameters:
     C<preference>,
     C<realtime>,
     C<routing>,
-    C<term_statistics>
+    C<term_statistics>,
+    C<version>,
+    C<version_type>
 
 See the L<mtermvectors docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-multi-termvectors.html>
 for more information.
