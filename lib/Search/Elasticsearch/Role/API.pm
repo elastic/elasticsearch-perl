@@ -800,7 +800,7 @@ sub api {
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_cluster", "settings" ] ],
-        qs     => ["flat_settings"],
+        qs => [ "flat_settings", "master_timeout", "timeout" ],
     },
 
     'cluster.reroute' => {
