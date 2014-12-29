@@ -67,15 +67,21 @@ sub perform_request {
         [ map { "$_: " . $headers{$_} } keys %headers ] )
         if %headers;
 
+    my %opts = %{ $self->handle_args };
     if ( $self->is_https ) {
-        my %opts
-            = $self->has_ssl_options
-            ? %{ $self->ssl_options }
-            : ( CURLOPT_SSL_VERIFYPEER => 0, CURLOPT_SSL_VERIFYHOST => 0 );
-
-        for ( keys %opts ) {
-            $handle->setopt( $_, $opts{$_} );
+        if ( $self->has_ssl_options ) {
+            %opts = ( %opts, %{ $self->ssl_options } );
         }
+        else {
+            %opts = (
+                %opts,
+                ( CURLOPT_SSL_VERIFYPEER => 0, CURLOPT_SSL_VERIFYHOST => 0 )
+            );
+        }
+    }
+
+    for ( keys %opts ) {
+        $handle->setopt( $_, $opts{$_} );
     }
 
     my $content = my $head = '';

@@ -43,6 +43,7 @@ sub perform_request {
         method          => $method,
         path            => $uri->path,
         query_string    => $uri->query,
+        %{ $self->handle_args }
     );
     if ( defined $params->{data} ) {
         $args{body} = $params->{data};

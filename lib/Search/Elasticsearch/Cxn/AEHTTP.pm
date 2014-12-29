@@ -44,6 +44,7 @@ sub perform_request {
         body => $data,
         persistent => 0,
         session    => $self->_pid,
+        ( %{ $self->handle_args } ),
         ( $self->is_https ? ( tls_ctx => $self->_tls_ctx ) : () ),
         sub {
             my ( $body, $headers ) = @_;
