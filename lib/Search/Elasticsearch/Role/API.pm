@@ -1386,7 +1386,11 @@ sub api {
             [ { node_id => 1 }, "_nodes", "{node_id}", "hot_threads" ],
             [ {}, "_nodes", "hot_threads" ],
         ],
-        qs => [ "interval", "snapshots", "threads", "type" ],
+        qs => [
+            "ignore_idle_threads", "interval",
+            "snapshots",           "threads",
+            "type",
+        ],
     },
 
     'nodes.info' => {

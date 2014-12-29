@@ -104,6 +104,7 @@ our %Params = (
     lang               => { type => 'string' },
     lenient            => { type => 'bool' },
     level              => {
+    indexing            => { type => 'bool' },
         options => [ 'cluster', 'node', 'indices', 'shards' ],
         type    => 'enum'
     },
