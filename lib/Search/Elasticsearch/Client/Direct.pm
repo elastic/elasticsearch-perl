@@ -586,8 +586,8 @@ for more information.
     $results = $e->termvectors(
         index   => $index,          # required
         type    => $type,           # required
-        id      => $id,             # required
 
+        id      => $id,             # optional
         body    => {...}            # optional
     )
 

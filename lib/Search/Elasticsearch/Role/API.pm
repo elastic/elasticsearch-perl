@@ -387,7 +387,7 @@ sub api {
         body            => {},
         doc             => "docs-multi-termvectors",
         index_when_type => 1,
-        parts           => { id => {}, index => {}, type => {} },
+        parts           => { index => {}, type => {} },
         paths           => [
             [   { index => 0, type => 1 }, "{index}",
                 "{type}", "_mtermvectors"
