@@ -8,7 +8,7 @@ extends 'Search::Elasticsearch';
 use Search::Elasticsearch::Util qw(parse_params);
 use namespace::clean;
 
-our $VERSION = '1.17';
+our $VERSION = '1.18';
 
 #===================================
 sub new {

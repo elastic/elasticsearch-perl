@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch::Async
 
+1.18    2015-01-05
+        Fixed bad logging test
+
 1.17    2014-12-29
 
         Bug fix:
