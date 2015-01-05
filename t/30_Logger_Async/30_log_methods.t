@@ -22,7 +22,7 @@ sub test_level {
 
     # ->debug
     ( $method, $format ) = ();
-    ok $l->$level( "foo", 42 ), "$level";
+    ok $l->$level("foo"), "$level";
     is $method, $level, "$level - method";
     is $format, "foo", "$level - format";
 
@@ -37,7 +37,6 @@ sub test_level {
     ok $l->$is_level(), "$is_level";
     is $method, $is_level, "$is_level - method";
     is $format, undef, "$is_level - format";
-
 }
 
 #===================================
