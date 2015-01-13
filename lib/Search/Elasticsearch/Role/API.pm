@@ -754,6 +754,16 @@ sub api {
         qs => [ "bytes", "h", "help", "master_timeout", "v" ],
     },
 
+    'cat.segments' => {
+        doc   => "cat-segments",
+        parts => { index => { multi => 1 } },
+        paths => [
+            [ { index => 2 }, "_cat", "segments", "{index}" ],
+            [ {}, "_cat", "segments" ],
+        ],
+        qs => [ "h", "help", "v" ],
+    },
+
     'cat.shards' => {
         doc   => "cat-shards",
         parts => { index => { multi => 1 } },

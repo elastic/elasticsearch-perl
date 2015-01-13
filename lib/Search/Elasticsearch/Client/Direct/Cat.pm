@@ -271,6 +271,22 @@ Query string parameters:
 See the L<cat recovery docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-recovery.html>
 for more information.
 
+=head2 C<segments()>
+
+    say $e->cat->segments(
+        index => 'index' | \@indices    # optional
+    );
+
+Provides low level information about the segments in the shards of an index.
+
+Query string parameters:
+    C<h>,
+    C<help>,
+    C<v>
+
+See the L<cat shards docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-segments.html>
+for more information.
+
 =head2 C<shards()>
 
     say $e->cat->shards(
