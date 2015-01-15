@@ -4,15 +4,15 @@ use Moo;
 
 our $DEBUG = 0;
 
-@Search::Elasticsearch::Error::Internal::ISA       = __PACKAGE__;
-@Search::Elasticsearch::Error::Param::ISA          = __PACKAGE__;
-@Search::Elasticsearch::Error::NoNodes::ISA        = __PACKAGE__;
-@Search::Elasticsearch::Error::Request::ISA        = __PACKAGE__;
-@Search::Elasticsearch::Error::Timeout::ISA        = __PACKAGE__;
-@Search::Elasticsearch::Error::Cxn::ISA            = __PACKAGE__;
-@Search::Elasticsearch::Error::Serializer::ISA     = __PACKAGE__;
+@Search::Elasticsearch::Error::Internal::ISA     = __PACKAGE__;
+@Search::Elasticsearch::Error::Param::ISA        = __PACKAGE__;
+@Search::Elasticsearch::Error::NoNodes::ISA      = __PACKAGE__;
 @Search::Elasticsearch::Error::Unauthorized::ISA = __PACKAGE__;
 @Search::Elasticsearch::Error::Forbidden::ISA    = __PACKAGE__;
+@Search::Elasticsearch::Error::Request::ISA      = __PACKAGE__;
+@Search::Elasticsearch::Error::Timeout::ISA      = __PACKAGE__;
+@Search::Elasticsearch::Error::Cxn::ISA          = __PACKAGE__;
+@Search::Elasticsearch::Error::Serializer::ISA   = __PACKAGE__;
 
 @Search::Elasticsearch::Error::Conflict::ISA
     = ( 'Search::Elasticsearch::Error::Request', __PACKAGE__ );
@@ -231,6 +231,7 @@ the C<503> HTTP status code.
 
 There was a problem validating the SSL certificate.  Not all
 backends support this error type.
+
 =back
 
 =item * C<Search::Elasticsearch::Error::Forbidden>
