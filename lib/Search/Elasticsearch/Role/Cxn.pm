@@ -27,6 +27,7 @@ has 'handle_args'           => ( is => 'ro', default  => sub { {} } );
 
 my %Code_To_Error = (
     400 => 'Request',
+    401 => 'Unauthorized',
     403 => 'Forbidden',
     404 => 'Missing',
     409 => 'Conflict',

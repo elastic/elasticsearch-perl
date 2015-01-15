@@ -11,6 +11,7 @@ our $DEBUG = 0;
 @Search::Elasticsearch::Error::Timeout::ISA        = __PACKAGE__;
 @Search::Elasticsearch::Error::Cxn::ISA            = __PACKAGE__;
 @Search::Elasticsearch::Error::Serializer::ISA     = __PACKAGE__;
+@Search::Elasticsearch::Error::Unauthorized::ISA = __PACKAGE__;
 @Search::Elasticsearch::Error::Forbidden::ISA    = __PACKAGE__;
 
 @Search::Elasticsearch::Error::Conflict::ISA
@@ -179,6 +180,11 @@ This error is triggered by HTTP status codes C<400> and C<500>. This class
 has the following sub-classes:
 
 =over
+
+=item * C<Search::Elasticsearch::Error::Unauthorized>
+
+Invalid (or no) username/password provided as C<userinfo> for a password
+protected service. These errors are triggered by the C<401> HTTP status code.
 
 =item * C<Search::Elasticsearch::Error::Missing>
 
