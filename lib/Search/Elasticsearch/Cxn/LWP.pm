@@ -138,7 +138,6 @@ that the remote host has a trusted certificate, and to avoid man-in-the-middle
 attacks, you could do the following:
 
     use Search::Elasticsearch;
-    use IO::Socket::SSL;
 
     my $es = Search::Elasticsearch->new(
         cxn   => 'LWP',
@@ -147,9 +146,8 @@ attacks, you could do the following:
             "https://node2.mydomain.com:9200",
         ],
         ssl_options => {
-            SSL_verify_mode     => SSL_VERIFY_PEER,
-            SSL_ca_file         => '/path/to/cacert.pem',
-            SSL_verifycn_scheme => 'http',
+            verify_hostname     => 1,
+            SSL_ca_file         => '/path/to/cacert.pem'
         }
     );
 
@@ -161,7 +159,6 @@ If you want your client to present its own certificate to the remote
 server, then use:
 
     use Search::Elasticsearch;
-    use IO::Socket::SSL;
 
     my $es = Search::Elasticsearch->new(
         cxn   => 'LWP',
@@ -170,9 +167,9 @@ server, then use:
             "https://node2.mydomain.com:9200",
         ],
         ssl_options => {
-            SSL_verify_mode     => SSL_VERIFY_PEER,
+            verify_hostname     => 1,
             SSL_ca_file         => '/path/to/cacert.pem',
-            SSL_verifycn_scheme => 'http',
+            SSL_use_cert        => 1,
             SSL_cert_file       => '/path/to/client.pem',
             SSL_key_file        => '/path/to/client.pem',
         }

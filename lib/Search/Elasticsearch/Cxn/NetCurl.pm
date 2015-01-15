@@ -42,14 +42,15 @@ sub perform_request {
     my $handle = $self->handle;
     $handle->reset;
 
-    #        $handle->setopt( CURLOPT_VERBOSE,     1 );
+    # $handle->setopt( CURLOPT_VERBOSE,     1 );
 
     $handle->setopt( CURLOPT_HEADER,        0 );
     $handle->setopt( CURLOPT_TCP_NODELAY,   1 );
     $handle->setopt( CURLOPT_URL,           $uri );
     $handle->setopt( CURLOPT_CUSTOMREQUEST, $method );
 
-    $handle->setopt( CURLOPT_CONNECTTIMEOUT_MS, $self->connect_timeout * 1000 );
+    $handle->setopt( CURLOPT_CONNECTTIMEOUT_MS,
+        $self->connect_timeout * 1000 );
     $handle->setopt( CURLOPT_TIMEOUT_MS,
         1000 * ( $params->{timeout} || $self->request_timeout ) );
 
@@ -75,7 +76,9 @@ sub perform_request {
         else {
             %opts = (
                 %opts,
-                ( CURLOPT_SSL_VERIFYPEER => 0, CURLOPT_SSL_VERIFYHOST => 0 )
+                (   CURLOPT_SSL_VERIFYPEER() => 0,
+                    CURLOPT_SSL_VERIFYHOST() => 0
+                )
             );
         }
     }

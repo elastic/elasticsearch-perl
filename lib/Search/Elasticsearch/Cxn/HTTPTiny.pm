@@ -61,6 +61,9 @@ sub _build_handle {
     my %args = ( default_headers => $self->default_headers );
     if ( $self->is_https && $self->has_ssl_options ) {
         $args{SSL_options} = $self->ssl_options;
+        if ( $args{SSL_options}{SSL_verify_mode} ) {
+            $args{verify_ssl} = 1;
+        }
     }
 
     return HTTP::Tiny->new( %args, %{ $self->handle_args } );
@@ -136,8 +139,7 @@ attacks, you could do the following:
         ],
         ssl_options => {
             SSL_verify_mode     => SSL_VERIFY_PEER,
-            SSL_ca_file         => '/path/to/cacert.pem',
-            SSL_verifycn_scheme => 'http',
+            SSL_ca_file         => '/path/to/cacert.pem'
         }
     );
 
@@ -157,8 +159,8 @@ server, then use:
         ],
         ssl_options => {
             SSL_verify_mode     => SSL_VERIFY_PEER,
+            SSL_use_cert        => 1,
             SSL_ca_file         => '/path/to/cacert.pem',
-            SSL_verifycn_scheme => 'http',
             SSL_cert_file       => '/path/to/client.pem',
             SSL_key_file        => '/path/to/client.pem',
         }
