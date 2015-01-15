@@ -12,15 +12,18 @@ local $ENV{ES_CXN_POOL};
 $ENV{ES_CXN_POOL} = 'Async::Static';
 $es = do "es_async.pl";
 
-is wait_for( $es->info )->{status}, 200, 'CxnPool::Async::Static';
+is wait_for( $es->info )->{tagline}, "You Know, for Search",
+    'CxnPool::Async::Static';
 
 $ENV{ES_CXN_POOL} = 'Async::Static::NoPing';
 $es = do "es_async.pl";
-is wait_for( $es->info )->{status}, 200, 'CxnPool::Async::Static::NoPing';
+is wait_for( $es->info )->{tagline}, "You Know, for Search",
+    'CxnPool::Async::Static::NoPing';
 
 $ENV{ES_CXN_POOL} = 'Async::Sniff';
 $es = do "es_async.pl";
-is wait_for( $es->info )->{status}, 200, 'CxnPool::Async::Sniff';
+is wait_for( $es->info )->{tagline}, "You Know, for Search",
+    'CxnPool::Async::Sniff';
 
 my ($node) = values %{
     (   wait_for(
