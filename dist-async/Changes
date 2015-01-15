@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch::Async
 
+1.19    2015-01-15
+        Added optional tests for https/authz/authen
+
 1.18    2015-01-05
         Fixed bad logging test
 

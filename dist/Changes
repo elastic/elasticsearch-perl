@@ -1,5 +1,20 @@
 Revision history for Search::Elasticsearch
 
+1.19    2015-01-15
+        Added method:
+        * cat.segments()
+
+        Added exceptions:
+        * Unauthorized - for invalid user creds
+        * SSL - for invalid SSL certs
+
+        Renamed exception:
+        * ClusterBlock -> Forbidden
+
+        Also:
+        * Simplified SSL support for HTTP::Tiny, LWP and improved instructions
+        * Added optional tests for https/authz/authen
+
 1.17    2014-12-29
 
         Bug fix:
