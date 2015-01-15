@@ -73,9 +73,10 @@ sub error_from_text {
 #===================================
     local $_ = $_[2];
     return
-          /[Tt]imed out/     ? 'Timeout'
-        : /Invalid argument/ ? 'Cxn'
-        :                      'Request';
+          /[Tt]imed out/               ? 'Timeout'
+        : /SSL connect attempt failed/ ? 'SSL'
+        : /Invalid argument/           ? 'Cxn'
+        :                                'Request';
 }
 
 #===================================
@@ -165,6 +166,9 @@ attacks, you could do the following:
             ca  => '/path/to/cacert.pem'
         }
     );
+
+If the remote server cannot be verified, an
+L<Search::Elasticsearch::Error|SSL error> will be thrown.
 
 If you want your client to present its own certificate to the remote
 server, then use:

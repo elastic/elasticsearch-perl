@@ -23,6 +23,9 @@ our $DEBUG = 0;
 @Search::Elasticsearch::Error::ContentLength::ISA
     = ( __PACKAGE__, 'Search::Elasticsearch::Error::Request' );
 
+@Search::Elasticsearch::Error::SSL::ISA
+    = ( __PACKAGE__, 'Search::Elasticsearch::Error::Cxn' );
+
 @Search::Elasticsearch::Error::Unavailable::ISA
     = ( 'Search::Elasticsearch::Error::Cxn', __PACKAGE__ );
 
@@ -214,7 +217,7 @@ The request timed out.
 
 There was an error connecting to a node in the cluster.  This error
 indicates node failure and will be retried on another node.
-This error has the following sub-class:
+This error has the following sub-classes:
 
 =over
 
@@ -224,6 +227,10 @@ The current node is unable to handle your request at the moment. Your
 request will be retried on another node.  This error is triggered by
 the C<503> HTTP status code.
 
+=item * C<Search::Elasticsearch::Error::SSL>
+
+There was a problem validating the SSL certificate.  Not all
+backends support this error type.
 =back
 
 =item * C<Search::Elasticsearch::Error::Forbidden>

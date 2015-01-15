@@ -120,6 +120,7 @@ sub error_from_text {
     return
           m/^7:/  ? 'Cxn'
         : m/^28:/ ? 'Timeout'
+        : m/^51:/ ? 'SSL'
         : m/^55:/ ? 'ContentLength'
         :           'Request';
 
@@ -210,6 +211,9 @@ and to avoid man-in-the-middle attacks, you could do the following:
             CURLOPT_CAINFO()  => '/path/to/cacert.pem'
         }
     );
+
+If the remote server cannot be verified, an
+L<Search::Elasticsearch::Error|SSL error> will be thrown.
 
 If you want your client to present its own certificate to the remote
 server, then use:

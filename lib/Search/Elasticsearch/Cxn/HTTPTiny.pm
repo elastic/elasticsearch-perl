@@ -49,6 +49,7 @@ sub error_from_text {
     return
           /[Tt]imed out/             ? 'Timeout'
         : /Unexpected end of stream/ ? 'ContentLength'
+        : /SSL connection failed/    ? 'SSL'
         : /$Cxn_Error/               ? 'Cxn'
         :                              'Request';
 }
@@ -139,6 +140,9 @@ attacks, you could do the following:
             SSL_verifycn_scheme => 'http',
         }
     );
+
+If the remote server cannot be verified, an
+L<Search::Elasticsearch::Error|SSL error> will be thrown.
 
 If you want your client to present its own certificate to the remote
 server, then use:

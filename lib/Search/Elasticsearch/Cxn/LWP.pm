@@ -153,6 +153,10 @@ attacks, you could do the following:
         }
     );
 
+If the remote server cannot be verified, an
+L<Search::Elasticsearch::Error|Cxn error> will be thrown - LWP does not
+allow us to detect that the connection error was due to invalid SSL.
+
 If you want your client to present its own certificate to the remote
 server, then use:
 
