@@ -80,7 +80,7 @@ our %Test_Types = (
 our %Errors = (
     missing   => 'Search::Elasticsearch::Error::Missing',
     conflict  => 'Search::Elasticsearch::Error::Conflict',
-    forbidden => 'Search::Elasticsearch::Error::ClusterBlocked',
+    forbidden => 'Search::Elasticsearch::Error::Forbidden',
     param     => 'Search::Elasticsearch::Error::Param',
     request   => 'Search::Elasticsearch::Error::Request',
 );
@@ -407,8 +407,7 @@ sub request_wrapper {
     return sub {
         my $promise = shift;
         my $cv      = AE::cv();
-        $promise->then( sub { $cv->send( shift @_ ) },
-            sub { $cv->croak(@_) } );
+        $promise->then( sub { $cv->send( shift @_ ) }, sub { $cv->croak(@_) } );
         return $cv->recv;
     };
 }
