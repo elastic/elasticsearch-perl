@@ -25,6 +25,19 @@ if ( $cxn eq 'Mojo' && !eval { require Mojo::UserAgent; 1 } ) {
     exit;
 }
 
+{
+    no warnings 'redefine';
+
+#===================================
+    sub wait_for {
+#===================================
+        my $promise = shift;
+        my $cv      = AE::cv;
+        $promise->done( $cv, sub { $cv->croak(@_) } );
+        $cv->recv;
+    }
+}
+
 my $es;
 if ( $ENV{ES} ) {
     $es = Search::Elasticsearch::Async->new(

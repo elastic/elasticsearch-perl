@@ -34,11 +34,3 @@ ok $node->{http}{max_content_length_in_bytes}, 'Sniffs max_content length';
 
 done_testing;
 
-#===================================
-sub wait_for {
-#===================================
-    my $promise = shift;
-    my $cv      = AE::cv;
-    $promise->done( $cv, sub { $cv->croak } );
-    $cv->recv;
-}

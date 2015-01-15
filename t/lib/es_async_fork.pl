@@ -43,11 +43,3 @@ for ( 1 .. 10 ) {
 is $ok, $Kids, "$cxn_class - Fork";
 done_testing;
 
-#===================================
-sub wait_for {
-#===================================
-    my $promise = shift;
-    my $cv      = AE::cv;
-    $promise->done( $cv, sub { $cv->croak } );
-    $cv->recv;
-}

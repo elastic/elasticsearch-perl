@@ -114,12 +114,3 @@ sub test_flush {
         )->catch( sub { $cv->croak(@_) } );
     $cv->recv;
 }
-
-#===================================
-sub wait_for {
-#===================================
-    my $promise = shift;
-    my $cv      = AE::cv;
-    $promise->done( $cv, sub { $cv->croak } );
-    $cv->recv;
-}

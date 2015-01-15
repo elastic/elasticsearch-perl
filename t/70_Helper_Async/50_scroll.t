@@ -178,15 +178,6 @@ sub test_start {
 }
 
 #===================================
-sub wait_for {
-#===================================
-    my $promise = shift;
-    my $cv      = AE::cv;
-    $promise->done( $cv, sub { $cv->croak } );
-    $cv->recv;
-}
-
-#===================================
 sub on_results {
 #===================================
     $max_seen = @_ if @_ > $max_seen;

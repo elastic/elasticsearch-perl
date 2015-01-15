@@ -218,11 +218,3 @@ is $results->[3]{_version}, 4, "Advanced - version";
 
 done_testing;
 
-#===================================
-sub wait_for {
-#===================================
-    my $promise = shift;
-    my $cv      = AE::cv;
-    $promise->done( $cv, sub { $cv->croak } );
-    $cv->recv;
-}
