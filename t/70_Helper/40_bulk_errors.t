@@ -11,7 +11,9 @@ use Log::Any::Adapter;
 my $es   = do "es_sync.pl";
 my $TRUE = $es->transport->serializer->decode('{"true":true}')->{true};
 
-my $is_0_90 = $es->info->{version}{number} =~ /^0.90/;
+my $version = $es->info->{version}{number};
+my $is_0_90 = $version =~ /^0\.90/;
+my $is_2    = $version =~ /^2\./;
 
 $es->indices->delete( index => '_all' );
 
@@ -180,6 +182,8 @@ sub test_params {
         unless $is_0_90;
 
     return sub {
+        delete $_[1]->{_shards}
+            if $is_2;
         is $_[0], 'index', "$type - action";
         cmp_deeply $_[1], subhashof($result), "$type - result";
         is $_[2], $j,       "$type - array index";

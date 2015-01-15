@@ -11,14 +11,16 @@ use Log::Any::Adapter;
 
 my $es   = do "es_async.pl";
 my $TRUE = $es->transport->serializer->decode('{"true":true}')->{true};
-my ($is_0_90);
+my ( $is_0_90, $is_2 );
 
 my $cv = AE::cv;
 
 wait_for(
     $es->info->then(
         sub {
-            $is_0_90 = shift()->{version}{number} =~ /^0.90/;
+            my $version = shift()->{version}{number};
+            $is_0_90 = $version =~ /^0\.90/;
+            $is_2    = $version =~ /^2\./;
             $es->indices->delete( index => '_all' );
         }
     )
@@ -197,6 +199,8 @@ sub test_params {
         unless $is_0_90;
 
     return sub {
+        delete $_[1]->{_shards}
+            if $is_2;
         is $_[0], 'index', "$type - action";
         cmp_deeply $_[1], subhashof($result), "$type - result";
         is $_[2], $j,       "$type - array index";
