@@ -7,11 +7,11 @@ our $DEBUG = 0;
 @Search::Elasticsearch::Error::Internal::ISA       = __PACKAGE__;
 @Search::Elasticsearch::Error::Param::ISA          = __PACKAGE__;
 @Search::Elasticsearch::Error::NoNodes::ISA        = __PACKAGE__;
-@Search::Elasticsearch::Error::ClusterBlocked::ISA = __PACKAGE__;
 @Search::Elasticsearch::Error::Request::ISA        = __PACKAGE__;
 @Search::Elasticsearch::Error::Timeout::ISA        = __PACKAGE__;
 @Search::Elasticsearch::Error::Cxn::ISA            = __PACKAGE__;
 @Search::Elasticsearch::Error::Serializer::ISA     = __PACKAGE__;
+@Search::Elasticsearch::Error::Forbidden::ISA    = __PACKAGE__;
 
 @Search::Elasticsearch::Error::Conflict::ISA
     = ( 'Search::Elasticsearch::Error::Request', __PACKAGE__ );
@@ -220,11 +220,12 @@ the C<503> HTTP status code.
 
 =back
 
-=item * C<Search::Elasticsearch::Error::ClusterBlocked>
+=item * C<Search::Elasticsearch::Error::Forbidden>
 
-The cluster was unable to process the request because it is currently blocking,
-eg there are not enough master nodes to form a cluster. This error is
-triggered by the C<403> HTTP status code.
+Either the cluster was unable to process the request because it is currently
+blocking, eg there are not enough master nodes to form a cluster, or
+because the authenticated user is trying to perform an unauthorized
+action. This error is triggered by the C<403> HTTP status code.
 
 =item * C<Search::Elasticsearch::Error::Serializer>
 
