@@ -19,6 +19,7 @@ my $api      = $version =~ /^0.90/ ? '0_90::Direct' : 'Direct';
 my $body     = $ENV{ES_BODY} || 'GET';
 my $cxn      = $ENV{ES_CXN} || do "default_async_cxn.pl" || die $!;
 my $cxn_pool = $ENV{ES_CXN_POOL} || 'Async::Static';
+our %Auth;
 
 if ( $cxn eq 'Mojo' && !eval { require Mojo::UserAgent; 1 } ) {
     plan skip_all => 'Mojo::UserAgent not installed';
@@ -46,9 +47,15 @@ if ( $ENV{ES} ) {
         cxn              => $cxn,
         cxn_pool         => $cxn_pool,
         client           => $api,
-        send_get_body_as => $body
+        send_get_body_as => $body,
+        %Auth
     );
-    $es->ping->then( sub { $cv->send(@_) }, sub { $cv->croak(@_) } );
+    if ( $ENV{ES_SKIP_PING} ) {
+        $cv->send(1);
+    }
+    else {
+        $es->ping->then( sub { $cv->send(@_) }, sub { $cv->croak(@_) } );
+    }
     eval { $cv->recv } or do {
         diag $@;
         undef $es;

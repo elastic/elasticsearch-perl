@@ -10,4 +10,4 @@ doc
 log
 bench_cxn.pl
 *.xml
-
+shield/*

@@ -14,19 +14,24 @@ my $body     = $ENV{ES_BODY}     || 'GET';
 my $cxn      = $ENV{ES_CXN}      || do "default_cxn.pl" || die $!;
 my $cxn_pool = $ENV{ES_CXN_POOL} || 'Static';
 my $timeout  = $ENV{ES_TIMEOUT}  || 30;
+our %Auth;
 
 my $es;
 if ( $ENV{ES} ) {
-    $es = Search::Elasticsearch->new(
-        nodes            => $ENV{ES},
-        trace_to         => $trace,
-        cxn              => $cxn,
-        cxn_pool         => $cxn_pool,
-        client           => $api,
-        send_get_body_as => $body,
-        request_timeout  => $timeout
-    );
-    eval { $es->ping; } or do {
+    eval {
+        $es = Search::Elasticsearch->new(
+            nodes            => $ENV{ES},
+            trace_to         => $trace,
+            cxn              => $cxn,
+            cxn_pool         => $cxn_pool,
+            client           => $api,
+            send_get_body_as => $body,
+            request_timeout  => $timeout,
+            %Auth
+        );
+        $es->ping unless $ENV{ES_SKIP_PING};
+        1;
+    } || do {
         diag $@;
         undef $es;
     };
