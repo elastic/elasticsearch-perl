@@ -45,6 +45,7 @@ on 'build' => sub {
 on 'test' => sub {
   requires "AE" => "0";
   requires "EV" => "0";
+  requires "IO::Socket::SSL" => "0";
   requires "Log::Any::Adapter::Callback" => "0";
   requires "Test::Deep" => "0";
   requires "Test::Exception" => "0";
