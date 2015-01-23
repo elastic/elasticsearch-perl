@@ -13,7 +13,11 @@ our %Handler = (
             : shift();
     },
     bool => sub { $_[0] ? 1 : 0 },
-    enum => sub {"$_[0]"},
+    enum => sub {
+        ref $_[0] eq 'ARRAY'
+            ? join( ',', @{ shift() } )
+            : shift();
+    },
     number   => sub { 0 + $_[0] },
     datetime => sub {"$_[0]"},
     duration => sub {"$_[0]"},
