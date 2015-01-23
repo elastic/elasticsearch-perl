@@ -129,7 +129,10 @@ Metrics for indices can be limited to particular indices with the C<index>
 parameter.
 
 Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
     C<flat_settings>,
+    C<ignore_unavailable>,
     C<local>,
     C<master_timeout>
 
