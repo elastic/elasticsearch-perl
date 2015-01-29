@@ -1,6 +1,6 @@
 package Search::Elasticsearch;
 
-use Moo 1.003;
+use Moo 1.003 ();
 
 use Search::Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
