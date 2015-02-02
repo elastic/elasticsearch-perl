@@ -21,9 +21,10 @@ my $wrapper   = request_wrapper();
 my $skip_list = load_skip_list();
 
 our %Supported = (
-    regex     => 1,
-    gtelte    => 1,
-    benchmark => sub {
+    regex         => 1,
+    gtelte        => 1,
+    stash_in_path => 1,
+    benchmark     => sub {
         no warnings;
         grep { $_->{settings}{node}{bench} eq 'true' }
             values %{ $es->nodes->info( metric => 'settings' )->{nodes} };
@@ -194,7 +195,7 @@ sub run_tests {
             else {
                 $field = $test;
             }
-            my $got = get_val( $val, $field );
+            my $got = get_val( $val, $field, \%stash );
             if ( $type eq 'set' ) {
                 $stash{$expect} = $got;
                 pass("$test_name: set $expect");
@@ -245,13 +246,15 @@ sub populate_vars {
 #===================================
 sub get_val {
 #===================================
-    my ( $val, $field ) = @_;
+    my ( $val, $field, $stash ) = @_;
     return undef unless defined $val;
     return $val  unless defined $field;
     return $val if $field eq '$body';
 
     for my $next ( split /(?<!\\)\./, $field ) {
         $next =~ s/\\//g;
+        $next = populate_vars( $next, $stash )
+            if $next =~ /^\$/;
         if ( ref $val eq 'ARRAY' ) {
             return undef
                 unless $next =~ /^\d+$/;
