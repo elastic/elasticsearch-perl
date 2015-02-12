@@ -29,6 +29,28 @@ our %Supported = (
         grep { $_->{settings}{node}{bench} eq 'true' }
             values %{ $es->nodes->info( metric => 'settings' )->{nodes} };
     },
+    groovy_scripting => sub {
+        my $scripting;
+        eval {
+            $es->index(
+                index   => 'test_script',
+                type    => 't',
+                id      => 1,
+                refresh => 1
+            );
+            $scripting = eval {
+                $es->search(
+                    body => {
+                        script_fields =>
+                            { script => { lang => 'groovy', script => 1 } }
+                    }
+                );
+                1;
+            };
+            $es->indices->delete( index => 'test_script' );
+        };
+        return $scripting;
+    }
 );
 
 our %Test_Types = (
