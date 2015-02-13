@@ -997,7 +997,7 @@ sub api {
         method => "HEAD",
         parts  => { name => { required => 1 } },
         paths  => [ [ { name => 1 }, "_template", "{name}" ] ],
-        qs     => ["local"],
+        qs => [ "local", "master_timeout" ],
     },
 
     'indices.exists_type' => {
@@ -1135,7 +1135,7 @@ sub api {
         parts => { name => {} },
         paths =>
             [ [ { name => 1 }, "_template", "{name}" ], [ {}, "_template" ] ],
-        qs => [ "flat_settings", "local" ],
+        qs => [ "flat_settings", "local", "master_timeout" ],
     },
 
     'indices.get_upgrade' => {

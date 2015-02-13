@@ -585,7 +585,8 @@ The C<get_template()> method is used to retrieve a named template.
 
 Query string parameters:
     C<flat_settings>,
-    C<local>
+    C<local>,
+    C<master_timeout>
 
 See the L<get_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
@@ -599,7 +600,8 @@ for more information.
 The C<exists_template()> method is used to check whether the named template exists.
 
 Query string parameters:
-    C<local>
+    C<local>,
+    C<master_timeout>
 
 See the L<get_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
