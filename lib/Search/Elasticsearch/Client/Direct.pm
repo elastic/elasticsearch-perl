@@ -891,6 +891,7 @@ Query string parameters:
     C<df>,
     C<expand_wildcards>,
     C<explain>,
+    C<fielddata_fields>,
     C<fields>,
     C<from>,
     C<ignore_unavailable>,
