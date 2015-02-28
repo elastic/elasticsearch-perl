@@ -101,5 +101,8 @@
 1.3.10_SNAPSHOT:
     - search.aggregation/10_histogram.yaml
 
+1.4.4:
+    - script/30_expressions.yaml
+
 
 
