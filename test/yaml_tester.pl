@@ -7,6 +7,7 @@ use Test::More;
 use Test::Deep;
 use Data::Dumper;
 use File::Basename;
+use Scalar::Util qw(looks_like_number);
 use Time::HiRes qw(gettimeofday);
 
 use lib qw(lib t/lib);
@@ -91,6 +92,9 @@ our %Test_Types = (
         my ( $got, $expect, $name ) = @_;
         if ( defined $expect and $expect =~ s{^\s*/(.+)/\s*$}{$1}s ) {
             like $got, qr/$expect/x, $name;
+        }
+        elsif ( looks_like_number($got) and looks_like_number($expect) ) {
+            cmp_deeply( $got + 0, $expect + 0, $name );
         }
         else {
             cmp_deeply(@_);
