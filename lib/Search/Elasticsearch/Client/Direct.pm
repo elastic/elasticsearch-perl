@@ -1491,7 +1491,7 @@ See the L<indexed search template docs|http://www.elasticsearch.org/guide/en/ela
 
 =head2 C<benchmark()>
 
-    $results = $e->benchamrk(
+    $results = $e->benchmark(
         index   => 'index' | \@indices,     # optional
         type    => 'type'  | \@types,       # optional
 
@@ -1523,7 +1523,7 @@ different index settings, eg:
         }
     );
 
-See the L<benchamrk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-benchmark.html> for more.
+See the L<benchmark docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-benchmark.html> for more.
 
 Query string parameters:
     C<verbose>
@@ -1537,7 +1537,7 @@ Query string parameters:
 
 Lists any currently running benchmarks.
 
-See the L<benchamrk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-benchmark.html> for more.
+See the L<benchmark docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-benchmark.html> for more.
 
 =head2 L<abort_benchmark>
 
@@ -1547,5 +1547,5 @@ See the L<benchamrk docs|http://www.elasticsearch.org/guide/en/elasticsearch/ref
 
 Aborts the named benchmark
 
-See the L<benchamrk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-benchmark.html> for more.
+See the L<benchmark docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-benchmark.html> for more.
 
