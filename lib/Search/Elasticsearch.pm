@@ -120,7 +120,7 @@ L<Search::Elasticsearch> is the official Perl client for Elasticsearch,
 supported by L<elasticsearch.com|http://www.elasticsearch.com>.  Elasticsearch
 itself is a flexible and powerful open source, distributed real-time
 search and analytics engine for the cloud.  You can read more about it
-on L<elasticsearch.org|http://www.elasticsearch.org>.
+on L<elastic.co|http://www.elastic.co>.
 
 =head1 BACKWARDS COMPATIBILITY AND ELASTICSEARCH 0.90.x
 
@@ -147,7 +147,7 @@ Unfortunately, the opinions of programmers seldom coincide. The intention of
 this client, and of the officially supported clients available for other
 languages, is to provide robust support for the full native Elasticsearch API
 with as few opinions as possible:  you should be able to read the
-L<Elasticsearch reference documentation|http://www.elasticsearch.org/guide>
+L<Elasticsearch reference documentation|http://www.elastic.co/guide>
 and understand how to use this client, or any of the other official clients.
 
 Should you decide that you want to customize the API, then this client
@@ -202,8 +202,8 @@ Easy extensibility
 =head1 INSTALLING ELASTICSEARCH
 
 You can download the latest version of Elasticsearch from
-L<http://www.elasticsearch.org/download>. See the
-L<installation instructions|http://www.elasticsearch.org/guide/reference/setup/installation/>
+L<http://www.elastic.co/download>. See the
+L<installation instructions|http://www.elastic.co/guide/reference/setup/installation/>
 for details. You will need to have a recent version of Java installed,
 preferably the Java v7 from Sun.
 
@@ -604,7 +604,7 @@ C<irc.freenode.net>.
 
 =item * Mailing list
 
-The main L<Elasticsearch mailing list|http://www.elasticsearch.org/community/forum/>.
+The main L<Elasticsearch mailing list|http://www.elastic.co/community>.
 
 =back
 

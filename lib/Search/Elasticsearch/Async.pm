@@ -106,7 +106,7 @@ L<Search::Elasticsearch::Async> is the official B<asynchronous> Perl client for
 Elasticsearch, supported by L<elasticsearch.com|http://www.elasticsearch.com>.
 Elasticsearch itself is a flexible and powerful open source, distributed real-time
 search and analytics engine for the cloud.  You can read more about it
-on L<elasticsearch.org|http://www.elasticsearch.org>.
+on L<elastic.co|http://www.elastic.co>.
 
 This module uses L<Promises> to provide a sane async interface, making your
 async code look more like synchronous code.  It can be used with
@@ -584,7 +584,7 @@ C<irc.freenode.net>.
 
 =item * Mailing list
 
-The main L<Elasticsearch mailing list|http://www.elasticsearch.org/community/forum/>.
+The main L<Elasticsearch mailing list|http://www.elastic.co/community>.
 
 =back
 

@@ -6,7 +6,7 @@ use Capture::Tiny qw(capture_merged tee_merged);
 
 my $es = Search::Elasticsearch->new;
 my $base_url
-    = "https://download.elasticsearch.org/elasticsearch/elasticsearch";
+    = "https://download.elastic.co/elasticsearch/elasticsearch";
 
 my @startup_opts = qw(
     -Des.network.host=localhost

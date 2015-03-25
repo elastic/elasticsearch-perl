@@ -369,7 +369,7 @@ C<irc.freenode.net>.
 
 =item * Mailing list
 
-The main L<Elasticsearch mailing list|http://www.elasticsearch.org/community/forum/>.
+The main L<Elasticsearch mailing list|http://www.elastic.co/community>.
 
 =back
 

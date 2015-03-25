@@ -84,7 +84,7 @@ Query string parameters:
     C<master_timeout>,
     C<v>
 
-See the L<cat aliases docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-aliases.html>
+See the L<cat aliases docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-aliases.html>
 for more information.
 
 =head2 C<allocation()>
@@ -104,7 +104,7 @@ Query string parameters:
     C<master_timeout>,
     C<v>
 
-See the L<cat allocation docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-allocation.html>
+See the L<cat allocation docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-allocation.html>
 for more information.
 
 =head2 C<count()>
@@ -123,7 +123,7 @@ Query string parameters:
     C<master_timeout>,
     C<v>
 
-See the L<cat count docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-count.html>
+See the L<cat count docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-count.html>
 for more information.
 
 =head2 C<fielddata()>
@@ -143,7 +143,7 @@ Query string parameters:
     C<master_timeout>,
     C<v>
 
-See the L<cat fielddata docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-fielddata.html>
+See the L<cat fielddata docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-fielddata.html>
 for more information.
 
 =head2 C<health()>
@@ -162,7 +162,7 @@ Query string parameters:
     C<ts>,
     C<v>
 
-See the L<cat health docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-health.html>
+See the L<cat health docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-health.html>
 for more information.
 
 =head2 C<indices()>
@@ -183,7 +183,7 @@ Query string parameters:
     C<pri>,
     C<v>
 
-See the L<cat indices docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-indices.html>
+See the L<cat indices docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-indices.html>
 for more information.
 
 =head2 C<master()>
@@ -199,7 +199,7 @@ Query string parameters:
     C<master_timeout>,
     C<v>
 
-See the L<cat master docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-master.html>
+See the L<cat master docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-master.html>
 for more information.
 
 =head2 C<nodes()>
@@ -215,7 +215,7 @@ Query string parameters:
     C<master_timeout>,
     C<v>
 
-See the L<cat nodes docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-nodes.html>
+See the L<cat nodes docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-nodes.html>
 for more information.
 
 =head2 C<pending_tasks()>
@@ -231,7 +231,7 @@ Query string parameters:
     C<help>,
     C<v>
 
-See the L<cat pending-tasks docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-pending-tasks.html>
+See the L<cat pending-tasks docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-pending-tasks.html>
 for more information.
 
 =head2 C<plugins()>
@@ -247,7 +247,7 @@ Query string parameters:
     C<help>,
     C<v>
 
-See the L<cat plugins docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-plugins.html>
+See the L<cat plugins docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-plugins.html>
 for more information.
 
 =head2 C<recovery()>
@@ -268,7 +268,7 @@ Query string parameters:
     C<master_timeout>,
     C<v>
 
-See the L<cat recovery docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-recovery.html>
+See the L<cat recovery docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-recovery.html>
 for more information.
 
 =head2 C<segments()>
@@ -284,7 +284,7 @@ Query string parameters:
     C<help>,
     C<v>
 
-See the L<cat shards docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-segments.html>
+See the L<cat shards docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-segments.html>
 for more information.
 
 =head2 C<shards()>
@@ -303,7 +303,7 @@ Query string parameters:
     C<master_timeout>,
     C<v>
 
-See the L<cat shards docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-shards.html>
+See the L<cat shards docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-shards.html>
 for more information.
 
 =head2 C<thread_pool()>
@@ -324,6 +324,6 @@ Query string parameters:
     C<master_timeout>,
     C<v>
 
-See the L<cat thread_pool docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cat-thread-pool.html>
+See the L<cat thread_pool docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-thread-pool.html>
 for more information.
 

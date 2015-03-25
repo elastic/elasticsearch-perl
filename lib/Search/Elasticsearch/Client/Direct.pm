@@ -390,7 +390,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-index_.html>
+See the L<index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html>
 for more information.
 
 =head2 C<create()>
@@ -420,7 +420,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<create docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-create.html>
+See the L<create docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-create.html>
 for more information.
 
 =head2 C<get()>
@@ -447,7 +447,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<get docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-get.html>
+See the L<get docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
 
 =head2 C<get_source()>
@@ -475,7 +475,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<get_source docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-get.html>
+See the L<get_source docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
 
 =head2 C<exists()>
@@ -496,7 +496,7 @@ Query string parameters:
     C<refresh>,
     C<routing>
 
-See the L<exists docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-get.html>
+See the L<exists docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
 
 =head2 C<delete()>
@@ -520,7 +520,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<delete docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-delete.html>
+See the L<delete docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete.html>
 for more information.
 
 =head2 C<update()>
@@ -578,7 +578,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<update docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-update.html>
+See the L<update docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update.html>
 for more information.
 
 =head2 C<termvectors()>
@@ -610,7 +610,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<termvector docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-termvectors.html>
+See the L<termvector docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-termvectors.html>
 for more information.
 
 =head1 BULK DOCUMENT CRUD METHODS
@@ -696,7 +696,7 @@ Query string parameters:
     C<replication>,
     C<timeout>
 
-See the L<bulk docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-bulk.html>
+See the L<bulk docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html>
 for more information.
 
 =head2 C<bulk_helper()>
@@ -752,7 +752,7 @@ Query string parameters:
     C<realtime>,
     C<refresh>
 
-See the L<mget docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-multi-get.html>
+See the L<mget docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-multi-get.html>
 for more information.
 
 =head2 C<delete_by_query()>
@@ -796,7 +796,7 @@ Query string parameters:
     C<source>,
     C<timeout>
 
-See the L<delete_by_query docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-delete-by-query.html>
+See the L<delete_by_query docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete-by-query.html>
 for more information.
 
 =head2 C<mtermvectors()>
@@ -835,7 +835,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<mtermvectors docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-multi-termvectors.html>
+See the L<mtermvectors docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-multi-termvectors.html>
 for more information.
 
 =head1 SEARCH METHODS
@@ -855,22 +855,22 @@ and of one, more or all types:
 The C<search()> method searches for matching documents in one or more
 indices.  It is just as easy to search a single index as it is to search
 all the indices in your cluster.  It can also return
-L<aggregations|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html>
-L<highlighted snippets|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-highlighting.html>
-and L<did-you-mean|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-suggesters-phrase.html>
-or L<search-as-you-type|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-suggesters-completion.html>
+L<aggregations|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html>
+L<highlighted snippets|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-highlighting.html>
+and L<did-you-mean|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-phrase.html>
+or L<search-as-you-type|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html>
 suggestions.
 
-The I<lite> L<version of search|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-uri-request.html>
+The I<lite> L<version of search|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-uri-request.html>
 allows you to specify a query string in the C<q> parameter, using the
 Lucene query string syntax:
 
     $results = $e->search( q => 'title:(elasticsearch clients)');
 
 However, the preferred way to search is by using the
-L<Query DSL|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html>
+L<Query DSL|http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html>
 to create a query, and passing that C<query> in the
-L<request body|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-body.html>:
+L<request body|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html>:
 
     $results = $e->search(
         body => {
@@ -916,7 +916,7 @@ Query string parameters:
     C<track_scores>,
     C<version>
 
-See the L<search reference|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-body.html>
+See the L<search reference|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html>
 for more information.
 
 Also see L<Search::Elasticsearch::Transport/send_get_body_as>.
@@ -943,7 +943,7 @@ Query string parameters:
     C<routing>,
     C<source>
 
-See the L<search exists reference|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-exists.html>
+See the L<search exists reference|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-exists.html>
 for more information.
 
 =head2 C<count()>
@@ -975,7 +975,7 @@ Query string parameters:
     C<routing>,
     C<source>
 
-See the L<count docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-count.html>
+See the L<count docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html>
 for more information.
 
 =head2 C<search_template()>
@@ -1006,7 +1006,7 @@ within the C<body>) and parameters to use with the template, eg:
         }
     );
 
-See the L<search template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-template.html>
+See the L<search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html>
 for more information.
 
 Query string parameters:
@@ -1041,8 +1041,8 @@ Query string parameters:
     C<scroll>,
     C<scroll_id>
 
-See the L<scroll docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-scroll.html>
-and the L<search_type docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search.html/search-request-search-type.html>
+See the L<scroll docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html>
+and the L<search_type docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search.html/search-request-search-type.html>
 for more information.
 
 =head2 C<clear_scroll()>
@@ -1101,7 +1101,7 @@ request).  For instance:
 Query string parameters:
     C<search_type>
 
-See the L<msearch docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-multi-search.html>
+See the L<msearch docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html>
 for more information.
 
 =head2 C<explain()>
@@ -1146,7 +1146,7 @@ Query string parameters:
     C<routing>,
     C<source>
 
-See the L<explain docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-explain.html>
+See the L<explain docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html>
 for more information.
 
 =head2 C<search_shards()>
@@ -1167,7 +1167,7 @@ Query string parameters:
     C<preference>,
     C<routing>
 
-See the L<search-shards docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-shards.html>
+See the L<search-shards docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-shards.html>
 for more information.
 
 =head1 PERCOLATION METHODS
@@ -1214,7 +1214,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<percolate docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-percolate.html>
+See the L<percolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html>
 for more information.
 
 =head2 C<count_percolate()>
@@ -1252,7 +1252,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<percolate docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-percolate.html>
+See the L<percolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html>
 for more information.
 
 =head2 C<mpercolate()>
@@ -1293,7 +1293,7 @@ Query string parameters:
     C<expand_wildcards>,
     C<ignore_unavailable>
 
-See the L<mpercolate docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-percolate.html>
+See the L<mpercolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html>
 for more information.
 
 =head2 C<suggest()>
@@ -1305,8 +1305,8 @@ for more information.
     );
 
 The C<suggest()> method is used to run
-L<did-you-mean|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-suggesteres-phrase.html>
-or L<search-as-you-type|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-suggesters-completion.html>
+L<did-you-mean|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesteres-phrase.html>
+or L<search-as-you-type|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html>
 suggestion requests, which can also be run as part of a L</search()> request.
 
     $results = $e->suggest(
@@ -1342,7 +1342,7 @@ Query string parameters:
     );
 
 The C<mlt()> method runs a
-L<more-like-this query|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html>
+L<more-like-this query|http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html>
 to find other documents which are similar to the specified document.
 
 Query string parameters:
@@ -1365,7 +1365,7 @@ Query string parameters:
     C<search_types>,
     C<stop_words>
 
-See the L<mlt docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-more-like-this.html>
+See the L<mlt docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-more-like-this.html>
 for more information.
 
 =HEAD1 INDEXED SCRIPT METHODS
@@ -1396,7 +1396,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
+See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
 =head2 C<get_script()>
 
@@ -1411,7 +1411,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
+See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
 =head2 C<delete_script()>
 
@@ -1426,7 +1426,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<indexed scripts docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
+See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
 =HEAD1 INDEXED SEARCH TEMPLATE METHODS
 
@@ -1459,7 +1459,7 @@ For instance:
 
 Query string parameters: None
 
-See the L<indexed search template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
+See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
 
 =head2 C<get_template()>
 
@@ -1473,7 +1473,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<indexed search template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
+See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
 
 =head2 C<delete_template()>
 
@@ -1485,5 +1485,5 @@ Delete the indexed template from the C<.scripts> index.
 
 Query string parameters: None
 
-See the L<indexed search template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
+See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
 

@@ -238,7 +238,7 @@ unless you specify a custom C<max_content_length>:
 
 This client can request compressed responses from Elasticsearch by
 enabling the C<http.compression> config setting in
-L<Elasticsearch|http://www.elasticsearch.org/guide/reference/modules/http/>
+L<Elasticsearch|http://www.elastic.co/guide/reference/modules/http/>
 and setting C<deflate> to C<true>:
 
     $e = Search::Elasticsearch->new(

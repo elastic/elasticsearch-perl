@@ -40,7 +40,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<create index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-create-index.html>
+See the L<create index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html>
 for more information.
 
 =head2 C<get()>
@@ -54,7 +54,7 @@ Returns the aliases, settings, mappings, and warmers for the specified indices.
 The C<feature> parameter can be set to none or more of: C<_settings>, C<_mappings>,
 C<_warmers> and C<_aliases>.
 
-See the L<get index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-index.html>.
+See the L<get index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-index.html>.
 
 Query string parameters:
     C<allow_no_indices>,
@@ -77,7 +77,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<local>
 
-See the L<index exists docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-indices-exists.html>
+See the L<index exists docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-indices-exists.html>
 for more information.
 
 =head2 C<delete()>
@@ -95,7 +95,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<delete index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-delete-index.html>
+See the L<delete index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html>
 for more information.
 
 =head2 C<close()>
@@ -114,7 +114,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<close index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-open-close.html>
+See the L<close index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html>
 for more information.
 
 =head2 C<open()>
@@ -132,7 +132,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<open index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-open-close.html>
+See the L<open index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html>
 for more information.
 
 =head2 C<clear_cache()>
@@ -158,7 +158,7 @@ Query string parameters:
     C<query_cache>,
     C<recycler>
 
-See the L<clear_cache docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-clearcache.html>
+See the L<clear_cache docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-clearcache.html>
 for more information.
 
 =head2 C<refresh()>
@@ -177,7 +177,7 @@ Query string parameters:
     C<force>,
     C<ignore_unavailable>
 
-See the L<refresh index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-refresh.html>
+See the L<refresh index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-refresh.html>
 for more information.
 
 =head2 C<flush()>
@@ -198,7 +198,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<wait_if_ongoing>
 
-See the L<flush index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-flush.html>
+See the L<flush index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-flush.html>
 for more information.
 
 =head2 C<optimize()>
@@ -220,7 +220,7 @@ Query string parameters:
     C<only_expunge_deletes>,
     C<wait_for_merge>
 
-See the L<optimize index docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-optimize.html>
+See the L<optimize index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-optimize.html>
 for more information.
 
 =head2 C<get_upgrade()>
@@ -238,7 +238,7 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>
 
-See the L<upgrade docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-upgrade.html>
+See the L<upgrade docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-upgrade.html>
 for more information.
 
 =head2 C<upgrade()>
@@ -255,7 +255,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<wait_for_completion>
 
-See the L<upgrade docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-upgrade.html>
+See the L<upgrade docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-upgrade.html>
 for more information.
 
 =head1 MAPPING METHODS
@@ -296,7 +296,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<put_mapping docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-put-mapping.html>
+See the L<put_mapping docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-put-mapping.html>
 for more information.
 
 
@@ -316,7 +316,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<local>
 
-See the L<get_mapping docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-mapping.html>
+See the L<get_mapping docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-mapping.html>
 for more information.
 
 =head2 C<get_field_mapping()>
@@ -339,7 +339,7 @@ Query string parameters:
     C<include_defaults>,
     C<local>
 
-See the L<get_mapping docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-field-mapping.html>
+See the L<get_mapping docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-field-mapping.html>
 for more information.
 
 =head2 C<exists_type()>
@@ -358,7 +358,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<local>
 
-See the L<exists_type docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-types-exists.html>
+See the L<exists_type docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-types-exists.html>
 for more information.
 
 =head2 C<delete_mapping()>
@@ -374,7 +374,7 @@ that type) in all specified indices.
 Query string parameters:
     C<master_timeout>
 
-See the L<delete_mapping docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-delete-mapping.html>
+See the L<delete_mapping docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-mapping.html>
 for more information.
 
 =head1 ALIAS METHODS
@@ -401,7 +401,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<update_aliases docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
+See the L<update_aliases docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
 
 =head2 C<get_aliases()>
@@ -418,7 +418,7 @@ Query string parameters:
     C<local>,
     C<timeout>
 
-See the L<get_aliases docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
+See the L<get_aliases docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
 
 =head2 C<put_alias()>
@@ -444,7 +444,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<put_alias docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
+See the L<put_alias docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
 
 =head2 C<get_alias()>
@@ -463,7 +463,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<local>
 
-See the L<get_alias docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
+See the L<get_alias docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
 
 =head2 C<exists_alias()>
@@ -482,7 +482,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<local>
 
-See the L<exists_alias docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
+See the L<exists_alias docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
 
 =head2 C<delete_alias()>
@@ -499,7 +499,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<delete_alias docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html>
+See the L<delete_alias docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
 
 =head1 SETTINGS METHODS
@@ -528,7 +528,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<master_timeout>
 
-See the L<put_settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-update-settings.html>
+See the L<put_settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html>
 for more information.
 
 =head2 C<get_settings()>
@@ -548,7 +548,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<local>
 
-See the L<get_settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-settings.html>
+See the L<get_settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-settings.html>
 for more information.
 
 =head1 TEMPLATE METHODS
@@ -572,7 +572,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<put_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
+See the L<put_template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
 
 =head2 C<get_template()>
@@ -588,7 +588,7 @@ Query string parameters:
     C<local>,
     C<master_timeout>
 
-See the L<get_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
+See the L<get_template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
 
 =head2 C<exists_template()>
@@ -603,7 +603,7 @@ Query string parameters:
     C<local>,
     C<master_timeout>
 
-See the L<get_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
+See the L<get_template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
 
 =head2 C<delete_template()>
@@ -620,7 +620,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<delete_template docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html>
+See the L<delete_template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
 
 
@@ -654,7 +654,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<master_timeout>
 
-See the L<put_warmer docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-warmers.html>
+See the L<put_warmer docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-warmers.html>
 for more information.
 
 =head2 C<get_warmer()>
@@ -673,7 +673,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<local>
 
-See the L<get_warmer docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-warmers.html>
+See the L<get_warmer docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-warmers.html>
 for more information.
 
 =head2 C<delete_warmer()>
@@ -688,7 +688,7 @@ The C<delete_warmer()> method is used to delete warmers by name.
 Query string parameters:
     C<master_timeout>
 
-See the L<delete_warmer docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-warmers.html>
+See the L<delete_warmer docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-warmers.html>
 for more information.
 
 =head1 STATS METHODS
@@ -733,7 +733,7 @@ Query string parameters:
     C<level>,
     C<types>
 
-See the L<stats docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-stats.html>
+See the L<stats docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-stats.html>
 for more information.
 
 =head2 C<recovery()>
@@ -749,7 +749,7 @@ Query string parameters:
     C<detailed>,
     C<human>
 
-See the L<recovery docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-recovery.html>
+See the L<recovery docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-recovery.html>
 for more information.
 
 =head2 C<segments()>
@@ -767,7 +767,7 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>
 
-See the L<segments docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-segments.html>
+See the L<segments docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-segments.html>
 for more information.
 
 =head1 QUERY AND ANALYSIS METHODS
@@ -794,7 +794,7 @@ Query string parameters:
     C<text>,
     C<tokenizer>
 
-See the L<analyze docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-analyze.html>
+See the L<analyze docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-analyze.html>
 for more information.
 
 =head2 C<validate_query()>
@@ -819,7 +819,7 @@ Query string parameters:
     C<q>,
     C<source>
 
-See the L<validate_query docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-validate.html>
+See the L<validate_query docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-validate.html>
 for more information.
 
 

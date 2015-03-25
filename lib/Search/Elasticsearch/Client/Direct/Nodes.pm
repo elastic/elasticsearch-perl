@@ -47,7 +47,7 @@ Query string parameters:
     C<flat_settings>,
     C<human>
 
-See the L<node_info docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-info.html>
+See the L<node_info docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-info.html>
 for more information.
 
 =head2 C<stats()>
@@ -119,7 +119,7 @@ Query string parameters:
     C<level>,
     C<types>
 
-See the L<node_stats docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-stats.html>
+See the L<node_stats docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-stats.html>
 for more information.
 
 =head2 C<hot_threads()>
@@ -138,7 +138,7 @@ Query string parameters:
     C<threads>,
     C<type>
 
-See the L<hot_threads docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-hot-threads.html>
+See the L<hot_threads docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-hot-threads.html>
 for more information.
 
 =head2 C<shutdown()>
@@ -154,6 +154,6 @@ Query string parameters:
     C<delay>,
     C<exit>
 
-See the L<shutdown docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-shutdown.html>
+See the L<shutdown docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-shutdown.html>
 for more information.
 

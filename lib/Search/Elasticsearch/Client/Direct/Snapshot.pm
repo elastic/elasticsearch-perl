@@ -36,7 +36,7 @@ Query string parameters:
     C<timeout>,
     C<verify>
 
-See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.
 
 =head2 C<get_repository()>
@@ -51,7 +51,7 @@ Query string parameters:
     C<local>,
     C<master_timeout>
 
-See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.
 
 =head2 C<verify_repository()>
@@ -66,7 +66,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.
 
 =head2 C<delete_repository()>
@@ -81,7 +81,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.
 
 =head2 C<create()>
@@ -112,7 +112,7 @@ Retrieve snapshots in the named repository.
 Query string parameters:
     C<master_timeout>
 
-See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.
 
 =head2 C<delete()>
@@ -127,7 +127,7 @@ Delete snapshot in the named repository.
 Query string parameters:
     C<master_timeout>
 
-See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.
 
 
@@ -146,7 +146,7 @@ Query string parameters:
     C<master_timeout>,
     C<wait_for_completion>
 
-See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.
 
 =head2 C<status()>
@@ -161,5 +161,5 @@ Returns status information about the specified snapshots.
 Query string parameters:
     C<master_timeout>
 
-See the L<"snapshot/restore docs"|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-snapshot.html>
+See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.

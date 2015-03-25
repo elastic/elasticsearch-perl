@@ -53,7 +53,7 @@ Query string parameters:
     C<wait_for_relocating_shards>,
     C<wait_for_status>
 
-See the L<cluster health docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-health.html>
+See the L<cluster health docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html>
 for more information.
 
 =head2 C<stats()>
@@ -68,7 +68,7 @@ Query string parameters:
     C<flat_settings>,
     C<human>
 
-See the L<cluster stats docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-stats.html>
+See the L<cluster stats docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-stats.html>
 for more information.
 
 =head2 C<get_settings()>
@@ -83,7 +83,7 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>
 
-See the L<cluster settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-update-settings.html>
+See the L<cluster settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html>
 for more information.
 
 =head2 C<put_settings()>
@@ -105,7 +105,7 @@ For instance:
 Query string parameters:
     C<flat_settings>
 
-See the L<cluster settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-update-settings.html>
+See the L<cluster settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html>
  for more information.
 
 =head2 C<state()>
@@ -136,7 +136,7 @@ Query string parameters:
     C<local>,
     C<master_timeout>
 
-See the L<cluster state docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-state.html>
+See the L<cluster state docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-state.html>
 for more information.
 
 =head2 C<pending_tasks()>
@@ -149,7 +149,7 @@ Query string parameters:
     C<local>,
     C<master_timeout>
 
-See the L<pending tasks docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-pending.html>
+See the L<pending tasks docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-pending.html>
 for more information.
 
 =head2 C<reroute()>
@@ -188,6 +188,6 @@ Query string parameters:
     C<metric>,
     C<timeout>
 
-See the L<reroute docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-reroute.html>
+See the L<reroute docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-reroute.html>
 for more information.
 

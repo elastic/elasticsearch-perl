@@ -30,7 +30,7 @@ sub parse_request {
         my $name = $defn->{name} || '<unknown method>';
         $self->logger->throw_error( 'Param',
                   "$_ in ($name) request. "
-                . "See docs at: http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/"
+                . "See docs at: http://www.elastic.co/guide/en/elasticsearch/reference/current/"
                 . $defn->{doc}
                 . '.html' );
     };

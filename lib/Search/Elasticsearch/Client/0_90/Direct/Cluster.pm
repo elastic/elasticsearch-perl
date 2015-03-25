@@ -39,7 +39,7 @@ Query string parameters:
     C<wait_for_relocating_shards>,
     C<wait_for_status>
 
-See the L<cluster health docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-health.html>
+See the L<cluster health docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/cluster-health.html>
 for more information.
 
 =head2 C<pending_tasks()>
@@ -52,7 +52,7 @@ Query string parameters:
     C<local>,
     C<master_timeout>
 
-See the L<pending tasks docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-pending.html>
+See the L<pending tasks docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/cluster-pending.html>
 for more information.
 
 =head2 C<node_info()>
@@ -79,7 +79,7 @@ Query string parameters:
     C<timeout>,
     C<transport>
 
-See the L<node_info docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-info.html>
+See the L<node_info docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/cluster-nodes-info.html>
 for more information.
 
 =head2 C<node_stats()>
@@ -118,7 +118,7 @@ Query string parameters:
     C<thread_pool>,
     C<transport>
 
-See the L<node_stats docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-stats.html>
+See the L<node_stats docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/cluster-nodes-stats.html>
 for more information.
 
 =head2 C<hot_threads()>
@@ -136,7 +136,7 @@ Query string parameters:
     C<threads>,
     C<type>
 
-See the L<hot_threads docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-hot-threads.html>
+See the L<hot_threads docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/cluster-nodes-hot-threads.html>
 for more information.
 
 =head2 C<get_settings()>
@@ -146,7 +146,7 @@ for more information.
 The C<get_settings()> method is used to retrieve cluster-wide settings that
 have been set with the L</put_settings()> method.
 
-See the L<cluster settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-update-settings.html>
+See the L<cluster settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/cluster-update-settings.html>
 for more information.
 
 =head2 C<put_settings()>
@@ -165,7 +165,7 @@ For instance:
         }
     );
 
-See the L<cluster settings docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-update-settings.html>
+See the L<cluster settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/cluster-update-settings.html>
  for more information.
 
 =head2 C<state()>
@@ -185,7 +185,7 @@ Query string parameters:
     C<local>,
     C<master_timeout>
 
-See the L<cluster state docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-state.html>
+See the L<cluster state docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/cluster-state.html>
 for more information.
 
 =head2 C<reroute()>
@@ -221,7 +221,7 @@ Query string parameters:
     C<dry_run>,
     C<filter_metadata>
 
-See the L<reroute docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-reroute.html>
+See the L<reroute docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/cluster-reroute.html>
 for more information.
 
 
@@ -238,6 +238,6 @@ Query string parameters:
     C<delay>,
     C<exit>
 
-See the L<shutdown docs|http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-nodes-shutdown.html>
+See the L<shutdown docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/cluster-nodes-shutdown.html>
 for more information.
 
