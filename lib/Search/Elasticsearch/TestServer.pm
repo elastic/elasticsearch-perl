@@ -191,7 +191,7 @@ be shutdown automatically.
         instances => 1,
         http_port => 9600,
         es_port   => 9700,
-        conf      => ['node.bench=true','script.disable_dynamic=false'],
+        conf      => ['script.disable_dynamic=false'],
     );
 
 Params:

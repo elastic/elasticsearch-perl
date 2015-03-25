@@ -22,28 +22,6 @@ sub api {
 
 #=== AUTOGEN - START ===
 
-    'abort_benchmark' => {
-        doc    => "search-benchmark",
-        method => "POST",
-        parts  => { name => {} },
-        paths  => [ [ { name => 2 }, "_bench", "abort", "{name}" ] ],
-        qs     => [],
-    },
-
-    'benchmark' => {
-        body   => {},
-        doc    => "search-benchmark",
-        method => "PUT",
-        parts  => { index => { multi => 1 }, type => {} },
-        paths  => [
-            [ { index => 0, type => 1 }, "{index}", "{type}", "_bench" ],
-            [ { type => 1 }, "_all", "{type}", "_bench" ],
-            [ { index => 0 }, "{index}", "_bench" ],
-            [ {}, "_bench" ],
-        ],
-        qs => ["verbose"],
-    },
-
     'bulk' => {
         body            => { required => 1 },
         doc             => "docs-bulk",
@@ -290,25 +268,13 @@ sub api {
             [ { index => 0, type => 1 }, "{index}", "{type}" ],
         ],
         qs => [
-            "consistency", "op_type", "parent",  "refresh",
-            "replication", "routing", "timeout", "timestamp",
-            "ttl",         "version", "version_type",
+            "consistency", "op_type", "parent",    "refresh",
+            "routing",     "timeout", "timestamp", "ttl",
+            "version",     "version_type",
         ],
     },
 
     'info' => { doc => "", parts => {}, paths => [ [ {} ] ], qs => [] },
-
-    'list_benchmarks' => {
-        doc   => "search-benchmark",
-        parts => { index => { multi => 1 }, type => {} },
-        paths => [
-            [ { index => 0, type => 1 }, "{index}", "{type}", "_bench" ],
-            [ { type => 1 }, "_all", "{type}", "_bench" ],
-            [ { index => 0 }, "{index}", "_bench" ],
-            [ {}, "_bench" ],
-        ],
-        qs => [],
-    },
 
     'mget' => {
         body            => { required => 1 },
