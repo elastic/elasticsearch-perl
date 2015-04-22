@@ -408,10 +408,15 @@ sub skip_feature {
 #===================================
 sub skip_version {
 #===================================
-    my $skip = shift;
+    my $skip    = shift;
     my $version = $skip->{version} or return;
-    my ( $min, $max ) = split( /\s*-\s*/, $version );
     my $current = $wrapper->( $es->info )->{version}{number};
+    return "Version $current - skip all versions"
+        if $version eq 'all';
+
+    my ( $min, $max ) = split( /\s*-\s*/, $version );
+    $min ||= 0;
+    $max ||= 999;
 
     return
         unless str_version($min) le str_version($current)
