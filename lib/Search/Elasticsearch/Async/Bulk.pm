@@ -94,8 +94,8 @@ sub flush {
         = $self->es->bulk( %{ $self->_bulk_args }, body => \@items )->catch(
         sub {
             my $error = shift;
-            if ( $error->isa('Cxn') ) {
-                push @{ $self->buffer }, @items;
+            if ( $error->is( 'Cxn', 'NoNodes' ) ) {
+                push @{ $self->_buffer }, @items;
                 $self->_buffer_size( $self->_buffer_size + $size );
                 $self->_buffer_count( $self->_buffer_count + $count );
             }
@@ -131,8 +131,7 @@ sub reindex {
     my $promise;
 
     # async scroll
-    if ( blessed($src) && $src->isa('Search::Elasticsearch::Async::Scroll') )
-    {
+    if ( blessed($src) && $src->isa('Search::Elasticsearch::Async::Scroll') ) {
         $promise = $src->start;
     }
     else {

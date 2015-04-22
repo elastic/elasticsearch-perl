@@ -35,8 +35,6 @@ my @Std = (
 my ( $b, $error, $success_count, $error_count, $custom_count,
     $conflict_count );
 
-# Cxn error - to not clear buffers
-
 ## Default error handling
 $b = bulk( { index => 'test', type => 'test' }, @Std );
 test_flush( "Default", 0, 2, 0, 0 );

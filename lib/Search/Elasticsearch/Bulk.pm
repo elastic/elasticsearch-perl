@@ -47,16 +47,17 @@ sub flush {
     }
     my $buffer  = $self->_buffer;
     my $results = try {
-        $self->es->bulk( %{ $self->_bulk_args }, body => $buffer );
+        my $res = $self->es->bulk( %{ $self->_bulk_args }, body => $buffer );
+        $self->clear_buffer;
+        return $res;
     }
     catch {
         my $error = $_;
         $self->clear_buffer
-            unless $error->is('Cxn');
+            unless $error->is( 'Cxn', 'NoNodes' );
 
         die $error;
     };
-    $self->clear_buffer;
     $self->_report( $buffer, $results );
     return defined wantarray ? $results : undef;
 }
