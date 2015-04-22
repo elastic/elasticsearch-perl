@@ -64,7 +64,7 @@ throws_ok { wait_for( $es->cluster->health ) }
 "Search::Elasticsearch::Error::Unauthorized", "$ENV{ES_CXN} - Bad userinfo";
 
 # Test https connection with correct auth, with invalid cacert
-$Auth{ssl_options} = ssl_options( 't/lib/bad_cacert.pm');
+$Auth{ssl_options} = ssl_options( 't/lib/bad_cacert.pem');
 
 $es = do "es_async.pl";
 $ENV{ES}="https://www.google.com";

@@ -63,7 +63,7 @@ throws_ok { $es->cluster->health }
     "$ENV{ES_CXN} - Bad userinfo";
 
 # Test https connection with correct auth, with invalid cacert
-$Auth{ssl_options} = ssl_options('t/lib/bad_cacert.pm');
+$Auth{ssl_options} = ssl_options('t/lib/bad_cacert.pem');
 $ENV{ES}="https://www.google.com";
 
 $es = do "es_sync.pl";
