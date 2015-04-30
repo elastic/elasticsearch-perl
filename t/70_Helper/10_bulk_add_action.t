@@ -206,6 +206,36 @@ ok $b->add_action(
         lang          => 'mvel',
         params        => { incr => 1 },
     },
+    update => {
+        _index        => 'foo',
+        _type         => 'bar',
+        _id           => 1,
+        _routing      => 1,
+        _parent       => 1,
+        _timestamp    => 1380019061000,
+        _ttl          => '10m',
+        _version      => 1,
+        _version_type => 'external',
+        doc           => { foo => 'bar' },
+        doc_as_upsert => 1,
+        detect_noop   => 1,
+    },
+    update => {
+        _index        => 'foo',
+        _type         => 'bar',
+        _id           => 1,
+        _routing      => 1,
+        _parent       => 1,
+        _timestamp    => 1380019061000,
+        _ttl          => '10m',
+        _version      => 1,
+        _version_type => 'external',
+        upsert        => { counter => 0 },
+        script        => '_ctx.source.counter+=incr',
+        lang          => 'mvel',
+        params        => { incr => 1 },
+        detect_noop   => 1,
+    },
     ),
     'Add update actions';
 
@@ -219,11 +249,15 @@ cmp_deeply $b->_buffer,
     q({"doc":{"foo":"bar"},"doc_as_upsert":1}),
     q({"update":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"lang":"mvel","params":{"incr":1},"script":"_ctx.source.counter+=incr","upsert":{"counter":0}}),
+    q({"update":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"detect_noop":1,"doc":{"foo":"bar"},"doc_as_upsert":1}),
+    q({"update":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"detect_noop":1,"lang":"mvel","params":{"incr":1},"script":"_ctx.source.counter+=incr","upsert":{"counter":0}}),
     ],
     "Update actions in buffer";
 
-is $b->_buffer_size,  892, "Update actions buffer size";
-is $b->_buffer_count, 4,   "Update actions buffer count";
+is $b->_buffer_size,  1370, "Update actions buffer size";
+is $b->_buffer_count, 6,   "Update actions buffer count";
 
 $b->clear_buffer;
 
