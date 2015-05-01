@@ -136,7 +136,7 @@ sub _encode_action {
 
     my $source;
     if ( $action eq 'update' ) {
-        for (qw(doc upsert doc_as_upsert script params lang)) {
+        for (qw(doc upsert doc_as_upsert script params lang detect_noop)) {
             $source->{$_} = delete $params->{$_}
                 if exists $params->{$_};
         }
