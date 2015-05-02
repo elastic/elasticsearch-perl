@@ -793,7 +793,6 @@ Query string parameters:
     C<q>,
     C<replication>,
     C<routing>,
-    C<source>,
     C<timeout>
 
 See the L<delete_by_query docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete-by-query.html>
@@ -905,7 +904,6 @@ Query string parameters:
     C<search_type>,
     C<size>,
     C<sort>,
-    C<source>,
     C<stats>,
     C<suggest_field>,
     C<suggest_mode>,
@@ -940,8 +938,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<min_score>,
     C<preference>,
-    C<routing>,
-    C<source>
+    C<routing>
 
 See the L<search exists reference|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-exists.html>
 for more information.
@@ -972,8 +969,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<min_score>,
     C<preference>,
-    C<routing>,
-    C<source>
+    C<routing>
 
 See the L<count docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html>
 for more information.
@@ -1143,8 +1139,7 @@ Query string parameters:
     C<parent>,
     C<preference>,
     C<q>,
-    C<routing>,
-    C<source>
+    C<routing>
 
 See the L<explain docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html>
 for more information.
@@ -1327,8 +1322,7 @@ Query string parameters:
     C<expand_wildcards>,
     C<ignore_unavailable>,
     C<preference>,
-    C<routing>,
-    C<source>
+    C<routing>
 
 
 =head2 C<mlt()>

@@ -65,7 +65,6 @@ sub api {
             "allow_no_indices",   "expand_wildcards",
             "ignore_unavailable", "min_score",
             "preference",         "routing",
-            "source",
         ],
     },
 
@@ -91,8 +90,8 @@ sub api {
             "allow_no_indices",   "expand_wildcards",
             "ignore_unavailable", "percolate_index",
             "percolate_type",     "preference",
-            "routing",            "source",
-            "version",            "version_type",
+            "routing",            "version",
+            "version_type",
         ],
     },
 
@@ -133,7 +132,7 @@ sub api {
             "df",                 "expand_wildcards",
             "ignore_unavailable", "q",
             "replication",        "routing",
-            "source",             "timeout",
+            "timeout",
         ],
     },
 
@@ -191,7 +190,6 @@ sub api {
             "lenient",         "lowercase_expanded_terms",
             "parent",          "preference",
             "q",               "routing",
-            "source",
         ],
     },
 
@@ -290,7 +288,7 @@ sub api {
             "_source",         "_source_exclude",
             "_source_include", "fields",
             "preference",      "realtime",
-            "refresh",         "source",
+            "refresh",
         ],
     },
 
@@ -316,8 +314,7 @@ sub api {
             "search_from",            "search_indices",
             "search_scroll",          "search_size",
             "search_source",          "search_type",
-            "search_types",           "source",
-            "stop_words",
+            "search_types",           "stop_words",
         ],
     },
 
@@ -331,10 +328,8 @@ sub api {
             [ { index => 0 }, "{index}", "_mpercolate" ],
             [ {}, "_mpercolate" ],
         ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "source",
-        ],
+        qs =>
+            [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
         serialize => "bulk",
     },
 
@@ -348,7 +343,7 @@ sub api {
             [ { index => 0 }, "{index}", "_msearch" ],
             [ {}, "_msearch" ],
         ],
-        qs        => [ "search_type", "source" ],
+        qs        => ["search_type"],
         serialize => "bulk",
     },
 
@@ -370,7 +365,7 @@ sub api {
             "parent",           "payloads",
             "positions",        "preference",
             "realtime",         "routing",
-            "source",           "term_statistics",
+            "term_statistics",
             "version",          "version_type",
         ],
     },
@@ -396,8 +391,7 @@ sub api {
             "percolate_index",    "percolate_preference",
             "percolate_routing",  "percolate_type",
             "preference",         "routing",
-            "source",             "version",
-            "version_type",
+            "version",            "version_type",
         ],
     },
 
@@ -435,7 +429,7 @@ sub api {
             [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ],
             [ {}, "_search", "scroll" ],
         ],
-        qs => [ "scroll", "source" ],
+        qs => ["scroll"],
     },
 
     'search' => {
@@ -461,10 +455,9 @@ sub api {
             "query_cache",      "routing",
             "scroll",           "search_type",
             "size",             "sort",
-            "source",           "stats",
-            "suggest_field",    "suggest_mode",
-            "suggest_size",     "suggest_text",
-            "terminate_after",  "timeout",
+            "stats",            "suggest_field",
+            "suggest_mode",     "suggest_size",
+            "suggest_text",     "timeout",
             "track_scores",     "version",
         ],
     },
@@ -487,7 +480,6 @@ sub api {
             "allow_no_indices",   "expand_wildcards",
             "ignore_unavailable", "min_score",
             "preference",         "routing",
-            "source",
         ],
     },
 
@@ -526,7 +518,7 @@ sub api {
             "allow_no_indices",   "expand_wildcards",
             "ignore_unavailable", "preference",
             "routing",            "scroll",
-            "search_type",        "source",
+            "search_type",
         ],
     },
 
@@ -540,7 +532,7 @@ sub api {
         qs => [
             "allow_no_indices",   "expand_wildcards",
             "ignore_unavailable", "preference",
-            "routing",            "source",
+            "routing",
         ],
     },
 
@@ -559,12 +551,11 @@ sub api {
             ],
         ],
         qs => [
-            "dfs",       "field_statistics",
-            "fields",    "offsets",
-            "parent",    "payloads",
-            "positions", "preference",
-            "realtime",  "routing",
-            "term_statistics",
+            "field_statistics", "fields",
+            "offsets",          "parent",
+            "payloads",         "positions",
+            "preference",       "realtime",
+            "routing",          "term_statistics",
         ],
     },
 
@@ -586,13 +577,12 @@ sub api {
             ],
         ],
         qs => [
-            "dfs",       "field_statistics",
-            "fields",    "offsets",
-            "parent",    "payloads",
-            "positions", "preference",
-            "realtime",  "routing",
-            "source",    "term_statistics",
-            "version",   "version_type",
+            "field_statistics", "fields",
+            "offsets",          "parent",
+            "payloads",         "positions",
+            "preference",       "realtime",
+            "routing",          "term_statistics",
+            "version",          "version_type",
         ],
     },
 
@@ -834,9 +824,8 @@ sub api {
         paths =>
             [ [ { index => 0 }, "{index}", "_analyze" ], [ {}, "_analyze" ] ],
         qs => [
-            "analyzer", "char_filters", "field",  "filters",
-            "format",   "prefer_local", "source", "text",
-            "tokenizer",
+            "analyzer", "char_filters", "field", "filters",
+            "format",   "prefer_local", "text",  "tokenizer",
         ],
     },
 
@@ -1366,7 +1355,7 @@ sub api {
         qs => [
             "allow_no_indices", "expand_wildcards",
             "explain",          "ignore_unavailable",
-            "q",                "source",
+            "q",
         ],
     },
 

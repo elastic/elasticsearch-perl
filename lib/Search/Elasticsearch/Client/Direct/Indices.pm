@@ -816,8 +816,7 @@ Query string parameters:
     C<expand_wildcards>,
     C<explain>,
     C<ignore_unavailable>,
-    C<q>,
-    C<source>
+    C<q>
 
 See the L<validate_query docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-validate.html>
 for more information.
