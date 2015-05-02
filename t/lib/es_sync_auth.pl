@@ -33,7 +33,8 @@ our %Auth = ( use_https => 1, userinfo => $ENV{ES_USERINFO} );
 $ENV{ES_CXN_POOL} = 'Static';
 my $es = do "es_sync.pl";
 
-ok $es->cluster->health, "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn static";
+ok $es->cluster->health,
+    "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn static";
 
 $ENV{ES_CXN_POOL} = 'Sniff';
 $es = do "es_sync.pl";
@@ -41,7 +42,8 @@ ok $es->cluster->health, "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn sniff";
 
 $ENV{ES_CXN_POOL} = 'Static::NoPing';
 $es = do "es_sync.pl";
-ok $es->cluster->health, "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn noping";
+ok $es->cluster->health,
+    "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn noping";
 
 # Test forbidden action
 throws_ok { $es->nodes->shutdown }
@@ -64,7 +66,7 @@ throws_ok { $es->cluster->health }
 
 # Test https connection with correct auth, with invalid cacert
 $Auth{ssl_options} = ssl_options('t/lib/bad_cacert.pem');
-$ENV{ES}="https://www.google.com";
+$ENV{ES}           = "https://www.google.com";
 
 $es = do "es_sync.pl";
 

@@ -37,7 +37,8 @@ isa_ok $l = Search::Elasticsearch->new(
     )->logger, 'Search::Elasticsearch::Logger::LogAny',
     'File Logger';
 
-isa_ok $l->log_handle->adapter, 'Log::Any::Adapter::File', 'File - Log to file';
+isa_ok $l->log_handle->adapter, 'Log::Any::Adapter::File',
+    'File - Log to file';
 isa_ok $l->trace_handle->adapter, 'Log::Any::Adapter::File',
     'File - Trace to file';
 

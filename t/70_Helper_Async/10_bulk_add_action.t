@@ -261,7 +261,7 @@ cmp_deeply $b->_buffer,
     "Update actions in buffer";
 
 is $b->_buffer_size,  1370, "Update actions buffer size";
-is $b->_buffer_count, 6,   "Update actions buffer count";
+is $b->_buffer_count, 6,    "Update actions buffer count";
 
 $b->clear_buffer;
 

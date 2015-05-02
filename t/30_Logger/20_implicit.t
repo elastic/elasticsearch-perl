@@ -12,7 +12,8 @@ isa_ok my $l = Search::Elasticsearch->new->logger,
     'Search::Elasticsearch::Logger::LogAny',
     'Default Logger';
 
-isa_ok $l->log_handle->adapter, 'Log::Any::Adapter::Stdout', 'Default - Log to Stdout';
+isa_ok $l->log_handle->adapter, 'Log::Any::Adapter::Stdout',
+    'Default - Log to Stdout';
 isa_ok $l->trace_handle->adapter, 'Log::Any::Adapter::Stderr',
     'Default - Trace to Stderr';
 

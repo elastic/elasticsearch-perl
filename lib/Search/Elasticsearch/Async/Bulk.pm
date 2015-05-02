@@ -131,7 +131,8 @@ sub reindex {
     my $promise;
 
     # async scroll
-    if ( blessed($src) && $src->isa('Search::Elasticsearch::Async::Scroll') ) {
+    if ( blessed($src) && $src->isa('Search::Elasticsearch::Async::Scroll') )
+    {
         $promise = $src->start;
     }
     else {
