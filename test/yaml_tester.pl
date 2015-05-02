@@ -208,10 +208,20 @@ sub run_tests {
             my $catch = delete $test->{catch};
             $test_name .= ": " . ( $catch ? 'catch ' . $catch : 'do' );
             $test = populate_vars( $test, \%stash );
-            my $ok = eval { ($val) = run_cmd($test); 1 };
-                  $catch ? test_error( $@, $catch, $test_name )
-                : $ok    ? pass($test_name)
-                :          fail($test_name) || diag($@);
+            eval { ($val) = run_cmd($test); };
+            if ($@) {
+                if ($catch) {
+                    $val = $@->{vars}{body}
+                        if $@->isa('Search::Elasticsearch::Error');
+                    test_error( $@, $catch, $test_name );
+                }
+                else {
+                    fail($test_name) || diag($@);
+                }
+            }
+            else {
+                pass($test_name);
+            }
         }
         else {
             my ( $field, $expect );

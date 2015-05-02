@@ -48,7 +48,6 @@ sub perform_request {
         }
 
         $logger->trace_error( $cxn, $error );
-        delete $error->{vars}{body};
         $error->is('NoNodes')
             ? $logger->throw_critical($error)
             : $logger->throw_error($error);
