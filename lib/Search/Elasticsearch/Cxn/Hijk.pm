@@ -5,7 +5,7 @@ with 'Search::Elasticsearch::Role::Cxn::HTTP',
     'Search::Elasticsearch::Role::Cxn',
     'Search::Elasticsearch::Role::Is_Sync';
 
-use Hijk 0.12;
+use Hijk 0.20;
 use Try::Tiny;
 use namespace::clean;
 
@@ -66,11 +66,11 @@ sub perform_request {
     my %head = map { lc($_) => $head->{$_} } keys %$head;
 
     return $self->process_response(
-        $params,                # request
-        $response->{status},    # code
-        $response->{error},     # msg
-        $response->{body},      # body
-        \%head                  # headers
+        $params,    # request
+        $response->{status} || 500,    # code
+        $response->{error},            # msg
+        $response->{body},             # body
+        \%head                         # headers
     );
 }
 
@@ -89,6 +89,8 @@ sub error_from_text {
     my $type
         = 0 + $_ & Hijk::Error::TIMEOUT        ? 'Timeout'
         : 0 + $_ & Hijk::Error::CANNOT_RESOLVE ? 'Cxn'
+        : 0 + $_ & Hijk::Error::REQUEST_ERROR  ? 'Cxn'
+        : 0 + $_ & Hijk::Error::RESPONSE_ERROR ? 'Cxn'
         : /Connection reset by peer/           ? 'ContentLength'
         : m/$Cxn_Error/                        ? 'Cxn'
         :                                        'Request';
