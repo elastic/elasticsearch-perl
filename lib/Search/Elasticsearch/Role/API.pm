@@ -193,6 +193,20 @@ sub api {
         ],
     },
 
+    'field_stats' => {
+        doc   => "search-field-stats",
+        parts => { index => { multi => 1 } },
+        paths => [
+            [ { index => 0 }, "{index}", "_field_stats" ],
+            [ {}, "_field_stats" ],
+        ],
+        qs => [
+            "allow_no_indices", "expand_wildcards",
+            "fields",           "ignore_unavailable",
+            "level",
+        ],
+    },
+
     'get' => {
         doc   => "docs-get",
         parts => {

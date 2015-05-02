@@ -1144,6 +1144,27 @@ Query string parameters:
 See the L<explain docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html>
 for more information.
 
+=head2 C<field_stats()>
+
+    $response = $e->field_stats(
+        index   => 'index'   | \@indices,   # optional
+        fields  => 'field'   | \@fields,    # optional
+        level   => 'cluster' | 'indices',   # optional
+    );
+
+The C<field-stats> API returns statistical properties of a field
+(such as min and max values) without executing a search.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<fields>,
+    C<ignore_unavailable>,
+    C<level>
+
+See the L<field-stats docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-field-stats.html>
+for more information.
+
 =head2 C<search_shards()>
 
     $response = $e->search_shards(
