@@ -41,22 +41,25 @@ if ( $cxn eq 'Mojo' && !eval { require Mojo::UserAgent; 1 } ) {
 
 my $es;
 if ( $ENV{ES} ) {
-    $es = Search::Elasticsearch::Async->new(
-        nodes            => $ENV{ES},
-        trace_to         => $trace,
-        cxn              => $cxn,
-        cxn_pool         => $cxn_pool,
-        client           => $api,
-        send_get_body_as => $body,
-        %Auth
-    );
-    if ( $ENV{ES_SKIP_PING} ) {
-        $cv->send(1);
-    }
-    else {
-        $es->ping->then( sub { $cv->send(@_) }, sub { $cv->croak(@_) } );
-    }
-    eval { $cv->recv } or do {
+    eval {
+        $es = Search::Elasticsearch::Async->new(
+            nodes            => $ENV{ES},
+            trace_to         => $trace,
+            cxn              => $cxn,
+            cxn_pool         => $cxn_pool,
+            client           => $api,
+            send_get_body_as => $body,
+            %Auth
+        );
+        if ( $ENV{ES_SKIP_PING} ) {
+            $cv->send(1);
+        }
+        else {
+            $es->ping->then( sub { $cv->send(@_) }, sub { $cv->croak(@_) } );
+        }
+        $cv->recv;
+        1;
+    } or do {
         diag $@;
         undef $es;
     };
