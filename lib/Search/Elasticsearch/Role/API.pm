@@ -1349,7 +1349,8 @@ sub api {
             [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
         qs => [
             "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "wait_for_completion",
+            "ignore_unavailable", "only_ancient_segments",
+            "wait_for_completion",
         ],
     },
 

@@ -253,6 +253,7 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<ignore_unavailable>,
+    C<only_ancient_segments>,
     C<wait_for_completion>
 
 See the L<upgrade docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-upgrade.html>

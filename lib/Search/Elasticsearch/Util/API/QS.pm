@@ -130,18 +130,19 @@ our %Params = (
             "routing_table", "master_node", "version"
         ]
     },
-    merge                => { type => 'bool' },
-    min_doc_freq         => { type => 'number' },
-    min_score            => { type => 'number' },
-    min_term_freq        => { type => 'number' },
-    min_word_len         => { type => 'number' },    # depr 0.90
-    min_word_length      => { type => 'number' },
-    mlt_fields           => { type => 'list' },
-    name                 => { type => 'list' },
-    network              => { type => 'bool' },
-    offsets              => { type => 'bool' },
-    only_expunge_deletes => { type => 'bool' },
-    op_type              => {
+    merge                 => { type => 'bool' },
+    min_doc_freq          => { type => 'number' },
+    min_score             => { type => 'number' },
+    min_term_freq         => { type => 'number' },
+    min_word_len          => { type => 'number' },    # depr 0.90
+    min_word_length       => { type => 'number' },
+    mlt_fields            => { type => 'list' },
+    name                  => { type => 'list' },
+    network               => { type => 'bool' },
+    offsets               => { type => 'bool' },
+    only_ancient_segments => { type => 'bool' },
+    only_expunge_deletes  => { type => 'bool' },
+    op_type               => {
         default => 'index',
         options => [ 'index', 'create' ],
         type    => 'enum'
