@@ -197,9 +197,10 @@ The configuration parameters are as follows:
 How long a normal request (ie not a ping or sniff request) should wait
 before throwing a C<Timeout> error.  Defaults to C<30> seconds.
 
-B<Note:> In production, no request should take 30 seconds to run, other
-than an L<optimize()/Search::Elasticsearch::Client::Direct/optimize()> request.
-A more reasonable value for production would be C<10> seconds or lower.
+B<Note:> In production, no CRUD or search request should take 30 seconds to run,
+although admin tasks like C<upgrade()>, C<optimize()>, or snapshot C<create()>
+may take much longer. A more reasonable value for production would be
+C<10> seconds or lower.
 
 =head2 C<ping_timeout>
 

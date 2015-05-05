@@ -1,117 +1,19 @@
-package Search::Elasticsearch::Client::0_90::Direct;
+package Search::Elasticsearch::Client::1_0::Direct;
+
+sub _namespace {__PACKAGE__}
 
 use Moo;
-with 'Search::Elasticsearch::Role::API::0_90';
+with 'Search::Elasticsearch::Role::API::1_0';
 with 'Search::Elasticsearch::Role::Client::Direct';
-
-use Search::Elasticsearch::Util qw(parse_params load_plugin is_compat);
-use namespace::clean;
-
-has 'cluster'             => ( is => 'lazy' );
-has 'indices'             => ( is => 'lazy' );
-has 'bulk_helper_class'   => ( is => 'ro', default => 'Bulk' );
-has 'scroll_helper_class' => ( is => 'ro', default => 'Scroll' );
-has '_bulk_class'         => ( is => 'lazy' );
-has '_scroll_class'       => ( is => 'lazy' );
+with 'Search::Elasticsearch::Role::Client::Direct::Main';
 
 __PACKAGE__->_install_api('');
-
-#===================================
-sub create {
-#===================================
-    my ( $self, $params ) = parse_params(@_);
-    $params->{op_type} = 'create';
-    $self->_index( 'create', $params );
-}
-
-#===================================
-sub index {
-#===================================
-    my ( $self, $params ) = parse_params(@_);
-    $self->_index( 'index', $params );
-}
-
-#===================================
-sub _index {
-#===================================
-    my ( $self, $name, $params ) = @_;
-    my $defn = $self->api->{index};
-    unless ( defined $params->{id} and length $params->{id} ) {
-        $defn = { %$defn, method => 'POST' };
-    }
-    $self->perform_request( { %$defn, name => $name }, $params );
-}
-
-#===================================
-around 'clear_scroll' => sub {
-#===================================
-    my $orig = shift;
-    my ( $self, $params ) = parse_params(@_);
-    $params->{scroll_id} ||= delete $params->{body};
-    $orig->( $self, $params );
-};
-
-#===================================
-sub _build__bulk_class {
-#===================================
-    my $self = shift;
-    $self->_build_helper( 'bulk', $self->bulk_helper_class );
-}
-
-#===================================
-sub _build__scroll_class {
-#===================================
-    my $self = shift;
-    $self->_build_helper( 'scroll', $self->scroll_helper_class );
-}
-
-#===================================
-sub _build_helper {
-#===================================
-    my ( $self, $name, $sub_class ) = @_;
-    my $class = load_plugin( 'Search::Elasticsearch', $sub_class );
-    is_compat( $name . '_helper_class', $self->transport, $class );
-    return $class;
-}
-
-#===================================
-sub bulk_helper {
-#===================================
-    my ( $self, $params ) = parse_params(@_);
-    $params->{es} ||= $self;
-    $self->_bulk_class->new($params);
-}
-
-#===================================
-sub scroll_helper {
-#===================================
-    my ( $self, $params ) = parse_params(@_);
-    $params->{es} ||= $self;
-    $self->_scroll_class->new($params);
-}
-
-#===================================
-sub _build_cluster { shift->_build_namespace('Cluster') }
-sub _build_indices { shift->_build_namespace('Indices') }
-#===================================
-
-#===================================
-sub _build_namespace {
-#===================================
-    my ( $self, $ns ) = @_;
-    my $class = load_plugin( __PACKAGE__, [$ns] );
-    return $class->new(
-        {   transport => $self->transport,
-            logger    => $self->logger
-        }
-    );
-}
 
 1;
 
 __END__
 
-# ABSTRACT: Thin client with full support for Elasticsearch 0.90 APIs
+# ABSTRACT: Thin client with full support for Elasticsearch 1.x APIs
 
 =head1 SYNOPSIS
 
@@ -119,7 +21,7 @@ Create a client:
 
     use Search::Elasticsearch;
     my $e = Search::Elasticsearch->new(
-        client => '0_90::Direct'          # for the 0.90 branch
+        client => '1_0::Direct'          # default
     );
 
 Index a doc:
@@ -163,8 +65,32 @@ Index-level requests:
 
 Cluster-level requests:
 
-    $state = $e->cluster->state;
-    $stats = $e->cluster->node_stats;
+    $health = $e->cluster->health;
+
+Node-level requests:
+
+    $info  = $e->nodes->info;
+    $stats = $e->nodes->stats;
+
+Snapshot and restore:
+
+    $e->snapshot->create_repository(
+        repository => 'my_backups',
+        type       => 'fs',
+        settings   => {
+            location => '/mnt/backups'
+        }
+    );
+
+    $e->snapshot->create(
+        repository => 'my_backups',
+        snapshot   => 'backup_2014'
+    );
+
+`cat` debugging:
+
+    say $e->cat->allocation;
+    say $e->cat->health;
 
 =head1 DESCRIPTION
 
@@ -183,16 +109,31 @@ L<bulk document CRUD|/BULK DOCUMENT CRUD METHODS> and L<search|/SEARCH METHODS>.
 It also provides access to clients for managing L<indices|/indices()>
 and the L<cluster|/cluster()>.
 
-=head1 ELASTICSEARCH VERSION
+=head1 BACKWARDS COMPATIBILITY AND ELASTICSEARCH 0.90.x
 
-This module is for use with the 0.90 branch of Elasticsearch and should
-be used as follows:
+This version of the client supports the Elasticsearch 1.0 branch by
+default, which is not backwards compatible with the 0.90 branch.
+
+If you need to talk to a version of Elasticsearch before 1.0.0,
+please use L<Search::Elasticsearch::Client::0_90::Direct> as follows:
 
     $es = Search::Elasticsearch->new(
         client => '0_90::Direct'
     );
 
-See L<Search::Elasticsearch::Client::1_0::Direct> for the default client.
+=head1 ELASTICSEARCH 2.x
+
+A client compatible with the as-yet-unreleased version 2.x of Elasticsearch is
+available as:
+
+    $es = Search::Elasticsearch->new(
+        client => '2_0::Direct'
+    );
+
+This will become the new default client once Elasticsearch 2.0.0 has been released.
+
+See L<Search::Elasticsearch::Client::2_0::Direct> for docs about the 2.x compatible
+client.
 
 =head1 CONVENTIONS
 
@@ -301,7 +242,7 @@ response, otherwise it throws an error.
 
     $indices_client = $e->indices;
 
-Returns an L<Search::Elasticsearch::Client::0_90::Direct::Indices> object which can be used
+Returns an L<Search::Elasticsearch::Client::1_0::Direct::Indices> object which can be used
 for managing indices, eg creating, deleting indices, managing mapping,
 index settings etc.
 
@@ -309,9 +250,31 @@ index settings etc.
 
     $cluster_client = $e->cluster;
 
-Returns an L<Search::Elasticsearch::Client::0_90::Direct::Cluster> object which can be used
-for managing the cluster, eg cluster-wide settings, cluster health,
-node information and stats.
+Returns an L<Search::Elasticsearch::Client::1_0::Direct::Cluster> object which can be used
+for managing the cluster, eg cluster-wide settings and cluster health.
+
+=head2 C<nodes()>
+
+    $node_client = $e->nodes;
+
+Returns an L<Search::Elasticsearch::Client::1_0::Direct::Nodes> object which can be used
+to retrieve node info and stats.
+
+=head2 C<snapshot()>
+
+    $snapshot_client = $e->snapshot;
+
+Returns an L<Search::Elasticsearch::Client::1_0::Direct::Snapshot> object which
+is used for managing backup repositories and creating and restoring
+snapshots.
+
+=head2 C<cat()>
+
+    $cat_client = $e->cat;
+
+Returns an L<Search::Elasticsearch::Client::1_0::Direct::Cat> object which can be used
+to retrieve simple to read text info for debugging and monitoring an
+Elasticsearch cluster.
 
 =head1 DOCUMENT CRUD METHODS
 
@@ -335,7 +298,6 @@ Query string parameters:
     C<consistency>,
     C<op_type>,
     C<parent>,
-    C<percolate>,
     C<refresh>,
     C<replication>,
     C<routing>,
@@ -345,7 +307,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<index docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/docs-index_.html>
+See the L<index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html>
 for more information.
 
 =head2 C<create()>
@@ -366,7 +328,6 @@ Query string parameters:
     C<consistency>,
     C<op_type>,
     C<parent>,
-    C<percolate>,
     C<refresh>,
     C<replication>,
     C<routing>,
@@ -376,7 +337,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<create docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/docs-create.html>
+See the L<create docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-create.html>
 for more information.
 
 =head2 C<get()>
@@ -399,9 +360,11 @@ Query string parameters:
     C<preference>,
     C<realtime>,
     C<refresh>,
-    C<routing>
+    C<routing>,
+    C<version>,
+    C<version_type>
 
-See the L<get docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/docs-get.html>
+See the L<get docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
 
 =head2 C<get_source()>
@@ -418,15 +381,18 @@ in the L</index()> method) instead of returning the C<_source> field
 plus the document metadata, ie the C<_index>, C<_type> etc.
 
 Query string parameters:
+    C<_source>,
     C<_source_exclude>,
     C<_source_include>,
     C<parent>,
     C<preference>,
     C<realtime>,
     C<refresh>,
-    C<routing>
+    C<routing>,
+    C<version>,
+    C<version_type>
 
-See the L<get_source docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/docs-get.html>
+See the L<get_source docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
 
 =head2 C<exists()>
@@ -447,7 +413,7 @@ Query string parameters:
     C<refresh>,
     C<routing>
 
-See the L<exists docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/docs-get.html>
+See the L<exists docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
 
 =head2 C<delete()>
@@ -471,7 +437,7 @@ Query string parameters:
     C<version>,
     C<version_type>
 
-See the L<delete docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/docs-delete.html>
+See the L<delete docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete.html>
 for more information.
 
 =head2 C<update()>
@@ -515,20 +481,53 @@ Query string parameters:
     C<fields>,
     C<lang>,
     C<parent>,
-    C<percolate>,
     C<realtime>,
     C<refresh>,
     C<replication>,
     C<retry_on_conflict>,
     C<routing>,
     C<script>,
+    C<script_id>,
+    C<scripted_upsert>,
     C<timeout>,
     C<timestamp>,
     C<ttl>,
     C<version>,
     C<version_type>
 
-See the L<update docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/docs-update.html>
+See the L<update docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update.html>
+for more information.
+
+=head2 C<termvectors()>
+
+    $results = $e->termvectors(
+        index   => $index,          # required
+        type    => $type,           # required
+
+        id      => $id,             # optional
+        body    => {...}            # optional
+    )
+
+The C<termvectors()> method retrieves term and field statistics, positions,
+offsets and payloads for the specified document, assuming that termvectors
+have been enabled.
+
+Query string parameters:
+    C<dfs>,
+    C<field_statistics>,
+    C<fields>,
+    C<offsets>,
+    C<parent>,
+    C<payloads>,
+    C<positions>,
+    C<preference>,
+    C<realtime>,
+    C<routing>,
+    C<term_statistics>,
+    C<version>,
+    C<version_type>
+
+See the L<termvector docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-termvectors.html>
 for more information.
 
 =head1 BULK DOCUMENT CRUD METHODS
@@ -612,10 +611,9 @@ Query string parameters:
     C<consistency>,
     C<refresh>,
     C<replication>,
-    C<timeout>,
-    C<type>
+    C<timeout>
 
-See the L<bulk docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/docs-bulk.html>
+See the L<bulk docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html>
 for more information.
 
 =head2 C<bulk_helper()>
@@ -671,13 +669,13 @@ Query string parameters:
     C<realtime>,
     C<refresh>
 
-See the L<mget docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/docs-multi-get.html>
+See the L<mget docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-multi-get.html>
 for more information.
 
 =head2 C<delete_by_query()>
 
     $result = $e->delete_by_query(
-        index => 'index' | \@indices,   # optional
+        index => 'index' | \@indices,   # required
         type  => 'type'  | \@types,     # optional
 
         body  => { query }              # required
@@ -708,15 +706,52 @@ Query string parameters:
     C<default_operator>,
     C<df>,
     C<expand_wildcards>,
-    C<ignore_indices>,
     C<ignore_unavailable>,
     C<q>,
     C<replication>,
     C<routing>,
-    C<source>,
     C<timeout>
 
-See the L<delete_by_query docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/docs-delete-by-query.html>
+See the L<delete_by_query docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete-by-query.html>
+for more information.
+
+=head2 C<mtermvectors()>
+
+    $results = $e->mtermvectors(
+        index   => $index,          # required if type specified
+        type    => $type,           # optional
+
+        body    => { }              # optional
+    )
+
+Runs multiple L</termvector()> requests in a single request, eg:
+
+    $results = $e->mtermvectors(
+        index   => 'test',
+        body    => {
+            docs => [
+                { _type => 'test', _id => 1, fields => ['text'] },
+                { _type => 'test', _id => 2, payloads => 1 },
+            ]
+        }
+    );
+
+Query string parameters:
+    C<field_statistics>,
+    C<fields>,
+    C<ids>,
+    C<offsets>,
+    C<parent>,
+    C<payloads>,
+    C<positions>,
+    C<preference>,
+    C<realtime>,
+    C<routing>,
+    C<term_statistics>,
+    C<version>,
+    C<version_type>
+
+See the L<mtermvectors docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-multi-termvectors.html>
 for more information.
 
 =head1 SEARCH METHODS
@@ -736,23 +771,22 @@ and of one, more or all types:
 The C<search()> method searches for matching documents in one or more
 indices.  It is just as easy to search a single index as it is to search
 all the indices in your cluster.  It can also return
-L<facets|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-facets.thml>
-(aggregations on particular fields),
-L<highlighted snippets|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-highlighting.html>
-and L<did-you-mean|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-suggesters-phrase.html>
-or L<search-as-you-type|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-suggesters-completion.html>
+L<aggregations|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html>
+L<highlighted snippets|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-highlighting.html>
+and L<did-you-mean|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-phrase.html>
+or L<search-as-you-type|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html>
 suggestions.
 
-The I<lite> L<version of search|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-uri-request.html>
+The I<lite> L<version of search|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-uri-request.html>
 allows you to specify a query string in the C<q> parameter, using the
 Lucene query string syntax:
 
     $results = $e->search( q => 'title:(elasticsearch clients)');
 
 However, the preferred way to search is by using the
-L<Query DSL|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/query-dsl.html>
+L<Query DSL|http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html>
 to create a query, and passing that C<query> in the
-L<request body|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-request-body.html>:
+L<request body|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html>:
 
     $results = $e->search(
         body => {
@@ -773,33 +807,58 @@ Query string parameters:
     C<df>,
     C<expand_wildcards>,
     C<explain>,
+    C<fielddata_fields>,
     C<fields>,
     C<from>,
-    C<ignore_indices>,
-    C<ignore_indices>,
     C<ignore_unavailable>,
     C<lenient>,
     C<lowercase_expanded_terms>,
     C<preference>,
     C<q>,
+    C<query_cache>,
     C<routing>,
     C<scroll>,
     C<search_type>,
     C<size>,
     C<sort>,
-    C<source>,
     C<stats>,
     C<suggest_field>,
     C<suggest_mode>,
     C<suggest_size>,
     C<suggest_text>,
+    C<terminate_after>,
     C<timeout>,
+    C<track_scores>,
     C<version>
 
-See the L<search reference|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-request-body.html>
+See the L<search reference|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html>
 for more information.
 
 Also see L<Search::Elasticsearch::Transport/send_get_body_as>.
+
+=head2 C<search_exists()>
+
+The C<search_exists()> method is a quick version of search which can be
+used to find out whether there are matching search results or not.
+It doesn't return any results itself.
+
+    $results = $e->search_exists(
+        index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional
+
+        body    => { search params }        # optional
+    );
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<min_score>,
+    C<preference>,
+    C<routing>
+
+See the L<search exists reference|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-exists.html>
+for more information.
 
 =head2 C<count()>
 
@@ -824,15 +883,53 @@ query:
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_indices>,
     C<ignore_unavailable>,
     C<min_score>,
     C<preference>,
-    C<routing>,
-    C<source>
+    C<routing>
 
-See the L<count docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-count.html>
+See the L<count docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html>
 for more information.
+
+=head2 C<search_template()>
+
+    $results = $e->search_template(
+        index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional
+
+        body    => { search params }        # optional
+    );
+
+Perform a search by specifying a template (either predefined or defined
+within the C<body>) and parameters to use with the template, eg:
+
+    $results = $e->search_template(
+        template => {
+            query => {
+                match => {
+                    "{{my_field}}" => "{{my_value}}"
+                }
+            },
+            size => "{{my_size}}"
+        },
+        params => {
+            my_field => 'foo',
+            my_value => 'bar',
+            my_size  => 5
+        }
+    );
+
+See the L<search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html>
+for more information.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<preference>,
+    C<scroll>,
+    C<search_type>
+
 
 =head2 C<scroll()>
 
@@ -857,8 +954,8 @@ Query string parameters:
     C<scroll>,
     C<scroll_id>
 
-See the L<scroll docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-request-scroll.html>
-and the L<search_type docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search.html/search-request-search-type.html>
+See the L<scroll docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html>
+and the L<search_type docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search.html/search-request-search-type.html>
 for more information.
 
 =head2 C<clear_scroll()>
@@ -866,6 +963,13 @@ for more information.
     $response = $e->clear_scroll(
         scroll_id => $id | \@ids    # required
     );
+
+Or
+
+    $response = $e->clear_scroll(
+        body => $id
+    );
+
 
 The C<clear_scroll()> method can clear unfinished scroll requests, freeing
 up resources on the server.
@@ -910,7 +1014,7 @@ request).  For instance:
 Query string parameters:
     C<search_type>
 
-See the L<msearch docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-multi-search.html>
+See the L<msearch docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html>
 for more information.
 
 =head2 C<explain()>
@@ -952,11 +1056,54 @@ Query string parameters:
     C<parent>,
     C<preference>,
     C<q>,
-    C<routing>,
-    C<source>
+    C<routing>
 
-See the L<explain docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-explain.html>
+See the L<explain docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html>
 for more information.
+
+=head2 C<field_stats()>
+
+    $response = $e->field_stats(
+        index   => 'index'   | \@indices,   # optional
+        fields  => 'field'   | \@fields,    # optional
+        level   => 'cluster' | 'indices',   # optional
+    );
+
+The C<field-stats> API returns statistical properties of a field
+(such as min and max values) without executing a search.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<fields>,
+    C<ignore_unavailable>,
+    C<level>
+
+See the L<field-stats docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-field-stats.html>
+for more information.
+
+=head2 C<search_shards()>
+
+    $response = $e->search_shards(
+        index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional
+    )
+
+The C<search_shards()> method returns information about which shards on
+which nodes will execute a search request.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<local>,
+    C<preference>,
+    C<routing>
+
+See the L<search-shards docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-shards.html>
+for more information.
+
+=head1 PERCOLATION METHODS
 
 =head2 C<percolate()>
 
@@ -987,28 +1134,116 @@ C<_source> field of the document under the C<doc> key:
 
 
 Query string parameters:
-    C<prefer_local>
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<percolate_format>,
+    C<percolate_index>,
+    C<percolate_preference>,
+    C<percolate_routing>,
+    C<percolate_type>,
+    C<preference>,
+    C<routing>,
+    C<version>,
+    C<version_type>
 
-See the L<percolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-percolate.html>
+See the L<percolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html>
+for more information.
+
+=head2 C<count_percolate()>
+
+    $results = $e->count_percolate(
+        index   => 'my_index',      # required
+        type    => 'my_type',       # required
+
+        body    => { percolation }  # required
+    );
+
+The L</count_percolate()> request works just like the L</percolate()>
+request except that it returns a count of all matching queries, instead
+of the queries themselves.
+
+    $results = $e->count_percolate(
+        index   => 'my_index',
+        type    => 'my_type',
+        body    => {
+            doc => {
+                title => 'Elasticsearch rocks'
+            }
+        }
+    );
+
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>,
+    C<percolate_index>,
+    C<percolate_type>,
+    C<preference>,
+    C<routing>,
+    C<version>,
+    C<version_type>
+
+See the L<percolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html>
+for more information.
+
+=head2 C<mpercolate()>
+
+    $results = $e->mpercolate(
+        index   => 'my_index',               # required if type
+        type    => 'my_type',                # optional
+
+        body    => [ percolation requests ]  # required
+    );
+
+Multi-percolation allows multiple L</percolate()> requests to be run
+in a single request.
+
+    $results = $e->mpercolate(
+        index   => 'my_index',
+        type    => 'my_type',
+        body    => [
+            # first request
+            { percolate => {
+                index => 'twitter',
+                type  => 'tweet'
+            }},
+            { doc => {message => 'some_text' }},
+
+            # second request
+            { percolate => {
+                index => 'twitter',
+                type  => 'tweet',
+                id    => 1
+            }},
+            {},
+        ]
+    );
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>
+
+See the L<mpercolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html>
 for more information.
 
 =head2 C<suggest()>
 
     $results = $e->suggest(
         index   => 'index' | \@indices,     # optional
-        type    => 'type'  | \@types,       # optional
 
         body    => { suggest request }      # required
     );
 
 The C<suggest()> method is used to run
-L<did-you-mean|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-suggesteres-phrase.html>
-or L<search-as-you-type|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-suggesters-completion.html>
+L<did-you-mean|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesteres-phrase.html>
+or L<search-as-you-type|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html>
 suggestion requests, which can also be run as part of a L</search()> request.
 
     $results = $e->suggest(
         index   => 'my_index',
-        type    => 'my_type',
         body    => {
             my_suggestions => {
                 phrase  => {
@@ -1023,11 +1258,9 @@ suggestion requests, which can also be run as part of a L</search()> request.
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
-    C<ignore_indices>,
     C<ignore_unavailable>,
     C<preference>,
-    C<routing>,
-    C<source>
+    C<routing>
 
 
 =head2 C<mlt()>
@@ -1041,17 +1274,17 @@ Query string parameters:
     );
 
 The C<mlt()> method runs a
-L<more-like-this query|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/query-dsl-mlt-query.html>
+L<more-like-this query|http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html>
 to find other documents which are similar to the specified document.
 
 Query string parameters:
     C<boost_terms>,
     C<max_doc_freq>,
     C<max_query_terms>,
-    C<max_word_len>,
+    C<max_word_length>,
     C<min_doc_freq>,
     C<min_term_freq>,
-    C<min_word_len>,
+    C<min_word_length>,
     C<mlt_fields>,
     C<percent_terms_to_match>,
     C<routing>,
@@ -1064,7 +1297,125 @@ Query string parameters:
     C<search_types>,
     C<stop_words>
 
-See the L<mlt docs|http://www.elastic.co/guide/en/elasticsearch/reference/0.90/search-more-like-this.html>
+See the L<mlt docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-more-like-this.html>
 for more information.
 
+=HEAD1 INDEXED SCRIPT METHODS
+
+If dynamic scripting is enabled, Elasticsearch allows you to store scripts in an internal index known as
+C<.scripts> and reference them by id. The methods to manage indexed scripts are as follows:
+
+=head2 C<put_script()>
+
+    $result  = $e->put_script(
+        lang => 'lang',     # required
+        id   => 'id',       # required
+        body => { script }  # required
+    );
+
+The C<put_script()> method is used to store a script in the C<.scripts> index. For instance:
+
+    $result  = $e->put_scripts(
+        lang => 'groovy',
+        id   => 'hello_world',
+        body => {
+          script => q(return "hello world");
+        }
+    );
+
+Query string parameters:
+    C<op_type>,
+    C<version>,
+    C<version_type>
+
+See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
+
+=head2 C<get_script()>
+
+    $script = $e->get_script(
+        lang => 'lang',     # required
+        id   => 'id',       # required
+    );
+
+Retrieve the indexed script from the C<.scripts> index.
+
+Query string parameters:
+    C<version>,
+    C<version_type>
+
+See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
+
+=head2 C<delete_script()>
+
+    $script = $e->delete_script(
+        lang => 'lang',     # required
+        id   => 'id',       # required
+    );
+
+Delete the indexed script from the C<.scripts> index.
+
+Query string parameters:
+    C<version>,
+    C<version_type>
+
+See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
+
+=HEAD1 INDEXED SEARCH TEMPLATE METHODS
+
+Mustache templates can be used to create search requests.  These templates can
+be stored in the C<.scripts> index and retrieved by ID. The methods to
+manage indexed scripts are as follows:
+
+=head2 C<put_template()>
+
+    $result  = $e->put_template(
+        id   => 'id',                       # required
+        body => { template } || "template"  # required
+    );
+
+The C<put_template()> method is used to store a template in the C<.scripts> index.
+For instance:
+
+    $result  = $e->put_template(
+        id   => 'hello_world',
+        body => {
+          template => {
+            query => {
+              match => {
+                title => "hello world"
+              }
+            }
+          }
+      }
+    );
+
+Query string parameters: None
+
+See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
+
+=head2 C<get_template()>
+
+    $script = $e->get_template(
+        id   => 'id',       # required
+    );
+
+Retrieve the indexed template from the C<.scripts> index.
+
+Query string parameters:
+    C<version>,
+    C<version_type>
+
+See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
+
+=head2 C<delete_template()>
+
+    $script = $e->delete_template(
+        id   => 'id',       # required
+    );
+
+Delete the indexed template from the C<.scripts> index.
+
+Query string parameters: None
+
+See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
 

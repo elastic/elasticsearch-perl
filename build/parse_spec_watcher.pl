@@ -8,51 +8,10 @@ use Path::Class;
 use Perl::Tidy;
 use JSON::XS;
 
-my @files = map { file($_) } glob '../elasticsearch/rest-api-spec/api/*.json';
+my @files = map { file($_) } glob '../elasticsearch-watcher/rest-api-spec/api/watcher*.json';
 
 my ( %API, %seen, %seen_combo, %Forbidden );
 
-forbid(
-    'GET' => qw(
-        /_nodes/hotthreads
-        /_nodes/{node_id}/hotthreads
-        /_nodes/{metric}
-        /_all/{type}/_mget
-        /_all/{type}/_mpercolate
-        /_all/{type}/_mtermvectors
-        )
-);
-
-forbid( 'HEAD' => () );
-
-forbid(
-    'PUT' => qw(
-        /{index}/{type}/_mapping
-        )
-);
-
-forbid(
-    'POST' => qw(
-        /_all/{type}/_bulk
-        /_all/{type}/_mget
-        /_all/{type}/_mpercolate
-        /_all/{type}/_mtermvectors
-        )
-);
-
-forbid(
-    'DELETE' => qw(
-        /{index}/{type}
-        /{index}/{type}/_mapping
-        )
-);
-
-forbid(
-    'QS' => qw(
-        operation_threading
-        field_data
-        )
-);
 
 for my $file (@files) {
     say $file;
@@ -66,12 +25,8 @@ for my $file (@files) {
 
 }
 
-# require index when type
-for ( 'bulk', 'mget', 'mpercolate', 'mtermvectors' ) {
-    $API{$_}{index_when_type} = 1;
-}
 
-update_module( shift(@ARGV) || 'lib/Search/Elasticsearch/Role/API.pm' );
+update_module( shift(@ARGV) || 'lib/Search/Elasticsearch/Plugin/Watcher/API.pm' );
 
 #===================================
 sub process {

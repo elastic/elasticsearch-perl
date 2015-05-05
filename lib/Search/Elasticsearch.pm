@@ -8,7 +8,7 @@ use namespace::clean;
 our $VERSION = '1.19';
 
 my %Default_Plugins = (
-    client      => [ 'Search::Elasticsearch::Client',       'Direct' ],
+    client      => [ 'Search::Elasticsearch::Client',       '1_0::Direct' ],
     cxn_factory => [ 'Search::Elasticsearch::Cxn::Factory', '' ],
     cxn_pool    => [ 'Search::Elasticsearch::CxnPool',      'Static' ],
     logger      => [ 'Search::Elasticsearch::Logger',       'LogAny' ],
@@ -31,6 +31,7 @@ sub new {
     my ( $class, $params ) = parse_params(@_);
 
     $params->{cxn} ||= 'HTTPTiny';
+    my $plugins = delete $params->{plugins} || [];
 
     for my $name (@Load_Order) {
         my ( $base, $default ) = @{ $Default_Plugins{$name} };
@@ -38,6 +39,13 @@ sub new {
         my $plugin_class = load_plugin( $base, $sub_class );
         $params->{$name} = $plugin_class->new($params);
     }
+
+    for my $name (@$plugins) {
+        my $plugin_class
+            = load_plugin( 'Search::Elasticsearch::Plugin', $name );
+        $plugin_class->_init_plugin($params);
+    }
+
     return $params->{client};
 }
 
@@ -132,6 +140,7 @@ please use L<Search::Elasticsearch::Client::0_90::Direct> as follows:
 
     $es = Search::Elasticsearch->new( client => '0_90::Direct' );
 
+
 =head2 Motivation
 
 =over
@@ -209,7 +218,7 @@ preferably the Java v7 from Sun.
 
 =head1 CREATING A NEW INSTANCE
 
-The L</new()> method returns a new L<client|Search::Elasticsearch::Client::Direct>
+The L</new()> method returns a new L<client|Search::Elasticsearch::Client::1_0::Direct>
 which can be used to run requests against the Elasticsearch cluster.
 
     use Search::Elasticsearch;
@@ -329,7 +338,7 @@ Other arguments are explained in the respective L<module docs|/MODULES>.
 =head1 RUNNING REQUESTS
 
 When you create a new instance of Search::Elasticsearch, it returns a
-L<client|Search::Elasticsearch::Client::Direct> object, which can be used for
+L<client|Search::Elasticsearch::Client::1_0::Direct> object, which can be used for
 running requests.
 
     use Search::Elasticsearch;
@@ -350,7 +359,7 @@ running requests.
         }
     );
 
-See L<Search::Elasticsearch::Client::Direct> for more details about the requests that
+See L<Search::Elasticsearch::Client::1_0::Direct> for more details about the requests that
 can be run.
 
 =head1 MODULES
@@ -381,11 +390,22 @@ The class to use for the client functionality, which provides
 methods that can be called to execute requests, such as
 C<search()>, C<index()> or C<delete()>. The client parses the user's
 requests and passes them to the L</transport> class to be executed.
+
+The default version of the client is C<1_0::Direct>, which can
+be explicitly specified as follows:
+
+    $e = Search::Elasticsearch->new(
+        client => '1_0::Direct'
+    );
+
 See :
+
 
 =over
 
-=item * L<Search::Elasticsearch::Client::Direct> (default, for 1.0 branch)
+=item * L<Search::Elasticsearch::Client::1_0::Direct> (default, for 1.0 branch)
+
+=item * L<Search::Elasticsearch::Client::2_0::Direct> (for 2.0 branch)
 
 =item * L<Search::Elasticsearch::Client::0_90::Direct> (for 0.90 branch)
 

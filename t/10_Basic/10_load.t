@@ -4,8 +4,9 @@ BEGIN { use_ok('Search::Elasticsearch') }
 
 my ( $e, $p, $t );
 
-isa_ok $e = Search::Elasticsearch->new(),
-    'Search::Elasticsearch::Client::Direct', "client";
+ok $e = Search::Elasticsearch->new(), "new client";
+ok $e->does('Search::Elasticsearch::Role::Client::Direct'),
+    "client does Search::Elasticsearch::Role::Client::Direct";
 isa_ok $t = $e->transport, 'Search::Elasticsearch::Transport', "transport";
 isa_ok $p = $t->cxn_pool, 'Search::Elasticsearch::CxnPool::Static',
     "cxn_pool";

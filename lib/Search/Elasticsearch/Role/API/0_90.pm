@@ -948,7 +948,7 @@ __END__
 =head1 DESCRIPTION
 
 All of the Elasticsearch APIs are defined in this role. The example given below
-is the definition for the L<Search::Elasticsearch::Client::Direct/index()> method:
+is the definition for the L<Search::Elasticsearch::Client::0_90::Direct/index()> method:
 
     'index' => {
         body => {
@@ -997,6 +997,10 @@ L<Search::Elasticsearch::Util::API::QS>
 
 =item *
 
-L<Search::Elasticsearch::Client::Direct>
+L<Search::Elasticsearch::Client::1_0::Direct>
+
+=item *
+
+L<Search::Elasticsearch::Client::2_0::Direct>
 
 =back

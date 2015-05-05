@@ -1,7 +1,7 @@
-package Search::Elasticsearch::Client::Direct::Nodes;
+package Search::Elasticsearch::Client::1_0::Direct::Nodes;
 
 use Moo;
-with 'Search::Elasticsearch::Role::API';
+with 'Search::Elasticsearch::Role::API::1_0';
 with 'Search::Elasticsearch::Role::Client::Direct';
 __PACKAGE__->_install_api('nodes');
 
@@ -80,7 +80,7 @@ Allowed metrics are:
     C<transport>
 
 If the C<indices> metric (or C<_all>) is specified, then
-L<indices_stats|Search::Elasticsearch::Client::Direct::Indices/indices_stats()>
+L<indices_stats|Search::Elasticsearch::Client::1_0::Direct::Indices/indices_stats()>
 information is returned on a per-node basis. Which indices stats are
 returned can be controlled with the C<index_metric> parameter:
 

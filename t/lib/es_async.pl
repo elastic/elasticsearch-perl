@@ -13,11 +13,14 @@ my $trace
     : $ENV{TRACE} eq '1' ? 'Stderr'
     :                      [ 'File', $ENV{TRACE} ];
 
-my $cv       = AE::cv;
-my $version  = $ENV{ES_VERSION} || '';
-my $api      = $version =~ /^0.90/ ? '0_90::Direct' : 'Direct';
-my $body     = $ENV{ES_BODY} || 'GET';
-my $cxn      = $ENV{ES_CXN} || do "default_async_cxn.pl" || die $!;
+my $cv = AE::cv;
+my $version = $ENV{ES_VERSION} || '';
+my $api
+    = $version =~ /^0.90/ ? '0_90::Direct'
+    : $version =~ /^2\./  ? '2_0::Direct'
+    :                       '1_0::Direct';
+my $body     = $ENV{ES_BODY}     || 'GET';
+my $cxn      = $ENV{ES_CXN}      || do "default_async_cxn.pl" || die $!;
 my $cxn_pool = $ENV{ES_CXN_POOL} || 'Async::Static';
 our %Auth;
 

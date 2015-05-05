@@ -247,14 +247,14 @@ until there are no more matching results, much like a cursor in an SQL
 database.
 
 Unlike paginating through results (with the C<from> parameter in
-L<search()|Search::Elasticsearch::Client::Direct/search()>),
+L<search()|Search::Elasticsearch::Client::1_0::Direct/search()>),
 scrolled searches take a snapshot of the current state of the index. Even
 if you keep adding new documents to the index or updating existing documents,
 a scrolled search will only see the index as it was when the search began.
 
 This module is a helper utility that wraps the functionality of the
-L<search()|Search::Elasticsearch::Client::Direct/search()> and
-L<scroll()|Search::Elasticsearch::Client::Direct/scroll()> methods to make
+L<search()|Search::Elasticsearch::Client::1_0::Direct/search()> and
+L<scroll()|Search::Elasticsearch::Client::1_0::Direct/scroll()> methods to make
 them easier to use.
 
 B<IMPORTANT>: Deep scrolling can be expensive.  See L</DEEP SCROLLING>
@@ -398,14 +398,14 @@ are memory constrained, you will need to take this into account.
     );
     $scroll->start;
 
-The L<Search::Elasticsearch::Client::Direct/scroll_helper()> method loads
+The L<Search::Elasticsearch::Client::1_0::Direct/scroll_helper()> method loads
 L<Search::Elasticsearch::Async::Scroll> class and calls L</new()>,
 passing in any arguments.
 
 You can specify a C<scroll> duration (which defaults to C<"1m">),
 C<scroll_in_qs> (which defaults to C<false>), and any
 of the listed callbacks. Any other parameters are
-passed directly to L<Search::Elasticsearch::Client::Direct/search()>.
+passed directly to L<Search::Elasticsearch::Client::1_0::Direct/search()>.
 
 The C<scroll> duration tells Elasticearch how long it should keep the scroll
 alive.  B<Note>: this duration doesn't need to be long enough to process
@@ -414,7 +414,7 @@ The expiry gets renewed for another C<scroll> period every time new
 a new batch of results is retrieved from the cluster.
 
 By default, the C<scroll_id> is passed as the C<body> to the
-L<scroll|Search::Elasticsearch::Client::Direct/scroll()> request.
+L<scroll|Search::Elasticsearch::Client::1_0::Direct/scroll()> request.
 To send it in the query string instead, set C<scroll_in_qs> to a true value,
 but be aware: when querying very many indices, the scroll ID can become
 too long for intervening proxies.
@@ -545,8 +545,8 @@ This value can only be checked once the scroll has completed.
 
 =item * L<Search::Elasticsearch::Async::Bulk/reindex()>
 
-=item * L<Search::Elasticsearch::Client::Direct/search()>
+=item * L<Search::Elasticsearch::Client::1_0::Direct/search()>
 
-=item * L<Search::Elasticsearch::Client::Direct/scroll()>
+=item * L<Search::Elasticsearch::Client::1_0::Direct/scroll()>
 
 =back

@@ -94,7 +94,7 @@ heap memory usage or the current number of threads in use.
 
 Stats can be returned for all nodes, or limited to particular nodes
 with the C<node_id> parameter.
-The L<indices_stats|Search::Elasticsearch::Client::Direct::Indices/indices_stats()>
+The L<indices_stats|Search::Elasticsearch::Client::1_0::Direct::Indices/indices_stats()>
 information can also be retrieved on a per-node basis with the C<node_stats()>
 method:
 

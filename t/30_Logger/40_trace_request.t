@@ -4,9 +4,8 @@ use Search::Elasticsearch;
 use lib 't/lib';
 do 'LogCallback.pl';
 
-isa_ok my $e
+ok my $e
     = Search::Elasticsearch->new( nodes => 'https://foo.bar:444/some/path' ),
-    'Search::Elasticsearch::Client::Direct',
     'Client';
 
 isa_ok my $l = $e->logger, 'Search::Elasticsearch::Logger::LogAny', 'Logger';
