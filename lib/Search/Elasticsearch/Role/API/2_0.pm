@@ -856,19 +856,6 @@ sub api {
         qs => [ "master_timeout", "timeout" ],
     },
 
-    'indices.delete_mapping' => {
-        doc    => "indices-delete-mapping",
-        method => "DELETE",
-        parts  => {
-            index => { multi => 1, required => 1 },
-            type  => { multi => 1, required => 1 },
-        },
-        paths => [
-            [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ]
-        ],
-        qs => ["master_timeout"],
-    },
-
     'indices.delete_template' => {
         doc    => "indices-templates",
         method => "DELETE",

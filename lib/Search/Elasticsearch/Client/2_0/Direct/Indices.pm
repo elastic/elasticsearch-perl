@@ -362,22 +362,6 @@ Query string parameters:
 See the L<exists_type docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-types-exists.html>
 for more information.
 
-=head2 C<delete_mapping()>
-
-    $response = $e->indices->delete_mapping(
-        index => 'index' | \@indices    # required,
-        type  => 'type'  | \@types      # required
-    );
-
-The C<delete_mapping()> method deletes the type mappings (and all documents of
-that type) in all specified indices.
-
-Query string parameters:
-    C<master_timeout>
-
-See the L<delete_mapping docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-mapping.html>
-for more information.
-
 =head1 ALIAS METHODS
 
 =head2 C<update_aliases()>
