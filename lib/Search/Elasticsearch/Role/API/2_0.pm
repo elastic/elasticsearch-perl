@@ -448,8 +448,9 @@ sub api {
             "size",             "sort",
             "stats",            "suggest_field",
             "suggest_mode",     "suggest_size",
-            "suggest_text",     "timeout",
-            "track_scores",     "version",
+            "suggest_text",     "terminate_after",
+            "timeout",          "track_scores",
+            "version",
         ],
     },
 
