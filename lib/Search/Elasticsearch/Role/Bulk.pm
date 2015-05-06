@@ -104,6 +104,12 @@ sub delete_ids {
     $self->add_action( map { ( 'delete' => { _id => $_ } ) } @_ );
 }
 
+our @Update_Params = qw(
+    doc upsert doc_as_upsert scripted_upsert
+    script script_id script_file
+    params lang detect_noop
+);
+
 #===================================
 sub _encode_action {
 #===================================
@@ -136,7 +142,7 @@ sub _encode_action {
 
     my $source;
     if ( $action eq 'update' ) {
-        for (qw(doc upsert doc_as_upsert script params lang detect_noop)) {
+        for (@Update_Params) {
             $source->{$_} = delete $params->{$_}
                 if exists $params->{$_};
         }
