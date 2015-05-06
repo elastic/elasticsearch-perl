@@ -656,48 +656,6 @@ Query string parameters:
 See the L<mget docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-multi-get.html>
 for more information.
 
-=head2 C<delete_by_query()>
-
-    $result = $e->delete_by_query(
-        index => 'index' | \@indices,   # required
-        type  => 'type'  | \@types,     # optional
-
-        body  => { query }              # required
-
-    );
-
-The C<delete_by_query()> method deletes all documents which match the
-query.  For instance, to delete all documents from 2012:
-
-    $result = $e->delete_by_query(
-        body  => {
-            query => {
-                range => {
-                    date => {
-                        gte => '2012-01-01',
-                        lt  => '2013-01-01'
-                    }
-                }
-            }
-        }
-    );
-
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<analyzer>,
-    C<consistency>,
-    C<default_operator>,
-    C<df>,
-    C<expand_wildcards>,
-    C<ignore_unavailable>,
-    C<q>,
-    C<routing>,
-    C<timeout>
-
-See the L<delete_by_query docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete-by-query.html>
-for more information.
-
 =head2 C<mtermvectors()>
 
     $results = $e->mtermvectors(

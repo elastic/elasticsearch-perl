@@ -108,26 +108,8 @@ sub api {
             ],
         ],
         qs => [
-
-    'delete_by_query' => {
-        body   => {},
-        doc    => "docs-delete-by-query",
-        method => "DELETE",
-        parts  => {
-            index => { multi => 1, required => 1 },
-            type  => { multi => 1 }
-        },
-        paths => [
-            [ { index => 0, type => 1 }, "{index}", "{type}", "_query" ],
-            [ { index => 0 }, "{index}", "_query" ],
-        ],
-        qs => [
-            "allow_no_indices",   "analyzer",
-            "consistency",        "default_operator",
-            "df",                 "expand_wildcards",
-            "ignore_unavailable", "q",
-            "replication",        "routing",
-            "timeout",
+            "consistency", "parent",  "refresh", "routing",
+            "timeout",     "version", "version_type",
         ],
     },
 
