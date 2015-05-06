@@ -1504,7 +1504,7 @@ is the definition for the L<Search::Elasticsearch::Client::2_0::Direct/index()> 
         path   => '{index}/{type}/{id|blank}',
         qs     => [
             'consistency', 'op_type',     'parent',  'percolate',
-            'refresh',     'replication', 'routing', 'timeout',
+            'refresh',     'routing',     'timeout',
             'timestamp',   'ttl',         'version', 'version_type'
         ],
     },
