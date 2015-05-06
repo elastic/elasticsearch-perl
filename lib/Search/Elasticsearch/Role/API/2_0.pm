@@ -933,9 +933,9 @@ sub api {
         paths =>
             [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "force",              "full",
-            "ignore_unavailable", "wait_if_ongoing",
+            "allow_no_indices", "expand_wildcards",
+            "force",            "ignore_unavailable",
+            "wait_if_ongoing",
         ],
     },
 

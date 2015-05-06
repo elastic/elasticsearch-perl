@@ -193,7 +193,6 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<force>,
-    C<full>,
     C<ignore_unavailable>,
     C<wait_if_ongoing>
 
