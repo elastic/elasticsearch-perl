@@ -288,7 +288,6 @@ Query string parameters:
     C<op_type>,
     C<parent>,
     C<refresh>,
-    C<replication>,
     C<routing>,
     C<timeout>,
     C<timestamp>,
@@ -318,7 +317,6 @@ Query string parameters:
     C<op_type>,
     C<parent>,
     C<refresh>,
-    C<replication>,
     C<routing>,
     C<timeout>,
     C<timestamp>,
@@ -420,7 +418,6 @@ Query string parameters:
     C<consistency>,
     C<parent>,
     C<refresh>,
-    C<replication>,
     C<routing>,
     C<timeout>,
     C<version>,
@@ -472,7 +469,6 @@ Query string parameters:
     C<parent>,
     C<realtime>,
     C<refresh>,
-    C<replication>,
     C<retry_on_conflict>,
     C<routing>,
     C<script>,
@@ -599,7 +595,6 @@ cause the others to fail as well.
 Query string parameters:
     C<consistency>,
     C<refresh>,
-    C<replication>,
     C<timeout>
 
 See the L<bulk docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html>
@@ -697,7 +692,6 @@ Query string parameters:
     C<expand_wildcards>,
     C<ignore_unavailable>,
     C<q>,
-    C<replication>,
     C<routing>,
     C<timeout>
 

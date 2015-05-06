@@ -33,8 +33,7 @@ sub api {
             [ { index => 0 }, "{index}", "_bulk" ],
             [ {}, "_bulk" ],
         ],
-        qs =>
-            [ "consistency", "refresh", "replication", "routing", "timeout" ],
+        qs        => [ "consistency", "refresh", "routing", "timeout" ],
         serialize => "bulk",
     },
 
@@ -109,10 +108,6 @@ sub api {
             ],
         ],
         qs => [
-            "consistency", "parent",  "refresh", "replication",
-            "routing",     "timeout", "version", "version_type",
-        ],
-    },
 
     'delete_by_query' => {
         body   => {},
@@ -615,14 +610,14 @@ sub api {
             ],
         ],
         qs => [
-            "consistency",       "fields",
-            "lang",              "parent",
-            "refresh",           "replication",
-            "retry_on_conflict", "routing",
-            "script",            "script_id",
-            "scripted_upsert",   "timeout",
-            "timestamp",         "ttl",
-            "version",           "version_type",
+            "consistency", "fields",
+            "lang",        "parent",
+            "refresh",     "retry_on_conflict",
+            "routing",     "script",
+            "script_id",   "scripted_upsert",
+            "timeout",     "timestamp",
+            "ttl",         "version",
+            "version_type",
         ],
     },
 
