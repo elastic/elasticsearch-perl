@@ -1261,18 +1261,6 @@ sub api {
         ],
     },
 
-    'indices.status' => {
-        doc   => "indices-status",
-        parts => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_status" ], [ {}, "_status" ] ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "human",            "ignore_unavailable",
-            "recovery",         "snapshot",
-        ],
-    },
-
     'indices.update_aliases' => {
         body   => { required => 1 },
         doc    => "indices-aliases",
