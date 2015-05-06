@@ -151,7 +151,6 @@ Query string parameters:
     C<fields>,
     C<filter>,
     C<filter_cache>,
-    C<filter_keys>,
     C<id>,
     C<id_cache>,
     C<ignore_unavailable>,
