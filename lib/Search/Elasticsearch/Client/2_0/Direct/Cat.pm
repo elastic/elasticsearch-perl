@@ -256,7 +256,7 @@ for more information.
         index => 'index' | \@indices    # optional
     );
 
-Provides a is a view of shard replication. It will show information
+Provides a view of shard replication. It will show information
 anytime data from at least one shard is copying to a different node.
 It can also show up on cluster restarts. If your recovery process seems
 stuck, try it to see if there’s any movement using C<recovery()>.
