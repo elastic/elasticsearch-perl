@@ -1343,20 +1343,6 @@ sub api {
         qs => [ "flat_settings", "human" ],
     },
 
-    'nodes.shutdown' => {
-        doc    => "cluster-nodes-shutdown",
-        method => "POST",
-        parts  => { node_id => { multi => 1 } },
-        paths  => [
-            [   { node_id => 2 }, "_cluster",
-                "nodes", "{node_id}",
-                "_shutdown"
-            ],
-            [ {}, "_shutdown" ],
-        ],
-        qs => [ "delay", "exit" ],
-    },
-
     'nodes.stats' => {
         doc   => "cluster-nodes-stats",
         parts => {

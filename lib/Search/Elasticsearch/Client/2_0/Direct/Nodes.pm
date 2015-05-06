@@ -141,19 +141,3 @@ Query string parameters:
 See the L<hot_threads docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-hot-threads.html>
 for more information.
 
-=head2 C<shutdown()>
-
-    $e->nodes->shutdown(
-        node_id => $node_id | \@node_ids    # optional
-    );
-
-The C<shutdown()> method is used to shutdown one or more nodes, or the whole
-cluster.
-
-Query string parameters:
-    C<delay>,
-    C<exit>
-
-See the L<shutdown docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-shutdown.html>
-for more information.
-
