@@ -1232,18 +1232,6 @@ sub api {
         ],
     },
 
-    'indices.snapshot_index' => {
-        doc    => "indices-gateway-snapshot",
-        method => "POST",
-        parts  => { index => { multi => 1 } },
-        paths  => [
-            [ { index => 0 }, "{index}", "_gateway", "snapshot" ],
-            [ {}, "_gateway", "snapshot" ],
-        ],
-        qs =>
-            [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
-    },
-
     'indices.stats' => {
         doc   => "indices-stats",
         parts => { index => { multi => 1 }, metric => { multi => 1 } },
