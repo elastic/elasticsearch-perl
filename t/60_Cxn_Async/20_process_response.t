@@ -27,8 +27,8 @@ cmp_deeply $response, 'Foo', "OK GET Text body - body";
 
 ### OK GET - Empty body
 ( $code, $response )
-    = $c->process_response( { method => 'GET', ignore => [] },
-    200, "OK", '' );
+    = $c->process_response( { method => 'GET', ignore => [] }, 200, "OK",
+    '' );
 
 is $code,             200, "OK GET Empty body - code";
 cmp_deeply $response, '',  "OK GET Empty body - body";
@@ -80,7 +80,7 @@ throws_ok {
 }
 qr/\[400\] error in body/, "Request error";
 
-### Conflict error
+### Conflict error pre v2
 throws_ok {
     $c->process_response(
         { method => 'GET', ignore => [] },
@@ -90,8 +90,21 @@ throws_ok {
         { 'content-type' => 'application/json' }
     );
 }
-qr/\[409\] VersionConflictEngineException/, "Conflict error";
-is $@->{vars}{current_version}, 1, "Error has current version";
+qr/\[409\] VersionConflictEngineException/, "Conflict error v1";
+is $@->{vars}{current_version}, 1, "Error has current version v1";
+
+### Conflict error >= v2
+throws_ok {
+    $c->process_response(
+        { method => 'GET', ignore => [] },
+        409,
+        "Conflict",
+        '{"error":{"type":"version_conflict_engine_exception","index":"test","root_cause":[{"shard":2,"reason":"[t][1]: version conflict, current [1], provided [2]","type":"version_conflict_engine_exception","index":"test"}],"shard":3,"reason":"[t][1]: version conflict, current [1], provided [2]"},"status":409}',
+        { 'content-type' => 'application/json' }
+    );
+}
+qr/\[409\] \[version_conflict_engine_exception\]/, "Conflict error v2";
+is $@->{vars}{current_version}, 1, "Error has current version v2";
 
 ### Timeout error
 throws_ok {

@@ -126,7 +126,7 @@ $b = bulk(
             {   _index => 'test',
                 _type  => 'test',
                 _id    => 1,
-                error  => re('VersionConflictEngineException'),
+                error  => re('version conflict'),
                 status => 409,
             },
             2, 1

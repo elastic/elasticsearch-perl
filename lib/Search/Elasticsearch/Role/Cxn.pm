@@ -122,6 +122,8 @@ sub process_response {
 
     my $is_encoded = $mime_type && $mime_type ne 'text/plain';
 
+    # Request is successful
+
     if ( $code >= 200 and $code <= 209 ) {
         if ( defined $body and length $body ) {
             $body = $self->serializer->decode($body)
@@ -132,10 +134,12 @@ sub process_response {
         return ( $code, '' );
     }
 
+    # Check if the error should be ignored
     my @ignore = to_list( $params->{ignore} );
     push @ignore, 404 if $params->{method} eq 'HEAD';
     return ($code) if grep { $_ eq $code } @ignore;
 
+    # Determine error type
     my $error_type = $Code_To_Error{$code};
     unless ($error_type) {
         if ( defined $body and length $body ) {
@@ -148,14 +152,11 @@ sub process_response {
     delete $params->{data} if $params->{body};
     my %error_args = ( status_code => $code, request => $params );
 
+    # Extract error message from the body, if present
+
     if ( $body = $self->serializer->decode($body) ) {
         $error_args{body} = $body;
-        if ( ref $body ) {
-            $msg = $body->{error} || $msg;
-        }
-        else {
-            $msg = $body;
-        }
+        $msg = $self->_munge_elasticsearch_exception($body) || $msg;
 
         $error_args{current_version} = $1
             if $error_type eq 'Conflict'
@@ -166,6 +167,38 @@ sub process_response {
     chomp $msg;
     throw( $error_type, "[" . $self->stringify . "]-[$code] $msg",
         \%error_args );
+}
+
+#===================================
+sub _munge_elasticsearch_exception {
+#===================================
+    my ( $self, $body ) = @_;
+    return $body unless ref $body eq 'HASH' && $body->{error};
+
+    my $error = $body->{error};
+    return $error unless ref $error eq 'HASH';
+
+    my $root_causes = $error->{root_cause} || [];
+    unless (@$root_causes) {
+        my $msg = "[" . $error->{type} . "] " if $error->{type};
+        $msg .= $error->{reason} if $error->{reason};
+        return $msg;
+    }
+
+    my $json = $self->serializer;
+    my @msgs;
+    for (@$root_causes) {
+        my %cause = (%$_);
+        my $msg
+            = "["
+            . ( delete $cause{type} ) . "] "
+            . ( delete $cause{reason} );
+        if ( keys %cause ) {
+            $msg .= ", with: " . $json->encode( \%cause );
+        }
+        push @msgs, $msg;
+    }
+    return ( join ", ", @msgs );
 }
 
 1;
