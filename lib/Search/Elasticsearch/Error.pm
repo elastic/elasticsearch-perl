@@ -115,15 +115,18 @@ sub _stack {
 
     my @stack;
     while ( my @caller = caller( ++$caller ) ) {
-        if ( $caller[0] eq 'Try::Tiny' or $caller[0] eq 'main' ) {
-            next if $caller[3] eq '(eval)';
-            if ( $caller[3] =~ /^(.+)::__ANON__\[(.+):(\d+)\]$/ ) {
-                @caller = ( $1, $2, $3, '(ANON)' );
-            }
+        next if $caller[0] eq 'Try::Tiny';
+
+        if ( $caller[3] =~ /^(.+)::__ANON__\[(.+):(\d+)\]$/ ) {
+            @caller = ( $1, $2, $3, '(ANON)' );
         }
+        elsif ( $caller[1] =~ /^\(eval \d+\)/ ) {
+            $caller[3] = "modified(" . $caller[3] . ")";
+        }
+
         next
             if $caller[0] =~ /^Search::Elasticsearch/
-            and $DEBUG < 2 || $caller[3] eq 'Try::Tiny::try';
+            and ( $DEBUG < 2 or $caller[3] eq 'Try::Tiny::try' );
         push @stack, [ @caller[ 0, 1, 2, 3 ] ];
         last unless $DEBUG > 1;
     }
@@ -136,15 +139,15 @@ sub stacktrace {
     my $self = shift;
     my $stack = shift || $self->_stack();
 
-    my $o = sprintf "%s\n%-4s %-40s %-5s %s\n%s\n",
-        '-' x 60, '#', 'Package', 'Line', 'Sub-routine', '-' x 60;
+    my $o = sprintf "%s\n%-4s %-50s %-5s %s\n%s\n",
+        '-' x 80, '#', 'Package', 'Line', 'Sub-routine', '-' x 80;
 
     my $i = 1;
     for (@$stack) {
-        $o .= sprintf "%-4d %-40s %4d  %s\n", $i++, @{$_}[ 0, 2, 3 ];
+        $o .= sprintf "%-4d %-50s %4d  %s\n", $i++, @{$_}[ 0, 2, 3 ];
     }
 
-    return $o .= ( '-' x 60 ) . "\n";
+    return $o .= ( '-' x 80 ) . "\n";
 }
 1;
 
