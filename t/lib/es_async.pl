@@ -23,6 +23,7 @@ my $api
 my $body     = $ENV{ES_BODY}     || 'GET';
 my $cxn      = $ENV{ES_CXN}      || do "default_async_cxn.pl" || die $!;
 my $cxn_pool = $ENV{ES_CXN_POOL} || 'Async::Static';
+my @plugins = split /,/, ( $ENV{ES_PLUGINS} || '' );
 our %Auth;
 
 if ( $cxn eq 'Mojo' && !eval { require Mojo::UserAgent; 1 } ) {
@@ -53,6 +54,7 @@ if ( $ENV{ES} ) {
             cxn_pool         => $cxn_pool,
             client           => $api,
             send_get_body_as => $body,
+            plugins          => \@plugins,
             %Auth
         );
         if ( $ENV{ES_SKIP_PING} ) {

@@ -12,13 +12,15 @@ my $trace   = 0;
 my $async   = 0;
 my $cxn     = '';
 my $junit   = 0;
+my @plugins;
 
 GetOptions(
-    'verbose' => \$verbose,
-    'trace'   => \$trace,
-    'cxn=s'   => \$cxn,
-    'async'   => \$async,
-    'junit'   => \$junit,
+    'verbose'  => \$verbose,
+    'trace=s'  => \$trace,
+    'cxn=s'    => \$cxn,
+    'async'    => \$async,
+    'junit'    => \$junit,
+    'plugin=s' => \@plugins
 );
 
 my $harness = 'TAP::Harness';
@@ -31,6 +33,7 @@ $ENV{ES_ASYNC} = $async;
 $ENV{ES_CXN}   = $cxn;
 $ENV{TRACE}    = $trace;
 $ENV{ES} ||= "localhost:9200";
+$ENV{ES_PLUGINS} = join ",", @plugins;
 
 my $tap = $harness->new(
     {   exec      => [ $^X, 'test/yaml_tester.pl' ],

@@ -18,6 +18,7 @@ my $body     = $ENV{ES_BODY}     || 'GET';
 my $cxn      = $ENV{ES_CXN}      || do "default_cxn.pl" || die $!;
 my $cxn_pool = $ENV{ES_CXN_POOL} || 'Static';
 my $timeout  = $ENV{ES_TIMEOUT}  || 30;
+my @plugins = split /,/, ( $ENV{ES_PLUGINS} || '' );
 our %Auth;
 
 my $es;
@@ -31,6 +32,7 @@ if ( $ENV{ES} ) {
             client           => $api,
             send_get_body_as => $body,
             request_timeout  => $timeout,
+            plugins          => \@plugins,
             %Auth
         );
         $es->ping unless $ENV{ES_SKIP_PING};
