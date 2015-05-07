@@ -1,6 +1,6 @@
 use Test::More;
 use lib 't/lib';
-my $es = do "es_sync.pl";
+my $es = do "es_async.pl";
 
 eval {
     my $v = $es->info->{version};
