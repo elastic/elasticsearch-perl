@@ -173,9 +173,8 @@ sub process_response {
 sub _munge_elasticsearch_exception {
 #===================================
     my ( $self, $body ) = @_;
-    return $body unless ref $body eq 'HASH' && $body->{error};
-
-    my $error = $body->{error};
+    return $body unless ref $body eq 'HASH';
+    my $error = $body->{error} || return;
     return $error unless ref $error eq 'HASH';
 
     my $root_causes = $error->{root_cause} || [];
