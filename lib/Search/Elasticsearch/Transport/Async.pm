@@ -60,7 +60,6 @@ sub perform_request {
             if ($cxn) {
                 $logger->trace_request( $cxn, $params );
                 $logger->trace_error( $cxn, $error );
-                delete $error->{vars}{body};
             }
             $error->is('NoNodes')
                 ? $logger->critical($error)
