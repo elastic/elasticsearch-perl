@@ -1203,44 +1203,6 @@ Query string parameters:
     C<preference>,
     C<routing>
 
-
-=head2 C<mlt()>
-
-    $results = $e->mlt(
-        index   => 'my_index',  # required
-        type    => 'my_type',   # required
-        id      => 123,         # required
-
-        body    => { search }   # optional
-    );
-
-The C<mlt()> method runs a
-L<more-like-this query|http://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html>
-to find other documents which are similar to the specified document.
-
-Query string parameters:
-    C<boost_terms>,
-    C<max_doc_freq>,
-    C<max_query_terms>,
-    C<max_word_length>,
-    C<min_doc_freq>,
-    C<min_term_freq>,
-    C<min_word_length>,
-    C<mlt_fields>,
-    C<percent_terms_to_match>,
-    C<routing>,
-    C<search_from>,
-    C<search_indices>,
-    C<search_scroll>,
-    C<search_size>,
-    C<search_source>,
-    C<search_type>,
-    C<search_types>,
-    C<stop_words>
-
-See the L<mlt docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-more-like-this.html>
-for more information.
-
 =HEAD1 INDEXED SCRIPT METHODS
 
 If dynamic scripting is enabled, Elasticsearch allows you to store scripts in an internal index known as

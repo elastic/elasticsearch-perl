@@ -283,32 +283,6 @@ sub api {
         ],
     },
 
-    'mlt' => {
-        body  => {},
-        doc   => "search-more-like-this",
-        parts => {
-            id    => { required => 1 },
-            index => { required => 1 },
-            type  => { required => 1 },
-        },
-        paths => [
-            [   { id => 2, index => 0, type => 1 },
-                "{index}", "{type}", "{id}", "_mlt",
-            ],
-        ],
-        qs => [
-            "boost_terms",            "max_doc_freq",
-            "max_query_terms",        "max_word_length",
-            "min_doc_freq",           "min_term_freq",
-            "min_word_length",        "mlt_fields",
-            "percent_terms_to_match", "routing",
-            "search_from",            "search_indices",
-            "search_scroll",          "search_size",
-            "search_source",          "search_type",
-            "search_types",           "stop_words",
-        ],
-    },
-
     'mpercolate' => {
         body            => { required => 1 },
         doc             => "search-percolate",
