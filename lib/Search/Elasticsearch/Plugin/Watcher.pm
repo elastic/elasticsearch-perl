@@ -102,6 +102,10 @@ for more information.
 
 The C<delete_watch()> method is used to delete a watch by ID.
 
+Query string parameters:
+    C<force>,
+    C<master_timeout>
+
 See the L<delete_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest-delete-watch.html>
 for more information.
 
@@ -115,6 +119,9 @@ for more information.
 The C<execute_watch()> method forces the execution of a previously
 registered watch.  Optional parameters may be passed in the C<body>.
 
+Query string parameters:
+    C<master_timeout>
+
 See the L<execute_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest-execute-watch.html>
 for more information.
 
@@ -126,6 +133,9 @@ for more information.
 
 The C<ack_watch()> method is used to manually throttle the execution of
 a watch.
+
+Query string parameters:
+    C<master_timeout>
 
 See the L<ack_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest-ack-watch.html>
 for more information.

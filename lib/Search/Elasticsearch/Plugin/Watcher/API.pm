@@ -27,7 +27,7 @@ sub api {
         method => "PUT",
         parts  => { id => { required => 1 } },
         paths  => [ [ { id => 2 }, "_watcher", "watch", "{id}", "_ack" ] ],
-        qs     => [],
+        qs     => ["master_timeout"],
     },
 
     'watcher.delete_watch' => {
@@ -35,7 +35,7 @@ sub api {
         method => "DELETE",
         parts  => { id => { required => 1 } },
         paths  => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
-        qs     => [],
+        qs => [ "force", "master_timeout" ],
     },
 
     'watcher.execute_watch' => {
@@ -67,7 +67,7 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
-        qs => [],
+        qs => ["master_timeout"],
     },
 
     'watcher.restart' => {
