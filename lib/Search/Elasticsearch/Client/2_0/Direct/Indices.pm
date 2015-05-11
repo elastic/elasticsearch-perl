@@ -793,12 +793,17 @@ The C<validate_query()> method accepts a query in the C<body> and checks
 whether the query is valid or not.  Most useful when C<explain> is set
 to C<true>, in which case it includes an execution plan in the output.
 
-
 Query string parameters:
     C<allow_no_indices>,
-    C<expand_wildcards>,
+    C<analyze_wildcard>,
+    C<analyzer>,
+    C<default_operator>,
+    C<df>,
     C<explain>,
+    C<expand_wildcards>,
     C<ignore_unavailable>,
+    C<lenient>,
+    C<lowercase_expanded_terms>
     C<q>
 
 See the L<validate_query docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-validate.html>
