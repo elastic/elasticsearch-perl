@@ -851,10 +851,17 @@ It doesn't return any results itself.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<analyze_wildcard>,
+    C<analyzer>,
+    C<default_operator>,
+    C<df>,
     C<expand_wildcards>,
     C<ignore_unavailable>,
+    C<lenient>,
+    C<lowercase_expanded_terms>,
     C<min_score>,
     C<preference>,
+    C<q>,
     C<routing>
 
 See the L<search exists reference|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-exists.html>
@@ -882,10 +889,17 @@ query:
 
 Query string parameters:
     C<allow_no_indices>,
+    C<analyze_wildcard>,
+    C<analyzer>,
+    C<default_operator>,
+    C<df>,
     C<expand_wildcards>,
     C<ignore_unavailable>,
+    C<lenient>,
+    C<lowercase_expanded_terms>,
     C<min_score>,
     C<preference>,
+    C<q>,
     C<routing>
 
 See the L<count docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html>

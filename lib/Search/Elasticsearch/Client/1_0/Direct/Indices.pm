@@ -814,9 +814,15 @@ to C<true>, in which case it includes an execution plan in the output.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<analyze_wildcard>,
+    C<analyzer>,
+    C<default_operator>,
+    C<df>,
     C<expand_wildcards>,
     C<explain>,
     C<ignore_unavailable>,
+    C<lenient>,
+    C<lowercase_expanded_terms>,
     C<q>
 
 See the L<validate_query docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-validate.html>
