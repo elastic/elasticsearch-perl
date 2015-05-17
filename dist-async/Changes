@@ -1,5 +1,9 @@
 Revision history for Search::Elasticsearch::Async
 
+1.20    2015-05-17
+        Search::Elasticsearch::Async is no longer a Moo class
+        Updated elasticsearch.org URLs to use elastic.co instead
+
 1.19    2015-01-15
         Added optional tests for https/authz/authen
 

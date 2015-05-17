@@ -1,5 +1,56 @@
 Revision history for Search::Elasticsearch
 
+1.20    2015-05-17
+
+        Deprecated:
+        * Search::Elasticsearch::Client::Direct in favour of
+          Search::Elasticsearch::Client::1_0::Direct
+
+        New features:
+        * Added support for structured JSON exceptions in Elasticsearch 2.0
+        * Added support for plugins
+        * Added Search::Elasticsearch::Client::2_0::Direct for the upcoming
+          Elasticsearch 2.0 with these changes:
+            * removed delete_by_query()
+            * removed termvector()
+            * removed indices.delete_mapping()
+            * removed nodes.shutdown()
+            * removed indices.status()
+            * added terminate_after param to search()
+            * added dfs param to termvectors()
+            * removed filter_keys param from indices.clear_cache()
+            * removed full param from indices.flush()
+            * removed force param from indics.optmize()
+            * removed replication param from all CRUD methods
+            * removed mlt() method
+
+        Bug fix:
+        * The bulk buffer was being cleared on a NoNodes exception
+
+        Added class:
+        Added methods:
+        * field_stats()
+
+        Added params:
+        * allow_no_indices, expand_wildcards, ignore_unavailable to cluster.state()
+        * fielddata_fields to search()
+        * master_timeout to indices.get_template() and indices.exists_template()
+        * detect_noop to update()
+        * only_ancient_segments to upgrade()
+        * analyze_wildcards, analyzer, default_operator, df, lenient, lowercase_expanded_terms,
+          and q to count(), search_exists() and indices.validate_query()
+
+        Removed methods:
+        * benchmark.* - never released in Elasticsearch
+
+        Also:
+        * arrays of enum query string params are now flattened as CSV
+        * enum expand_wildcards also accepts: none, all
+        * Search::Elasticsearch is no longer a Moo class
+        * Updated elasticsearch.org URLs to use elastic.co instead
+        * the request body is retained in exceptions
+        * upgraded Hijk to 0.20
+
 1.19    2015-01-15
         Added method:
         * cat.segments()
