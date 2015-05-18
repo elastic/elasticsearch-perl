@@ -37,6 +37,7 @@ sub BUILDARGS {
         total        => $total,
         max_score    => $results->{hits}{max_score},
         _buffer      => $results->{hits}{hits},
+        $params->{params} ? ( search_params => $params->{params}) : (),
         $total
         ? ( _scroll_id => $results->{_scroll_id} )
         : ( is_finished => 1 )
