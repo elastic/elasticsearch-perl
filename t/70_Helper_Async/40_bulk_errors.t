@@ -126,7 +126,10 @@ $b = bulk(
             {   _index => 'test',
                 _type  => 'test',
                 _id    => 1,
-                error  => re('MapperParsingException'),
+                error  => any(
+                    re('MapperParsingException'),
+                    superhashof( { type => 'mapper_parsing_exception' } )
+                ),
                 status => 400,
             },
             1
@@ -136,7 +139,12 @@ $b = bulk(
             {   _index => 'test',
                 _type  => 'test',
                 _id    => 1,
-                error  => re('version conflict'),
+                error  => any(
+                    re('version conflict'),
+                    superhashof(
+                        { type => 'version_conflict_engine_exception' }
+                    )
+                ),
                 status => 409,
             },
             2, 1

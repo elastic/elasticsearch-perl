@@ -20,11 +20,6 @@ has '_buffer_count' => ( is => 'rw', default => 0 );
 has '_serializer'   => ( is => 'lazy' );
 has '_bulk_args'    => ( is => 'ro' );
 
-our $Conflict = qr/
-    DocumentAlreadyExistsException
-  | :.version.conflict,.current.\[(\d+)\]
-  /x;
-
 our %Actions = (
     'index'  => 1,
     'create' => 1,
@@ -191,15 +186,39 @@ sub _report {
         my ( $action, $result ) = %$item;
         my @args = ($action);
         if ( my $error = $result->{error} ) {
-            $on_conflict && $error =~ /$Conflict/
-                ? $on_conflict->( $action, $result, $j, $1 )
-                : $on_error && $on_error->( $action, $result, $j );
+            if ($on_conflict) {
+                my ( $is_conflict, $version )
+                    = $self->_is_conflict_error($error);
+                if ($is_conflict) {
+                    $on_conflict->( $action, $result, $j, $version );
+                    next;
+                }
+            }
+            $on_error && $on_error->( $action, $result, $j );
         }
         else {
             $on_success && $on_success->( $action, $result, $j );
         }
         $j++;
     }
+}
+
+#===================================
+sub _is_conflict_error {
+#===================================
+    my ( $self, $error ) = @_;
+    my $version;
+    if ( ref($error) eq 'HASH' ) {
+        return 1 if $error->{type} eq 'document_already_exists_exception';
+        return unless $error->{type} eq 'version_conflict_engine_exception';
+        $error->{reason} =~ /version.conflict,.current.\[(\d+)\]/;
+        return ( 1, $1 );
+    }
+    return unless $error =~ /
+            DocumentAlreadyExistsException
+           |version.conflict,.current.\[(\d+)\]
+           /x;
+    return ( 1, $1 );
 }
 
 #===================================
