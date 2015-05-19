@@ -33,7 +33,7 @@ sub finish {
 sub scroll_request {
 #===================================
     my $self = shift;
-    my %args = ( scroll => $self->scroll );
+    my %args = ( scroll => $self->scroll, $self->search_params ? ( params => $self->search_params ) : () );
     if ( $self->scroll_in_qs ) {
         $args{scroll_id} = $self->_scroll_id;
     }
