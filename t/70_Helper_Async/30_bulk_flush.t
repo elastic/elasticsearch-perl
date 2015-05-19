@@ -53,6 +53,12 @@ test_flush(
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 );
 
+test_flush(
+    "max_count = 5, max_time = 1",
+    { max_count => 5, max_time => 1 },
+    1, 2, 0, 1, 2, 3, 4, 0, 0, 1
+);
+
 done_testing;
 
 wait_for( $es->indices->delete( index => 'test' ) );
@@ -76,9 +82,28 @@ sub test_flush {
     my $loop;
 
     my $d = deferred;
+    my $w;
     $loop = sub {
+        my $no_check_time = shift;
         if ( $i == 20 ) {
             return $b->flush->then( sub { $d->resolve } );
+        }
+
+        # sleep on 12 or 18 if max_time specified
+        if (  !$no_check_time
+            && $params->{max_time}
+            && ( $i == 12 || $i == 18 ) )
+        {
+            my $t = deferred;
+            $w = AE::timer(
+                $params->{max_time},
+                0,
+                sub {
+                    $t->resolve;
+                    $loop->('no_check_time');
+                }
+            );
+            return $t->promise;
         }
         $b->index( { id => $i, source => {} } )->then(
             sub {

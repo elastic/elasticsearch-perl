@@ -28,6 +28,7 @@ sub add_action {
     my $buffer    = $self->_buffer;
     my $max_size  = $self->max_size;
     my $max_count = $self->max_count;
+    my $max_time  = $self->max_time;
 
     my $deferred = deferred;
     my @actions  = @_;
@@ -54,8 +55,9 @@ sub add_action {
             my $count = $self->_buffer_count( $self->_buffer_count + 1 );
 
             next
-                unless ( $max_size && $size >= $max_size )
-                || $max_count && $count >= $max_count;
+                unless ( $max_size and $size >= $max_size )
+                || ( $max_count and $count >= $max_count )
+                || ( $max_time  and time >= $self->_last_flush + $max_time );
 
             return $self->flush->done( $weak_add,
                 sub { $deferred->reject(@_) } );
@@ -77,6 +79,8 @@ sub flush {
 
     my $size  = $self->_buffer_size;
     my $count = $self->_buffer_count;
+
+    $self->_last_flush(time);
 
     unless ($size) {
         return deferred->resolve( { items => [] } )->promise;
@@ -262,6 +266,7 @@ L<Search::Elasticsearch::Role::Is_Async>.
 
         max_count   => 1_000,               # optional
         max_size    => 1_000_000,           # optional
+        max_time    => 5,                   # optional
 
         verbose     => 0 | 1,               # optional
 
@@ -296,8 +301,8 @@ exception, otherwise it is resolved with the items that have been flushed.
 
 =head2 Auto-flushing
 
-An automatic L</flush()> is triggered whenever the C<max_count> or C<max_size>
-threshold is breached.  This causes all actions in the buffer to be
+An automatic L</flush()> is triggered whenever the C<max_count>, C<max_size>,
+or C<max_time> threshold is breached.  This causes all actions in the buffer to be
 sent to Elasticsearch.
 
 =over
@@ -313,6 +318,12 @@ C<1,000>.
 The maximum size of JSON request body to allow before triggering a
 L</flush()>.  This can be disabled by setting C<max_size> to C<0>.  Defaults
 to C<1_000,000> bytes.
+
+=item * C<max_time>
+
+The maximum number of seconds to wait before triggering a flush.  Defaults
+to C<0> seconds, which means that it is disabled.  B<Note:> This timeout
+is only triggered when new items are added to the queue, not in the background.
 
 =back
 

@@ -51,6 +51,12 @@ test_flush(
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 );
 
+test_flush(
+    "max_count = 5, max_time = 1",
+    { max_count => 5, max_time => 1 },
+    1, 2, 0, 1, 2, 3, 4, 0, 0, 1
+);
+
 done_testing;
 
 $es->indices->delete( index => 'test' );
@@ -74,6 +80,11 @@ sub test_flush {
     $es->cluster->health( wait_for_status => 'yellow' );
 
     for my $i ( 10 .. 19 ) {
+
+        # sleep on 12 or 18 if max_time specified
+        if ( $params->{max_time} && ( $i == 12 || $i == 18 ) ) {
+            sleep $params->{max_time} + 1;
+        }
         $b->index( { id => $i, source => {} } );
         is $b->_buffer_count, shift @seq, "$title - " . ( $i - 9 );
     }

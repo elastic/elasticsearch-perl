@@ -6,12 +6,14 @@ requires 'add_action', 'flush';
 use Search::Elasticsearch::Util qw(parse_params throw);
 use namespace::clean;
 
-has 'es'          => ( is => 'ro', required => 1 );
-has 'max_count'   => ( is => 'rw', default  => 1_000 );
-has 'max_size'    => ( is => 'rw', default  => 1_000_000 );
-has 'on_success'  => ( is => 'ro', default  => 0 );
+has 'es'        => ( is => 'ro', required => 1 );
+has 'max_count' => ( is => 'rw', default  => 1_000 );
+has 'max_size'  => ( is => 'rw', default  => 1_000_000 );
+has 'max_time'  => ( is => 'rw', default  => undef );
+
+has 'on_success'  => ( is => 'ro', default => 0 );
 has 'on_error'    => ( is => 'lazy' );
-has 'on_conflict' => ( is => 'ro', default  => 0 );
+has 'on_conflict' => ( is => 'ro', default => 0 );
 has 'verbose'     => ( is => 'rw' );
 
 has '_buffer' => ( is => 'ro', default => sub { [] } );
@@ -19,6 +21,7 @@ has '_buffer_size'  => ( is => 'rw', default => 0 );
 has '_buffer_count' => ( is => 'rw', default => 0 );
 has '_serializer'   => ( is => 'lazy' );
 has '_bulk_args'    => ( is => 'ro' );
+has '_last_flush' => ( is => 'rw', default => sub {time} );
 
 our %Actions = (
     'index'  => 1,
