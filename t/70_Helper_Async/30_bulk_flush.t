@@ -55,7 +55,7 @@ test_flush(
 
 test_flush(
     "max_count = 5, max_time = 1",
-    { max_count => 5, max_time => 1 },
+    { max_count => 5, max_time => 2 },
     1, 2, 0, 1, 2, 3, 4, 0, 0, 1
 );
 
