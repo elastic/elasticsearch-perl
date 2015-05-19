@@ -9,7 +9,7 @@ use namespace::clean;
 has 'es'        => ( is => 'ro', required => 1 );
 has 'max_count' => ( is => 'rw', default  => 1_000 );
 has 'max_size'  => ( is => 'rw', default  => 1_000_000 );
-has 'max_time'  => ( is => 'rw', default  => undef );
+has 'max_time'  => ( is => 'rw', default  => 0 );
 
 has 'on_success'  => ( is => 'ro', default => 0 );
 has 'on_error'    => ( is => 'lazy' );
