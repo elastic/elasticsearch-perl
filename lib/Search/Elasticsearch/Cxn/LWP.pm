@@ -125,6 +125,8 @@ From L<Search::Elasticsearch::Role::Cxn>
 
 =item * L<handle_args|Search::Elasticsearch::Role::Cxn/"handle_args">
 
+=item * L<handle_args|Search::Elasticsearch::Role::Cxn/"default_qs_params">
+
 =back
 
 =head1 SSL/TLS

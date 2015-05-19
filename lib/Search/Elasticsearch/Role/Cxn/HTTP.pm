@@ -90,7 +90,8 @@ sub build_uri {
     my ( $self, $params ) = @_;
     my $uri = $self->uri->clone;
     $uri->path( $uri->path . $params->{path} );
-    $uri->query_form( $params->{qs} );
+    my %qs = ( %{ $self->default_qs_params }, %{ $params->{qs} || {} } );
+    $uri->query_form( \%qs );
     return $uri;
 }
 
@@ -278,6 +279,7 @@ to each request.
 The default headers that are passed with each request.  This includes
 the C<Accept-Encoding> header if C</deflate> is true, and the C<Authorization>
 header if C</userinfo> has a value.
+Also see L<Search::Elasticsearch::Role::Cxn/default_qs_params>.
 
 =head2 C<max_content_length()>
 

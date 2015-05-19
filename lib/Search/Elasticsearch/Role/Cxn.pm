@@ -24,6 +24,7 @@ has 'max_dead_timeout'      => ( is => 'ro', default  => 3600 );
 has 'serializer'            => ( is => 'ro', required => 1 );
 has 'logger'                => ( is => 'ro', required => 1 );
 has 'handle_args'           => ( is => 'ro', default  => sub { {} } );
+has 'default_qs_params'     => ( is => 'ro', default  => sub { {} } );
 
 my %Code_To_Error = (
     400 => 'Request',
@@ -324,6 +325,17 @@ to ensure that you get information about healthy nodes from the cluster.
 
 Any default arguments which should be passed when creating a new instance of
 the class which handles the network transport, eg L<HTTP::Tiny>.
+
+=head2 C<default_qs_params>
+
+    $e = Search::Elasticsearch->new(
+        default_qs_params => {
+            session_key => 'my_session_key'
+        }
+    );
+
+Any values passed to C<default_qs_params> will be added to the query string
+of every request. Also see L<Search::Elasticsearch::Role::Cxn::HTTP/default_headers()>.
 
 =head1 METHODS
 

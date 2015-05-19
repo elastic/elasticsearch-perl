@@ -103,6 +103,33 @@ is_cxn "Hash path",
     new_cxn( nodes => { path => 'baz' } ),
     { port => 80, uri => 'http://localhost:80/baz' };
 
+# Build URI
+is new_cxn()->build_uri( { path => '/' } ), 'http://localhost:9200/',
+    "Default URI";
+
+is new_cxn( { nodes => 'http://localhost:9200/foo' } )
+    ->build_uri( { path => '/_search' } ),
+    'http://localhost:9200/foo/_search',
+    "URI with path";
+
+is new_cxn( { default_qs_params => { session => 'key' } } )
+    ->build_uri( { path => '/_search' } ),
+    'http://localhost:9200/_search?session=key',
+    "default_qs_params";
+
+my $uri = new_cxn( { default_qs_params => { session => 'key' } } )
+    ->build_uri( { path => '/_search', qs => { foo => 'bar' } } );
+
+like $uri, qr{^http://localhost:9200/_search?},
+    "default_qs_params and qs - 1";
+like $uri, qr{session=key}, "default_qs_params and qs - 2";
+like $uri, qr{foo=bar},     "default_qs_params and qs - 3";
+
+is new_cxn( { default_qs_params => { session => 'key' } } )
+    ->build_uri( { path => '/_search', qs => { session => 'bar' } } ),
+    'http://localhost:9200/_search?session=bar',
+    "default_qs_params overwritten";
+
 done_testing;
 
 #===================================
