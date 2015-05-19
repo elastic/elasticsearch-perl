@@ -81,37 +81,31 @@ sub test_flush {
     my $i = 10;
     my $loop;
 
+    my $index_doc = sub {
+        $b->index( { id => $i, source => {} } );
+    };
+
+    my $check_buffer = sub {
+        is $b->_buffer_count, shift @seq, "$title - " . ( $i - 9 );
+        $i++;
+    };
+
     my $d = deferred;
     my $w;
+
     $loop = sub {
-        my $no_check_time = shift;
         if ( $i == 20 ) {
             return $b->flush->then( sub { $d->resolve } );
         }
 
         # sleep on 12 or 18 if max_time specified
-        if (  !$no_check_time
-            && $params->{max_time}
-            && ( $i == 12 || $i == 18 ) )
-        {
+        if ( $params->{max_time} && ( $i == 12 || $i == 18 ) ) {
             my $t = deferred;
-            $w = AE::timer(
-                $params->{max_time}+2,
-                0,
-                sub {
-                    $t->resolve;
-                    $loop->('no_check_time');
-                }
-            );
+            $w = AE::timer( $params->{max_time} + 1, 0, sub { $t->resolve } );
+            $t->then($index_doc)->then($check_buffer)->then($loop);
             return $t->promise;
         }
-        $b->index( { id => $i, source => {} } )->then(
-            sub {
-                is $b->_buffer_count, shift @seq, "$title - " . ( $i - 9 );
-                $i++;
-                $loop->();
-            }
-        );
+        $index_doc->()->then($check_buffer)->then($loop);
     };
 
     $es->indices->delete( index => 'test', ignore => 404 )
