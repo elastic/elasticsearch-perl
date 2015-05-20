@@ -793,7 +793,6 @@ sub api {
             "allow_no_indices",   "expand_wildcards",
             "fielddata",          "fields",
             "filter",             "filter_cache",
-            "id",                 "id_cache",
             "ignore_unavailable", "query_cache",
             "recycler",
         ],
