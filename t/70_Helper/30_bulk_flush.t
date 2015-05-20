@@ -83,7 +83,7 @@ sub test_flush {
 
         # sleep on 12 or 18 if max_time specified
         if ( $params->{max_time} && ( $i == 12 || $i == 18 ) ) {
-            sleep $params->{max_time} + 1;
+            $b->_last_flush( time - $params->{max_time} - 1 );
         }
         $b->index( { id => $i, source => {} } );
         is $b->_buffer_count, shift @seq, "$title - " . ( $i - 9 );

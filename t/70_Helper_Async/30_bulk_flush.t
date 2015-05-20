@@ -55,7 +55,7 @@ test_flush(
 
 test_flush(
     "max_count = 5, max_time = 1",
-    { max_count => 5, max_time => 1 },
+    { max_count => 5, max_time => 5 },
     1, 2, 0, 1, 2, 3, 4, 0, 0, 1
 );
 
@@ -100,10 +100,7 @@ sub test_flush {
 
         # sleep on 12 or 18 if max_time specified
         if ( $params->{max_time} && ( $i == 12 || $i == 18 ) ) {
-            my $t = deferred;
-            $w = AE::timer( $params->{max_time} + 1, 0, sub { $t->resolve } );
-            $t->then($index_doc)->then($check_buffer)->then($loop);
-            return $t->promise;
+            $b->_last_flush( time - $params->{max_time} - 1 );
         }
         $index_doc->()->then($check_buffer)->then($loop);
     };
