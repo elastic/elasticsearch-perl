@@ -1119,9 +1119,9 @@ sub api {
             [ { type => 1 }, "_mapping", "{type}" ],
         ],
         qs => [
-            "allow_no_indices", "expand_wildcards",
-            "ignore_conflicts", "ignore_unavailable",
-            "master_timeout",   "timeout",
+            "allow_no_indices",   "expand_wildcards",
+            "ignore_unavailable", "master_timeout",
+            "timeout",
         ],
     },
 

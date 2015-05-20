@@ -289,7 +289,6 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<ignore_unavailable>,
-    C<ignore_conflicts>,
     C<master_timeout>,
     C<timeout>
 
