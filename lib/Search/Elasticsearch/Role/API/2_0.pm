@@ -1202,6 +1202,14 @@ sub api {
         ],
     },
 
+    'indices.seal' => {
+        doc    => "indices-seal",
+        method => "POST",
+        parts  => { index => { multi => 1 } },
+        paths  => [ [ { index => 0 }, "{index}", "_seal" ], [ {}, "_seal" ] ],
+        qs     => [],
+    },
+
     'indices.segments' => {
         doc   => "indices-segments",
         parts => { index => { multi => 1 } },

@@ -219,6 +219,26 @@ Query string parameters:
 See the L<optimize index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-optimize.html>
 for more information.
 
+=head2 C<seal()>
+
+    $respnse = $e->indices->seal(
+        index => 'index' | \@indices    # optional
+    );
+
+The C<seal()> method does a synchronised L<flush()> on the primaries and replicas of
+all the specified indices.  In other words, after flushing it tries to write a I<seal>
+on the primaries and replicas to mark them as containing the same documents.  During
+recovery, if a replica has the same I<seal> as the primary, then it doesn't need to check
+whether the segment files on primary and replica are the same, and it can move on
+directly to just replaying the translog.  This can greatly speed up recovery.
+
+Sealing happens automatically in the background on indices that have not received any
+writes for a while, but the L<seal()> method can be used to trigger this process
+manually, eg before shutting down.  Any new commits immediately break the seal.
+
+See the L<seal index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-seal.html>
+for more information.
+
 =head2 C<get_upgrade()>
 
     $response = $e->indices->get_upgrade(
