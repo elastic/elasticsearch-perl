@@ -68,6 +68,7 @@ our %Params = (
     filter_index_templates => { type => 'bool' },
     filter_indices         => { type => 'list' },
     filter_keys            => { type => 'bool' },
+    filter_path            => { type => 'list' },
     filter_metadata        => { type => 'bool' },
     filter_nodes           => { type => 'bool' },
     filter_routing_table   => { type => 'bool' },

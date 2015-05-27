@@ -33,7 +33,8 @@ sub api {
             [ { index => 0 }, "{index}", "_bulk" ],
             [ {}, "_bulk" ],
         ],
-        qs        => [ "consistency", "refresh", "routing", "timeout" ],
+        qs =>
+            [ "consistency", "filter_path", "refresh", "routing", "timeout" ],
         serialize => "bulk",
     },
 
@@ -46,7 +47,7 @@ sub api {
             [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ],
             [ {}, "_search", "scroll" ],
         ],
-        qs => [],
+        qs => ["filter_path"],
     },
 
     'count' => {
@@ -61,13 +62,13 @@ sub api {
             [ {}, "_count" ],
         ],
         qs => [
-            "allow_no_indices",         "analyze_wildcard",
-            "analyzer",                 "default_operator",
-            "df",                       "expand_wildcards",
-            "ignore_unavailable",       "lenient",
-            "lowercase_expanded_terms", "min_score",
-            "preference",               "q",
-            "routing",
+            "allow_no_indices", "analyze_wildcard",
+            "analyzer",         "default_operator",
+            "df",               "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "lenient",          "lowercase_expanded_terms",
+            "min_score",        "preference",
+            "q",                "routing",
         ],
     },
 
@@ -90,11 +91,11 @@ sub api {
             ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "percolate_index",
-            "percolate_type",     "preference",
-            "routing",            "version",
-            "version_type",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "percolate_index",  "percolate_type",
+            "preference",       "routing",
+            "version",          "version_type",
         ],
     },
 
@@ -112,8 +113,8 @@ sub api {
             ],
         ],
         qs => [
-            "consistency", "parent",  "refresh", "routing",
-            "timeout",     "version", "version_type",
+            "consistency", "filter_path", "parent",  "refresh",
+            "routing",     "timeout",     "version", "version_type",
         ],
     },
 
@@ -122,7 +123,7 @@ sub api {
         method => "DELETE",
         parts  => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs => [ "version", "version_type" ],
+        qs => [ "filter_path", "version", "version_type" ],
     },
 
     'delete_template' => {
@@ -130,7 +131,7 @@ sub api {
         method => "DELETE",
         parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs => [ "version", "version_type" ],
+        qs => [ "filter_path", "version", "version_type" ],
     },
 
     'exists' => {
@@ -164,13 +165,14 @@ sub api {
             ],
         ],
         qs => [
-            "_source",         "_source_exclude",
-            "_source_include", "analyze_wildcard",
-            "analyzer",        "default_operator",
-            "df",              "fields",
-            "lenient",         "lowercase_expanded_terms",
-            "parent",          "preference",
-            "q",               "routing",
+            "_source",                  "_source_exclude",
+            "_source_include",          "analyze_wildcard",
+            "analyzer",                 "default_operator",
+            "df",                       "fields",
+            "filter_path",              "lenient",
+            "lowercase_expanded_terms", "parent",
+            "preference",               "q",
+            "routing",
         ],
     },
 
@@ -182,9 +184,9 @@ sub api {
             [ {}, "_field_stats" ],
         ],
         qs => [
-            "allow_no_indices", "expand_wildcards",
-            "fields",           "ignore_unavailable",
-            "level",
+            "allow_no_indices",   "expand_wildcards",
+            "fields",             "filter_path",
+            "ignore_unavailable", "level",
         ],
     },
 
@@ -203,10 +205,10 @@ sub api {
         qs => [
             "_source",         "_source_exclude",
             "_source_include", "fields",
-            "parent",          "preference",
-            "realtime",        "refresh",
-            "routing",         "version",
-            "version_type",
+            "filter_path",     "parent",
+            "preference",      "realtime",
+            "refresh",         "routing",
+            "version",         "version_type",
         ],
     },
 
@@ -214,7 +216,7 @@ sub api {
         doc   => "modules-scripting",
         parts => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs => [ "version", "version_type" ],
+        qs => [ "filter_path", "version", "version_type" ],
     },
 
     'get_source' => {
@@ -231,10 +233,11 @@ sub api {
         ],
         qs => [
             "_source",         "_source_exclude",
-            "_source_include", "parent",
-            "preference",      "realtime",
-            "refresh",         "routing",
-            "version",         "version_type",
+            "_source_include", "filter_path",
+            "parent",          "preference",
+            "realtime",        "refresh",
+            "routing",         "version",
+            "version_type",
         ],
     },
 
@@ -242,7 +245,7 @@ sub api {
         doc   => "search-template",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs => [ "version", "version_type" ],
+        qs => [ "filter_path", "version", "version_type" ],
     },
 
     'index' => {
@@ -261,13 +264,18 @@ sub api {
             [ { index => 0, type => 1 }, "{index}", "{type}" ],
         ],
         qs => [
-            "consistency", "op_type", "parent",    "refresh",
-            "routing",     "timeout", "timestamp", "ttl",
-            "version",     "version_type",
+            "consistency", "filter_path", "op_type", "parent",
+            "refresh",     "routing",     "timeout", "timestamp",
+            "ttl",         "version",     "version_type",
         ],
     },
 
-    'info' => { doc => "", parts => {}, paths => [ [ {} ] ], qs => [] },
+    'info' => {
+        doc   => "",
+        parts => {},
+        paths => [ [ {} ] ],
+        qs    => ["filter_path"]
+    },
 
     'mget' => {
         body            => { required => 1 },
@@ -282,8 +290,8 @@ sub api {
         qs => [
             "_source",         "_source_exclude",
             "_source_include", "fields",
-            "preference",      "realtime",
-            "refresh",
+            "filter_path",     "preference",
+            "realtime",        "refresh",
         ],
     },
 
@@ -297,8 +305,10 @@ sub api {
             [ { index => 0 }, "{index}", "_mpercolate" ],
             [ {}, "_mpercolate" ],
         ],
-        qs =>
-            [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
+        qs => [
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+        ],
         serialize => "bulk",
     },
 
@@ -312,7 +322,7 @@ sub api {
             [ { index => 0 }, "{index}", "_msearch" ],
             [ {}, "_msearch" ],
         ],
-        qs        => ["search_type"],
+        qs        => [ "filter_path", "search_type" ],
         serialize => "bulk",
     },
 
@@ -330,12 +340,12 @@ sub api {
         ],
         qs => [
             "field_statistics", "fields",
-            "ids",              "offsets",
-            "parent",           "payloads",
-            "positions",        "preference",
-            "realtime",         "routing",
-            "term_statistics",  "version",
-            "version_type",
+            "filter_path",      "ids",
+            "offsets",          "parent",
+            "payloads",         "positions",
+            "preference",       "realtime",
+            "routing",          "term_statistics",
+            "version",          "version_type",
         ],
     },
 
@@ -355,12 +365,13 @@ sub api {
             [ { index => 0, type => 1 }, "{index}", "{type}", "_percolate" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "percolate_format",
-            "percolate_index",    "percolate_preference",
-            "percolate_routing",  "percolate_type",
-            "preference",         "routing",
-            "version",            "version_type",
+            "allow_no_indices",     "expand_wildcards",
+            "filter_path",          "ignore_unavailable",
+            "percolate_format",     "percolate_index",
+            "percolate_preference", "percolate_routing",
+            "percolate_type",       "preference",
+            "routing",              "version",
+            "version_type",
         ],
     },
 
@@ -378,7 +389,7 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs => [ "op_type", "version", "version_type" ],
+        qs => [ "filter_path", "op_type", "version", "version_type" ],
     },
 
     'put_template' => {
@@ -387,7 +398,7 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs => [ "op_type", "version", "version_type" ],
+        qs => [ "filter_path", "op_type", "version", "version_type" ],
     },
 
     'scroll' => {
@@ -398,7 +409,7 @@ sub api {
             [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ],
             [ {}, "_search", "scroll" ],
         ],
-        qs => ["scroll"],
+        qs => [ "filter_path", "scroll" ],
     },
 
     'search' => {
@@ -412,23 +423,23 @@ sub api {
             [ {}, "_search" ],
         ],
         qs => [
-            "_source",          "_source_exclude",
-            "_source_include",  "allow_no_indices",
-            "analyze_wildcard", "analyzer",
-            "default_operator", "df",
-            "expand_wildcards", "explain",
-            "fielddata_fields", "fields",
-            "from",             "ignore_unavailable",
-            "lenient",          "lowercase_expanded_terms",
-            "preference",       "q",
-            "query_cache",      "routing",
-            "scroll",           "search_type",
-            "size",             "sort",
-            "stats",            "suggest_field",
-            "suggest_mode",     "suggest_size",
-            "suggest_text",     "terminate_after",
-            "timeout",          "track_scores",
-            "version",
+            "_source",                  "_source_exclude",
+            "_source_include",          "allow_no_indices",
+            "analyze_wildcard",         "analyzer",
+            "default_operator",         "df",
+            "expand_wildcards",         "explain",
+            "fielddata_fields",         "fields",
+            "filter_path",              "from",
+            "ignore_unavailable",       "lenient",
+            "lowercase_expanded_terms", "preference",
+            "q",                        "query_cache",
+            "routing",                  "scroll",
+            "search_type",              "size",
+            "sort",                     "stats",
+            "suggest_field",            "suggest_mode",
+            "suggest_size",             "suggest_text",
+            "terminate_after",          "timeout",
+            "track_scores",             "version",
         ],
     },
 
@@ -447,13 +458,13 @@ sub api {
             [ {}, "_search", "exists" ],
         ],
         qs => [
-            "allow_no_indices",         "analyze_wildcard",
-            "analyzer",                 "default_operator",
-            "df",                       "expand_wildcards",
-            "ignore_unavailable",       "lenient",
-            "lowercase_expanded_terms", "min_score",
-            "preference",               "q",
-            "routing",
+            "allow_no_indices", "analyze_wildcard",
+            "analyzer",         "default_operator",
+            "df",               "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "lenient",          "lowercase_expanded_terms",
+            "min_score",        "preference",
+            "q",                "routing",
         ],
     },
 
@@ -469,9 +480,10 @@ sub api {
             [ {}, "_search_shards" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "local",
-            "preference",         "routing",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "local",            "preference",
+            "routing",
         ],
     },
 
@@ -489,10 +501,10 @@ sub api {
             [ {}, "_search", "template" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "preference",
-            "routing",            "scroll",
-            "search_type",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "preference",       "routing",
+            "scroll",           "search_type",
         ],
     },
 
@@ -504,9 +516,9 @@ sub api {
         paths =>
             [ [ { index => 0 }, "{index}", "_suggest" ], [ {}, "_suggest" ] ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "preference",
-            "routing",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "preference",       "routing",
         ],
     },
 
@@ -528,13 +540,13 @@ sub api {
             ],
         ],
         qs => [
-            "dfs",             "field_statistics",
-            "fields",          "offsets",
-            "parent",          "payloads",
-            "positions",       "preference",
-            "realtime",        "routing",
-            "term_statistics", "version",
-            "version_type",
+            "dfs",        "field_statistics",
+            "fields",     "filter_path",
+            "offsets",    "parent",
+            "payloads",   "positions",
+            "preference", "realtime",
+            "routing",    "term_statistics",
+            "version",    "version_type",
         ],
     },
 
@@ -553,14 +565,14 @@ sub api {
             ],
         ],
         qs => [
-            "consistency", "fields",
-            "lang",        "parent",
-            "refresh",     "retry_on_conflict",
-            "routing",     "script",
-            "script_id",   "scripted_upsert",
-            "timeout",     "timestamp",
-            "ttl",         "version",
-            "version_type",
+            "consistency",       "fields",
+            "filter_path",       "lang",
+            "parent",            "refresh",
+            "retry_on_conflict", "routing",
+            "script",            "script_id",
+            "scripted_upsert",   "timeout",
+            "timestamp",         "ttl",
+            "version",           "version_type",
         ],
     },
 
@@ -697,7 +709,7 @@ sub api {
         doc   => "cluster-update-settings",
         parts => {},
         paths => [ [ {}, "_cluster", "settings" ] ],
-        qs => [ "flat_settings", "master_timeout", "timeout" ],
+        qs => [ "filter_path", "flat_settings", "master_timeout", "timeout" ],
     },
 
     'cluster.health' => {
@@ -708,10 +720,11 @@ sub api {
             [ {}, "_cluster", "health" ],
         ],
         qs => [
-            "level",                      "local",
-            "master_timeout",             "timeout",
-            "wait_for_active_shards",     "wait_for_nodes",
-            "wait_for_relocating_shards", "wait_for_status",
+            "filter_path",    "level",
+            "local",          "master_timeout",
+            "timeout",        "wait_for_active_shards",
+            "wait_for_nodes", "wait_for_relocating_shards",
+            "wait_for_status",
         ],
     },
 
@@ -719,7 +732,7 @@ sub api {
         doc   => "cluster-pending",
         parts => {},
         paths => [ [ {}, "_cluster", "pending_tasks" ] ],
-        qs => [ "local", "master_timeout" ],
+        qs => [ "filter_path", "local", "master_timeout" ],
     },
 
     'cluster.put_settings' => {
@@ -728,7 +741,7 @@ sub api {
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_cluster", "settings" ] ],
-        qs => [ "flat_settings", "master_timeout", "timeout" ],
+        qs => [ "filter_path", "flat_settings", "master_timeout", "timeout" ],
     },
 
     'cluster.reroute' => {
@@ -737,7 +750,11 @@ sub api {
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_cluster", "reroute" ] ],
-        qs => [ "dry_run", "explain", "master_timeout", "metric", "timeout" ],
+        qs     => [
+            "dry_run",     "explain",
+            "filter_path", "master_timeout",
+            "metric",      "timeout",
+        ],
     },
 
     'cluster.state' => {
@@ -753,9 +770,10 @@ sub api {
             [ {}, "_cluster", "state" ],
         ],
         qs => [
-            "allow_no_indices", "expand_wildcards",
-            "flat_settings",    "ignore_unavailable",
-            "local",            "master_timeout",
+            "allow_no_indices",   "expand_wildcards",
+            "filter_path",        "flat_settings",
+            "ignore_unavailable", "local",
+            "master_timeout",
         ],
     },
 
@@ -766,7 +784,7 @@ sub api {
             [ { node_id => 3 }, "_cluster", "stats", "nodes", "{node_id}" ],
             [ {}, "_cluster", "stats" ],
         ],
-        qs => [ "flat_settings", "human" ],
+        qs => [ "filter_path", "flat_settings", "human" ],
     },
 
     'indices.analyze' => {
@@ -776,8 +794,9 @@ sub api {
         paths =>
             [ [ { index => 0 }, "{index}", "_analyze" ], [ {}, "_analyze" ] ],
         qs => [
-            "analyzer", "char_filters", "field", "filters",
-            "format",   "prefer_local", "text",  "tokenizer",
+            "analyzer", "char_filters", "field",        "filter_path",
+            "filters",  "format",       "prefer_local", "text",
+            "tokenizer",
         ],
     },
 
@@ -790,11 +809,11 @@ sub api {
             [ {}, "_cache", "clear" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "fielddata",          "fields",
-            "filter",             "filter_cache",
-            "ignore_unavailable", "query_cache",
-            "recycler",
+            "allow_no_indices", "expand_wildcards",
+            "fielddata",        "fields",
+            "filter",           "filter_cache",
+            "filter_path",      "ignore_unavailable",
+            "query_cache",      "recycler",
         ],
     },
 
@@ -804,9 +823,9 @@ sub api {
         parts  => { index => { required => 1 } },
         paths  => [ [ { index => 0 }, "{index}", "_close" ] ],
         qs     => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "master_timeout",
-            "timeout",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "master_timeout",   "timeout",
         ],
     },
 
@@ -816,7 +835,7 @@ sub api {
         method => "PUT",
         parts  => { index => { required => 1 } },
         paths  => [ [ { index => 0 }, "{index}" ] ],
-        qs => [ "master_timeout", "timeout" ],
+        qs => [ "filter_path", "master_timeout", "timeout" ],
     },
 
     'indices.delete' => {
@@ -824,7 +843,7 @@ sub api {
         method => "DELETE",
         parts  => { index => { multi => 1, required => 1 } },
         paths => [ [ { index => 0 }, "{index}" ] ],
-        qs => [ "master_timeout", "timeout" ],
+        qs => [ "filter_path", "master_timeout", "timeout" ],
     },
 
     'indices.delete_alias' => {
@@ -836,7 +855,7 @@ sub api {
         },
         paths =>
             [ [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ] ],
-        qs => [ "master_timeout", "timeout" ],
+        qs => [ "filter_path", "master_timeout", "timeout" ],
     },
 
     'indices.delete_template' => {
@@ -844,7 +863,7 @@ sub api {
         method => "DELETE",
         parts  => { name => { required => 1 } },
         paths  => [ [ { name => 1 }, "_template", "{name}" ] ],
-        qs => [ "master_timeout", "timeout" ],
+        qs => [ "filter_path", "master_timeout", "timeout" ],
     },
 
     'indices.delete_warmer' => {
@@ -856,7 +875,7 @@ sub api {
         },
         paths =>
             [ [ { index => 0, name => 2 }, "{index}", "_warmer", "{name}" ] ],
-        qs => ["master_timeout"],
+        qs => [ "filter_path", "master_timeout" ],
     },
 
     'indices.exists' => {
@@ -914,9 +933,9 @@ sub api {
         paths =>
             [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
         qs => [
-            "allow_no_indices", "expand_wildcards",
-            "force",            "ignore_unavailable",
-            "wait_if_ongoing",
+            "allow_no_indices",   "expand_wildcards",
+            "filter_path",        "force",
+            "ignore_unavailable", "wait_if_ongoing",
         ],
     },
 
@@ -931,8 +950,9 @@ sub api {
             [ { index => 0 }, "{index}" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "local",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "local",
         ],
     },
 
@@ -946,8 +966,9 @@ sub api {
             [ {}, "_alias" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "local",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "local",
         ],
     },
 
@@ -960,7 +981,7 @@ sub api {
             [ { name  => 1 }, "_aliases", "{name}" ],
             [ {}, "_aliases" ],
         ],
-        qs => [ "local", "timeout" ],
+        qs => [ "filter_path", "local", "timeout" ],
     },
 
     'indices.get_field_mapping' => {
@@ -986,9 +1007,9 @@ sub api {
             [ { field => 2 }, "_mapping", "field", "{field}" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "include_defaults",
-            "local",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "include_defaults", "local",
         ],
     },
 
@@ -1002,8 +1023,9 @@ sub api {
             [ {}, "_mapping" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "local",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "local",
         ],
     },
 
@@ -1017,9 +1039,9 @@ sub api {
             [ {}, "_settings" ],
         ],
         qs => [
-            "allow_no_indices", "expand_wildcards",
-            "flat_settings",    "ignore_unavailable",
-            "local",
+            "allow_no_indices",   "expand_wildcards",
+            "filter_path",        "flat_settings",
+            "ignore_unavailable", "local",
         ],
     },
 
@@ -1028,7 +1050,7 @@ sub api {
         parts => { name => {} },
         paths =>
             [ [ { name => 1 }, "_template", "{name}" ], [ {}, "_template" ] ],
-        qs => [ "flat_settings", "local", "master_timeout" ],
+        qs => [ "filter_path", "flat_settings", "local", "master_timeout" ],
     },
 
     'indices.get_upgrade' => {
@@ -1038,7 +1060,8 @@ sub api {
             [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
         qs => [
             "allow_no_indices", "expand_wildcards",
-            "human",            "ignore_unavailable",
+            "filter_path",      "human",
+            "ignore_unavailable",
         ],
     },
 
@@ -1063,8 +1086,9 @@ sub api {
             [ {}, "_warmer" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "local",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "local",
         ],
     },
 
@@ -1074,9 +1098,9 @@ sub api {
         parts  => { index => { required => 1 } },
         paths  => [ [ { index => 0 }, "{index}", "_open" ] ],
         qs     => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "master_timeout",
-            "timeout",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "master_timeout",   "timeout",
         ],
     },
 
@@ -1089,10 +1113,10 @@ sub api {
             [ {}, "_optimize" ]
         ],
         qs => [
-            "allow_no_indices", "expand_wildcards",
-            "flush",            "ignore_unavailable",
-            "max_num_segments", "only_expunge_deletes",
-            "wait_for_merge",
+            "allow_no_indices",     "expand_wildcards",
+            "filter_path",          "flush",
+            "ignore_unavailable",   "max_num_segments",
+            "only_expunge_deletes", "wait_for_merge",
         ],
     },
 
@@ -1106,7 +1130,7 @@ sub api {
         },
         paths =>
             [ [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ] ],
-        qs => [ "master_timeout", "timeout" ],
+        qs => [ "filter_path", "master_timeout", "timeout" ],
     },
 
     'indices.put_mapping' => {
@@ -1119,9 +1143,9 @@ sub api {
             [ { type => 1 }, "_mapping", "{type}" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "master_timeout",
-            "timeout",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "master_timeout",   "timeout",
         ],
     },
 
@@ -1135,9 +1159,9 @@ sub api {
             [ {}, "_settings" ]
         ],
         qs => [
-            "allow_no_indices", "expand_wildcards",
-            "flat_settings",    "ignore_unavailable",
-            "master_timeout",
+            "allow_no_indices",   "expand_wildcards",
+            "filter_path",        "flat_settings",
+            "ignore_unavailable", "master_timeout",
         ],
     },
 
@@ -1148,9 +1172,9 @@ sub api {
         parts => { name => { required => 1 } },
         paths => [ [ { name => 1 }, "_template", "{name}" ] ],
         qs => [
-            "create",         "flat_settings",
-            "master_timeout", "order",
-            "timeout"
+            "create",        "filter_path",
+            "flat_settings", "master_timeout",
+            "order",         "timeout",
         ],
     },
 
@@ -1175,8 +1199,9 @@ sub api {
             [ { name => 1 }, "_warmer", "{name}" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "master_timeout",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "master_timeout",
         ],
     },
 
@@ -1187,7 +1212,7 @@ sub api {
             [ { index => 0 }, "{index}", "_recovery" ],
             [ {}, "_recovery" ]
         ],
-        qs => [ "active_only", "detailed", "human" ],
+        qs => [ "active_only", "detailed", "filter_path", "human" ],
     },
 
     'indices.refresh' => {
@@ -1198,7 +1223,8 @@ sub api {
             [ [ { index => 0 }, "{index}", "_refresh" ], [ {}, "_refresh" ] ],
         qs => [
             "allow_no_indices", "expand_wildcards",
-            "force",            "ignore_unavailable",
+            "filter_path",      "force",
+            "ignore_unavailable",
         ],
     },
 
@@ -1207,7 +1233,7 @@ sub api {
         method => "POST",
         parts  => { index => { multi => 1 } },
         paths  => [ [ { index => 0 }, "{index}", "_seal" ], [ {}, "_seal" ] ],
-        qs     => [],
+        qs     => ["filter_path"],
     },
 
     'indices.segments' => {
@@ -1219,7 +1245,8 @@ sub api {
         ],
         qs => [
             "allow_no_indices", "expand_wildcards",
-            "human",            "ignore_unavailable",
+            "filter_path",      "human",
+            "ignore_unavailable",
         ],
     },
 
@@ -1234,9 +1261,9 @@ sub api {
         ],
         qs => [
             "completion_fields", "fielddata_fields",
-            "fields",            "groups",
-            "human",             "level",
-            "types",
+            "fields",            "filter_path",
+            "groups",            "human",
+            "level",             "types",
         ],
     },
 
@@ -1246,7 +1273,7 @@ sub api {
         method => "POST",
         parts  => {},
         paths => [ [ {}, "_aliases" ] ],
-        qs => [ "master_timeout", "timeout" ],
+        qs => [ "filter_path", "master_timeout", "timeout" ],
     },
 
     'indices.upgrade' => {
@@ -1256,9 +1283,9 @@ sub api {
         paths =>
             [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "only_ancient_segments",
-            "wait_for_completion",
+            "allow_no_indices",      "expand_wildcards",
+            "filter_path",           "ignore_unavailable",
+            "only_ancient_segments", "wait_for_completion",
         ],
     },
 
@@ -1276,12 +1303,12 @@ sub api {
             [ {}, "_validate", "query" ],
         ],
         qs => [
-            "allow_no_indices", "analyze_wildcard",
-            "analyzer",         "default_operator",
-            "df",               "expand_wildcards",
-            "explain",          "ignore_unavailable",
-            "lenient",          "lowercase_expanded_terms",
-            "q",
+            "allow_no_indices",         "analyze_wildcard",
+            "analyzer",                 "default_operator",
+            "df",                       "expand_wildcards",
+            "explain",                  "filter_path",
+            "ignore_unavailable",       "lenient",
+            "lowercase_expanded_terms", "q",
         ],
     },
 
@@ -1293,9 +1320,9 @@ sub api {
             [ {}, "_nodes", "hot_threads" ],
         ],
         qs => [
-            "ignore_idle_threads", "interval",
-            "snapshots",           "threads",
-            "type",
+            "filter_path", "ignore_idle_threads",
+            "interval",    "snapshots",
+            "threads",     "type",
         ],
     },
 
@@ -1310,7 +1337,7 @@ sub api {
             [ { node_id => 1 }, "_nodes", "{node_id}" ],
             [ {}, "_nodes" ],
         ],
-        qs => [ "flat_settings", "human" ],
+        qs => [ "filter_path", "flat_settings", "human" ],
     },
 
     'nodes.stats' => {
@@ -1345,9 +1372,9 @@ sub api {
         ],
         qs => [
             "completion_fields", "fielddata_fields",
-            "fields",            "groups",
-            "human",             "level",
-            "types",
+            "fields",            "filter_path",
+            "groups",            "human",
+            "level",             "types",
         ],
     },
 
@@ -1364,7 +1391,7 @@ sub api {
                 "{repository}", "{snapshot}",
             ],
         ],
-        qs => [ "master_timeout", "wait_for_completion" ],
+        qs => [ "filter_path", "master_timeout", "wait_for_completion" ],
     },
 
     'snapshot.create_repository' => {
@@ -1373,7 +1400,7 @@ sub api {
         method => "PUT",
         parts => { repository => { required => 1 } },
         paths => [ [ { repository => 1 }, "_snapshot", "{repository}" ] ],
-        qs => [ "master_timeout", "timeout", "verify" ],
+        qs => [ "filter_path", "master_timeout", "timeout", "verify" ],
     },
 
     'snapshot.delete' => {
@@ -1388,7 +1415,7 @@ sub api {
                 "{repository}", "{snapshot}",
             ],
         ],
-        qs => ["master_timeout"],
+        qs => [ "filter_path", "master_timeout" ],
     },
 
     'snapshot.delete_repository' => {
@@ -1396,7 +1423,7 @@ sub api {
         method => "DELETE",
         parts  => { repository => { multi => 1, required => 1 } },
         paths  => [ [ { repository => 1 }, "_snapshot", "{repository}" ] ],
-        qs => [ "master_timeout", "timeout" ],
+        qs => [ "filter_path", "master_timeout", "timeout" ],
     },
 
     'snapshot.get' => {
@@ -1410,7 +1437,7 @@ sub api {
                 "{repository}", "{snapshot}",
             ],
         ],
-        qs => ["master_timeout"],
+        qs => [ "filter_path", "master_timeout" ],
     },
 
     'snapshot.get_repository' => {
@@ -1420,7 +1447,7 @@ sub api {
             [ { repository => 1 }, "_snapshot", "{repository}" ],
             [ {}, "_snapshot" ],
         ],
-        qs => [ "local", "master_timeout" ],
+        qs => [ "filter_path", "local", "master_timeout" ],
     },
 
     'snapshot.restore' => {
@@ -1437,7 +1464,7 @@ sub api {
                 "_restore",
             ],
         ],
-        qs => [ "master_timeout", "wait_for_completion" ],
+        qs => [ "filter_path", "master_timeout", "wait_for_completion" ],
     },
 
     'snapshot.status' => {
@@ -1455,7 +1482,7 @@ sub api {
             [ { repository => 1 }, "_snapshot", "{repository}", "_status" ],
             [ {}, "_snapshot", "_status" ],
         ],
-        qs => ["master_timeout"],
+        qs => [ "filter_path", "master_timeout" ],
     },
 
     'snapshot.verify_repository' => {
@@ -1465,7 +1492,7 @@ sub api {
         paths  => [
             [ { repository => 1 }, "_snapshot", "{repository}", "_verify" ],
         ],
-        qs => [ "master_timeout", "timeout" ],
+        qs => [ "filter_path", "master_timeout", "timeout" ],
     },
 
 #=== AUTOGEN - END ===

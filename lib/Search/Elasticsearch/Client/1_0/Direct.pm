@@ -187,6 +187,21 @@ UTF-8 bytes and passed as is:
 
     $e->indices->analyze( body => "The quick brown fox");
 
+=head2 Filter path parameter
+
+Any API which returns a JSON body accepts a C<filter_path> parameter
+which will filter the JSON down to only the specified paths.  For instance,
+if you are running a search request and only want the C<total> hits and
+the C<_source> field for each hit (without the C<_id>, C<_index> etc),
+you can do:
+
+    $e->search(
+        query => {...},
+        filter_paths => [ 'hits.total', 'hits.hits._source' ]
+    );
+
+This parameter was added in Elasticsearch 1.6.0.
+
 =head2 Ignore parameter
 
 Normally, any HTTP status code outside the 200-299 range will result in

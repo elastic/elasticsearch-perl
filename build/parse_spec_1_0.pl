@@ -101,6 +101,11 @@ sub process {
     # parts
     my $parts = $spec{parts} = process_parts( $url->{parts} );
 
+    # default qs params
+    unless ( $method eq 'HEAD' or ( $spec{paths}[0][1] || '' ) eq '_cat' ) {
+        $url->{params}{filter_path} = 1;
+    }
+
     # qs
     $spec{qs} = [
         sort grep { !$Forbidden{QS}{$_} }
