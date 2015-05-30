@@ -939,6 +939,22 @@ sub api {
         ],
     },
 
+    'indices.flush_synced' => {
+        doc    => "indices-flush",
+        method => "POST",
+        parts  => {
+            allow_no_indices   => {},
+            expand_wildcards   => {},
+            ignore_unavailable => {},
+            index              => { multi => 1 },
+        },
+        paths => [
+            [ { index => 0 }, "{index}", "_flush", "synced" ],
+            [ {}, "_flush", "synced" ],
+        ],
+        qs => ["filter_path"],
+    },
+
     'indices.get' => {
         doc   => "indices-get-index",
         parts => {
@@ -1226,14 +1242,6 @@ sub api {
             "filter_path",      "force",
             "ignore_unavailable",
         ],
-    },
-
-    'indices.seal' => {
-        doc    => "indices-seal",
-        method => "POST",
-        parts  => { index => { multi => 1 } },
-        paths  => [ [ { index => 0 }, "{index}", "_seal" ], [ {}, "_seal" ] ],
-        qs     => ["filter_path"],
     },
 
     'indices.segments' => {

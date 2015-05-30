@@ -201,6 +201,26 @@ Query string parameters:
 See the L<flush index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-flush.html>
 for more information.
 
+=head2 C<flush_synced()>
+
+    $respnse = $e->indices->flush_synced(
+        index => 'index' | \@indices    # optional
+    );
+
+The C<flush_synced()> method does a synchronised L<flush()> on the primaries and replicas of
+all the specified indices.  In other words, after flushing it tries to write a C<sync_id>
+on the primaries and replicas to mark them as containing the same documents.  During
+recovery, if a replica has the same C<sync_id> as the primary, then it doesn't need to check
+whether the segment files on primary and replica are the same, and it can move on
+directly to just replaying the translog.  This can greatly speed up recovery.
+
+Synced flushes happens automatically in the background on indices that have not received any
+writes for a while, but the L<flush_synced()> method can be used to trigger this process
+manually, eg before shutting down.  Any new commits immediately break the sync.
+
+See the L<flush synced docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/flush.html>
+for more information.
+
 =head2 C<optimize()>
 
     $response = $e->indices->optimize(
@@ -221,26 +241,6 @@ Query string parameters:
     C<wait_for_merge>
 
 See the L<optimize index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-optimize.html>
-for more information.
-
-=head2 C<seal()>
-
-    $respnse = $e->indices->seal(
-        index => 'index' | \@indices    # optional
-    );
-
-The C<seal()> method does a synchronised L<flush()> on the primaries and replicas of
-all the specified indices.  In other words, after flushing it tries to write a I<seal>
-on the primaries and replicas to mark them as containing the same documents.  During
-recovery, if a replica has the same I<seal> as the primary, then it doesn't need to check
-whether the segment files on primary and replica are the same, and it can move on
-directly to just replaying the translog.  This can greatly speed up recovery.
-
-Sealing happens automatically in the background on indices that have not received any
-writes for a while, but the L<seal()> method can be used to trigger this process
-manually, eg before shutting down.  Any new commits immediately break the seal.
-
-See the L<seal index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-seal.html>
 for more information.
 
 =head2 C<get_upgrade()>
