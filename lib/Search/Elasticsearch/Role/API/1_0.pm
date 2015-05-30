@@ -33,8 +33,10 @@ sub api {
             [ { index => 0 }, "{index}", "_bulk" ],
             [ {}, "_bulk" ],
         ],
-        qs =>
-            [ "consistency", "filter_path", "refresh", "routing", "timeout" ],
+        qs => [
+            "consistency", "filter_path", "refresh", "replication",
+            "routing",     "timeout",
+        ],
         serialize => "bulk",
     },
 
@@ -575,15 +577,16 @@ sub api {
         body  => {},
         doc   => "docs-termvectors",
         parts => {
-            id    => { required => 1 },
+            id    => {},
             index => { required => 1 },
-            type  => { required => 1 },
+            type  => { required => 1 }
         },
         paths => [
             [   { id => 2, index => 0, type => 1 }, "{index}",
                 "{type}", "{id}",
                 "_termvector",
             ],
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_termvector" ],
         ],
         qs => [
             "field_statistics", "fields",
