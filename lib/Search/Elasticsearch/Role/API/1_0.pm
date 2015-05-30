@@ -1027,6 +1027,8 @@ sub api {
             "filter_path",      "force",
             "full",             "ignore_unavailable",
             "wait_if_ongoing",
+        ],
+    },
 
     'indices.flush_synced' => {
         doc    => "indices-flush",
