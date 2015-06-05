@@ -9,7 +9,7 @@ use Search::Elasticsearch::Scroll;
 use Search::Elasticsearch::Bulk;
 
 our $es = do "es_sync.pl";
-my $is_0_90 = $es->info->{version}{number} =~ /^0.90/;
+my $es_version = $es->info->{version}{number};
 
 $es->indices->delete( index => '_all', ignore => 404 );
 do "index_test_data.pl" or die $!;
@@ -92,10 +92,9 @@ my $query = {
         ]
     }
 };
-unless ($is_0_90) {
+if ( $es_version !~ /^0.90/ ) {
     $query = { query => $query };
 }
-
 is $es->count(
     index => 'test2',
     type  => 'test',
@@ -146,8 +145,16 @@ my $results = $es->search(
     fields  => [ '_parent', '_routing' ],
     version => 1,
 )->{hits}{hits};
-is $results->[3]{fields}{_parent},  1, "Advanced - parent";
-is $results->[3]{fields}{_routing}, 2, "Advanced - routing";
+
+if ( $es_version =~ /^(1\.|0\.90)/ ) {
+    is $results->[3]{fields}{_parent},  1, "Advanced - parent";
+    is $results->[3]{fields}{_routing}, 2, "Advanced - routing";
+}
+else {
+    is $results->[3]{_parent},  1, "Advanced - parent";
+    is $results->[3]{_routing}, 2, "Advanced - routing";
+}
+
 is $results->[3]{_version}, 4, "Advanced - version";
 
 done_testing;

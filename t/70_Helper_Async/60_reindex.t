@@ -53,8 +53,8 @@ is wait_for(
     )->{count}, 100,
     'Reindexed to same index';
 
-is wait_for( $es->get( index => 'test', type => 'test', id => 1 ) )
-    ->{_version}, 2,
+is wait_for( $es->get( index => 'test', type => 'test', id => 1 ) )->{_version},
+    2,
     "Reindexed to same index - version updated";
 
 my @docs = map {
@@ -167,8 +167,7 @@ for ( 'test', 'test2' ) {
     wait_for(
         $es->indices->create(
             index => $_,
-            body =>
-                { mappings => { test => { _parent => { type => 'foo' } } } }
+            body => { mappings => { test => { _parent => { type => 'foo' } } } }
         )
     );
 }
@@ -212,8 +211,15 @@ my $results = wait_for(
         version => 1,
     )
 )->{hits}{hits};
-is $results->[3]{fields}{_parent},  1, "Advanced - parent";
-is $results->[3]{fields}{_routing}, 2, "Advanced - routing";
+
+if ( $es_version =~ /^(1\.|0\.90)/ ) {
+    is $results->[3]{fields}{_parent},  1, "Advanced - parent";
+    is $results->[3]{fields}{_routing}, 2, "Advanced - routing";
+}
+else {
+    is $results->[3]{_parent},  1, "Advanced - parent";
+    is $results->[3]{_routing}, 2, "Advanced - routing";
+}
 is $results->[3]{_version}, 4, "Advanced - version";
 
 done_testing;
