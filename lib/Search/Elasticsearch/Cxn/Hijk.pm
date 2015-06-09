@@ -69,8 +69,10 @@ sub perform_request {
         $params,    # request
         $response->{status} || 500,    # code
         $response->{error},            # msg
-        $response->{body},             # body
-        \%head                         # headers
+        $response->{body}
+            || $response->{error_message}
+            || $response->{errno_string},    # body
+        \%head                               # headers
     );
 }
 
