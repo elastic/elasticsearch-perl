@@ -823,7 +823,8 @@ Query string parameters:
     C<ignore_unavailable>,
     C<lenient>,
     C<lowercase_expanded_terms>
-    C<q>
+    C<q>,
+    C<rewrite>
 
 See the L<validate_query docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-validate.html>
 for more information.
