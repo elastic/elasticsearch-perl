@@ -194,7 +194,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<wait_if_ongoing>
 
-See the L<flush index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-flush.html>
+See the L<flush index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-synced-flush.html>
 for more information.
 
 =head2 C<flush_synced()>
