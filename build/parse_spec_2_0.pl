@@ -8,7 +8,7 @@ use Path::Class;
 use Perl::Tidy;
 use JSON::XS;
 
-my @files = map { file($_) } glob '../elasticsearch/rest-api-spec/api/*.json';
+my @files = map { file($_) } glob '../elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/api/*.json';
 
 my ( %API, %seen, %seen_combo, %Forbidden );
 
