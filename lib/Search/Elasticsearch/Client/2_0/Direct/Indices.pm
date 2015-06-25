@@ -59,6 +59,7 @@ See the L<get index docs|http://www.elastic.co/guide/en/elasticsearch/reference/
 Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<local>
 
@@ -545,6 +546,7 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<flat_settings>,
+    C<human>,
     C<ignore_unavailable>,
     C<local>
 

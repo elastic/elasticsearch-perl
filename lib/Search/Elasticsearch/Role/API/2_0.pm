@@ -967,7 +967,8 @@ sub api {
         ],
         qs => [
             "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
+            "filter_path",      "flat_settings",
+            "human",            "ignore_unavailable",
             "local",
         ],
     },
@@ -1055,9 +1056,10 @@ sub api {
             [ {}, "_settings" ],
         ],
         qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "filter_path",        "flat_settings",
-            "ignore_unavailable", "local",
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "flat_settings",
+            "human",            "ignore_unavailable",
+            "local",
         ],
     },
 
