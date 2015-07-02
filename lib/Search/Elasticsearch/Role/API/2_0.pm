@@ -444,7 +444,7 @@ sub api {
             "filter_path",              "from",
             "ignore_unavailable",       "lenient",
             "lowercase_expanded_terms", "preference",
-            "q",                        "query_cache",
+            "q",                        "request_cache",
             "routing",                  "scroll",
             "search_type",              "size",
             "sort",                     "stats",

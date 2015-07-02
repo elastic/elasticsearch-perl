@@ -769,7 +769,7 @@ Query string parameters:
     C<lowercase_expanded_terms>,
     C<preference>,
     C<q>,
-    C<query_cache>,
+    C<request_cache>,
     C<routing>,
     C<scroll>,
     C<search_type>,

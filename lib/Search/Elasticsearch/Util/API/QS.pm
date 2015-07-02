@@ -24,18 +24,18 @@ our %Handler = (
 );
 
 our %Params = (
-    active_only      => { type => 'bool' },
-    all              => { type => 'bool' },
-    allow_no_indices => { type => 'bool' },
-    analyze_wildcard => { type => 'bool' },
-    analyzer         => { type => 'string' },
-    boost_terms      => { type => 'number' },
-    bytes            => { type => 'enum', options => [ 'b', 'k', 'm', 'g' ] },
-    char_filters     => { type => 'list' },
-    clear            => { type => 'bool' },
-    completion       => { type => 'bool' },
+    active_only       => { type => 'bool' },
+    all               => { type => 'bool' },
+    allow_no_indices  => { type => 'bool' },
+    analyze_wildcard  => { type => 'bool' },
+    analyzer          => { type => 'string' },
+    boost_terms       => { type => 'number' },
+    bytes             => { type => 'enum', options => [ 'b', 'k', 'm', 'g' ] },
+    char_filters      => { type => 'list' },
+    clear             => { type => 'bool' },
+    completion        => { type => 'bool' },
     completion_fields => { type => 'list' },
-    consistency       => {
+    consistency => {
         options => [ 'one', 'quorum', 'all' ],
         type    => 'enum'
     },
@@ -176,6 +176,7 @@ our %Params = (
         options => [ 'sync', 'async' ],
         type    => 'enum'
     },
+    request_cache     => { type => 'bool' },
     retry_on_conflict => { type => 'number' },
     routing           => { type => 'string' },
     script            => { type => 'string' },
