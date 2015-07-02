@@ -898,6 +898,33 @@ Query string parameters:
     C<scroll>,
     C<search_type>
 
+=head2 C<render_search_template()>
+
+    $response = $e->render_search_template(
+        id   => 'id',           # optional
+        body => { template }    # optional
+    );
+
+Renders the template, filling in the passed-in parameters and returns the resulting JSON, eg:
+
+    $results = $e->render_search_template(
+        template => {
+            query => {
+                match => {
+                    "{{my_field}}" => "{{my_value}}"
+                }
+            },
+            size => "{{my_size}}"
+        },
+        params => {
+            my_field => 'foo',
+            my_value => 'bar',
+            my_size  => 5
+        }
+    );
+
+See the L<search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html>
+for more information.
 
 =head2 C<scroll()>
 
@@ -1035,6 +1062,7 @@ for more information.
         index   => 'index'   | \@indices,   # optional
         fields  => 'field'   | \@fields,    # optional
         level   => 'cluster' | 'indices',   # optional
+        body    => { filters }              # optional
     );
 
 The C<field-stats> API returns statistical properties of a field

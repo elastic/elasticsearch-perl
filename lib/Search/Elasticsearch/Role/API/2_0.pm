@@ -177,6 +177,7 @@ sub api {
     },
 
     'field_stats' => {
+        body  => {},
         doc   => "search-field-stats",
         parts => { index => { multi => 1 } },
         paths => [
@@ -399,6 +400,17 @@ sub api {
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
         qs => [ "filter_path", "op_type", "version", "version_type" ],
+    },
+
+    'render_search_template' => {
+        body  => {},
+        doc   => "search-template",
+        parts => { id => {} },
+        paths => [
+            [ { id => 2 }, "_render", "template", "{id}" ],
+            [ {}, "_render", "template" ],
+        ],
+        qs => ["filter_path"],
     },
 
     'scroll' => {
