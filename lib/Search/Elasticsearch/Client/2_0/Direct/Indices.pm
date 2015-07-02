@@ -150,11 +150,10 @@ Query string parameters:
     C<expand_wildcards>,
     C<fielddata>,
     C<fields>,
-    C<filter>,
-    C<filter_cache>,
     C<ignore_unavailable>,
     C<query_cache>,
-    C<recycler>
+    C<recycler>,
+    C<request>
 
 See the L<clear_cache docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-clearcache.html>
 for more information.

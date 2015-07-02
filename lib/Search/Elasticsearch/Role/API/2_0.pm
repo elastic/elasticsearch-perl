@@ -823,9 +823,9 @@ sub api {
         qs => [
             "allow_no_indices", "expand_wildcards",
             "fielddata",        "fields",
-            "filter",           "filter_cache",
             "filter_path",      "ignore_unavailable",
-            "query_cache",      "recycler",
+            "query",            "recycler",
+            "request",
         ],
     },
 
