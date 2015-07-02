@@ -151,7 +151,7 @@ Query string parameters:
     C<fielddata>,
     C<fields>,
     C<ignore_unavailable>,
-    C<query_cache>,
+    C<query>,
     C<recycler>,
     C<request>
 

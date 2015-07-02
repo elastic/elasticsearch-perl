@@ -166,6 +166,7 @@ our %Params = (
     pri                    => { type => 'bool' },
     process                => { type => 'bool' },
     q                      => { type => 'string' },
+    query                  => { type => 'bool' },
     query_cache            => { type => 'bool' },
     realtime               => { type => 'bool' },
     recovery               => { type => 'bool' },
@@ -176,8 +177,10 @@ our %Params = (
         options => [ 'sync', 'async' ],
         type    => 'enum'
     },
+    request           => { type => 'bool' },
     request_cache     => { type => 'bool' },
     retry_on_conflict => { type => 'number' },
+    rewrite           => { type => 'bool' },
     routing           => { type => 'string' },
     script            => { type => 'string' },
     script_id         => { type => 'string' },
