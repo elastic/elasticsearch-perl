@@ -337,6 +337,26 @@ sub reset_es {
     $es->logger->trace_comment( "Start: " . timestamp() );
     $wrapper->( $es->indices->delete( index => '_all', ignore => 404 ) );
     eval { $wrapper->( $es->indices->delete_template( name => '*' ) ) };
+    eval {
+        for my $repo ( keys %{ $es->snapshot->get_repository } ) {
+            eval {    # ignore url based repos
+                my @snaps = map { $_->{snapshot} } @{
+                    $es->snapshot->get(
+                        repository => $repo,
+                        snapshot   => '_all'
+                    )->{snapshots}
+                };
+                for (@snaps) {
+                    $es->snapshot->delete(
+                        repository => $repo,
+                        snapshot   => $_
+                    );
+                }
+            };
+            $es->snapshot->delete_repository( repository => $repo );
+        }
+        1;
+    } or die $@;
     $es->logger->trace_comment( "End: " . timestamp() );
 }
 
