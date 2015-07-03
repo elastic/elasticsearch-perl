@@ -355,8 +355,7 @@ sub reset_es {
             };
             $es->snapshot->delete_repository( repository => $repo );
         }
-        1;
-    } or die $@;
+    };
     $es->logger->trace_comment( "End: " . timestamp() );
 }
 
