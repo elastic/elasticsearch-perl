@@ -39,9 +39,9 @@ requires "warnings" => "0";
 recommends "URI::Escape::XS" => "0";
 
 on 'build' => sub {
-  requires "Fatal" => "0";
   requires "TAP::Harness::JUnit" => "0";
   requires "Test::More" => "0.98";
+  requires "base" => "2.18";
 };
 
 on 'test' => sub {
