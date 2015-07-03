@@ -38,20 +38,16 @@ requires "strict" => "0";
 requires "warnings" => "0";
 recommends "URI::Escape::XS" => "0";
 
-on 'build' => sub {
-  requires "TAP::Harness::JUnit" => "0";
-  requires "Test::More" => "0.98";
-  requires "base" => "2.18";
-};
-
 on 'test' => sub {
   requires "AE" => "0";
   requires "EV" => "0";
   requires "IO::Socket::SSL" => "0";
   requires "Log::Any::Adapter::Callback" => "0";
+  requires "TAP::Harness::JUnit" => "0";
   requires "Test::Deep" => "0";
   requires "Test::Exception" => "0";
   requires "Test::More" => "0.98";
+  requires "base" => "2.18";
   requires "lib" => "0";
 };
 
