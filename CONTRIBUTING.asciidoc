@@ -1,3 +1,16 @@
+= Building/Testing the Packages
+
+There are three packages in this repo: Search-Elasticsearch (= the main
+package), Search-Elasticsearch-Async, and Search-Elasticsearch-Cxn-NetCurl
+
+The +dist.ini+ for each package is located in the +dist/+, +dist-async/+ and
++dist-netcurl/+ sub-directories. Please ignore the +dist.ini+ at the root
+directory.
+
+In order to build or test the distributions all you have to do is cd into the
+relevant directory and run the dzil (see http://dzil.org/[Dist::Zilla])
+commands from there. E.g: +dzil test+.
+
 = Contributing to elasticsearch-perl
 
 If you have a bugfix or new feature that you would like to contribute to
