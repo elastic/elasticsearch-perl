@@ -160,6 +160,8 @@ From L<Search::Elasticsearch::Role::CxnPool::Static>
 
 From L<Search::Elasticsearch::Role::CxnPool>
 
+=over
+
 =item * L<cxn_factory()|Search::Elasticsearch::Role::CxnPool/"cxn_factory()">
 
 =item * L<logger()|Search::Elasticsearch::Role::CxnPool/"logger()">

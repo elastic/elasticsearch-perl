@@ -1329,7 +1329,7 @@ Query string parameters:
 See the L<mlt docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-more-like-this.html>
 for more information.
 
-=HEAD1 INDEXED SCRIPT METHODS
+=head1 INDEXED SCRIPT METHODS
 
 If dynamic scripting is enabled, Elasticsearch allows you to store scripts in an internal index known as
 C<.scripts> and reference them by id. The methods to manage indexed scripts are as follows:
@@ -1389,7 +1389,7 @@ Query string parameters:
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
-=HEAD1 INDEXED SEARCH TEMPLATE METHODS
+=head1 INDEXED SEARCH TEMPLATE METHODS
 
 Mustache templates can be used to create search requests.  These templates can
 be stored in the C<.scripts> index and retrieved by ID. The methods to
