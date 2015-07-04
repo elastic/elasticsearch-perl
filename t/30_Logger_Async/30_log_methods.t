@@ -28,7 +28,7 @@ sub test_level {
 
     # ->debugf
     ( $method, $format ) = ();
-    ok $l->$levelf( "foo %s", "bar", 42 ), "$levelf";
+    ok $l->$levelf( "foo %s", "bar" ), "$levelf";
     is $method, $level, "$levelf - method";
     is $format, "foo bar", "$levelf - format";
 
