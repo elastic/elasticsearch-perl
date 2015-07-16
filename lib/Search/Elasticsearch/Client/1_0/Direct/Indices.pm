@@ -812,6 +812,7 @@ Query string parameters:
     C<filters>,
     C<format>,
     C<prefer_local>,
+    C<rewrite>,
     C<text>,
     C<tokenizer>
 

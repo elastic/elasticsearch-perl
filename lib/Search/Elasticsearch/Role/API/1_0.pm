@@ -1437,6 +1437,7 @@ sub api {
             "explain",                  "filter_path",
             "ignore_unavailable",       "lenient",
             "lowercase_expanded_terms", "q",
+            "rewrite",
         ],
     },
 
