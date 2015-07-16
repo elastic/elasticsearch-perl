@@ -1033,7 +1033,7 @@ sub api {
     },
 
     'indices.flush_synced' => {
-        doc    => "indices-flush",
+        doc    => "indices-synced-flush",
         method => "POST",
         parts  => {
             allow_no_indices   => {},
