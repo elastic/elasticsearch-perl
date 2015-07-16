@@ -116,7 +116,8 @@ sub api {
         ],
         qs => [
             "consistency", "filter_path", "parent",  "refresh",
-            "routing",     "timeout",     "version", "version_type",
+            "replication", "routing",     "timeout", "version",
+            "version_type",
         ],
     },
 
@@ -289,8 +290,8 @@ sub api {
         ],
         qs => [
             "consistency", "filter_path", "op_type", "parent",
-            "refresh",     "routing",     "timeout", "timestamp",
-            "ttl",         "version",     "version_type",
+            "refresh",     "replication", "routing", "timeout",
+            "timestamp",   "ttl",         "version", "version_type",
         ],
     },
 
@@ -641,14 +642,15 @@ sub api {
             ],
         ],
         qs => [
-            "consistency",       "fields",
-            "filter_path",       "lang",
-            "parent",            "refresh",
-            "retry_on_conflict", "routing",
-            "script",            "script_id",
-            "scripted_upsert",   "timeout",
-            "timestamp",         "ttl",
-            "version",           "version_type",
+            "consistency", "fields",
+            "filter_path", "lang",
+            "parent",      "refresh",
+            "replication", "retry_on_conflict",
+            "routing",     "script",
+            "script_id",   "scripted_upsert",
+            "timeout",     "timestamp",
+            "ttl",         "version",
+            "version_type",
         ],
     },
 
