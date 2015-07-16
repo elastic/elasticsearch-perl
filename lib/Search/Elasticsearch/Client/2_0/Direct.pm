@@ -607,7 +607,9 @@ cause the others to fail as well.
 
 Query string parameters:
     C<consistency>,
+    C<fields>,
     C<refresh>,
+    C<routing>,
     C<timeout>
 
 See the L<bulk docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html>

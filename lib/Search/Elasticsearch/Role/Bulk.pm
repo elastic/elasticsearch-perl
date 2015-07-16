@@ -31,9 +31,9 @@ our %Actions = (
 );
 
 our @Metadata_Keys = (
-    'index',  'type',      'id',  'routing',
-    'parent', 'timestamp', 'ttl', 'version',
-    'version_type'
+    'index',   'type',   'id',        'fields',
+    'routing', 'parent', 'timestamp', 'ttl',
+    'version', 'version_type'
 );
 
 #===================================
@@ -56,7 +56,8 @@ sub BUILDARGS {
 #===================================
     my ( $class, $params ) = parse_params(@_);
     my %args;
-    for (qw(index type consistency refresh replication timeout)) {
+    for (qw(index type consistency fields refresh replication routing timeout))
+    {
         $args{$_} = $params->{$_}
             if exists $params->{$_};
     }

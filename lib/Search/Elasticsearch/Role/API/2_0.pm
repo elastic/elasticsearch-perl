@@ -33,8 +33,10 @@ sub api {
             [ { index => 0 }, "{index}", "_bulk" ],
             [ {}, "_bulk" ],
         ],
-        qs =>
-            [ "consistency", "filter_path", "refresh", "routing", "timeout" ],
+        qs => [
+            "consistency", "fields", "filter_path", "refresh",
+            "routing",     "timeout",
+        ],
         serialize => "bulk",
     },
 
