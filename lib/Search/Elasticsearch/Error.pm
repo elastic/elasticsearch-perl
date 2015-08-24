@@ -9,6 +9,7 @@ our $DEBUG = 0;
 @Search::Elasticsearch::Error::NoNodes::ISA      = __PACKAGE__;
 @Search::Elasticsearch::Error::Unauthorized::ISA = __PACKAGE__;
 @Search::Elasticsearch::Error::Forbidden::ISA    = __PACKAGE__;
+@Search::Elasticsearch::Error::Illegal::ISA      = __PACKAGE__;
 @Search::Elasticsearch::Error::Request::ISA      = __PACKAGE__;
 @Search::Elasticsearch::Error::Timeout::ISA      = __PACKAGE__;
 @Search::Elasticsearch::Error::Cxn::ISA          = __PACKAGE__;
@@ -243,6 +244,12 @@ Either the cluster was unable to process the request because it is currently
 blocking, eg there are not enough master nodes to form a cluster, or
 because the authenticated user is trying to perform an unauthorized
 action. This error is triggered by the C<403> HTTP status code.
+
+=item * C<Search::Elasticsearch::Error::Illegal>
+
+You have attempted to perform an illegal operation.
+For instance, you attempted to use a Scroll helper in a different process
+after forking.
 
 =item * C<Search::Elasticsearch::Error::Serializer>
 

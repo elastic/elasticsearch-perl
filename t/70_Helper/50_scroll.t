@@ -175,6 +175,24 @@ ok ref $d && $d->{_source}, 'next() in scalar context';
     ok( $s->is_finished(), "Ok can finish in the creating process");
 }
 
+{
+    # Test Scroll usage attempt in a different process.
+    my $s = Search::Elasticsearch::Scroll->new( es => $es , body => {});
+    my $pid = fork();
+    unless( defined( $pid ) ){ die "Cannot fork. Lack of resources?"; }
+    unless( $pid ){
+        # Calling this next should crash, not exiting this process with 0
+        eval{ $s->next(); };
+        my $err = $@;
+        my $is_illegal_error = eval{ $err->is('Illegal'); };
+        exit( $is_illegal_error ? 1 : 0 );
+    }else{
+        # Wait for children
+        waitpid( $pid , 0 );
+        cmp_ok( $?, '!=', 0, "Ok good exit code. Child did crash before exiting with 0");
+    }
+}
+
 done_testing;
 $es->indices->delete( index => 'test' );
 
