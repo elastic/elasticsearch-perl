@@ -3,7 +3,6 @@ package Search::Elasticsearch::Role::Scroll;
 use Moo::Role;
 requires '_clear_scroll';
 use Search::Elasticsearch::Util qw(parse_params throw);
-use Scalar::Util qw(weaken blessed);
 use namespace::clean;
 
 has 'es' => ( is => 'ro', required => 1 );
@@ -19,11 +18,13 @@ has 'total_took'    => ( is => 'rwp' );
 has 'search_params' => ( is => 'ro' );
 has 'is_finished'   => ( is => 'rwp', default => '' );
 has '_scroll_id'    => ( is => 'rwp', clearer => 1, predicate => 1 );
+has '_pid'          => ( is => 'ro', default => $$ );
 
 #===================================
 sub finish {
 #===================================
     my $self = shift;
+    return unless ( $self->_pid() == $$ );
     return if $self->is_finished;
     $self->_set_is_finished(1);
     $self->_clear_scroll;
@@ -52,4 +53,4 @@ sub DEMOLISH {
 
 1;
 
-# ABSTRACT: Provides common functionality to L<Elasticseach::Scroll> and L<Search::Elasticsearch::Async::Scroll>
+# ABSTRACT: Provides common functionality to L<Search::Elasticseach::Scroll> and L<Search::Elasticsearch::Async::Scroll>

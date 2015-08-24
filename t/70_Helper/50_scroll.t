@@ -153,6 +153,28 @@ my $s = $es->scroll_helper;
 my $d = $s->next;
 ok ref $d && $d->{_source}, 'next() in scalar context';
 
+{
+    # Test auto finish fork protection.
+    my $s = $es->scroll_helper();
+    ok( $s->_pid() , "Ok got a PID");
+
+    my $pid = fork();
+    unless( defined( $pid ) ){ die "Cannot fork. Lack of resources?"; }
+    unless( $pid ){
+        # Child. Call finish check that its not finished
+        # (the call to finish did nothing).
+        $s->finish();
+        exit( $s->is_finished() ? 1 : 0 );
+    }else{
+        # Wait for children
+        waitpid( $pid , 0 );
+        cmp_ok( $?, '==', 0, "Ok good exit code. Child did not finish the Scroll");
+    }
+    ok( ! $s->is_finished(), "Ok our Scroll is not finished");
+    $s->finish();
+    ok( $s->is_finished(), "Ok can finish in the creating process");
+}
+
 done_testing;
 $es->indices->delete( index => 'test' );
 
