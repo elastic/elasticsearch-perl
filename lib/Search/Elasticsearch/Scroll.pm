@@ -9,6 +9,19 @@ has '_buffer' => ( is => 'ro' );
 with 'Search::Elasticsearch::Role::Is_Sync',
     'Search::Elasticsearch::Role::Scroll';
 
+my @fork_protected_methods = qw/next drain_buffer refill_buffer/;
+
+# Protect all fork protected method against their
+# usage in a different forked processs.
+around \@fork_protected_methods => sub{
+    my ($orig, $self, @rest) = @_;
+    unless( $self->_pid() == $$ ){
+        throw('Illegal', 'You are attempting to use this Scroll in a different process');
+    }
+    return $self->$orig(@rest);
+};
+
+
 #===================================
 sub BUILDARGS {
 #===================================
