@@ -1,13 +1,13 @@
 package Search::Elasticsearch::Async;
 
-use Search::Elasticsearch 1.20;
+use Search::Elasticsearch 1.99;
 use Promises 0.93 ();
 use parent 'Search::Elasticsearch';
 
 use Search::Elasticsearch::Util qw(parse_params);
 use namespace::clean;
 
-our $VERSION = '1.20';
+our $VERSION = '1.99';
 
 #===================================
 sub new {

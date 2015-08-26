@@ -1,5 +1,38 @@
 Revision history for Search::Elasticsearch
 
+1.99    2015-08-26
+
+        This release provides support for Elasticsearch 2.0.0-beta1 and above,
+        but the default client is still '1_0::Direct' and will remain so until
+        version 2.00 is released.
+
+        New features:
+        * Added default_qs_params, which will be added to every request
+        * Added max_time to the Bulk helper, to flush after a max elapsed time
+        * Added filter_path parameter to all methods which return JSON
+        * Added indices.flush_synced()
+        * Added render_search_template()
+        * Added cat.nodeattrs()
+        * Added human flag to indices.get and indices.get_settings
+        * Added rewrite flag to indices.validate_query
+        * Added rewrite flag to indices.analyze
+        * Added fields param to bulk()
+        * Added update_all_types to indices.create and indices.put_mapping
+        * Added request_cache to indices.put_warmer and indices.stats
+        * Added request to indices.clear_cache
+        * Added RequestTimeout exception for server-side timeouts
+        * Updated Plugin::Watcher with 1.0 API
+
+        Removed:
+        * Removed id and id_cache from indices.clear_cache
+        * Removed filter and filter_cache from indices.clear_cache
+        * Removed ignore_conflict from indices.put_mapping
+
+        Bugfixes:
+        * Fixed error handling in Hijk
+        * Fixed live test to non-existent IP address
+
+
 1.20    2015-05-17
 
         Deprecated:

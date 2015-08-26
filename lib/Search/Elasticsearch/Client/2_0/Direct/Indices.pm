@@ -195,7 +195,7 @@ Query string parameters:
     C<ignore_unavailable>,
     C<wait_if_ongoing>
 
-See the L<flush index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-synced-flush.html>
+See the L<flush index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-flush.html>
 for more information.
 
 =head2 C<flush_synced()>
@@ -215,7 +215,7 @@ Synced flushes happens automatically in the background on indices that have not 
 writes for a while, but the L<flush_synced()> method can be used to trigger this process
 manually, eg before shutting down.  Any new commits immediately break the sync.
 
-See the L<flush synced docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/flush.html>
+See the L<flush synced docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-synced-flush.html>
 for more information.
 
 =head2 C<optimize()>
