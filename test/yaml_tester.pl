@@ -210,15 +210,13 @@ sub run_tests {
             $test_name .= ": " . ( $catch ? 'catch ' . $catch : 'do' );
             $test = populate_vars( $test, \%stash );
             eval { ($val) = run_cmd($test); };
-            if ($@) {
-                if ($catch) {
-                    $val = $@->{vars}{body}
-                        if $@->isa('Search::Elasticsearch::Error');
-                    test_error( $@, $catch, $test_name );
-                }
-                else {
-                    fail($test_name) || diag($@);
-                }
+            if ($catch) {
+                $val = $@->{vars}{body}
+                    if $@ && $@->isa('Search::Elasticsearch::Error');
+                test_error( $@, $catch, $test_name );
+            }
+            elsif ($@) {
+                fail($test_name) || diag($@);
             }
             else {
                 pass($test_name);
