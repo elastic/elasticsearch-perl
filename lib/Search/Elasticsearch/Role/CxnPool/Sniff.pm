@@ -45,7 +45,7 @@ sub parse_sniff {
         my $data = $nodes->{$node_id};
 
         my $host = $data->{ $protocol . "_address" } or next;
-        $host =~ s{^inet\[[^/]*/([^\]]+)\]}{$1} or next;
+        $host =~ s{^inet\[[^/]*/([^\]]+)\]}{$1};
 
         $host = $self->should_accept_node( $host, $node_id, $data )
             or next;
