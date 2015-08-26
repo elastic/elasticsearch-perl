@@ -212,6 +212,7 @@ our %Params = (
     _source_exclude => { type => 'list', },
     _source_include => { type => 'list', },
     stats           => { type => 'list' },
+    status          => { type => 'string' },
     stop_words      => { type => 'list' },
     store           => { type => 'bool' },
     suggest_field   => { type => 'string' },
