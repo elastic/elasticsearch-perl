@@ -458,7 +458,7 @@ sub skip_version {
 sub str_version {
 #===================================
     no warnings 'uninitialized';
-    return sprintf "%03d-%03d-%03d", ( split /\./, shift() )[ 0 .. 2 ];
+    return sprintf "%03d-%03d-%03d", ( split /[-.]/, shift() )[ 0 .. 2 ];
 }
 #===================================
 sub request_wrapper {
