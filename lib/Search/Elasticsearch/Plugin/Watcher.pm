@@ -112,7 +112,7 @@ for more information.
 =head2 C<execute_watch()>
 
     $response = $es->watcher->execute_watch(
-        id    => $watch_id,     # required
+        id    => $watch_id,     # optional
         body  => {...}          # optional
     );
 
@@ -120,6 +120,7 @@ The C<execute_watch()> method forces the execution of a previously
 registered watch.  Optional parameters may be passed in the C<body>.
 
 Query string parameters:
+    C<debug>,
     C<master_timeout>
 
 See the L<execute_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest-execute-watch.html>
@@ -128,7 +129,8 @@ for more information.
 =head2 C<ack_watch()>
 
     $response = $es->watcher->ack_watch(
-        id    => $watch_id,     # required
+        watch_id => $watch_id,                  # required
+        action_id => $action_id | \@action_ids  # optional
     );
 
 The C<ack_watch()> method is used to manually throttle the execution of
@@ -152,7 +154,9 @@ for more information.
 
 =head2 C<stats()>
 
-    $response = $es->watcher->stats();
+    $response = $es->watcher->stats(
+        metric => $metric       # optional
+    );
 
 The C<stats()> method returns information about the status of the watcher plugin.
 
