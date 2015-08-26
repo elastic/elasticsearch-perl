@@ -661,6 +661,13 @@ sub api {
         qs    => [ "h", "help", "local", "master_timeout", "v" ],
     },
 
+    'cat.nodeattrs' => {
+        doc   => "cat-nodeattrs",
+        parts => {},
+        paths => [ [ {}, "_cat", "nodeattrs" ] ],
+        qs    => [ "h", "help", "local", "master_timeout", "v" ],
+    },
+
     'cat.nodes' => {
         doc   => "cat-nodes",
         parts => {},

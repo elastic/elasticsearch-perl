@@ -202,6 +202,22 @@ Query string parameters:
 See the L<cat master docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-master.html>
 for more information.
 
+=head2 C<nodeattrs()>
+
+    say $e->cat->nodeattrs();
+
+Returns the node attributes set per node.
+
+Query string parameters:
+    C<h>,
+    C<help>,
+    C<local>,
+    C<master_timeout>,
+    C<v>
+
+See the L<cat nodeattrs docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-nodeattrs.html>
+for more information.
+
 =head2 C<nodes()>
 
     say $e->cat->nodes();
