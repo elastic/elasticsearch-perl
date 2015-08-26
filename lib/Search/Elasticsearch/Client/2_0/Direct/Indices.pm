@@ -38,7 +38,8 @@ settings, type mappings and index warmers can be added at the same time.
 
 Query string parameters:
     C<master_timeout>,
-    C<timeout>
+    C<timeout>,
+    C<update_all_types>
 
 See the L<create index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html>
 for more information.
@@ -310,7 +311,8 @@ Query string parameters:
     C<expand_wildcards>,
     C<ignore_unavailable>,
     C<master_timeout>,
-    C<timeout>
+    C<timeout>,
+    C<update_all_types>
 
 See the L<put_mapping docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-put-mapping.html>
 for more information.

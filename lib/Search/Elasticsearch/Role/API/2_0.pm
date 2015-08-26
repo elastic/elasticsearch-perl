@@ -849,7 +849,9 @@ sub api {
         method => "PUT",
         parts  => { index => { required => 1 } },
         paths  => [ [ { index => 0 }, "{index}" ] ],
-        qs => [ "filter_path", "master_timeout", "timeout" ],
+        qs     => [
+            "filter_path", "master_timeout", "timeout", "update_all_types"
+        ],
     },
 
     'indices.delete' => {
@@ -1178,6 +1180,7 @@ sub api {
             "allow_no_indices", "expand_wildcards",
             "filter_path",      "ignore_unavailable",
             "master_timeout",   "timeout",
+            "update_all_types",
         ],
     },
 
