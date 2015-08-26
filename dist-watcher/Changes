@@ -1,5 +1,11 @@
 Revision history for Search::Elasticsearch::Plugin::Watcher
 
+1.99    2015-08-26
+
+        This release provides support for Elasticsearch 2.0.0-beta1 and above,
+        but the default client is still '1_0::Direct' and will remain so until
+        version 2.00 is released.
+
 1.20    2015-05-17
 
         First release
