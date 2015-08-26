@@ -20,6 +20,9 @@ our $DEBUG = 0;
 @Search::Elasticsearch::Error::Missing::ISA
     = ( 'Search::Elasticsearch::Error::Request', __PACKAGE__ );
 
+@Search::Elasticsearch::Error::RequestTimeout::ISA
+    = ( 'Search::Elasticsearch::Error::Request', __PACKAGE__ );
+
 @Search::Elasticsearch::Error::ContentLength::ISA
     = ( __PACKAGE__, 'Search::Elasticsearch::Error::Request' );
 
@@ -209,6 +212,13 @@ is triggered by the C<409> HTTP status code.
 
 The request body was longer than the
 L<max_content_length|Search::Elasticsearch::Role::Cxn::HTTP/max_content_length>.
+
+=item * C<Search::Elasticsearch::Error::RequestTimeout>
+
+The request took longer than the specified C<timeout>.  Currently only
+applies to the
+L<cluster_health|Search::Elasticsearch::Client::2_0::Direct::Cluster/cluster_health()>
+request.
 
 =back
 

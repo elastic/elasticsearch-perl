@@ -105,11 +105,12 @@ our %Test_Types = (
 );
 
 our %Errors = (
-    missing   => 'Search::Elasticsearch::Error::Missing',
-    conflict  => 'Search::Elasticsearch::Error::Conflict',
-    forbidden => 'Search::Elasticsearch::Error::Forbidden',
-    param     => 'Search::Elasticsearch::Error::Param',
-    request   => 'Search::Elasticsearch::Error::Request',
+    missing         => 'Search::Elasticsearch::Error::Missing',
+    conflict        => 'Search::Elasticsearch::Error::Conflict',
+    forbidden       => 'Search::Elasticsearch::Error::Forbidden',
+    param           => 'Search::Elasticsearch::Error::Param',
+    request         => 'Search::Elasticsearch::Error::Request',
+    request_timeout => 'Search::Elasticsearch::Error::RequestTimeout',
 );
 
 my $test = shift @ARGV or die "No test specified";

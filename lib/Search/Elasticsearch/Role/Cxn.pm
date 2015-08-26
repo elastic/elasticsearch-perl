@@ -31,6 +31,7 @@ my %Code_To_Error = (
     401 => 'Unauthorized',
     403 => 'Forbidden',
     404 => 'Missing',
+    408 => 'RequestTimeout',
     409 => 'Conflict',
     503 => 'Unavailable'
 );
