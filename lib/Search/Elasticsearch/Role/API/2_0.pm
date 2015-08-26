@@ -1236,7 +1236,7 @@ sub api {
         qs => [
             "allow_no_indices", "expand_wildcards",
             "filter_path",      "ignore_unavailable",
-            "master_timeout",
+            "master_timeout",   "request_cache",
         ],
     },
 

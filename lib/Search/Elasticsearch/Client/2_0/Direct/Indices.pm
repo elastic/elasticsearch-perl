@@ -655,7 +655,8 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<ignore_unavailable>,
-    C<master_timeout>
+    C<master_timeout>,
+    C<request_cache>
 
 See the L<put_warmer docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-warmers.html>
 for more information.
@@ -721,6 +722,7 @@ Allowed metrics are:
     C<percolate>,
     C<query_cache>,
     C<refresh>,
+    C<request_cache>,
     C<search>,
     C<segments>,
     C<store>,
