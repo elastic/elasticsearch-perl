@@ -775,6 +775,25 @@ Query string parameters:
 See the L<segments docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-segments.html>
 for more information.
 
+=head2 C<shard_stores()>
+
+    $result = $e->indices->shard_stores(
+        index   => 'index' | \@indices      # optional
+    );
+
+The C<shard_stores()> method is used to find out which nodes contain
+copies of which shards, whether the shards are allocated or not.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<human>,
+    C<ignore_unavailable>,
+    C<status>
+
+See the L<shard_stores docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-shards-stores.html>
+for more information.
+
 =head1 QUERY AND ANALYSIS METHODS
 
 =head2 C<analyze()>

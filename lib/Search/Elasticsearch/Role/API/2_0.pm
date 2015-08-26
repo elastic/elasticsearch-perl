@@ -1277,6 +1277,20 @@ sub api {
         ],
     },
 
+    'indices.shard_stores' => {
+        doc   => "indices-shards-stores",
+        parts => { index => { multi => 1 } },
+        paths => [
+            [ { index => 0 }, "{index}", "_shard_stores" ],
+            [ {}, "_shard_stores" ],
+        ],
+        qs => [
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+            "status",
+        ],
+    },
+
     'indices.stats' => {
         doc   => "indices-stats",
         parts => { index => { multi => 1 }, metric => { multi => 1 } },
