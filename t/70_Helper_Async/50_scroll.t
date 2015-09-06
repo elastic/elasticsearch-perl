@@ -139,6 +139,55 @@ test_scroll(
     max_seen   => 10
 );
 
+{
+    # Test auto finish fork protection.
+    my $count = 0;
+    my $s = $es->scroll_helper( size => 5, on_result => sub { $count++ } );
+
+    my $pid = fork();
+    unless ( defined($pid) ) { die "Cannot fork. Lack of resources?"; }
+    unless ($pid) {
+
+        # Child. Call finish check that its not finished
+        # (the call to finish did nothing).
+        wait_for( $s->finish() );
+        exit 0;
+    }
+    else {
+        # Wait for children
+        waitpid( $pid, 0 );
+        is $?, 0, "Child exited without errors";
+    }
+    ok !$s->is_finished(), "Our Scroll is not finished";
+    wait_for( $s->start );
+    is $count, 100, "All documents retrieved";
+    ok $s->is_finished, "Our scroll is finished";
+}
+
+{
+    # Test Scroll usage attempt in a different process.
+    my $count = 0;
+    my $s     = $es->scroll_helper(
+        size      => 5,
+        on_result => sub { $count++ },
+        on_error  => sub { die @_ }
+    );
+
+    my $pid = fork();
+    unless ( defined($pid) ) { die "Cannot fork. Lack of resources?"; }
+    unless ($pid) {
+
+        eval { wait_for( $s->start ) };
+        my $err = $@;
+        exit( eval { $err->is('Illegal') && 123 } || 999 );
+    }
+    else {
+        # Wait for children
+        waitpid( $pid, 0 );
+        is $? >> 8, 123, "Child threw Illegal exception";
+    }
+}
+
 done_testing;
 
 wait_for( $es->indices->delete( index => 'test' ) );

@@ -174,28 +174,34 @@ sub _results_iterator {
 }
 
 #===================================
-sub _clear_scroll {
+sub finish {
 #===================================
     my $self = shift;
-    my $scroll_id = $self->_scroll_id or return;
+    $self->_set_is_finished(1);
+
+    my $scroll_id = $self->_scroll_id;
     $self->_clear_scroll_id;
+
+    if ( !$scroll_id || $self->_pid != $$ ) {
+        my $d = deferred;
+        $d->resolve();
+        return $d->promise;
+    }
 
     my %args
         = $self->scroll_in_qs
         ? ( scroll_id => $scroll_id )
         : ( body => $scroll_id );
 
-    $self->es->clear_scroll(%args)->catch( sub { } );
+    $self->es->clear_scroll(%args)->then(
+        sub {
+            $self->_clear_on_start;
+            $self->_clear_on_results;
+            $self->_clear_on_error;
+        },
+        sub { }
+    );
 }
-
-#===================================
-after 'finish' => sub {
-#===================================
-    my $self = shift;
-    $self->_clear_on_start;
-    $self->_clear_on_results;
-    $self->_clear_on_error;
-};
 
 1;
 

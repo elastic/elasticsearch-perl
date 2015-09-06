@@ -153,6 +153,52 @@ my $s = $es->scroll_helper;
 my $d = $s->next;
 ok ref $d && $d->{_source}, 'next() in scalar context';
 
+{
+    # Test auto finish fork protection.
+    my $s = $es->scroll_helper( size => 5 );
+
+    my $pid = fork();
+    unless ( defined($pid) ) { die "Cannot fork. Lack of resources?"; }
+    unless ($pid) {
+
+        # Child. Call finish check that its not finished
+        # (the call to finish did nothing).
+        $s->finish();
+        exit;
+    }
+    else {
+        # Wait for children
+        waitpid( $pid, 0 );
+        is $?, 0, "Child exited without errors";
+    }
+    ok !$s->is_finished(), "Our Scroll is not finished";
+    my $count = 0;
+    while ( $s->next ) { $count++ }
+    is $count, 100, "All documents retrieved";
+    ok $s->is_finished, "Our scroll is finished";
+}
+
+{
+    # Test Scroll usage attempt in a different process.
+    my $s = $es->scroll_helper( size => 5 );
+    my $pid = fork();
+    unless ( defined($pid) ) { die "Cannot fork. Lack of resources?"; }
+    unless ($pid) {
+
+        # Calling this next should crash, not exiting this process with 0
+        eval {
+            while ( $s->next ) { }
+        };
+        my $err = $@;
+        exit( eval { $err->is('Illegal') && 123 } || 999 );
+    }
+    else {
+        # Wait for children
+        waitpid( $pid, 0 );
+        is $? >> 8, 123, "Child threw Illegal exception";
+    }
+}
+
 done_testing;
 $es->indices->delete( index => 'test' );
 

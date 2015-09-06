@@ -95,18 +95,14 @@ sub refill_buffer {
 }
 
 #===================================
-around 'finish' => sub {
-#===================================
-    my ( $orig, $self ) = @_;
-    $orig->($self);
-    @{ $self->_buffer } = ();
-    1;
-};
-
-#===================================
-sub _clear_scroll {
+sub finish {
 #===================================
     my $self = shift;
+    return if $self->is_finished || $self->_pid != $$;
+
+    $self->_set_is_finished(1);
+    @{ $self->_buffer } = ();
+
     my $scroll_id = $self->_scroll_id or return;
     $self->_clear_scroll_id;
 
@@ -115,6 +111,7 @@ sub _clear_scroll {
         ? ( scroll_id => $scroll_id )
         : ( body => $scroll_id );
     eval { $self->es->clear_scroll(%args) };
+    return 1;
 }
 
 1;

@@ -1,9 +1,9 @@
 package Search::Elasticsearch::Role::Scroll;
 
 use Moo::Role;
-requires '_clear_scroll';
+requires 'finish';
 use Search::Elasticsearch::Util qw(parse_params throw);
-use Scalar::Util qw(weaken blessed);
+use Devel::GlobalDestruction;
 use namespace::clean;
 
 has 'es' => ( is => 'ro', required => 1 );
@@ -18,21 +18,18 @@ has 'took'          => ( is => 'rwp' );
 has 'total_took'    => ( is => 'rwp' );
 has 'search_params' => ( is => 'ro' );
 has 'is_finished'   => ( is => 'rwp', default => '' );
+has '_pid'          => ( is => 'ro', default => $$ );
 has '_scroll_id'    => ( is => 'rwp', clearer => 1, predicate => 1 );
-
-#===================================
-sub finish {
-#===================================
-    my $self = shift;
-    return if $self->is_finished;
-    $self->_set_is_finished(1);
-    $self->_clear_scroll;
-}
 
 #===================================
 sub scroll_request {
 #===================================
     my $self = shift;
+    throw( 'Illegal',
+              'Scroll requests are not fork safe and may only be '
+            . 'refilled by the same process that created the instance.' )
+        if $self->_pid != $$;
+
     my %args = ( scroll => $self->scroll );
     if ( $self->scroll_in_qs ) {
         $args{scroll_id} = $self->_scroll_id;
@@ -47,9 +44,10 @@ sub scroll_request {
 sub DEMOLISH {
 #===================================
     my $self = shift or return;
+    return if in_global_destruction;
     $self->finish;
 }
 
 1;
 
-# ABSTRACT: Provides common functionality to L<Elasticseach::Scroll> and L<Search::Elasticsearch::Async::Scroll>
+# ABSTRACT: Provides common functionality to L<Search::Elasticseach::Scroll> and L<Search::Elasticsearch::Async::Scroll>
