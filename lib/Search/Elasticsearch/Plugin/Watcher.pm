@@ -28,7 +28,7 @@ sub _build_watcher {
     shift->_build_namespace('+Search::Elasticsearch::Plugin::Watcher');
 }
 
-1
+1;
 
 __END__
 
