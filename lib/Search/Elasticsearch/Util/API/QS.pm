@@ -40,6 +40,7 @@ our %Params = (
         type    => 'enum'
     },
     create           => { type => 'bool' },
+    debug            => { type => 'bool' },
     default_operator => {
         default => 'OR',
         options => [ 'AND', 'OR' ],
