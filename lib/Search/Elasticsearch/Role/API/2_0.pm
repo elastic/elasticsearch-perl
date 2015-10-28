@@ -821,7 +821,7 @@ sub api {
             [ { node_id => 3 }, "_cluster", "stats", "nodes", "{node_id}" ],
             [ {}, "_cluster", "stats" ],
         ],
-        qs => [ "filter_path", "flat_settings", "human" ],
+        qs => [ "filter_path", "flat_settings", "human", "timeout" ],
     },
 
     'indices.analyze' => {
@@ -1387,7 +1387,8 @@ sub api {
         qs => [
             "filter_path", "ignore_idle_threads",
             "interval",    "snapshots",
-            "threads",     "type",
+            "threads",     "timeout",
+            "type",
         ],
     },
 
@@ -1402,7 +1403,7 @@ sub api {
             [ { node_id => 1 }, "_nodes", "{node_id}" ],
             [ {}, "_nodes" ],
         ],
-        qs => [ "filter_path", "flat_settings", "human" ],
+        qs => [ "filter_path", "flat_settings", "human", "timeout" ],
     },
 
     'nodes.stats' => {
@@ -1439,7 +1440,8 @@ sub api {
             "completion_fields", "fielddata_fields",
             "fields",            "filter_path",
             "groups",            "human",
-            "level",             "types",
+            "level",             "timeout",
+            "types",
         ],
     },
 

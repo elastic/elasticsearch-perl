@@ -54,7 +54,8 @@ Returns high-level cluster stats, optionally limited to the listed nodes.
 
 Query string parameters:
     C<flat_settings>,
-    C<human>
+    C<human>,
+    C<timeout>
 
 See the L<cluster stats docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-stats.html>
 for more information.

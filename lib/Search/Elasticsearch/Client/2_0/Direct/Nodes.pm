@@ -41,6 +41,7 @@ Allowed metrics are:
     C<process>,
     C<settings>,
     C<thread_pool>,
+    C<timeout>,
     C<transport>
 
 Query string parameters:
@@ -77,6 +78,7 @@ Allowed metrics are:
     C<os>,
     C<process>,
     C<thread_pool>,
+    C<timeout>,
     C<transport>
 
 If the C<indices> metric (or C<_all>) is specified, then
@@ -136,6 +138,7 @@ Query string parameters:
     C<interval>,
     C<snapshots>,
     C<threads>,
+    C<timeout>,
     C<type>
 
 See the L<hot_threads docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-hot-threads.html>
