@@ -106,7 +106,7 @@ sub sniff {
         $self->perform_request(
             {   method  => 'GET',
                 path    => '/_nodes/' . $protocol,
-                qs      => { timeout => 1000 * $self->sniff_timeout },
+                qs      => { timeout => $self->sniff_timeout . 's' },
                 timeout => $self->sniff_request_timeout,
             }
         )->{nodes};
@@ -191,9 +191,7 @@ sub _munge_elasticsearch_exception {
     for (@$root_causes) {
         my %cause = (%$_);
         my $msg
-            = "["
-            . ( delete $cause{type} ) . "] "
-            . ( delete $cause{reason} );
+            = "[" . ( delete $cause{type} ) . "] " . ( delete $cause{reason} );
         if ( keys %cause ) {
             $msg .= ", with: " . $json->encode( \%cause );
         }

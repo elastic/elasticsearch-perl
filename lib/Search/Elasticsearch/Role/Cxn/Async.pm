@@ -38,7 +38,7 @@ sub sniff {
     $self->perform_request(
         {   method  => 'GET',
             path    => '/_nodes/' . $protocol,
-            qs      => { timeout => 1000 * $self->sniff_timeout },
+            qs      => { timeout => $self->sniff_timeout . 's' },
             timeout => $self->sniff_request_timeout,
         }
         )->then(
