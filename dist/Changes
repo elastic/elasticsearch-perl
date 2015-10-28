@@ -1,5 +1,32 @@
 Revision history for Search::Elasticsearch
 
+2.00    2015-10-28
+
+        The default client is now '2_0::Direct', for use with Elasticsearch 2.x.
+        Specify client '1_0::Direct' if using with Elasticsearch 1.x.
+
+        Breaking:
+        * The field parameter to indices.get_field_mapping() has been renamed to fields
+
+        New features:
+        * Added fields param to Bulk helper
+        * The name parameter to indices.get_template() can accept multiple options
+        * Added indices.forcemerge() and deprecated indices.optimize()
+        * The index parameter to indices.open() and indices.close() is required
+        * Added allow_no_indices, expand_wildcards, and ignore_unavailable params
+          to indices.flush_synced()
+        * Added the timeout param to cluster.stats(), nodes.hot_threads(),
+          nodes.stats(), and nodes.info()
+        * cluster.health() can accept multiple indices
+        * Added cat.repositories() and cat.snapshots()
+        * Added detect_noop param to update()
+        * search_shards() accepts multi values for index/type
+        * delete_template() requires an id
+        * Add fork protection to Scroll and Async::Scroll
+
+        Bug fix:
+        * Added missing debug QS param
+
 1.99    2015-08-26
 
         This release provides support for Elasticsearch 2.0.0-beta1 and above,

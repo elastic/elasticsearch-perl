@@ -5,7 +5,7 @@ use Moo 1.003 ();
 use Search::Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
-our $VERSION = '1.99';
+our $VERSION = '2.00';
 
 my %Default_Plugins = (
     client      => [ 'Search::Elasticsearch::Client',       '2_0::Direct' ],

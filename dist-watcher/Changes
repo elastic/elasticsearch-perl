@@ -1,5 +1,16 @@
 Revision history for Search::Elasticsearch::Plugin::Watcher
 
+2.00    2015-10-28
+
+        The default client is now '2_0::Direct', for use with Elasticsearch 2.x.
+        Specify client '1_0::Direct' if using with Elasticsearch 1.x.
+
+        New features:
+        * Added activate_watch() and deactivate_watch()
+
+        Bug fixes:
+        * Missing semicolon at end of Watcher plugin
+
 1.99    2015-08-26
 
         This release provides support for Elasticsearch 2.0.0-beta1 and above,

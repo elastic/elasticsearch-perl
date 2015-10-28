@@ -5,9 +5,9 @@ with 'Search::Elasticsearch::Plugin::Watcher::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 __PACKAGE__->_install_api('watcher');
 
-use Search::Elasticsearch 1.99 ();
+use Search::Elasticsearch 2.00 ();
 
-our $VERSION = '1.99';
+our $VERSION = '2.00';
 
 #===================================
 sub _init_plugin {
