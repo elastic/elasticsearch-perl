@@ -287,6 +287,22 @@ Query string parameters:
 See the L<cat recovery docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-recovery.html>
 for more information.
 
+=head2 C<repositories()>
+
+    say $e->cat->repositories()
+
+Provides a list of registered snapshot repositories.
+
+Query string parameters:
+    C<h>,
+    C<help>,
+    C<local>,
+    C<master_timeout>,
+    C<v>
+
+See the L<cat repositories docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-repositories.html>
+for more information.
+
 =head2 C<segments()>
 
     say $e->cat->segments(
@@ -321,6 +337,24 @@ Query string parameters:
 
 See the L<cat shards docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-shards.html>
 for more information.
+
+=head2 C<snapshots()>
+
+    say $e->cat->snapshots(
+        repository => 'repository' | \@repositories # optional
+    )
+
+Provides a list of all snapshots that belong to the specified repositories.
+
+Query string parameters:
+    C<h>,
+    C<help>,
+    C<master_timeout>,
+    C<v>
+
+See the L<cat snapshots docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-snapshots.html>
+for more information.
+
 
 =head2 C<thread_pool()>
 

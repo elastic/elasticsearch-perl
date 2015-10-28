@@ -700,6 +700,13 @@ sub api {
         qs => [ "bytes", "h", "help", "master_timeout", "v" ],
     },
 
+    'cat.repositories' => {
+        doc   => "cat-repositories",
+        parts => {},
+        paths => [ [ {}, "_cat", "repositories" ] ],
+        qs    => [ "h", "help", "local", "master_timeout", "v" ],
+    },
+
     'cat.segments' => {
         doc   => "cat-segments",
         parts => { index => { multi => 1 } },
@@ -718,6 +725,14 @@ sub api {
             [ {}, "_cat", "shards" ],
         ],
         qs => [ "h", "help", "local", "master_timeout", "v" ],
+    },
+
+    'cat.snapshots' => {
+        doc   => "cat-snapshots",
+        parts => { repository => { multi => 1 } },
+        paths =>
+            [ [ { repository => 2 }, "_cat", "snapshots", "{repository}" ] ],
+        qs => [ "h", "help", "master_timeout", "v" ],
     },
 
     'cat.thread_pool' => {
