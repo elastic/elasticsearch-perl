@@ -477,6 +477,7 @@ C<index>, C<type> and C<id> if it exists. Updates can be performed either by:
 
 Query string parameters:
     C<consistency>,
+    C<detect_noop>,
     C<fields>,
     C<lang>,
     C<parent>,

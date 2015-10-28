@@ -48,6 +48,7 @@ our %Params = (
     },
     delay            => { type => 'duration' },
     detailed         => { type => 'bool' },
+    detect_noop      => { type => 'bool' },
     df               => { type => 'string' },
     dfs              => { type => 'bool' },
     docs             => { type => 'bool' },
