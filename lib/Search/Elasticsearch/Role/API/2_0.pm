@@ -1118,7 +1118,7 @@ sub api {
 
     'indices.get_template' => {
         doc   => "indices-templates",
-        parts => { name => {} },
+        parts => { name => { multi => 1 } },
         paths =>
             [ [ { name => 1 }, "_template", "{name}" ], [ {}, "_template" ] ],
         qs => [ "filter_path", "flat_settings", "local", "master_timeout" ],

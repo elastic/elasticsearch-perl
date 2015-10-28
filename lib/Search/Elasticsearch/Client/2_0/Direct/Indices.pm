@@ -610,7 +610,7 @@ for more information.
 =head2 C<get_template()>
 
     $result = $e->indices->get_template(
-        name  => 'template'                 # optional
+        name  => 'template' | \@templates # optional
     );
 
 The C<get_template()> method is used to retrieve a named template.
