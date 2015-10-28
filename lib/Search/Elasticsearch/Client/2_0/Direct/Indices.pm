@@ -369,9 +369,9 @@ for more information.
 =head2 C<get_field_mapping()>
 
     $result = $e->indices->get_field_mapping(
-        index => 'index' | \@indices    # optional,
-        type  => 'type'  | \@types      # optional,
-        field => 'field' | \@fields     # required
+        index => 'index'  | \@indices    # optional,
+        type  => 'type'   | \@types      # optional,
+        fields => 'field' | \@fields     # required
 
         include_defaults => 0 | 1
     );
