@@ -484,7 +484,7 @@ sub api {
 
     'search_shards' => {
         doc   => "search-shards",
-        parts => { index => {}, type => {} },
+        parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
                 "{type}", "_search_shards",
