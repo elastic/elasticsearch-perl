@@ -991,6 +991,21 @@ sub api {
             "filter_path",      "ignore_unavailable",
         ],
     },
+
+    'indices.forcemerge' => {
+        doc    => "indices-forcemerge",
+        method => "POST",
+        parts  => { index => { multi => 1 } },
+        paths  => [
+            [ { index => 0 }, "{index}", "_forcemerge" ],
+            [ {}, "_forcemerge" ],
+        ],
+        qs => [
+            "allow_no_indices",     "expand_wildcards",
+            "filter_path",          "flush",
+            "ignore_unavailable",   "max_num_segments",
+            "only_expunge_deletes", "wait_for_merge",
+        ],
     },
 
     'indices.get' => {

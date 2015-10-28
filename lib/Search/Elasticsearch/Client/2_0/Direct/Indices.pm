@@ -223,7 +223,31 @@ Query string parameters:
     C<expand_wildcards>,
     C<ignore_unavailable>
 
+=head2 C<forcemerge()>
+
+    $response = $e->indices->forcemerge(
+        index => 'index' | \@indices    # optional
+    );
+
+The C<forcemerge()> method rewrites all the data in an index into at most
+C<max_num_segments>.  This is a very heavy operation and should only be run
+with care, and only on indices that are no longer being updated.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<flush>,
+    C<ignore_unavailable>,
+    C<max_num_segments>,
+    C<only_expunge_deletes>,
+    C<wait_for_merge>
+
+See the L<forcemerge docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-forcemerge.html>
+for more information.
+
 =head2 C<optimize()>
+
+The C<optimize()> method is deprecated in 2.x and will be replaced by L<forcemerge()>;
 
     $response = $e->indices->optimize(
         index => 'index' | \@indices    # optional
