@@ -131,7 +131,7 @@ sub api {
     'delete_template' => {
         doc    => "search-template",
         method => "DELETE",
-        parts  => { id => {} },
+        parts  => { id => { required => 1 } },
         paths  => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
         qs => [ "filter_path", "version", "version_type" ],
     },
