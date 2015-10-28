@@ -857,7 +857,7 @@ sub api {
     'indices.close' => {
         doc    => "indices-open-close",
         method => "POST",
-        parts  => { index => { required => 1 } },
+        parts  => { index => { multi => 1, required => 1 } },
         paths  => [ [ { index => 0 }, "{index}", "_close" ] ],
         qs     => [
             "allow_no_indices", "expand_wildcards",
