@@ -60,8 +60,8 @@ In other words, it can be used as follows:
 
     my $response = $es->watcher->info();
 
-It works with the L<version 1.x|Search::Elasticsearch::Client::1_0::Direct>
-and L<version 2.x|Search::Elasticsearch::Client::2_0::Direct> clients, and
+It works with the L<version 1.x|Search::Elasticsearch::Client::2_0::Direct>
+and L<version 2.x|Search::Elasticsearch::Client::1_0::Direct> clients, and
 can be used both in L<Search::Elasticsearch> and in
 L<Search::Elasticsearch::Async>.
 

@@ -146,7 +146,7 @@ __END__
 
 =head1 DESCRIPTION
 
-This module provides a wrapper for the L<Search::Elasticsearch::Client::1_0::Direct/bulk()>
+This module provides a wrapper for the L<Search::Elasticsearch::Client::2_0::Direct/bulk()>
 method which makes it easier to run multiple create, index, update or delete
 actions in a single request. It also provides a simple interface
 for L<reindexing documents|/REINDEXING DOCUMENTS>.
@@ -190,7 +190,7 @@ Search::Elasticsearch client as the C<es> argument.
 The C<index> and C<type> parameters provide default values for
 C<index> and C<type>, which can be overridden in each action.
 You can also pass any other values which are accepted
-by the L<bulk()|Search::Elasticsearch::Client::1_0::Direct/bulk()> method.
+by the L<bulk()|Search::Elasticsearch::Client::2_0::Direct/bulk()> method.
 
 See L</flush()> for more information about the other parameters.
 
@@ -201,7 +201,7 @@ See L</flush()> for more information about the other parameters.
     $result = $bulk->flush;
 
 The C<flush()> method sends all buffered actions to Elasticsearch using
-a L<bulk()|Search::Elasticsearch::Client::1_0::Direct/bulk()> request.
+a L<bulk()|Search::Elasticsearch::Client::2_0::Direct/bulk()> request.
 
 =head2 Auto-flushing
 
@@ -365,7 +365,7 @@ they must be specified either in L</new()> or in every action.
     );
 
 The C<create()> helper method allows you to add multiple C<create> actions.
-It accepts the same parameters as L<Search::Elasticsearch::Client::1_0::Direct/create()>
+It accepts the same parameters as L<Search::Elasticsearch::Client::2_0::Direct/create()>
 except that the document body should be passed as the C<source> or C<_source>
 parameter, instead of as C<body>.
 
@@ -391,7 +391,7 @@ you can just pass the individual document bodies.
     );
 
 The C<index()> helper method allows you to add multiple C<index> actions.
-It accepts the same parameters as L<Search::Elasticsearch::Client::1_0::Direct/index()>
+It accepts the same parameters as L<Search::Elasticsearch::Client::2_0::Direct/index()>
 except that the document body should be passed as the C<source> or C<_source>
 parameter, instead of as C<body>.
 
@@ -404,7 +404,7 @@ parameter, instead of as C<body>.
     );
 
 The C<delete()> helper method allows you to add multiple C<delete> actions.
-It accepts the same parameters as L<Search::Elasticsearch::Client::1_0::Direct/delete()>.
+It accepts the same parameters as L<Search::Elasticsearch::Client::2_0::Direct/delete()>.
 
 =head2 C<delete_ids()>
 
@@ -432,7 +432,7 @@ In this case, all you have to do is to pass in a list of IDs.
 
 
 The C<update()> helper method allows you to add multiple C<update> actions.
-It accepts the same parameters as L<Search::Elasticsearch::Client::1_0::Direct/update()>.
+It accepts the same parameters as L<Search::Elasticsearch::Client::2_0::Direct/update()>.
 An update can either use a I<partial doc> which gets merged with an existing
 doc (example 1 above), or can use a C<script> to update an existing doc
 (example 2 above).

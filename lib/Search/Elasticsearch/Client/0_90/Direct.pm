@@ -168,7 +168,7 @@ Cluster-level requests:
 
 =head1 DESCRIPTION
 
-The L<Search::Elasticsearch::Client::1_0::Direct> class provides the default
+The L<Search::Elasticsearch::Client::2_0::Direct> class provides the default
 client that is returned by:
 
     $e = Search::Elasticsearch->new;
@@ -192,7 +192,7 @@ be used as follows:
         client => '0_90::Direct'
     );
 
-See L<Search::Elasticsearch::Client::1_0::Direct> for the default client.
+See L<Search::Elasticsearch::Client::2_0::Direct> for the default client.
 
 =head1 CONVENTIONS
 

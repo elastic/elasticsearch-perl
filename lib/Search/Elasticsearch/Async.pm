@@ -267,7 +267,7 @@ is repeated until the application is interrupted with C<Ctrl-C>.:
 
 =head1 CREATING A NEW INSTANCE
 
-The L</new()> method returns a new L<client|Search::Elasticsearch::Client::1_0::Direct>
+The L</new()> method returns a new L<client|Search::Elasticsearch::Client::2_0::Direct>
 which can be used to run requests against the Elasticsearch cluster.
 
     use Search::Elasticsearch::Async;
@@ -387,7 +387,7 @@ Other arguments are explained in the respective L<module docs|/MODULES>.
 =head1 RUNNING REQUESTS
 
 When you create a new instance of Search::Elasticsearch::Async, it returns a
-L<client|Search::Elasticsearch::Client::1_0::Direct> object, which can be used for
+L<client|Search::Elasticsearch::Client::2_0::Direct> object, which can be used for
 running requests.
 
     use Search::Elasticsearch::Async;
@@ -411,7 +411,7 @@ running requests.
         );
     });
 
-See L<Search::Elasticsearch::Client::1_0::Direct> for more details about the requests
+See L<Search::Elasticsearch::Client::2_0::Direct> for more details about the requests
 that can be run.
 
 =head1 MODULES
@@ -443,20 +443,20 @@ methods that can be called to execute requests, such as
 C<search()>, C<index()> or C<delete()>. The client parses the user's
 requests and passes them to the L</transport> class to be executed.
 
-The default version of the client is C<1_0::Direct>, which can
+The default version of the client is C<2_0::Direct>, which can
 be explicitly specified as follows:
 
     $e = Search::Elasticsearch::Async->new(
-        client => '1_0::Direct'
+        client => '2_0::Direct'
     );
 
 See :
 
 =over
 
-=item * L<Search::Elasticsearch::Client::1_0::Direct> (default, for 1.0 branch)
+=item * L<Search::Elasticsearch::Client::2_0::Direct> (default, for 2.0 branch)
 
-=item * L<Search::Elasticsearch::Client::2_0::Direct> (for 2.0 branch)
+=item * L<Search::Elasticsearch::Client::1_0::Direct> (for 1.0 branch)
 
 =item * L<Search::Elasticsearch::Client::0_90::Direct> (for 0.90 branch)
 

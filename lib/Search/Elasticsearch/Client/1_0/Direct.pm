@@ -21,7 +21,7 @@ Create a client:
 
     use Search::Elasticsearch;
     my $e = Search::Elasticsearch->new(
-        client => '1_0::Direct'          # default
+        client => '1_0::Direct'
     );
 
 Index a doc:
@@ -94,10 +94,10 @@ Snapshot and restore:
 
 =head1 DESCRIPTION
 
-The L<Search::Elasticsearch::Client::1_0::Direct> class provides the default
+The L<Search::Elasticsearch::Client::1_0::Direct> class provides the
 client that is returned by:
 
-    $e = Search::Elasticsearch->new;
+    $e = Search::Elasticsearch->new( cxn => '1_0::Direct' );
 
 It is intended to be as close as possible to the native REST API that
 Elasticsearch uses, so that it is easy to translate the
@@ -111,8 +111,8 @@ and the L<cluster|/cluster()>.
 
 =head1 BACKWARDS COMPATIBILITY AND ELASTICSEARCH 0.90.x
 
-This version of the client supports the Elasticsearch 1.0 branch by
-default, which is not backwards compatible with the 0.90 branch.
+This version of the client supports the Elasticsearch 1.0 branch,
+which is not backwards compatible with the 0.90 branch.
 
 If you need to talk to a version of Elasticsearch before 1.0.0,
 please use L<Search::Elasticsearch::Client::0_90::Direct> as follows:
@@ -123,14 +123,12 @@ please use L<Search::Elasticsearch::Client::0_90::Direct> as follows:
 
 =head1 ELASTICSEARCH 2.x
 
-A client compatible with the as-yet-unreleased version 2.x of Elasticsearch is
+A client compatible with version 2.x of Elasticsearch is
 available as:
 
     $es = Search::Elasticsearch->new(
-        client => '2_0::Direct'
+        client => '2_0::Direct'  # default
     );
-
-This will become the new default client once Elasticsearch 2.0.0 has been released.
 
 See L<Search::Elasticsearch::Client::2_0::Direct> for docs about the 2.x compatible
 client.
