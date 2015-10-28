@@ -104,7 +104,7 @@ sub delete_ids {
 }
 
 our @Update_Params = qw(
-    doc upsert doc_as_upsert scripted_upsert
+    doc upsert doc_as_upsert fields scripted_upsert
     script script_id script_file
     params lang detect_noop
 );
