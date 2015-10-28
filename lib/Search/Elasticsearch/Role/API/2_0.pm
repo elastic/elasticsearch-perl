@@ -751,7 +751,7 @@ sub api {
 
     'cluster.health' => {
         doc   => "cluster-health",
-        parts => { index => {} },
+        parts => { index => { multi => 1 } },
         paths => [
             [ { index => 2 }, "_cluster", "health", "{index}" ],
             [ {}, "_cluster", "health" ],
