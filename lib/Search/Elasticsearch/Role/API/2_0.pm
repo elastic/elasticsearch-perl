@@ -981,17 +981,16 @@ sub api {
     'indices.flush_synced' => {
         doc    => "indices-synced-flush",
         method => "POST",
-        parts  => {
-            allow_no_indices   => {},
-            expand_wildcards   => {},
-            ignore_unavailable => {},
-            index              => { multi => 1 },
-        },
-        paths => [
+        parts  => { index => { multi => 1 } },
+        paths  => [
             [ { index => 0 }, "{index}", "_flush", "synced" ],
             [ {}, "_flush", "synced" ],
         ],
-        qs => ["filter_path"],
+        qs => [
+            "allow_no_indices", "expand_wildcards",
+            "filter_path",      "ignore_unavailable",
+        ],
+    },
     },
 
     'indices.get' => {

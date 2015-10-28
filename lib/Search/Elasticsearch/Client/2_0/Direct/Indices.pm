@@ -218,6 +218,11 @@ manually, eg before shutting down.  Any new commits immediately break the sync.
 See the L<flush synced docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-synced-flush.html>
 for more information.
 
+Query string parameters:
+    C<allow_no_indices>,
+    C<expand_wildcards>,
+    C<ignore_unavailable>
+
 =head2 C<optimize()>
 
     $response = $e->indices->optimize(
