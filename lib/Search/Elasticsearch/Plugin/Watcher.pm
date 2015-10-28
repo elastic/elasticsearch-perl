@@ -83,6 +83,10 @@ an existing watcher.
 See the L<put_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-put-watch>
 for more information.
 
+Query string parameters:
+    C<active>,
+    C<master_timeout>
+
 =head2 C<get_watch()>
 
     $response = $es->watcher->get_watch(
@@ -141,6 +145,33 @@ Query string parameters:
 
 See the L<ack_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-ack-watch>
 for more information.
+
+=head2 C<activate_watch()>
+
+    $response = $es->watcher->activate_watch(
+        watch_id => $watch_id,                  # required
+    );
+
+The C<activate_watch()> method is used to activate a deactive watch.
+
+Query string parameters:
+    C<master_timeout>
+
+See the L<activate_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-activate-watch>
+for more information.
+
+=head2 C<deactivate_watch()>
+
+    $response = $es->watcher->deactivate_watch(
+        watch_id => $watch_id,                  # required
+    );
+
+The C<deactivate_watch()> method is used to deactivate an active watch.
+
+Query string parameters:
+    C<master_timeout>
+
+See the L<deactivate_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-deactivate-watch>
 for more information.
 
 =head2 C<info()>

@@ -24,6 +24,7 @@ our %Handler = (
 );
 
 our %Params = (
+    active            => { type => 'bool' },
     active_only       => { type => 'bool' },
     all               => { type => 'bool' },
     allow_no_indices  => { type => 'bool' },

@@ -37,6 +37,32 @@ sub api {
         qs => ["master_timeout"],
     },
 
+    'watcher.activate_watch' => {
+        doc    => "",
+        method => "PUT",
+        parts  => { watch_id => { required => 1 } },
+        paths  => [
+            [   { watch_id => 2 }, "_watcher",
+                "watch", "{watch_id}",
+                "_activate",
+            ],
+        ],
+        qs => ["master_timeout"],
+    },
+
+    'watcher.deactivate_watch' => {
+        doc    => "",
+        method => "PUT",
+        parts  => { watch_id => { required => 1 } },
+        paths  => [
+            [   { watch_id => 2 }, "_watcher",
+                "watch", "{watch_id}",
+                "_deactivate",
+            ],
+        ],
+        qs => ["master_timeout"],
+    },
+
     'watcher.delete_watch' => {
         doc    => "appendix-api-delete-watch",
         method => "DELETE",
@@ -77,7 +103,7 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
-        qs => ["master_timeout"],
+        qs => [ "active", "master_timeout" ],
     },
 
     'watcher.restart' => {
