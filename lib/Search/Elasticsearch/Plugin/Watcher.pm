@@ -80,7 +80,7 @@ L<http://www.elastic.co/guide/en/watcher/current/>
 The C<put_watch()> method is used to register a new watcher or to update
 an existing watcher.
 
-See the L<put_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest-put-watch.html>
+See the L<put_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-put-watch>
 for more information.
 
 =head2 C<get_watch()>
@@ -91,7 +91,7 @@ for more information.
 
 The C<get_watch()> method is used to retrieve a watch by ID.
 
-See the L<get_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest-get-watch.html>
+See the L<get_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-get-watch>
 for more information.
 
 =head2 C<delete_watch()>
@@ -106,7 +106,7 @@ Query string parameters:
     C<force>,
     C<master_timeout>
 
-See the L<delete_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest-delete-watch.html>
+See the L<delete_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-delete-watch>
 for more information.
 
 =head2 C<execute_watch()>
@@ -123,7 +123,7 @@ Query string parameters:
     C<debug>,
     C<master_timeout>
 
-See the L<execute_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest-execute-watch.html>
+See the L<execute_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-execute-watch>
 for more information.
 
 =head2 C<ack_watch()>
@@ -139,7 +139,8 @@ a watch.
 Query string parameters:
     C<master_timeout>
 
-See the L<ack_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest-ack-watch.html>
+See the L<ack_watch docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-ack-watch>
+for more information.
 for more information.
 
 =head2 C<info()>
@@ -149,7 +150,7 @@ for more information.
 The C<info()> method returns basic information about the watcher plugin
 that is installed.
 
-See the L<info docs|http://www.elastic.co/guide/en/watcher/current/api-rest-info.html>
+See the L<info docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-info>
 for more information.
 
 =head2 C<stats()>
@@ -160,7 +161,7 @@ for more information.
 
 The C<stats()> method returns information about the status of the watcher plugin.
 
-See the L<stats docs|http://www.elastic.co/guide/en/watcher/current/api-rest-stats.html>
+See the L<stats docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-stats>
 for more information.
 
 =head2 C<stop()>
@@ -169,7 +170,7 @@ for more information.
 
 The C<stop()> method stops the watcher service if it is running.
 
-See the L<stop docs|http://www.elastic.co/guide/en/watcher/current/api-rest-stop.html>
+See the L<stop docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-stop>
 for more information.
 
 =head2 C<start()>
@@ -178,7 +179,7 @@ for more information.
 
 The C<start()> method starts the watcher service if it is not already running.
 
-See the L<start docs|http://www.elastic.co/guide/en/watcher/current/api-rest-start.html>
+See the L<start docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-start>
 for more information.
 
 
@@ -188,7 +189,7 @@ for more information.
 
 The C<restart()> method stops then starts the watcher service.
 
-See the L<restart docs|http://www.elastic.co/guide/en/watcher/current/api-rest-restart.html>
+See the L<restart docs|http://www.elastic.co/guide/en/watcher/current/api-rest.html#api-rest-restart>
 for more information.
 
 
