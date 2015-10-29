@@ -5,7 +5,7 @@ use warnings;
 use lib 't/lib';
 use Search::Elasticsearch::Bulk;
 
-my $es = do "es_sync.pl";
+my $es = do "es_sync.pl" or die( $@ || $! );
 
 $es->indices->delete( index => '_all' );
 

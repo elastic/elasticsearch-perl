@@ -13,7 +13,7 @@ $ENV{ES_SKIP_PING} = 1;
 $ENV{ES_CXN_POOL}  = 'Static';
 $ENV{ES_TIMEOUT}   = 1;
 
-my $es = do "es_sync.pl";
+my $es = do "es_sync.pl" or die( $@ || $! );
 SKIP: {
     skip
         "IO::Socket::IP doesn't respect timeout: https://rt.cpan.org/Ticket/Display.html?id=103878",

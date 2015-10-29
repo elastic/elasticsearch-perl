@@ -7,7 +7,7 @@ use AE;
 use Promises qw(deferred);
 use Search::Elasticsearch::Async::Bulk;
 
-my $es = do "es_async.pl";
+my $es = do "es_async.pl" or die( $@ || $! );
 
 wait_for( $es->indices->delete( index => '_all' ) );
 

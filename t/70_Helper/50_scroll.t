@@ -9,7 +9,7 @@ use warnings;
 our $es;
 
 BEGIN {
-    $es = do "es_sync.pl";
+    $es = do "es_sync.pl" or die( $@ || $! );
     use_ok 'Search::Elasticsearch::Scroll';
 }
 
@@ -32,7 +32,7 @@ if ( $es_version ge '0.90.5' ) {
     );
 }
 
-do "index_test_data.pl" or die $!;
+do "index_test_data.pl" or die( $@ || $! );
 
 test_scroll(
     "Match all",

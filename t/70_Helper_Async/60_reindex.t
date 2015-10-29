@@ -12,14 +12,14 @@ use Search::Elasticsearch::Async::Bulk;
 our ( $es, $es_version );
 
 BEGIN {
-    $es = do "es_async.pl";
+    $es = do "es_async.pl" or die( $@ || $! );
 }
 
 wait_for( $es->indices->delete( index => '_all', ignore => 404 )
         ->then( sub { $es->info } )
         ->then( sub { $es_version = shift()->{version}{number} } ) );
 
-do "index_test_data.pl" or die $!;
+do "index_test_data.pl" or die( $@ || $! );
 
 my ( $b, $s );
 
@@ -128,7 +128,7 @@ $b = Search::Elasticsearch::Async::Bulk->new( es => $es, index => 'test2' );
 {
     local $ENV{ES_CXN};
     local $ENV{ES_CXN_POOL};
-    my $sync = do 'es_sync.pl';
+    my $sync = do 'es_sync.pl' or die( $@ || $! );
     $s = $sync->scroll_helper( index => 'test' )
 }
 

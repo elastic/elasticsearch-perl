@@ -2,7 +2,7 @@ use Test::More;
 use Test::Exception;
 use Search::Elasticsearch;
 use lib 't/lib';
-do 'LogCallback.pl';
+do 'LogCallback.pl' or die( $@ || $! );
 
 isa_ok my $l = Search::Elasticsearch->new->logger,
     'Search::Elasticsearch::Logger::LogAny',

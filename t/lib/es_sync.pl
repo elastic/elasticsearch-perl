@@ -14,7 +14,7 @@ my $api
     : $version =~ /^1\./  ? '1_0::Direct'
     :                       '2_0::Direct';
 my $body     = $ENV{ES_BODY}     || 'GET';
-my $cxn      = $ENV{ES_CXN}      || do "default_cxn.pl" || die $!;
+my $cxn      = $ENV{ES_CXN}      || do "default_cxn.pl" || die( $@ || $! );
 my $cxn_pool = $ENV{ES_CXN_POOL} || 'Static';
 my $timeout  = $ENV{ES_TIMEOUT}  || 30;
 my @plugins = split /,/, ( $ENV{ES_PLUGINS} || '' );

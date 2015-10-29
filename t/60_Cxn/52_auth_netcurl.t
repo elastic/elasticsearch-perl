@@ -11,4 +11,4 @@ sub ssl_options {
     return { CURLOPT_CAINFO() => $_[0] };
 }
 
-do "es_sync_auth.pl";
+do "es_sync_auth.pl" or die( $@ || $! );

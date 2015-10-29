@@ -10,18 +10,18 @@ my $es;
 local $ENV{ES_CXN_POOL};
 
 $ENV{ES_CXN_POOL} = 'Async::Static';
-$es = do "es_async.pl";
+$es = do "es_async.pl" or die( $@ || $! );
 
 is wait_for( $es->info )->{tagline}, "You Know, for Search",
     'CxnPool::Async::Static';
 
 $ENV{ES_CXN_POOL} = 'Async::Static::NoPing';
-$es = do "es_async.pl";
+$es = do "es_async.pl" or die( $@ || $! );
 is wait_for( $es->info )->{tagline}, "You Know, for Search",
     'CxnPool::Async::Static::NoPing';
 
 $ENV{ES_CXN_POOL} = 'Async::Sniff';
-$es = do "es_async.pl";
+$es = do "es_async.pl" or die( $@ || $! );
 is wait_for( $es->info )->{tagline}, "You Know, for Search",
     'CxnPool::Async::Sniff';
 

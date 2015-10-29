@@ -9,7 +9,7 @@ use warnings;
 our ( $es, $es_version, $s, $total_seen, $max_seen );
 
 BEGIN {
-    $es = do "es_async.pl";
+    $es = do "es_async.pl" or die( $@ || $! );
     use_ok 'Search::Elasticsearch::Async::Scroll';
 }
 
@@ -28,7 +28,7 @@ if ( $es_version ge '0.90.5' ) {
     );
 }
 
-do "index_test_data.pl" or die $!;
+do "index_test_data.pl" or die( $@ || $! );
 
 test_scroll(
     "Match all - on_result",

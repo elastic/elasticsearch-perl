@@ -8,7 +8,7 @@ use lib 't/lib';
 my ( $es, $error, $name );
 
 BEGIN {
-    $es = do "es_async.pl";
+    $es = do "es_async.pl" or die( $@ || $! );
     use_ok "Search::Elasticsearch::Async::Bulk";
 }
 

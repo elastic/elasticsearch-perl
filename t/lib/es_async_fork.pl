@@ -3,7 +3,7 @@ use POSIX ":sys_wait_h";
 use AE;
 use Promises qw(deferred);
 
-my $es        = do "es_async.pl";
+my $es        = do "es_async.pl" or die( $@ || $! );
 my $cxn_class = ref $es->transport->cxn_pool->cxns->[0];
 ok wait_for( $es->info ), "$cxn_class - Info before fork";
 

@@ -1,7 +1,7 @@
 use Test::More;
 use POSIX ":sys_wait_h";
 
-my $es        = do "es_sync.pl";
+my $es        = do "es_sync.pl" or die( $@ || $! );
 my $cxn_class = ref $es->transport->cxn_pool->cxns->[0];
 ok $es->info, "$cxn_class - Info before fork";
 

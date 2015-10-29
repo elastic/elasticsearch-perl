@@ -11,4 +11,4 @@ sub ssl_options {
     };
 }
 
-do "es_sync_auth.pl";
+do "es_sync_auth.pl" or die( $@ || $! );

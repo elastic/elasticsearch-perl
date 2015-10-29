@@ -6,7 +6,7 @@ use warnings;
 use Search::Elasticsearch::Bulk;
 use lib 't/lib';
 
-my $es = do "es_sync.pl";
+my $es = do "es_sync.pl" or die( $@ || $! );
 
 my $b = Search::Elasticsearch::Bulk->new(
     es    => $es,

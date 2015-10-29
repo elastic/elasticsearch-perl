@@ -5,7 +5,7 @@ use lib 't/lib';
 
 local $ENV{ES_CXN};
 local $ENV{ES_CXN_POOL};
-my $es = do 'es_sync.pl';
+my $es = do 'es_sync.pl' or die( $@ || $! );
 
 $es->indices->delete( index => 'test', ignore => 404 );
 $es->indices->create( index => 'test' );

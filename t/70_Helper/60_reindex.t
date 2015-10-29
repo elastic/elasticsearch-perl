@@ -8,11 +8,11 @@ use warnings;
 use Search::Elasticsearch::Scroll;
 use Search::Elasticsearch::Bulk;
 
-our $es = do "es_sync.pl";
+our $es = do "es_sync.pl" or die( $@ || $! );
 my $es_version = $es->info->{version}{number};
 
 $es->indices->delete( index => '_all', ignore => 404 );
-do "index_test_data.pl" or die $!;
+do "index_test_data.pl" or die( $@ || $! );
 
 my $b;
 

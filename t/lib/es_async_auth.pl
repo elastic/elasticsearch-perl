@@ -30,17 +30,17 @@ our %Auth = ( use_https => 1, userinfo => $ENV{ES_USERINFO} );
 
 # Test https connection with correct auth, without cacert
 $ENV{ES_CXN_POOL} = 'Async::Static';
-my $es = do "es_async.pl";
+my $es = do "es_async.pl" or die( $@ || $! );
 ok wait_for( $es->cluster->health ),
     "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn static";
 
 $ENV{ES_CXN_POOL} = 'Async::Sniff';
-$es = do "es_async.pl";
+$es = do "es_async.pl" or die( $@ || $! );
 ok wait_for( $es->cluster->health ),
     "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn sniff";
 
 $ENV{ES_CXN_POOL} = 'Async::Static::NoPing';
-$es = do "es_async.pl";
+$es = do "es_async.pl" or die( $@ || $! );
 ok wait_for( $es->cluster->health ),
     "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn noping";
 
@@ -52,21 +52,21 @@ throws_ok { wait_for( $es->nodes->shutdown ) }
 # Test https connection with correct auth, with valid cacert
 $Auth{ssl_options} = ssl_options( $ENV{ES_CA_PATH} );
 
-$es = do "es_async.pl";
+$es = do "es_async.pl" or die( $@ || $! );
 
 ok wait_for( $es->cluster->health ),
     "$ENV{ES_CXN} - Valid cert HTTPS with auth";
 
 # Test invalid user credentials
 %Auth = ( userinfo => 'foobar:baz' );
-$es = do "es_async.pl";
+$es = do "es_async.pl" or die( $@ || $! );
 throws_ok { wait_for( $es->cluster->health ) }
 "Search::Elasticsearch::Error::Unauthorized", "$ENV{ES_CXN} - Bad userinfo";
 
 # Test https connection with correct auth, with invalid cacert
 $Auth{ssl_options} = ssl_options('t/lib/bad_cacert.pem');
 
-$es = do "es_async.pl";
+$es = do "es_async.pl" or die( $@ || $! );
 $ENV{ES} = "https://www.google.com";
 
 throws_ok { wait_for( $es->cluster->health ) }

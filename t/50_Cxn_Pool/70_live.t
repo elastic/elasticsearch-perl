@@ -9,15 +9,15 @@ my $es;
 local $ENV{ES_CXN_POOL};
 
 $ENV{ES_CXN_POOL} = 'Static';
-$es = do "es_sync.pl";
+$es = do "es_sync.pl" or die( $@ || $! );
 is $es->info->{tagline}, "You Know, for Search", 'CxnPool::Static';
 
 $ENV{ES_CXN_POOL} = 'Static::NoPing';
-$es = do "es_sync.pl";
+$es = do "es_sync.pl" or die( $@ || $! );
 is $es->info->{tagline}, "You Know, for Search", 'CxnPool::Static::NoPing';
 
 $ENV{ES_CXN_POOL} = 'Sniff';
-$es = do "es_sync.pl";
+$es = do "es_sync.pl" or die( $@ || $! );
 is $es->info->{tagline}, "You Know, for Search", 'CxnPool::Sniff';
 
 my ($node) = values %{ $es->transport->cxn_pool->next_cxn->sniff };

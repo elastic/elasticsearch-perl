@@ -8,7 +8,7 @@ use lib 't/lib';
 use Search::Elasticsearch::Bulk;
 use Log::Any::Adapter;
 
-my $es   = do "es_sync.pl";
+my $es   = do "es_sync.pl" or die( $@ || $! );
 my $TRUE = $es->transport->serializer->decode('{"true":true}')->{true};
 
 my $version = $es->info->{version}{number};

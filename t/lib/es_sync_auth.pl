@@ -31,17 +31,17 @@ our %Auth = ( use_https => 1, userinfo => $ENV{ES_USERINFO} );
 
 # Test https connection with correct auth, without cacert
 $ENV{ES_CXN_POOL} = 'Static';
-my $es = do "es_sync.pl";
+my $es = do "es_sync.pl" or die( $@ || $! );
 
 ok $es->cluster->health,
     "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn static";
 
 $ENV{ES_CXN_POOL} = 'Sniff';
-$es = do "es_sync.pl";
+$es = do "es_sync.pl" or die( $@ || $! );
 ok $es->cluster->health, "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn sniff";
 
 $ENV{ES_CXN_POOL} = 'Static::NoPing';
-$es = do "es_sync.pl";
+$es = do "es_sync.pl" or die( $@ || $! );
 ok $es->cluster->health,
     "$ENV{ES_CXN} - Non-cert HTTPS with auth, cxn noping";
 
@@ -53,13 +53,13 @@ throws_ok { $es->nodes->shutdown }
 # Test https connection with correct auth, with valid cacert
 $Auth{ssl_options} = ssl_options( $ENV{ES_CA_PATH} );
 
-$es = do "es_sync.pl";
+$es = do "es_sync.pl" or die( $@ || $! );
 
 ok $es->cluster->health, "$ENV{ES_CXN} - Valid cert HTTPS with auth";
 
 # Test invalid user credentials
 %Auth = ( userinfo => 'foobar:baz' );
-$es = do "es_sync.pl";
+$es = do "es_sync.pl" or die( $@ || $! );
 throws_ok { $es->cluster->health }
 "Search::Elasticsearch::Error::Unauthorized",
     "$ENV{ES_CXN} - Bad userinfo";
@@ -68,7 +68,7 @@ throws_ok { $es->cluster->health }
 $Auth{ssl_options} = ssl_options('t/lib/bad_cacert.pem');
 $ENV{ES}           = "https://www.google.com";
 
-$es = do "es_sync.pl";
+$es = do "es_sync.pl" or die( $@ || $! );
 
 throws_ok { $es->cluster->health }
 "Search::Elasticsearch::Error::$Throws_SSL",
