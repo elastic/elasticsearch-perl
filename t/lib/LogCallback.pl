@@ -1,4 +1,4 @@
-use Log::Any::Adapter::Callback;
+use Log::Any::Adapter::Callback 0.09;
 use Log::Any::Adapter;
 
 our ( $method, $format );
