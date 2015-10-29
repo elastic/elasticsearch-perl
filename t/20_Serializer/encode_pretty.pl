@@ -29,23 +29,24 @@ isa_ok my $s
     "Search::Elasticsearch::Serializer::$JSON_BACKEND", 'Serializer';
 
 # encode
-is $s->encode_pretty(), undef,    #
-    'Enc - No args returns undef';
-is $s->encode_pretty(undef), undef,    #
-    'Enc - Undef returns undef';
-is $s->encode_pretty(''), '',          #
-    'Enc - Empty string returns same';
-is $s->encode_pretty('foo'), 'foo',    #
-    'Enc - String returns same';
-is $s->encode_pretty($utf8_str), $utf8_bytes,    #
-    'Enc - Unicode string returns encoded';
-is $s->encode_pretty($utf8_bytes), $utf8_bytes,    #
-    'Enc - Unicode bytes returns same';
-is $s->encode_pretty($hash), $json_hash,           #
-    'Enc - Hash returns JSON';
-is $s->encode_pretty($arr), $json_arr,             #
-    'Enc - Array returns JSON';
+is_pretty( [],            undef,       'Enc - No args returns undef' );
+is_pretty( [undef],       undef,       'Enc - Undef returns undef' );
+is_pretty( [''],          '',          'Enc - Empty string returns same' );
+is_pretty( ['foo'],       'foo',       'Enc - String returns same' );
+is_pretty( [$utf8_str],   $utf8_bytes, 'Enc - Unicode string returns encoded' );
+is_pretty( [$utf8_bytes], $utf8_bytes, 'Enc - Unicode bytes returns same' );
+is_pretty( [$hash],       $json_hash,  'Enc - Hash returns JSON' );
+is_pretty( [$arr],        $json_arr,   'Enc - Array returns JSON' );
+
 throws_ok { $s->encode_pretty( \$utf8_str ) } qr/Serializer/,    #
     'Enc - scalar ref dies';
+
+sub is_pretty {
+    my ( $arg, $expect, $desc ) = @_;
+    my $got = $s->encode_pretty(@$arg);
+    defined $got    and $got =~ s/^\s+//gm;
+    defined $expect and $expect =~ s/^\s+//gm;
+    is $got, $expect, $desc;
+}
 
 done_testing;
