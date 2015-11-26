@@ -1,7 +1,5 @@
 package Search::Elasticsearch::Error;
 
-use Moo;
-
 our $DEBUG = 0;
 
 @Search::Elasticsearch::Error::Internal::ISA     = __PACKAGE__;
