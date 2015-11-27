@@ -931,18 +931,20 @@ Perform a search by specifying a template (either predefined or defined
 within the C<body>) and parameters to use with the template, eg:
 
     $results = $e->search_template(
-        template => {
-            query => {
-                match => {
-                    "{{my_field}}" => "{{my_value}}"
-                }
+        body => {
+            template => {
+                query => {
+                    match => {
+                        "{{my_field}}" => "{{my_value}}"
+                    }
+                },
+                size => "{{my_size}}"
             },
-            size => "{{my_size}}"
-        },
-        params => {
-            my_field => 'foo',
-            my_value => 'bar',
-            my_size  => 5
+            params => {
+                my_field => 'foo',
+                my_value => 'bar',
+                my_size  => 5
+            }
         }
     );
 
