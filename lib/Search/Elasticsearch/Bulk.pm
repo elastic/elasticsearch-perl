@@ -134,7 +134,7 @@ __END__
     $bulk->add_action( update => { id => 1, script => '...' });
 
     # Manual flush
-    $bulk->flush
+    $bulk->flush;
 
     # Reindex docs:
     my $bulk = $es->bulk_helper(

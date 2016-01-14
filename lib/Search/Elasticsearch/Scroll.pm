@@ -219,7 +219,7 @@ C<client_id>:
         }
     );
 
-    while my ( $doc = $scroll->next ) {
+    while (my $doc = $scroll->next) {
         # do something
     }
 
