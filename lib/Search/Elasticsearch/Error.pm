@@ -151,6 +151,13 @@ sub stacktrace {
 
     return $o .= ( '-' x 80 ) . "\n";
 }
+
+#===================================
+sub TO_JSON {
+#===================================
+    my $self = shift;
+    return $self->_stringify;
+}
 1;
 
 # ABSTRACT: Errors thrown by Search::Elasticsearch
@@ -170,6 +177,10 @@ consists of the following:
 
 The C<$Search::Elasticsearch::Error::DEBUG> variable can be set to C<1> or C<2>
 to increase the verbosity of errors.
+
+Error objects stringify to a human readable error message when used in text
+context (for example: C<print 'Oh no! '.$error>).  They also support the C<TO_JSON>
+method to support conversion to JSON when L<JSON/convert_blessed> is enabled.
 
 =head1 ERROR CLASSES
 
