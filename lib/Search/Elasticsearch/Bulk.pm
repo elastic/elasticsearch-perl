@@ -427,6 +427,12 @@ In this case, all you have to do is to pass in a list of IDs.
           params        => { incr => 1},
           upsert        => { upsert doc }
         },
+        {
+          id            => 3,
+          lang          => 'groovy',
+          script_file   => 'counter'  # config/scripts/counter.groovy
+          params        => { incr => 42},
+        }
         ...
     );
 
@@ -435,7 +441,7 @@ The C<update()> helper method allows you to add multiple C<update> actions.
 It accepts the same parameters as L<Search::Elasticsearch::Client::2_0::Direct/update()>.
 An update can either use a I<partial doc> which gets merged with an existing
 doc (example 1 above), or can use a C<script> to update an existing doc
-(example 2 above).
+(example 2 above). To use a script stored in a file, use C<script_file> (example 3).
 
 =head1 REINDEXING DOCUMENTS
 
