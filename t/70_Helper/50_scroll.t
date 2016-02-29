@@ -199,6 +199,24 @@ ok ref $d && $d->{_source}, 'next() in scalar context';
     }
 }
 
+{
+    # Test valid Scroll usage after initial fork
+    my $pid = fork();
+    unless ( defined($pid) ) { die "Cannot fork. Lack of resources?"; }
+    unless ($pid) {
+
+        my $s = $es->scroll_helper( size => 5 );
+
+        while ( $s->next ) { }
+        exit 0;
+    }
+    else {
+        # Wait for children
+        waitpid( $pid, 0 );
+        is $? , 0, "Scroll completed successfully";
+    }
+}
+
 done_testing;
 $es->indices->delete( index => 'test' );
 

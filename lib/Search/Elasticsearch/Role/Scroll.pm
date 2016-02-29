@@ -18,7 +18,7 @@ has 'took'          => ( is => 'rwp' );
 has 'total_took'    => ( is => 'rwp' );
 has 'search_params' => ( is => 'ro' );
 has 'is_finished'   => ( is => 'rwp', default => '' );
-has '_pid'          => ( is => 'ro', default => $$ );
+has '_pid'          => ( is => 'ro', default => sub {$$} );
 has '_scroll_id'    => ( is => 'rwp', clearer => 1, predicate => 1 );
 
 #===================================
