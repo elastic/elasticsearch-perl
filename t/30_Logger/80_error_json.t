@@ -4,17 +4,17 @@ use lib 't/lib';
 
 use_ok('Search::Elasticsearch::Error');
 
-eval 'use JSON qw(to_json);';
+eval 'use JSON::PP;';
 SKIP: {
-    skip 'JSON module not installed',2 if $@;
+    skip 'JSON::PP module not installed',2 if $@;
     ok(my $es_error = Search::Elasticsearch::Error->new(
         'Missing',
         "Foo missing",
         { code => 404 }
     ),'Create test error');
     like(
-	to_json({ eserr => $es_error}, { convert_blessed => 1 }),
+	JSON::PP->new->convert_blessed(1)->encode({ eserr => $es_error}),
 	qr/Foo missing/,
-	'to_json',
+	'encode_json',
     );
 }
