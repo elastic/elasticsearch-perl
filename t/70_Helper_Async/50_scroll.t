@@ -188,6 +188,29 @@ test_scroll(
     }
 }
 
+{
+    # Test valid Scroll usage after initial fork
+    my $pid = fork();
+    unless ( defined($pid) ) { die "Cannot fork. Lack of resources?"; }
+    unless ($pid) {
+
+        my $count = 0;
+        my $s     = $es->scroll_helper(
+            size      => 5,
+            on_result => sub { $count++ },
+            on_error  => sub { die @_ }
+        );
+
+        wait_for( $s->start );
+        exit 0;
+    }
+    else {
+        # Wait for children
+        waitpid( $pid, 0 );
+        is $? , 0, "Scroll completed successfully";
+    }
+}
+
 done_testing;
 
 wait_for( $es->indices->delete( index => 'test' ) );

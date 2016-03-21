@@ -463,15 +463,52 @@ C<index>, C<type> and C<id> if it exists. Updates can be performed either by:
         }
     );
 
-=item * or with a script:
+=item * with an inline script:
 
     $response = $e->update(
         ...,
         body => {
-            script => "ctx._source.counter += incr",
-            params => { incr => 5 }
+            script => {
+                inline => "ctx._source.counter += incr",
+                params => { incr => 5 }
+            }
         }
     );
+
+Make sure you enable
+L<dynamic scripting|https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#enable-dynamic-scripting>
+and know its implications.
+
+=item * with an indexed script:
+
+    $response = $e->update(
+        ...,
+        body => {
+            script => {
+                id     => $id,
+                params => { incr => 5 }
+            }
+        }
+    );
+
+See L<indexed scripts|https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts>
+for more information.
+
+=item * with a script stored as a file:
+
+    $response = $e->update(
+        ...,
+        body => {
+            script => {
+                file   => 'counter',
+                lang   => 'groovy',
+                params => { incr => 5 }
+            }
+        }
+    );
+
+See L<scripting docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html>
+for more information.
 
 =back
 
