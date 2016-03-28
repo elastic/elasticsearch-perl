@@ -8,7 +8,12 @@ use Path::Class;
 use Perl::Tidy;
 use JSON::XS;
 
-my @files = map { file($_) } glob '../elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/api/*.json';
+my @api_dirs = qw(
+    rest-api-spec/src/main/resources/rest-api-spec/api
+    plugins/delete-by-query/src/test/resources/rest-api-spec/api
+);
+my @files
+    = map { file($_) } map { glob "../elasticsearch/$_/*.json" } @api_dirs;
 
 my ( %API, %seen, %seen_combo, %Forbidden );
 
