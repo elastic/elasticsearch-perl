@@ -5,7 +5,7 @@ with 'Search::Elasticsearch::Role::Cxn::HTTP',
     'Search::Elasticsearch::Role::Cxn',
     'Search::Elasticsearch::Role::Is_Sync';
 
-use Hijk 0.20;
+use Hijk;
 use Try::Tiny;
 use namespace::clean;
 
