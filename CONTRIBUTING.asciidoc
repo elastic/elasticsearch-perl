@@ -1,15 +1,44 @@
 = Building/Testing the Packages
 
-There are three packages in this repo: Search-Elasticsearch (= the main
-package), Search-Elasticsearch-Async, and Search-Elasticsearch-Cxn-NetCurl
+There are three packages in this repo: `Search-Elasticsearch` (= the main
+package), `Search-Elasticsearch-Async`, and `Search-Elasticsearch-Cxn-NetCurl`
 
-The +dist.ini+ for each package is located in the +dist/+, +dist-async/+ and
-+dist-netcurl/+ sub-directories. Please ignore the +dist.ini+ at the root
+The +dist.ini+ for each package is located in the `dist/`, `dist-async/` and
+`dist-netcurl/` sub-directories. Please ignore the `dist.ini` at the root
 directory.
 
 In order to build or test the distributions all you have to do is cd into the
 relevant directory and run the dzil (see http://dzil.org/[Dist::Zilla])
-commands from there. E.g: +dzil test+.
+commands from there. E.g: `dzil test`.
+
+=== SYNOPSIS
+
+[source,bash]
+....
+# install Dist::Zilla
+cpanm Dist::Zilla
+
+# cd into dist/ dist-async/ or dist-netcurl/
+cd dist
+
+# install developer requirements
+dzil --authordeps --missing | cpanm
+
+# if ReadmeFromPod doesn't install cleanly, pin it to version 0.21:
+cpanm Dist::Zilla::Plugin::ReadmeFromPod@0.21 Test::Pod
+
+# install build requirements:
+dzil --listdeps --missing | cpanm
+
+# run tests w/o Elasticsearch
+dzil test --all
+
+# manually run an Elasticsearch cluster
+elasticsearch &
+
+# run tests against a running Elasticsearch with the ES environment variable
+ES=localhost:9200 dzil test --all
+....
 
 = Contributing to elasticsearch-perl
 
