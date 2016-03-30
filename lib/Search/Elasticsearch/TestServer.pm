@@ -17,6 +17,7 @@ has 'es_port'   => ( is => 'ro', default  => 9700 );
 has 'pids'      => ( is => 'ro', default  => sub { [] }, clearer => 1 , predicate => 1);
 has 'dir'       => ( is => 'ro', clearer  => 1 );
 has 'conf' => ( is => 'ro', default => sub { [] } );
+has '_starter_pid' => ( is => 'rw', required => 0, predicate => 1 );
 
 #===================================
 sub start {
@@ -112,9 +113,19 @@ sub _start_node {
                 unless $pid;
             chomp $pid;
             push @{ $self->{pids} }, $pid;
+            $self->_starter_pid($$);
         }
     }
     $SIG{INT}->('INT') if $int_caught;
+}
+
+#===================================
+sub guarded_shutdown {
+#===================================
+    my $self = shift;
+    if ( $self->_has_starter_pid && $$ == $self->_starter_pid ) {
+        $self->shutdown();
+    }
 }
 
 #===================================
@@ -157,7 +168,7 @@ sub _command_line {
 }
 
 #===================================
-sub DEMOLISH { shift->shutdown }
+sub DEMOLISH { shift->guarded_shutdown }
 #===================================
 
 1;
