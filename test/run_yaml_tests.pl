@@ -34,6 +34,7 @@ $ENV{ES_CXN}   = $cxn;
 $ENV{TRACE}    = $trace;
 $ENV{ES} ||= "localhost:9200";
 $ENV{ES_PLUGINS} = join ",", @plugins;
+$ENV{ES_HOME} ||= "/usr/share/elasticsearch/";
 
 my $tap = $harness->new(
     {   exec      => [ $^X, 'test/yaml_tester.pl' ],
