@@ -130,16 +130,11 @@ itself is a flexible and powerful open source, distributed real-time
 search and analytics engine for the cloud.  You can read more about it
 on L<elastic.co|http://www.elastic.co>.
 
-=head1 BACKWARDS COMPATIBILITY AND ELASTICSEARCH 0.90.x
+=head1 BACKWARDS COMPATIBILITY
 
-This version of the client supports the Elasticsearch 1.0 branch by
-default, which is not backwards compatible with the 0.90 branch.
-
-If you need to talk to a version of Elasticsearch before 1.0.0,
-please use L<Search::Elasticsearch::Client::0_90::Direct> as follows:
-
-    $es = Search::Elasticsearch->new( client => '0_90::Direct' );
-
+This version of the client supports the Elasticsearch 2.0 branch by
+default, see L</Client> section below for details of working with 1.0
+and 0.90 branches.
 
 =head2 Motivation
 
