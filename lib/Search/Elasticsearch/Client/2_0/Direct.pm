@@ -87,6 +87,10 @@ Snapshot and restore:
         snapshot   => 'backup_2014'
     );
 
+Task management:
+
+    $e->tasks->list;
+
 `cat` debugging:
 
     say $e->cat->allocation;
@@ -269,6 +273,13 @@ to retrieve node info and stats.
 Returns an L<Search::Elasticsearch::Client::2_0::Direct::Snapshot> object which
 is used for managing backup repositories and creating and restoring
 snapshots.
+
+=head2 C<tasks()>
+
+    $tasks_client = $e->tasks;
+
+Returns an L<Search::Elasticsearch::Client::2_0::Direct::Tasks> object which
+is used for accessing the task management API.
 
 =head2 C<cat()>
 

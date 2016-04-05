@@ -10,6 +10,7 @@ has 'nodes'               => ( is => 'lazy', init_arg => undef );
 has 'indices'             => ( is => 'lazy', init_arg => undef );
 has 'snapshot'            => ( is => 'lazy', init_arg => undef );
 has 'cat'                 => ( is => 'lazy', init_arg => undef );
+has 'tasks'               => ( is => 'lazy', init_arg => undef );
 has 'bulk_helper_class'   => ( is => 'ro',   default  => 'Bulk' );
 has 'scroll_helper_class' => ( is => 'ro',   default  => 'Scroll' );
 has '_bulk_class'         => ( is => 'lazy' );
@@ -69,6 +70,7 @@ sub _build_nodes    { shift->_build_namespace('Nodes') }
 sub _build_indices  { shift->_build_namespace('Indices') }
 sub _build_snapshot { shift->_build_namespace('Snapshot') }
 sub _build_cat      { shift->_build_namespace('Cat') }
+sub _build_tasks    { shift->_build_namespace('Tasks') }
 #===================================
 
 #===================================

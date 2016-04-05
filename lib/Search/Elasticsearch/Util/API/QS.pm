@@ -24,18 +24,25 @@ our %Handler = (
 );
 
 our %Params = (
+    actions           => { type => 'list' },
     active            => { type => 'bool' },
     active_only       => { type => 'bool' },
     all               => { type => 'bool' },
     allow_no_indices  => { type => 'bool' },
     analyze_wildcard  => { type => 'bool' },
     analyzer          => { type => 'string' },
+    attributes        => { type => 'list' },
     boost_terms       => { type => 'number' },
     bytes             => { type => 'enum', options => [ 'b', 'k', 'm', 'g' ] },
     char_filters      => { type => 'list' },
     clear             => { type => 'bool' },
     completion        => { type => 'bool' },
     completion_fields => { type => 'list' },
+    conflicts => {
+        type    => 'enum',
+        options => [ 'abort', 'proceed' ],
+        default => 'abort'
+    },
     consistency => {
         options => [ 'one', 'quorum', 'all' ],
         type    => 'enum'
@@ -48,6 +55,7 @@ our %Params = (
         type    => 'enum'
     },
     delay            => { type => 'duration' },
+    detail           => { type => 'bool' },
     detailed         => { type => 'bool' },
     detect_noop      => { type => 'bool' },
     df               => { type => 'string' },
@@ -143,6 +151,7 @@ our %Params = (
     mlt_fields            => { type => 'list' },
     name                  => { type => 'list' },
     network               => { type => 'bool' },
+    node_id               => { type => 'list' },
     offsets               => { type => 'bool' },
     only_ancient_segments => { type => 'bool' },
     only_expunge_deletes  => { type => 'bool' },
@@ -154,6 +163,8 @@ our %Params = (
     order                  => { type => 'number' },
     os                     => { type => 'bool' },
     parent                 => { type => 'string' },
+    parent_node            => { type => 'string' },
+    parent_task            => { type => 'string' },
     payloads               => { type => 'bool' },
     percent_terms_to_match => { type => 'number' },
     percolate              => { type => 'string' },
@@ -162,6 +173,7 @@ our %Params = (
     percolate_preference   => { type => 'string' },
     percolate_routing      => { type => 'list' },
     percolate_type         => { type => 'string' },
+    pipeline               => { type => 'string' },
     plugin                 => { type => 'bool' },
     positions              => { type => 'bool' },
     prefer_local           => { type => 'bool' },
@@ -190,12 +202,14 @@ our %Params = (
     scripted_upsert   => { type => 'bool' },
     scroll            => { type => 'duration' },
     scroll_id         => { type => 'string' },
+    scroll_size       => { type => 'number' },
     search            => { type => 'bool' },
     search_from       => { type => 'number' },
     search_indices    => { type => 'list' },
     search_scroll     => { type => 'string' },
     search_size       => { type => 'number' },
     search_source     => { type => 'string' },
+    search_timeout    => { type => 'duration' },
     search_type       => {
         options => [
             'query_then_fetch',     'query_and_fetch',

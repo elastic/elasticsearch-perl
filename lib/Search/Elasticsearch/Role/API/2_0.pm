@@ -1649,6 +1649,33 @@ sub api {
         qs => [ "filter_path", "master_timeout", "timeout" ],
     },
 
+    'tasks.cancel' => {
+        doc    => "tasks-cancel",
+        method => "POST",
+        parts  => { task_id => {} },
+        paths  => [
+            [ { task_id => 1 }, "_tasks", "{task_id}", "_cancel" ],
+            [ {}, "_tasks", "_cancel" ],
+        ],
+        qs => [
+            "actions", "filter_path", "node_id", "parent_node",
+            "parent_task",
+        ],
+    },
+
+    'tasks.list' => {
+        doc   => "tasks-list",
+        parts => { task_id => {} },
+        paths =>
+            [ [ { task_id => 1 }, "_tasks", "{task_id}" ], [ {}, "_tasks" ] ],
+        qs => [
+            "actions",     "detailed",
+            "filter_path", "node_id",
+            "parent_node", "parent_task",
+            "wait_for_completion",
+        ],
+    },
+
 #=== AUTOGEN - END ===
 
 );
