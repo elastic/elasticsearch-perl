@@ -802,10 +802,10 @@ sub api {
 
     'cat.snapshots' => {
         doc   => "cat-snapshots",
-        parts => { repository => { multi => 1 } },
+        parts => { repository => { multi => 1, required => 1 } },
         paths =>
             [ [ { repository => 2 }, "_cat", "snapshots", "{repository}" ] ],
-        qs => [ "h", "help", "master_timeout", "v" ],
+        qs => [ "h", "help", "ignore_unavailable", "master_timeout", "v" ],
     },
 
     'cat.thread_pool' => {

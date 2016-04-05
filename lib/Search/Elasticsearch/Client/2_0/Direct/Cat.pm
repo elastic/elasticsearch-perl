@@ -341,7 +341,7 @@ for more information.
 =head2 C<snapshots()>
 
     say $e->cat->snapshots(
-        repository => 'repository' | \@repositories # optional
+        repository => 'repository' | \@repositories # required
     )
 
 Provides a list of all snapshots that belong to the specified repositories.
@@ -349,6 +349,7 @@ Provides a list of all snapshots that belong to the specified repositories.
 Query string parameters:
     C<h>,
     C<help>,
+    C<ignore_unavailable>,
     C<master_timeout>,
     C<v>
 
