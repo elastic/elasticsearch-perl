@@ -521,7 +521,7 @@ another, you can use two separate C<$es> objects:
     $es_target  = Search::Elasticsearch->new( nodes => 'localhost:9200' );
     $es_source  = Search::Elasticsearch->new( nodes => 'search1:9200' );
 
-    my $bulk = $es_targer->bulk_helper(
+    my $bulk = $es_targert->bulk_helper(
         verbose => 1
     )
     -> reindex(

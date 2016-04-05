@@ -115,7 +115,7 @@ __END__
 
     $info        = $e->cluster->info;
     $health      = $e->cluster->health;
-    $node_stats  = $e->cluster->node_stats
+    $node_stats  = $e->cluster->node_stats;
 
     # Index requests:
 
