@@ -1381,9 +1381,9 @@ sub api {
             [ {}, "_segments" ]
         ],
         qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "human",
-            "ignore_unavailable",
+            "allow_no_indices",   "expand_wildcards",
+            "filter_path",        "human",
+            "ignore_unavailable", "verbose",
         ],
     },
 

@@ -799,7 +799,8 @@ Query string parameters:
     C<allow_no_indices>,
     C<expand_wildcards>,
     C<human>,
-    C<ignore_unavailable>
+    C<ignore_unavailable>,
+    C<verbose>
 
 See the L<segments docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-segments.html>
 for more information.
