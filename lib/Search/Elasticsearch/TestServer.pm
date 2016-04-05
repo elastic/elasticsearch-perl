@@ -14,9 +14,14 @@ has 'es_home'   => ( is => 'ro', required => 1 );
 has 'instances' => ( is => 'ro', default  => 1 );
 has 'http_port' => ( is => 'ro', default  => 9600 );
 has 'es_port'   => ( is => 'ro', default  => 9700 );
-has 'pids'      => ( is => 'ro', default  => sub { [] }, clearer => 1 , predicate => 1);
-has 'dir'       => ( is => 'ro', clearer  => 1 );
-has 'conf' => ( is => 'ro', default => sub { [] } );
+has 'pids'      => (
+    is        => 'ro',
+    default   => sub { [] },
+    clearer   => 1,
+    predicate => 1
+);
+has 'dir'          => ( is => 'ro', clearer  => 1 );
+has 'conf'         => ( is => 'ro', default  => sub { [] } );
 has '_starter_pid' => ( is => 'rw', required => 0, predicate => 1 );
 
 #===================================
