@@ -839,7 +839,9 @@ for debugging analyzer configurations.
 
 Query string parameters:
     C<analyzer>,
+    C<attributes>,
     C<char_filters>,
+    C<explain>,
     C<field>,
     C<filters>,
     C<format>,

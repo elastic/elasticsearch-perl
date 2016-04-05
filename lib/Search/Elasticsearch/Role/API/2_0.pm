@@ -904,9 +904,9 @@ sub api {
         paths =>
             [ [ { index => 0 }, "{index}", "_analyze" ], [ {}, "_analyze" ] ],
         qs => [
-            "analyzer", "char_filters", "field",        "filter_path",
-            "filters",  "format",       "prefer_local", "text",
-            "tokenizer",
+            "analyzer",     "attributes",  "char_filters", "explain",
+            "field",        "filter_path", "filters",      "format",
+            "prefer_local", "text",        "tokenizer",
         ],
     },
 
