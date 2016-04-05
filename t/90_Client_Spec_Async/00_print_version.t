@@ -3,7 +3,7 @@ use lib 't/lib';
 my $es = do "es_async.pl" or die( $@ || $! );
 
 eval {
-    my $v = $es->info->{version};
+    my $v = wait_for( $es->info )->{version};
     diag "";
     diag "";
     diag "Testing against Search::Elasticsearch::Async v" . $v->{number};
