@@ -1143,6 +1143,109 @@ Query string parameters:
 See the L<search-shards docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-shards.html>
 for more information.
 
+=head1 CRUD-BY-QUERY METHODS
+
+=head2 C<delete_by_query()>
+
+    $response = $e->delete_by_query(
+        index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional,
+        body    => { delete-by-query }      # optional
+    );
+
+The C<delete_by_query()> method (available with the
+L<delete-by-query plugin|https://www.elastic.co/guide/en/elasticsearch/plugins/current/plugins-delete-by-query.html>)
+deletes all documents which match the specified query.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<analyzer>,
+    C<default_operator>,
+    C<df>,
+    C<expand_wildcards>,
+    C<filter_path>,
+    C<ignore_unavailable>,
+    C<q>,
+    C<routing>,
+    C<timeout>
+
+See the L<delete-by-query docs|https://www.elastic.co/guide/en/elasticsearch/plugins/current/plugins-delete-by-query.html>
+for more information.
+
+=head2 C<reindex()>
+
+    $response = $e->reindex(
+        body => { reindex }     # required
+    );
+
+The C<reindex()> API is used to index documents from one index or multiple indices
+to a new index.
+
+Query string parameters:
+    C<consistency>,
+    C<refresh>,
+    C<timeout>,
+    C<wait_for_completion>
+
+See the L<reindex docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html>
+for more information.
+
+=head2 C<update_by_query()>
+
+    $response = $e->update_by_query(
+        index   => 'index' | \@indices,     # optional
+        type    => 'type'  | \@types,       # optional,
+        body    => { update-by-query }      # optional
+    );
+
+The C<update_by_query()> API is used to bulk update documents from one index or
+multiple indices using a script.
+
+Query string parameters:
+    C<_source>,
+    C<_source_exclude>,
+    C<_source_include>,
+    C<allow_no_indices>,
+    C<analyze_wildcard>,
+    C<analyzer>,
+    C<conflicts>,
+    C<consistency>,
+    C<default_operator>,
+    C<df>,
+    C<expand_wildcards>,
+    C<explain>,
+    C<fielddata_fields>,
+    C<fields>,
+    C<from>,
+    C<ignore_unavailable>,
+    C<lenient>,
+    C<lowercase_expanded_terms>,
+    C<preference>,
+    C<q>,
+    C<refresh>,
+    C<request_cache>,
+    C<routing>,
+    C<scroll>,
+    C<scroll_size>,
+    C<search_timeout>,
+    C<search_type>,
+    C<size>,
+    C<sort>,
+    C<stats>,
+    C<suggest_field>,
+    C<suggest_mode>,
+    C<suggest_size>,
+    C<suggest_text>,
+    C<terminate_after>,
+    C<timeout>,
+    C<track_scores>,
+    C<version>,
+    C<version_type>,
+    C<wait_for_completion>
+
+See the L<update_by_query docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update-by-query.html>
+for more information.
+
 =head1 PERCOLATION METHODS
 
 =head2 C<percolate()>

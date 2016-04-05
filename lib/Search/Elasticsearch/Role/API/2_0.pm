@@ -120,6 +120,27 @@ sub api {
         ],
     },
 
+    'delete_by_query' => {
+        body   => {},
+        doc    => "plugins-delete-by-query",
+        method => "DELETE",
+        parts  => {
+            index => { multi => 1, required => 1 },
+            type  => { multi => 1 }
+        },
+        paths => [
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_query" ],
+            [ { index => 0 }, "{index}", "_query" ],
+        ],
+        qs => [
+            "allow_no_indices",   "analyzer",
+            "default_operator",   "df",
+            "expand_wildcards",   "filter_path",
+            "ignore_unavailable", "q",
+            "routing",            "timeout",
+        ],
+    },
+
     'delete_script' => {
         doc    => "modules-scripting",
         method => "DELETE",
@@ -404,6 +425,19 @@ sub api {
         qs => [ "filter_path", "op_type", "version", "version_type" ],
     },
 
+    'reindex' => {
+        body   => { required => 1 },
+        doc    => "plugins-reindex",
+        method => "POST",
+        parts  => {},
+        paths => [ [ {}, "_reindex" ] ],
+        qs => [
+            "consistency", "filter_path",
+            "refresh",     "timeout",
+            "wait_for_completion",
+        ],
+    },
+
     'render_search_template' => {
         body  => {},
         doc   => "search-template",
@@ -588,6 +622,45 @@ sub api {
             "timeout",     "timestamp",
             "ttl",         "version",
             "version_type",
+        ],
+    },
+
+    'update_by_query' => {
+        body   => {},
+        doc    => "plugins-reindex",
+        method => "POST",
+        parts  => {
+            index => { multi => 1, required => 1 },
+            type  => { multi => 1 }
+        },
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_update_by_query",
+            ],
+            [ { index => 0 }, "{index}", "_update_by_query" ],
+        ],
+        qs => [
+            "_source",                  "_source_exclude",
+            "_source_include",          "allow_no_indices",
+            "analyze_wildcard",         "analyzer",
+            "conflicts",                "consistency",
+            "default_operator",         "df",
+            "expand_wildcards",         "explain",
+            "fielddata_fields",         "fields",
+            "filter_path",              "from",
+            "ignore_unavailable",       "lenient",
+            "lowercase_expanded_terms", "preference",
+            "q",                        "refresh",
+            "request_cache",            "routing",
+            "scroll",                   "scroll_size",
+            "search_timeout",           "search_type",
+            "size",                     "sort",
+            "stats",                    "suggest_field",
+            "suggest_mode",             "suggest_size",
+            "suggest_text",             "terminate_after",
+            "timeout",                  "track_scores",
+            "version",                  "version_type",
+            "wait_for_completion",
         ],
     },
 
