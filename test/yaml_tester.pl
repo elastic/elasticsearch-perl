@@ -111,6 +111,7 @@ our %Errors = (
     param           => 'Search::Elasticsearch::Error::Param',
     request         => 'Search::Elasticsearch::Error::Request',
     request_timeout => 'Search::Elasticsearch::Error::RequestTimeout',
+    unavailable     => 'Search::Elasticsearch::Error::Unavailable',
 );
 
 my $test = shift @ARGV or die "No test specified";
