@@ -1,5 +1,25 @@
 Revision history for Search::Elasticsearch
 
+2.01    2016-04-15
+
+        Updated for Elasticsearch 2.3.0
+
+        New features:
+            * Added delete_by_query(), reindex(), and update_by_query()
+            * Added tasks.list() and tasks.cancel()
+            * Added ignore_unavailable to cat.snapshots()
+            * Added attributes and explain to indices.analyze()
+            * Added verbose to indices.segments()
+            * S::ES::Error now implements TO_JSON
+            * TestServer can now be used with forked processes
+
+
+        Bug fixes:
+            * Search::Elasticsearch::Error shouldn't be a Moo class
+            * Search::Elasticsearch::Scroll can now be used in a forked process
+            * Hijk is now optional as it doesn't work on windows
+            * cat.snapshots requires a repository
+
 2.00    2015-10-28
 
         The default client is now '2_0::Direct', for use with Elasticsearch 2.x.

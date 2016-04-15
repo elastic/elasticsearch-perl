@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch::Async
 
+2.01    2016-04-15
+        Bumped version for Search::Elasticsearch 2.01
+
 2.00    2015-10-28
 
         The default client is now '2_0::Direct', for use with Elasticsearch 2.x.

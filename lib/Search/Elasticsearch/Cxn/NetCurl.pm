@@ -5,8 +5,8 @@ with 'Search::Elasticsearch::Role::Cxn::HTTP',
     'Search::Elasticsearch::Role::Cxn',
     'Search::Elasticsearch::Role::Is_Sync';
 
-use Search::Elasticsearch 2.00;
-our $VERSION = "2.00";
+use Search::Elasticsearch 2.01;
+our $VERSION = "2.01";
 
 use HTTP::Parser::XS qw(HEADERS_AS_HASHREF parse_http_response);
 use Try::Tiny;
