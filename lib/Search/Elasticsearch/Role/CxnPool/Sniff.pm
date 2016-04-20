@@ -44,8 +44,8 @@ sub parse_sniff {
     for my $node_id ( keys %$nodes ) {
         my $data = $nodes->{$node_id};
 
-        my $host = $data->{ $protocol . "_address" } or next;
-        $host =~ s{^inet\[[^/]*/([^\]]+)\]}{$1};
+        my $host = $self->_extract_host( $data->{ $protocol . "_address" } )
+            or next;
 
         $host = $self->should_accept_node( $host, $node_id, $data )
             or next;
@@ -70,6 +70,16 @@ sub parse_sniff {
     $self->logger->infof( "Next sniff at: %s", scalar localtime($next) );
 
     return 1;
+}
+
+#===================================
+sub _extract_host {
+#===================================
+    my $self = shift;
+    my $host = shift || return;
+    $host =~ s{^inet\[(.+)\]$}{$1};
+    $host =~ s{^[^/]+/}{};
+    return $host;
 }
 
 #===================================
