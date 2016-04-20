@@ -1,5 +1,10 @@
 Revision history for Search::Elasticsearch
 
+2.02    2016-04-20
+
+        Bug fix:
+            Sniffed http addresses may or may not have the hostname/ prepended
+
 2.01    2016-04-15
 
         Updated for Elasticsearch 2.3.0
