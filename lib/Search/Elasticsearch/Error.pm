@@ -28,7 +28,13 @@ our $DEBUG = 0;
 @Search::Elasticsearch::Error::SSL::ISA
     = ( __PACKAGE__, 'Search::Elasticsearch::Error::Cxn' );
 
+@Search::Elasticsearch::Error::BadGateway::ISA
+    = ( 'Search::Elasticsearch::Error::Cxn', __PACKAGE__ );
+
 @Search::Elasticsearch::Error::Unavailable::ISA
+    = ( 'Search::Elasticsearch::Error::Cxn', __PACKAGE__ );
+
+@Search::Elasticsearch::Error::GatewayTimeout::ISA
     = ( 'Search::Elasticsearch::Error::Cxn', __PACKAGE__ );
 
 use overload (
@@ -82,8 +88,7 @@ sub _stringify {
     unless ( $self->{msg} ) {
         my $stack  = $self->{stack};
         my $caller = $stack->[0];
-        $self->{msg}
-            = sprintf( "[%s] ** %s, called from sub %s at %s line %d.",
+        $self->{msg} = sprintf( "[%s] ** %s, called from sub %s at %s line %d.",
             $self->{type}, $self->{text}, @{$caller}[ 3, 1, 2 ] );
 
         if ( $self->{vars} ) {
@@ -249,6 +254,16 @@ This error has the following sub-classes:
 The current node is unable to handle your request at the moment. Your
 request will be retried on another node.  This error is triggered by
 the C<503> HTTP status code.
+
+=item * C<Search::Elasticsearch::Error::BadGateway>
+
+A proxy between the client and Elasticsearch is unable to connect to Elasticsearch.
+This error is triggered by the C<502> HTTP status code.
+
+=item * C<Search::Elasticsearch::Error::GatewayTimeout>
+
+A proxy between the client and Elasticsearch is unable to connect to Elasticsearch
+within its own timeout. This error is triggered by the C<504> HTTP status code.
 
 =item * C<Search::Elasticsearch::Error::SSL>
 
