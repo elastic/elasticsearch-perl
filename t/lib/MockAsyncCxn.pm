@@ -9,8 +9,7 @@ use Promises qw(deferred);
 use Data::Dumper;
 use Moo;
 with 'Search::Elasticsearch::Role::Cxn::Async';
-with 'Search::Elasticsearch::Role::Cxn::HTTP',
-    'Search::Elasticsearch::Role::Cxn',
+with 'Search::Elasticsearch::Role::Cxn',
     'Search::Elasticsearch::Role::Is_Async';
 
 use Sub::Exporter -setup => {

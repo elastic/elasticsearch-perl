@@ -1,9 +1,7 @@
 package Search::Elasticsearch::Cxn::HTTPTiny;
 
 use Moo;
-with 'Search::Elasticsearch::Role::Cxn::HTTP',
-    'Search::Elasticsearch::Role::Cxn',
-    'Search::Elasticsearch::Role::Is_Sync';
+with 'Search::Elasticsearch::Role::Cxn', 'Search::Elasticsearch::Role::Is_Sync';
 
 use HTTP::Tiny 0.043 ();
 use namespace::clean;
@@ -79,29 +77,24 @@ Provides the default HTTP Cxn class and is based on L<HTTP::Tiny>.
 The HTTP::Tiny backend is fast, uses pure Perl, support proxies and https
 and provides persistent connections.
 
-This class does L<Search::Elasticsearch::Role::Cxn::HTTP>, whose documentation
-provides more information, L<Search::Elasticsearch::Role::Cxn> and
-L<Search::Elasticsearch::Role::Is_Sync>.
+This class does L<Search::Elasticsearch::Role::Cxn>, whose documentation
+provides more information, and L<Search::Elasticsearch::Role::Is_Sync>.
 
 =head1 CONFIGURATION
 
 =head2 Inherited configuration
 
-From L<Search::Elasticsearch::Role::Cxn::HTTP>
-
-=over
-
-=item * L<node|Search::Elasticsearch::Role::Cxn::HTTP/"node">
-
-=item * L<max_content_length|Search::Elasticsearch::Role::Cxn::HTTP/"max_content_length">
-
-=item * L<deflate|Search::Elasticsearch::Role::Cxn::HTTP/"deflate">
-
-=back
-
 From L<Search::Elasticsearch::Role::Cxn>
 
 =over
+
+=item * L<node|Search::Elasticsearch::Role::Cxn/"node">
+
+=item * L<max_content_length|Search::Elasticsearch::Role::Cxn/"max_content_length">
+
+=item * L<deflate|Search::Elasticsearch::Role::Cxn/"gzip">
+
+=item * L<deflate|Search::Elasticsearch::Role::Cxn/"deflate">
 
 =item * L<request_timeout|Search::Elasticsearch::Role::Cxn/"request_timeout">
 
@@ -192,27 +185,21 @@ error if the request failed.
 
 =head2 Inherited methods
 
-From L<Search::Elasticsearch::Role::Cxn::HTTP>
-
-=over
-
-=item * L<scheme()|Search::Elasticsearch::Role::Cxn::HTTP/"scheme()">
-
-=item * L<is_https()|Search::Elasticsearch::Role::Cxn::HTTP/"is_https()">
-
-=item * L<userinfo()|Search::Elasticsearch::Role::Cxn::HTTP/"userinfo()">
-
-=item * L<default_headers()|Search::Elasticsearch::Role::Cxn::HTTP/"default_headers()">
-
-=item * L<max_content_length()|Search::Elasticsearch::Role::Cxn::HTTP/"max_content_length()">
-
-=item * L<build_uri()|Search::Elasticsearch::Role::Cxn::HTTP/"build_uri()">
-
-=back
-
 From L<Search::Elasticsearch::Role::Cxn>
 
 =over
+
+=item * L<scheme()|Search::Elasticsearch::Role::Cxn/"scheme()">
+
+=item * L<is_https()|Search::Elasticsearch::Role::Cxn/"is_https()">
+
+=item * L<userinfo()|Search::Elasticsearch::Role::Cxn/"userinfo()">
+
+=item * L<default_headers()|Search::Elasticsearch::Role::Cxn/"default_headers()">
+
+=item * L<max_content_length()|Search::Elasticsearch::Role::Cxn/"max_content_length()">
+
+=item * L<build_uri()|Search::Elasticsearch::Role::Cxn/"build_uri()">
 
 =item * L<host()|Search::Elasticsearch::Role::Cxn/"host()">
 
@@ -246,7 +233,7 @@ From L<Search::Elasticsearch::Role::Cxn>
 
 =over
 
-=item * L<Search::Elasticsearch::Role::Cxn::HTTP>
+=item * L<Search::Elasticsearch::Role::Cxn>
 
 =item * L<Search::Elasticsearch::Cxn::Hijk>
 

@@ -247,7 +247,7 @@ Each C<node> can be a URL including a scheme, host, port, path and userinfo
 
     https://username:password@search.domain.com:443/prefix/path
 
-See L<Search::Elasticsearch::Role::Cxn::HTTP/node> for more on node specification.
+See L<Search::Elasticsearch::Role::Cxn/node> for more on node specification.
 
 =head2 C<cxn_pool>
 

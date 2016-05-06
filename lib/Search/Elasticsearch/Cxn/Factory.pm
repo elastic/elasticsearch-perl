@@ -6,7 +6,7 @@ use namespace::clean;
 
 has 'cxn_class'          => ( is => 'ro', required => 1 );
 has '_factory'           => ( is => 'ro', required => 1 );
-has 'default_host'       => ( is => 'ro', required => 1 );
+has 'default_host'       => ( is => 'ro', default  => 'http://localhost:9200' );
 has 'max_content_length' => ( is => 'rw', default  => 104_857_600 );
 
 #===================================
@@ -26,9 +26,8 @@ sub BUILDARGS {
             max_content_length => $self->max_content_length
         );
     };
-    $params->{default_host} = $cxn_class->default_host;
-    $params->{cxn_args}     = \%args;
-    $params->{cxn_class}    = $cxn_class;
+    $params->{cxn_args}  = \%args;
+    $params->{cxn_class} = $cxn_class;
     return $params;
 }
 

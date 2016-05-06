@@ -76,7 +76,7 @@ L<Search::Elasticsearch::Role::Is_Sync>.
 
 The list of nodes to use to serve requests.  Can accept a single node,
 multiple nodes, and defaults to C<localhost:9200> if no C<nodes> are
-specified. See L<Search::Elasticsearch::Role::Cxn::HTTP/node> for details of the node
+specified. See L<Search::Elasticsearch::Role::Cxn/node> for details of the node
 specification.
 
 =head2 See also

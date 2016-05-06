@@ -87,15 +87,14 @@ sub sniff {
 
         return if $done;
         my ( $cxn, $nodes ) = @_;
-        if ( $nodes && $self->parse_sniff( $cxn->protocol, $nodes ) ) {
+        if ( $nodes && $self->parse_sniff($nodes) ) {
             $done++;
             $self->_clear_sniff;
             return $deferred->resolve();
         }
 
         unless ( @all || $done_seeds++ ) {
-            $self->logger->infof(
-                "No live nodes available. Trying seed nodes.");
+            $self->logger->infof("No live nodes available. Trying seed nodes.");
             @all = $self->_seeds_as_cxns;
         }
 
@@ -157,7 +156,7 @@ cluster, they will be auto-discovered during a sniff.
 If all sniffed nodes fail, then it falls back to sniffing the original
 I<seed> nodes that you specified in C<new()>.
 
-For L<HTTP Cxn classes|Search::Elasticsearch::Role::Cxn::HTTP>, this module
+For L<HTTP Cxn classes|Search::Elasticsearch::Role::Cxn>, this module
 will also dynamically detect the C<max_content_length> which the nodes
 in the cluster will accept.
 
@@ -170,7 +169,7 @@ L<Search::Elasticsearch::Role::Is_Async>.
 
 The list of nodes to use to discover the cluster.  Can accept a single node,
 multiple nodes, and defaults to C<localhost:9200> if no C<nodes> are
-specified. See L<Search::Elasticsearch::Role::Cxn::HTTP/node> for details of the node
+specified. See L<Search::Elasticsearch::Role::Cxn/node> for details of the node
 specification.
 
 =head2 C<concurrent_sniff>

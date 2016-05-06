@@ -7,9 +7,7 @@ our $VERSION = $Search::Elasticsearch::VERSION;
 
 use Data::Dumper;
 use Moo;
-with 'Search::Elasticsearch::Role::Cxn',
-    'Search::Elasticsearch::Role::Cxn::HTTP',
-    'Search::Elasticsearch::Role::Is_Sync';
+with 'Search::Elasticsearch::Role::Cxn', 'Search::Elasticsearch::Role::Is_Sync';
 
 use Sub::Exporter -setup => {
     exports => [ qw(

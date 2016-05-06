@@ -226,7 +226,7 @@ is triggered by the C<409> HTTP status code.
 =item * C<Search::Elasticsearch::Error::ContentLength>
 
 The request body was longer than the
-L<max_content_length|Search::Elasticsearch::Role::Cxn::HTTP/max_content_length>.
+L<max_content_length|Search::Elasticsearch::Role::Cxn/max_content_length>.
 
 =item * C<Search::Elasticsearch::Error::RequestTimeout>
 

@@ -32,12 +32,11 @@ sub pings_ok {
 #===================================
 sub sniff {
 #===================================
-    my $self     = shift;
-    my $protocol = $self->protocol;
+    my $self = shift;
     $self->logger->infof( 'Sniffing [%s]', $self->stringify );
     $self->perform_request(
         {   method  => 'GET',
-            path    => '/_nodes/' . $protocol,
+            path    => '/_nodes/http',
             qs      => { timeout => $self->sniff_timeout . 's' },
             timeout => $self->sniff_request_timeout,
         }

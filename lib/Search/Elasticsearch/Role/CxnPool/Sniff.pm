@@ -33,9 +33,8 @@ sub schedule_check {
 #===================================
 sub parse_sniff {
 #===================================
-    my $self     = shift;
-    my $protocol = shift;
-    my $nodes    = shift or return;
+    my $self = shift;
+    my $nodes = shift or return;
 
     my @live_nodes;
     my $max       = 0;
@@ -44,16 +43,16 @@ sub parse_sniff {
     for my $node_id ( keys %$nodes ) {
         my $data = $nodes->{$node_id};
 
-        my $host = $self->_extract_host( $data->{ $protocol . "_address" } )
+        my $host = $self->_extract_host( $data->{"http_address"} )
             or next;
 
         $host = $self->should_accept_node( $host, $node_id, $data )
             or next;
 
         push @live_nodes, $host;
-        next unless $sniff_max and $data->{$protocol};
+        next unless $sniff_max and $data->{http};
 
-        my $node_max = $data->{$protocol}{max_content_length_in_bytes} || 0;
+        my $node_max = $data->{http}{max_content_length_in_bytes} || 0;
         $max
             = $node_max == 0 ? $max
             : $max == 0      ? $node_max
@@ -102,7 +101,7 @@ have been added to the cluster.  Defaults to `300` seconds.
 =head2 C<sniff_max_content_length>
 
 Whether we should set the
-L<max_content_length|Search::Elasticsearch::Role::Cxn::HTTP/max_content_length>
+L<max_content_length|Search::Elasticsearch::Role::Cxn/max_content_length>
 dynamically while sniffing. Defaults to true unless a fixed
 C<max_content_length> was specified.
 
@@ -121,7 +120,7 @@ Schedules a sniff before the next request is processed.
 Parses the response from a sniff request and extracts the hostname/ip
 of all listed nodes, filtered through L</should_accept_node()>. If any live
 nodes are found, they are passed to L<Search::Elasticsearch::Role::CxnPool/set_cxns()>.
-The L<max_content_length|Search::Elasticsearch::Role::Cxn::HTTP/max_content_length>
+The L<max_content_length|Search::Elasticsearch::Role::Cxn/max_content_length>
 is also detected if L</sniff_max_content_length> is true.
 
 =head2 C<should_accept_node()>
