@@ -5,6 +5,10 @@ use Search::Elasticsearch::Util qw(parse_params throw to_list);
 use List::Util qw(min);
 use Try::Tiny;
 use URI();
+use IO::Compress::Deflate();
+use IO::Uncompress::Inflate();
+use IO::Compress::Gzip();
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use Search::Elasticsearch::Util qw(to_list);
 use namespace::clean;
 
@@ -30,6 +34,8 @@ has 'is_https'           => ( is => 'ro' );
 has 'userinfo'           => ( is => 'ro' );
 has 'max_content_length' => ( is => 'ro' );
 has 'default_headers'    => ( is => 'ro' );
+has 'deflate'            => ( is => 'ro' );
+has 'gzip'               => ( is => 'ro' );
 has 'ssl_options'        => ( is => 'ro', predicate => 'has_ssl_options' );
 has 'handle'             => ( is => 'lazy', clearer => 1 );
 has '_pid'               => ( is => 'rw', default => $$ );
@@ -96,6 +102,13 @@ sub BUILDARGS {
         $default_headers{Authorization} = "Basic $auth";
     }
 
+    if ( $params->{gzip} ) {
+        $default_headers{'Accept-Encoding'} = "gzip";
+    }
+
+    elsif ( $params->{deflate} ) {
+        $default_headers{'Accept-Encoding'} = "deflate";
+    }
 
     $params->{scheme}          = $scheme;
     $params->{is_https}        = $scheme eq 'https';
@@ -217,6 +230,8 @@ before 'perform_request' => sub {
     my ( $self, $params ) = @_;
     return unless defined $params->{data};
 
+    $self->_compress_body($params);
+
     my $max = $self->max_content_length
         or return;
 
@@ -228,9 +243,60 @@ before 'perform_request' => sub {
 };
 
 #===================================
+sub _compress_body {
+#===================================
+    my ( $self, $params ) = @_;
+    my $output;
+    if ( $self->gzip ) {
+        IO::Compress::Gzip::gzip( \( $params->{data} ), \$output )
+            or throw( 'Request',
+            "Couldn't gzip request: $IO::Compress::Gzip::GzipError" );
+        $params->{data}     = $output;
+        $params->{encoding} = 'gzip';
+    }
+    elsif ( $self->deflate ) {
+        IO::Compress::Deflate::deflate( \( $params->{data} ), \$output )
+            or throw( 'Request',
+            "Couldn't deflate request: $IO::Compress::Deflate::DeflateError" );
+        $params->{data}     = $output;
+        $params->{encoding} = 'deflate';
+    }
+}
+
+#===================================
+sub _decompress_body {
+#===================================
+    my ( $self, $body_ref, $headers ) = @_;
+    if ( my $encoding = $headers->{'content-encoding'} ) {
+        my $output;
+        if ( $encoding eq 'gzip' ) {
+            IO::Uncompress::Gunzip::gunzip( $body_ref, \$output )
+                or throw(
+                'Request',
+                "Couldn't gunzip response: $IO::Uncompress::Gunzip::GunzipError"
+                );
+        }
+        elsif ( $encoding eq 'deflate' ) {
+            IO::Uncompress::Inflate::inflate( $body_ref, \$output,
+                Transparent => 0 )
+                or throw(
+                'Request',
+                "Couldn't inflate response: $IO::Uncompress::Inflate::InflateError"
+                );
+        }
+        else {
+            throw( 'Request', "Unknown content-encoding: $encoding" );
+        }
+        ${$body_ref} = $output;
+    }
+}
+
+#===================================
 sub process_response {
 #===================================
     my ( $self, $params, $code, $msg, $body, $headers ) = @_;
+    $self->_decompress_body( \$body, $headers );
+
     my ($mime_type) = split /\s*;\s*/, ( $headers->{'content-type'} || '' );
 
     my $is_encoded = $mime_type && $mime_type ne 'text/plain';
@@ -392,6 +458,15 @@ unless you specify a custom C<max_content_length>:
     $e = Search::Elasticsearch->new(
         cxn_pool           => 'Sniff',
         max_content_length => 10_000
+    );
+
+=head2 C<gzip>
+
+Enable Gzip compression of requests to and responses from Elasticsearch
+as follows:
+
+    $e = Search::Elasticsearch->new(
+        gzip => 1
     );
 
 =head2 C<deflate>

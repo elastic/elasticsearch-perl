@@ -31,7 +31,9 @@ sub perform_request {
     my %headers = ( %{ $self->default_headers } );
     my $data    = $params->{data};
     if ( defined $data ) {
-        $headers{'Content-Type'} = $params->{mime_type};
+        $headers{'Content-Type'}     = $params->{mime_type};
+        $headers{'Content-Encoding'} = $params->{encoding}
+            if $params->{encoding};
     }
 
     my $deferred = deferred;

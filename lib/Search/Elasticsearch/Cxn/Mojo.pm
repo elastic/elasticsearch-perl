@@ -25,7 +25,9 @@ sub perform_request {
     my @args = ( $method, $uri, \%headers );
     my $data = $params->{data};
     if ( defined $data ) {
-        $headers{'Content-Type'} = $params->{mime_type};
+        $headers{'Content-Type'}     = $params->{mime_type};
+        $headers{'Content-Encoding'} = $params->{encoding}
+            if $params->{encoding};
         push @args, $data;
     }
 

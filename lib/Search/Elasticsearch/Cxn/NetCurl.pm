@@ -47,8 +47,7 @@ sub perform_request {
     $handle->setopt( CURLOPT_URL,           $uri );
     $handle->setopt( CURLOPT_CUSTOMREQUEST, $method );
 
-    $handle->setopt( CURLOPT_CONNECTTIMEOUT_MS,
-        $self->connect_timeout * 1000 );
+    $handle->setopt( CURLOPT_CONNECTTIMEOUT_MS, $self->connect_timeout * 1000 );
     $handle->setopt( CURLOPT_TIMEOUT_MS,
         1000 * ( $params->{timeout} || $self->request_timeout ) );
 
@@ -56,8 +55,10 @@ sub perform_request {
 
     my $data = $params->{data};
     if ( defined $data ) {
-        $headers{'Content-Type'} = $params->{mime_type};
-        $headers{'Expect'}       = '';
+        $headers{'Content-Type'}     = $params->{mime_type};
+        $headers{'Expect'}           = '';
+        $headers{'Content-Encoding'} = $params->{encoding}
+            if $params->{encoding};
         $handle->setopt( CURLOPT_POSTFIELDS,    $data );
         $handle->setopt( CURLOPT_POSTFIELDSIZE, length $data );
     }

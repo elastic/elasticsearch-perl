@@ -22,8 +22,10 @@ sub perform_request {
 
     my %args;
     if ( defined $params->{data} ) {
-        $args{content} = $params->{data};
-        $args{headers}{'Content-Type'} = $params->{mime_type};
+        $args{content}                     = $params->{data};
+        $args{headers}{'Content-Type'}     = $params->{mime_type};
+        $args{headers}{'Content-Encoding'} = $params->{encoding}
+            if $params->{encoding};
     }
 
     my $handle = $self->handle;

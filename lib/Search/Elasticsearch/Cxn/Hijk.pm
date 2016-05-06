@@ -46,6 +46,8 @@ sub perform_request {
     if ( defined $params->{data} ) {
         $args{body} = $params->{data};
         $args{head} = [ 'Content-Type', $params->{mime_type} ];
+        push @{ $args{headers} }, ( 'Content-Encoding', $params->{encoding} )
+            if $params->{encoding};
     }
 
     my $response;

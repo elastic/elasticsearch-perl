@@ -22,11 +22,16 @@ sub perform_request {
     my $uri    = $self->build_uri($params);
     my $method = $params->{method};
 
+    my %headers;
+    if ( $params->{data} ) {
+        $headers{'Content-Type'}     = $params->{mime_type};
+        $headers{'Content-Encoding'} = $params->{encoding}
+            if $params->{encoding};
+    }
+
     my $request = HTTP::Request->new(
         $method => $uri,
-        [   'Content-Type' => $params->{mime_type},
-            %{ $self->default_headers },
-        ],
+        [ %headers, %{ $self->default_headers }, ],
         $params->{data}
     );
 
