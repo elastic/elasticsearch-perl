@@ -32,6 +32,7 @@ sub new {
 
     $params->{cxn} ||= 'HTTPTiny';
     my $plugins = delete $params->{plugins} || [];
+    $plugins = [$plugins] unless ref $plugins eq 'ARRAY';
 
     for my $name (@Load_Order) {
         my ( $base, $default ) = @{ $Default_Plugins{$name} };
