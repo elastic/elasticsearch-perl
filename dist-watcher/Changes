@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch::Plugin::Watcher
 
+2.02    2016-05-24
+        Deprecated this module in favour of Search::Elasticsearch::Plugin::XPack
+
 2.00    2015-10-28
 
         The default client is now '2_0::Direct', for use with Elasticsearch 2.x.
