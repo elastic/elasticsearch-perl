@@ -3,6 +3,8 @@ package Search::Elasticsearch::Role::Client::Direct;
 use Moo::Role;
 with 'Search::Elasticsearch::Role::Client';
 use Search::Elasticsearch::Util::API::Path qw(path_handler);
+use Search::Elasticsearch::Util qw(load_plugin);
+
 use Try::Tiny;
 use Package::Stash 0.34 ();
 use namespace::clean;
@@ -102,6 +104,18 @@ sub _install_api {
             }
         );
     }
+}
+
+#===================================
+sub _build_namespace {
+#===================================
+    my ( $self, $ns ) = @_;
+    my $class = load_plugin( $self->_namespace, [$ns] );
+    return $class->new(
+        {   transport => $self->transport,
+            logger    => $self->logger
+        }
+    );
 }
 
 1;

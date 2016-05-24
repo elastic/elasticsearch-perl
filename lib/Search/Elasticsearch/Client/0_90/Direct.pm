@@ -4,7 +4,7 @@ use Moo;
 with 'Search::Elasticsearch::Role::API::0_90';
 with 'Search::Elasticsearch::Role::Client::Direct';
 
-use Search::Elasticsearch::Util qw(parse_params load_plugin is_compat);
+use Search::Elasticsearch::Util qw(parse_params is_compat);
 use namespace::clean;
 
 has 'cluster'             => ( is => 'lazy' );
@@ -94,18 +94,6 @@ sub scroll_helper {
 sub _build_cluster { shift->_build_namespace('Cluster') }
 sub _build_indices { shift->_build_namespace('Indices') }
 #===================================
-
-#===================================
-sub _build_namespace {
-#===================================
-    my ( $self, $ns ) = @_;
-    my $class = load_plugin( __PACKAGE__, [$ns] );
-    return $class->new(
-        {   transport => $self->transport,
-            logger    => $self->logger
-        }
-    );
-}
 
 1;
 

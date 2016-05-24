@@ -1,7 +1,6 @@
 package Search::Elasticsearch::Role::Client::Direct::Main;
 
 use Moo::Role;
-requires '_namespace';
 
 use Search::Elasticsearch::Util qw(parse_params load_plugin is_compat);
 
@@ -72,18 +71,6 @@ sub _build_snapshot { shift->_build_namespace('Snapshot') }
 sub _build_cat      { shift->_build_namespace('Cat') }
 sub _build_tasks    { shift->_build_namespace('Tasks') }
 #===================================
-
-#===================================
-sub _build_namespace {
-#===================================
-    my ( $self, $ns ) = @_;
-    my $class = load_plugin( $self->_namespace, [$ns] );
-    return $class->new(
-        {   transport => $self->transport,
-            logger    => $self->logger
-        }
-    );
-}
 
 1;
 
