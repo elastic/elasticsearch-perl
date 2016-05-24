@@ -6,6 +6,8 @@ use Search::Elasticsearch::Util qw(throw);
 use Search::Elasticsearch::Util::API::QS qw(qs_init);
 use namespace::clean;
 
+has 'api_version' => ( is => 'ro', default => '1_0' );
+
 our %API;
 
 #===================================
@@ -110,9 +112,7 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}"
-            ],
+            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
         ],
         qs => [
             "consistency", "filter_path", "parent",  "refresh",
@@ -147,7 +147,7 @@ sub api {
         doc    => "modules-scripting",
         method => "DELETE",
         parts  => { id => { required => 1 }, lang => { required => 1 } },
-        paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
+        paths  => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
         qs => [ "filter_path", "version", "version_type" ],
     },
 
@@ -168,9 +168,7 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}"
-            ],
+            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
         ],
         qs => [ "parent", "preference", "realtime", "refresh", "routing" ],
     },
@@ -223,9 +221,7 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}"
-            ],
+            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
         ],
         qs => [
             "_source",         "_source_exclude",
@@ -283,9 +279,7 @@ sub api {
             type  => { required => 1 }
         },
         paths => [
-            [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}"
-            ],
+            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
             [ { index => 0, type => 1 }, "{index}", "{type}" ],
         ],
         qs => [
@@ -384,9 +378,7 @@ sub api {
         index_when_type => 1,
         parts           => { index => {}, type => {} },
         paths           => [
-            [   { index => 0, type => 1 }, "{index}",
-                "{type}", "_mtermvectors"
-            ],
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_mtermvectors" ],
             [ { index => 0 }, "{index}", "_mtermvectors" ],
             [ {}, "_mtermvectors" ],
         ],
@@ -612,9 +604,7 @@ sub api {
                 "{type}", "{id}",
                 "_termvectors",
             ],
-            [   { index => 0, type => 1 }, "{index}", "{type}",
-                "_termvectors"
-            ],
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_termvectors" ],
         ],
         qs => [
             "dfs",        "field_statistics",
@@ -829,9 +819,8 @@ sub api {
         parts  => {},
         paths  => [ [ {}, "_cluster", "reroute" ] ],
         qs     => [
-            "dry_run",     "explain",
-            "filter_path", "master_timeout",
-            "metric",      "timeout",
+            "dry_run", "explain", "filter_path", "master_timeout",
+            "metric",  "timeout",
         ],
     },
 
@@ -944,9 +933,8 @@ sub api {
             index => { multi => 1, required => 1 },
             type  => { multi => 1, required => 1 },
         },
-        paths => [
-            [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ]
-        ],
+        paths =>
+            [ [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ] ],
         qs => [ "filter_path", "master_timeout" ],
     },
 
@@ -1022,9 +1010,8 @@ sub api {
         doc    => "indices-flush",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
-        qs => [
+        paths  => [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
+        qs     => [
             "allow_no_indices", "expand_wildcards",
             "filter_path",      "force",
             "full",             "ignore_unavailable",
@@ -1185,10 +1172,7 @@ sub api {
             [   { index => 0, name => 3, type => 1 },
                 "{index}", "{type}", "_warmer", "{name}",
             ],
-            [   { name => 3, type => 1 }, "_all",
-                "{type}", "_warmer",
-                "{name}"
-            ],
+            [ { name => 3, type => 1 }, "_all", "{type}", "_warmer", "{name}" ],
             [ { index => 0, name => 2 }, "{index}", "_warmer", "{name}" ],
             [ { index => 0 }, "{index}", "_warmer" ],
             [ { name  => 1 }, "_warmer", "{name}" ],
@@ -1217,10 +1201,8 @@ sub api {
         doc    => "indices-optimize",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths  => [
-            [ { index => 0 }, "{index}", "_optimize" ],
-            [ {}, "_optimize" ]
-        ],
+        paths =>
+            [ [ { index => 0 }, "{index}", "_optimize" ], [ {}, "_optimize" ] ],
         qs => [
             "allow_no_indices", "expand_wildcards",
             "filter_path",      "flush",
@@ -1265,10 +1247,8 @@ sub api {
         doc    => "indices-update-settings",
         method => "PUT",
         parts => { index => { multi => 1 } },
-        paths => [
-            [ { index => 0 }, "{index}", "_settings" ],
-            [ {}, "_settings" ]
-        ],
+        paths =>
+            [ [ { index => 0 }, "{index}", "_settings" ], [ {}, "_settings" ] ],
         qs => [
             "allow_no_indices",   "expand_wildcards",
             "filter_path",        "flat_settings",
@@ -1302,10 +1282,7 @@ sub api {
             [   { index => 0, name => 3, type => 1 },
                 "{index}", "{type}", "_warmer", "{name}",
             ],
-            [   { name => 3, type => 1 }, "_all",
-                "{type}", "_warmer",
-                "{name}"
-            ],
+            [ { name => 3, type => 1 }, "_all", "{type}", "_warmer", "{name}" ],
             [ { index => 0, name => 2 }, "{index}", "_warmer", "{name}" ],
             [ { name => 1 }, "_warmer", "{name}" ],
         ],
@@ -1319,10 +1296,8 @@ sub api {
     'indices.recovery' => {
         doc   => "indices-recovery",
         parts => { index => { multi => 1 } },
-        paths => [
-            [ { index => 0 }, "{index}", "_recovery" ],
-            [ {}, "_recovery" ]
-        ],
+        paths =>
+            [ [ { index => 0 }, "{index}", "_recovery" ], [ {}, "_recovery" ] ],
         qs => [ "active_only", "detailed", "filter_path", "human" ],
     },
 
@@ -1342,10 +1317,8 @@ sub api {
     'indices.segments' => {
         doc   => "indices-segments",
         parts => { index => { multi => 1 } },
-        paths => [
-            [ { index => 0 }, "{index}", "_segments" ],
-            [ {}, "_segments" ]
-        ],
+        paths =>
+            [ [ { index => 0 }, "{index}", "_segments" ], [ {}, "_segments" ] ],
         qs => [
             "allow_no_indices", "expand_wildcards",
             "filter_path",      "human",
@@ -1361,8 +1334,7 @@ sub api {
             [ { index => 0 }, "{index}", "_gateway", "snapshot" ],
             [ {}, "_gateway", "snapshot" ],
         ],
-        qs =>
-            [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
+        qs => [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
     },
 
     'indices.stats' => {
@@ -1474,10 +1446,7 @@ sub api {
         method => "POST",
         parts  => { node_id => { multi => 1 } },
         paths  => [
-            [   { node_id => 2 }, "_cluster",
-                "nodes", "{node_id}",
-                "_shutdown"
-            ],
+            [ { node_id => 2 }, "_cluster", "nodes", "{node_id}", "_shutdown" ],
             [ {}, "_shutdown" ],
         ],
         qs => [ "delay", "exit", "filter_path" ],
@@ -1618,10 +1587,7 @@ sub api {
                 "{repository}", "{snapshot}",
                 "_status",
             ],
-            [   { snapshot => 2 }, "_snapshot",
-                "_all", "{snapshot}",
-                "_status"
-            ],
+            [ { snapshot => 2 }, "_snapshot", "_all", "{snapshot}", "_status" ],
             [ { repository => 1 }, "_snapshot", "{repository}", "_status" ],
             [ {}, "_snapshot", "_status" ],
         ],

@@ -6,6 +6,8 @@ use Search::Elasticsearch::Util qw(throw);
 use Search::Elasticsearch::Util::API::QS qw(qs_init);
 use namespace::clean;
 
+has 'api_version' => ( is => 'ro', default => '0_90' );
+
 our %API;
 
 #===================================
