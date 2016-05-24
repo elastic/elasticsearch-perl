@@ -7,7 +7,7 @@ __PACKAGE__->_install_api('watcher');
 
 use Search::Elasticsearch 2.00 ();
 
-our $VERSION = '2.02';
+our $VERSION = '2.03';
 
 #===================================
 sub _init_plugin {

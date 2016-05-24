@@ -1,5 +1,11 @@
 Revision history for Search::Elasticsearch
 
+2.03    2016-05-24
+
+        Added register_qs() to allow plugins to expand known query string params
+        Added api_version() to API roles so that plugins can determine which
+        API version they should load.
+
 2.02    2016-04-20
 
         Bug fix:

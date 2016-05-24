@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch::Cxn::NetCurl
 
+2.03    2016-05-24
+        Bumped version for Search::Elasticsearch 2.03
+
 2.02    2016-04-20
         Bumped version for Search::Elasticsearch 2.02
 

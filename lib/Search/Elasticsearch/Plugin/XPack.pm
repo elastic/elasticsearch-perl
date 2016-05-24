@@ -2,9 +2,9 @@ package Search::Elasticsearch::Plugin::XPack;
 
 use Moo;
 
-use Search::Elasticsearch 2.02 ();
+use Search::Elasticsearch 2.03 ();
 
-our $VERSION = '2.02';
+our $VERSION = '2.03';
 
 #===================================
 sub _init_plugin {
