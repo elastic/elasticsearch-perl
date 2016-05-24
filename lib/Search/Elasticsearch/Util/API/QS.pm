@@ -3,7 +3,7 @@ package Search::Elasticsearch::Util::API::QS;
 use strict;
 use warnings;
 
-use Sub::Exporter -setup => { exports => ['qs_init'] };
+use Sub::Exporter -setup => { exports => [ 'qs_init', 'register_qs' ] };
 
 our %Handler = (
     string => sub {"$_[0]"},
@@ -291,6 +291,18 @@ sub qs_init {
     return \%qs;
 }
 
+#===================================
+sub register_qs {
+#===================================
+    while (@_) {
+        my $key = shift;
+        die "Query string parameter ($key) already exists"
+            if $Params{$key};
+        my $handler = shift
+            || die "No handler provided for query string parameter ($key)";
+        $Params{$key} = $handler;
+    }
+}
 1;
 
 __END__
@@ -324,4 +336,12 @@ Would result in:
 
     $qs_hash: { fields => 'foo,bar', size => 10};
     $params:   { query => \%query }
+
+=head2 C<register_qs()>
+
+    use Search::Elasticsearch::Util::API::QS qw(register_qs);
+
+    register_qs( foo => { type => 'bool'},...)
+
+Allows plugins to add query string parameter handlers.
 
