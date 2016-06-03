@@ -270,4 +270,4 @@ sub _doc_transformer {
 
 1;
 
-# ABSTRACT: Provides common functionality to L<Elasticseach::Bulk> and L<Search::Elasticsearch::Async::Bulk>
+# ABSTRACT: Provides common functionality to L<Search::Elasticseach::Bulk> and L<Search::Elasticsearch::Async::Bulk>
