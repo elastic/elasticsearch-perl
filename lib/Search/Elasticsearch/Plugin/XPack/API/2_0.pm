@@ -67,7 +67,9 @@ sub api {
         method => "POST",
         parts  => { realms => { required => 1 } },
         paths  => [
-            [ { realms => 2 }, "_shield", "realm", "{realms}", "_clear_cache" ],
+            [   { realms => 2 }, "_shield", "realm", "{realms}",
+                "_clear_cache"
+            ],
         ],
         qs => ["usernames"],
     },
@@ -76,8 +78,9 @@ sub api {
         doc    => "",
         method => "PUT",
         parts  => { name => { required => 1 } },
-        paths =>
-            [ [ { name => 2 }, "_shield", "role", "{name}", "_clear_cache" ] ],
+        paths  => [
+            [ { name => 2 }, "_shield", "role", "{name}", "_clear_cache" ]
+        ],
         qs => [],
     },
 
@@ -138,7 +141,8 @@ sub api {
     'watcher.ack_watch' => {
         doc    => "appendix-api-ack-watch",
         method => "PUT",
-        parts => { action_id => { multi => 1 }, watch_id => { required => 1 } },
+        parts =>
+            { action_id => { multi => 1 }, watch_id => { required => 1 } },
         paths => [
             [   { action_id => 3, watch_id => 2 }, "_watcher",
                 "watch",       "{watch_id}",
