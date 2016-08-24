@@ -435,9 +435,18 @@ sub api {
         paths => [ [ {}, "_reindex" ] ],
         qs => [
             "consistency", "filter_path",
-            "refresh",     "timeout",
-            "wait_for_completion",
+            "refresh",     "requests_per_second",
+            "timeout",     "wait_for_completion",
         ],
+    },
+
+    'reindex_rethrottle' => {
+        doc    => "plugins-reindex",
+        method => "POST",
+        parts  => { task_id => {} },
+        paths =>
+            [ [ { task_id => 1 }, "_reindex", "{task_id}", "_rethrottle" ] ],
+        qs => [ "filter_path", "requests_per_second" ],
     },
 
     'render_search_template' => {
@@ -653,16 +662,16 @@ sub api {
             "ignore_unavailable",       "lenient",
             "lowercase_expanded_terms", "preference",
             "q",                        "refresh",
-            "request_cache",            "routing",
-            "scroll",                   "scroll_size",
-            "search_timeout",           "search_type",
-            "size",                     "sort",
-            "stats",                    "suggest_field",
-            "suggest_mode",             "suggest_size",
-            "suggest_text",             "terminate_after",
-            "timeout",                  "track_scores",
-            "version",                  "version_type",
-            "wait_for_completion",
+            "request_cache",            "requests_per_second",
+            "routing",                  "scroll",
+            "scroll_size",              "search_timeout",
+            "search_type",              "size",
+            "sort",                     "stats",
+            "suggest_field",            "suggest_mode",
+            "suggest_size",             "suggest_text",
+            "terminate_after",          "timeout",
+            "track_scores",             "version",
+            "version_type",             "wait_for_completion",
         ],
     },
 

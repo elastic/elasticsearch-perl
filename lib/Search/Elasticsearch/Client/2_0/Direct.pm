@@ -1195,6 +1195,7 @@ to a new index.
 Query string parameters:
     C<consistency>,
     C<refresh>,
+    C<requests_per_second>,
     C<timeout>,
     C<wait_for_completion>
 
@@ -1235,6 +1236,7 @@ Query string parameters:
     C<q>,
     C<refresh>,
     C<request_cache>,
+    C<requests_per_second>,
     C<routing>,
     C<scroll>,
     C<scroll_size>,
@@ -1256,6 +1258,23 @@ Query string parameters:
 
 See the L<update_by_query docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update-by-query.html>
 for more information.
+
+=head2 C<reindex_rethrottle>
+
+    $response = $e->reindex_rethrottle(
+        task_id             => 'task_id',       # required
+        requests_per_second => $req_per_second
+    );
+
+The C<reindex_rethrottle()> API is used to dynamically update the throtting
+of an existing reindex request, identified by C<task_id>.
+
+Query string parameters:
+    C<requests_per_second>
+
+See the L<reindex docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html>
+for more information.
+
 
 =head1 PERCOLATION METHODS
 
