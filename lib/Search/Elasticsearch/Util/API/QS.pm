@@ -12,7 +12,7 @@ our %Handler = (
             ? join( ',', @{ shift() } )
             : shift();
     },
-    bool => sub { $_[0] ? 1 : 0 },
+    bool => sub { $_[0] ? 'true' : 'false' },
     enum => sub {
         ref $_[0] eq 'ARRAY'
             ? join( ',', @{ shift() } )
@@ -186,8 +186,12 @@ our %Params = (
     realtime               => { type => 'bool' },
     recovery               => { type => 'bool' },
     recycler               => { type => 'bool' },
-    refresh                => { type => 'bool' },
-    replication            => {
+    refresh                => {
+        default => 'false',
+        type    => 'enum',
+        options => [ 'true', 'false', 'wait_for' ]
+    },
+    replication => {
         default => 'sync',
         options => [ 'sync', 'async' ],
         type    => 'enum'
