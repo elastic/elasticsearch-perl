@@ -841,10 +841,10 @@ for debugging analyzer configurations.
 Query string parameters:
     C<analyzer>,
     C<attributes>,
-    C<char_filters>,
+    C<char_filter>,
     C<explain>,
     C<field>,
-    C<filters>,
+    C<filter>,
     C<format>,
     C<prefer_local>,
     C<text>,
