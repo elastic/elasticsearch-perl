@@ -525,7 +525,6 @@ for more information.
 
 Query string parameters:
     C<consistency>,
-    C<detect_noop>,
     C<fields>,
     C<lang>,
     C<parent>,
