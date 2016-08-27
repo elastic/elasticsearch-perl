@@ -1,9 +1,9 @@
 package Search::Elasticsearch::Client::1_0::Role::API;
 
 use Moo::Role;
+with 'Search::Elasticsearch::Role::API';
 
 use Search::Elasticsearch::Util qw(throw);
-use Search::Elasticsearch::Util::API::QS qw(qs_init);
 use namespace::clean;
 
 has 'api_version' => ( is => 'ro', default => '1_0' );
@@ -25,20 +25,23 @@ sub api {
 #=== AUTOGEN - START ===
 
     'bulk' => {
-        body            => { required => 1 },
-        doc             => "docs-bulk",
-        index_when_type => 1,
-        method          => "POST",
+        body   => { required => 1 },
+        doc    => "docs-bulk",
+        method => "POST",
         parts => { index => {}, type => {} },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_bulk" ],
             [ { index => 0 }, "{index}", "_bulk" ],
             [ {}, "_bulk" ],
         ],
-        qs => [
-            "consistency", "filter_path", "refresh", "replication",
-            "routing",     "timeout",
-        ],
+        qs => {
+            consistency => "enum",
+            filter_path => "list",
+            refresh     => "boolean",
+            replication => "enum",
+            routing     => "string",
+            timeout     => "time",
+        },
         serialize => "bulk",
     },
 
@@ -51,7 +54,7 @@ sub api {
             [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ],
             [ {}, "_search", "scroll" ],
         ],
-        qs => ["filter_path"],
+        qs => { filter_path => "list" },
     },
 
     'count' => {
@@ -61,19 +64,25 @@ sub api {
         parts  => { index => { multi => 1 }, type => { multi => 1 } },
         paths  => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_count" ],
-            [ { type => 1 }, "_all", "{type}", "_count" ],
             [ { index => 0 }, "{index}", "_count" ],
             [ {}, "_count" ],
         ],
-        qs => [
-            "allow_no_indices", "analyze_wildcard",
-            "analyzer",         "default_operator",
-            "df",               "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "lenient",          "lowercase_expanded_terms",
-            "min_score",        "preference",
-            "q",                "routing",
-        ],
+        qs => {
+            allow_no_indices         => "boolean",
+            analyze_wildcard         => "boolean",
+            analyzer                 => "string",
+            default_operator         => "enum",
+            df                       => "string",
+            expand_wildcards         => "enum",
+            filter_path              => "list",
+            ignore_unavailable       => "boolean",
+            lenient                  => "boolean",
+            lowercase_expanded_terms => "boolean",
+            min_score                => "number",
+            preference               => "string",
+            q                        => "string",
+            routing                  => "string",
+        },
     },
 
     'count_percolate' => {
@@ -94,13 +103,18 @@ sub api {
                 "count",
             ],
         ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "percolate_index",  "percolate_type",
-            "preference",       "routing",
-            "version",          "version_type",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            percolate_index    => "string",
+            percolate_type     => "string",
+            preference         => "string",
+            routing            => "list",
+            version            => "number",
+            version_type       => "enum",
+        },
     },
 
     'delete' => {
@@ -112,13 +126,21 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
         ],
-        qs => [
-            "consistency", "filter_path", "parent",  "refresh",
-            "replication", "routing",     "timeout", "version",
-            "version_type",
-        ],
+        qs => {
+            consistency  => "enum",
+            filter_path  => "list",
+            parent       => "string",
+            refresh      => "boolean",
+            replication  => "enum",
+            routing      => "string",
+            timeout      => "time",
+            version      => "number",
+            version_type => "enum",
+        },
     },
 
     'delete_by_query' => {
@@ -133,22 +155,32 @@ sub api {
             [ { index => 0, type => 1 }, "{index}", "{type}", "_query" ],
             [ { index => 0 }, "{index}", "_query" ],
         ],
-        qs => [
-            "allow_no_indices", "analyzer",
-            "consistency",      "default_operator",
-            "df",               "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "q",                "replication",
-            "routing",          "timeout",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            analyzer           => "string",
+            consistency        => "enum",
+            default_operator   => "enum",
+            df                 => "string",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            q                  => "string",
+            replication        => "enum",
+            routing            => "string",
+            timeout            => "time",
+        },
     },
 
     'delete_script' => {
         doc    => "modules-scripting",
         method => "DELETE",
         parts  => { id => { required => 1 }, lang => { required => 1 } },
-        paths  => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs => [ "filter_path", "version", "version_type" ],
+        paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
+        qs    => {
+            filter_path  => "list",
+            version      => "number",
+            version_type => "enum"
+        },
     },
 
     'delete_template' => {
@@ -156,7 +188,11 @@ sub api {
         method => "DELETE",
         parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs => [ "filter_path", "version", "version_type" ],
+        qs     => {
+            filter_path  => "list",
+            version      => "number",
+            version_type => "enum"
+        },
     },
 
     'exists' => {
@@ -168,9 +204,17 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
         ],
-        qs => [ "parent", "preference", "realtime", "refresh", "routing" ],
+        qs => {
+            parent     => "string",
+            preference => "string",
+            realtime   => "boolean",
+            refresh    => "boolean",
+            routing    => "string",
+        },
     },
 
     'explain' => {
@@ -187,16 +231,23 @@ sub api {
                 "_explain",
             ],
         ],
-        qs => [
-            "_source",                  "_source_exclude",
-            "_source_include",          "analyze_wildcard",
-            "analyzer",                 "default_operator",
-            "df",                       "fields",
-            "filter_path",              "lenient",
-            "lowercase_expanded_terms", "parent",
-            "preference",               "q",
-            "routing",
-        ],
+        qs => {
+            _source                  => "list",
+            _source_exclude          => "list",
+            _source_include          => "list",
+            analyze_wildcard         => "boolean",
+            analyzer                 => "string",
+            default_operator         => "enum",
+            df                       => "string",
+            fields                   => "list",
+            filter_path              => "list",
+            lenient                  => "boolean",
+            lowercase_expanded_terms => "boolean",
+            parent                   => "string",
+            preference               => "string",
+            q                        => "string",
+            routing                  => "string",
+        },
     },
 
     'field_stats' => {
@@ -206,11 +257,14 @@ sub api {
             [ { index => 0 }, "{index}", "_field_stats" ],
             [ {}, "_field_stats" ],
         ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "fields",             "filter_path",
-            "ignore_unavailable", "level",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            fields             => "list",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            level              => "enum",
+        },
     },
 
     'get' => {
@@ -221,23 +275,35 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
         ],
-        qs => [
-            "_source",         "_source_exclude",
-            "_source_include", "fields",
-            "filter_path",     "parent",
-            "preference",      "realtime",
-            "refresh",         "routing",
-            "version",         "version_type",
-        ],
+        qs => {
+            _source         => "list",
+            _source_exclude => "list",
+            _source_include => "list",
+            fields          => "list",
+            filter_path     => "list",
+            parent          => "string",
+            preference      => "string",
+            realtime        => "boolean",
+            refresh         => "boolean",
+            routing         => "string",
+            version         => "number",
+            version_type    => "enum",
+        },
     },
 
     'get_script' => {
         doc   => "modules-scripting",
         parts => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs => [ "filter_path", "version", "version_type" ],
+        qs    => {
+            filter_path  => "list",
+            version      => "number",
+            version_type => "enum"
+        },
     },
 
     'get_source' => {
@@ -252,21 +318,30 @@ sub api {
                 "{index}", "{type}", "{id}", "_source",
             ],
         ],
-        qs => [
-            "_source",         "_source_exclude",
-            "_source_include", "filter_path",
-            "parent",          "preference",
-            "realtime",        "refresh",
-            "routing",         "version",
-            "version_type",
-        ],
+        qs => {
+            _source         => "list",
+            _source_exclude => "list",
+            _source_include => "list",
+            filter_path     => "list",
+            parent          => "string",
+            preference      => "string",
+            realtime        => "boolean",
+            refresh         => "boolean",
+            routing         => "string",
+            version         => "number",
+            version_type    => "enum",
+        },
     },
 
     'get_template' => {
         doc   => "search-template",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs => [ "filter_path", "version", "version_type" ],
+        qs    => {
+            filter_path  => "list",
+            version      => "number",
+            version_type => "enum"
+        },
     },
 
     'index' => {
@@ -279,39 +354,53 @@ sub api {
             type  => { required => 1 }
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
             [ { index => 0, type => 1 }, "{index}", "{type}" ],
         ],
-        qs => [
-            "consistency", "filter_path", "op_type", "parent",
-            "refresh",     "replication", "routing", "timeout",
-            "timestamp",   "ttl",         "version", "version_type",
-        ],
+        qs => {
+            consistency  => "enum",
+            filter_path  => "list",
+            op_type      => "enum",
+            parent       => "string",
+            refresh      => "boolean",
+            replication  => "enum",
+            routing      => "string",
+            timeout      => "time",
+            timestamp    => "time",
+            ttl          => "time",
+            version      => "number",
+            version_type => "enum",
+        },
     },
 
     'info' => {
         doc   => "",
         parts => {},
         paths => [ [ {} ] ],
-        qs    => ["filter_path"]
+        qs    => { filter_path => "list" }
     },
 
     'mget' => {
-        body            => { required => 1 },
-        doc             => "docs-multi-get",
-        index_when_type => 1,
+        body => { required => 1 },
+        doc  => "docs-multi-get",
         parts => { index => {}, type => {} },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_mget" ],
             [ { index => 0 }, "{index}", "_mget" ],
             [ {}, "_mget" ],
         ],
-        qs => [
-            "_source",         "_source_exclude",
-            "_source_include", "fields",
-            "filter_path",     "preference",
-            "realtime",        "refresh",
-        ],
+        qs => {
+            _source         => "list",
+            _source_exclude => "list",
+            _source_include => "list",
+            fields          => "list",
+            filter_path     => "list",
+            preference      => "string",
+            realtime        => "boolean",
+            refresh         => "boolean",
+        },
     },
 
     'mlt' => {
@@ -327,34 +416,44 @@ sub api {
                 "{index}", "{type}", "{id}", "_mlt",
             ],
         ],
-        qs => [
-            "boost_terms",     "filter_path",
-            "max_doc_freq",    "max_query_terms",
-            "max_word_length", "min_doc_freq",
-            "min_term_freq",   "min_word_length",
-            "mlt_fields",      "percent_terms_to_match",
-            "routing",         "search_from",
-            "search_indices",  "search_scroll",
-            "search_size",     "search_source",
-            "search_type",     "search_types",
-            "stop_words",
-        ],
+        qs => {
+            boost_terms            => "number",
+            filter_path            => "list",
+            max_doc_freq           => "number",
+            max_query_terms        => "number",
+            max_word_length        => "number",
+            min_doc_freq           => "number",
+            min_term_freq          => "number",
+            min_word_length        => "number",
+            mlt_fields             => "list",
+            percent_terms_to_match => "number",
+            routing                => "string",
+            search_from            => "number",
+            search_indices         => "list",
+            search_scroll          => "string",
+            search_size            => "number",
+            search_source          => "string",
+            search_type            => "string",
+            search_types           => "list",
+            stop_words             => "list",
+        },
     },
 
     'mpercolate' => {
-        body            => { required => 1 },
-        doc             => "search-percolate",
-        index_when_type => 1,
+        body => { required => 1 },
+        doc  => "search-percolate",
         parts => { index => {}, type => {} },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_mpercolate" ],
             [ { index => 0 }, "{index}", "_mpercolate" ],
             [ {}, "_mpercolate" ],
         ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+        },
         serialize => "bulk",
     },
 
@@ -364,33 +463,38 @@ sub api {
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_msearch" ],
-            [ { type => 1 }, "_all", "{type}", "_msearch" ],
             [ { index => 0 }, "{index}", "_msearch" ],
             [ {}, "_msearch" ],
         ],
-        qs        => [ "filter_path", "search_type" ],
+        qs        => { filter_path => "list", search_type => "enum" },
         serialize => "bulk",
     },
 
     'mtermvectors' => {
-        body            => {},
-        doc             => "docs-multi-termvectors",
-        index_when_type => 1,
-        parts           => { index => {}, type => {} },
-        paths           => [
-            [ { index => 0, type => 1 }, "{index}", "{type}", "_mtermvectors" ],
+        body  => {},
+        doc   => "docs-multi-termvectors",
+        parts => { index => {}, type => {} },
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_mtermvectors"
+            ],
             [ { index => 0 }, "{index}", "_mtermvectors" ],
             [ {}, "_mtermvectors" ],
         ],
-        qs => [
-            "field_statistics", "fields",
-            "filter_path",      "ids",
-            "offsets",          "parent",
-            "payloads",         "positions",
-            "preference",       "realtime",
-            "routing",          "term_statistics",
-            "version",          "version_type",
-        ],
+        qs => {
+            field_statistics => "boolean",
+            fields           => "list",
+            filter_path      => "list",
+            ids              => "list",
+            offsets          => "boolean",
+            parent           => "string",
+            payloads         => "boolean",
+            positions        => "boolean",
+            preference       => "string",
+            realtime         => "boolean",
+            routing          => "string",
+            term_statistics  => "boolean",
+        },
     },
 
     'percolate' => {
@@ -408,15 +512,21 @@ sub api {
             ],
             [ { index => 0, type => 1 }, "{index}", "{type}", "_percolate" ],
         ],
-        qs => [
-            "allow_no_indices",     "expand_wildcards",
-            "filter_path",          "ignore_unavailable",
-            "percolate_format",     "percolate_index",
-            "percolate_preference", "percolate_routing",
-            "percolate_type",       "preference",
-            "routing",              "version",
-            "version_type",
-        ],
+        qs => {
+            allow_no_indices     => "boolean",
+            expand_wildcards     => "enum",
+            filter_path          => "list",
+            ignore_unavailable   => "boolean",
+            percolate_format     => "enum",
+            percolate_index      => "string",
+            percolate_preference => "string",
+            percolate_routing    => "string",
+            percolate_type       => "string",
+            preference           => "string",
+            routing              => "list",
+            version              => "number",
+            version_type         => "enum",
+        },
     },
 
     'ping' => {
@@ -424,7 +534,7 @@ sub api {
         method => "HEAD",
         parts  => {},
         paths  => [ [ {} ] ],
-        qs     => []
+        qs     => {}
     },
 
     'put_script' => {
@@ -433,7 +543,12 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs => [ "filter_path", "op_type", "version", "version_type" ],
+        qs => {
+            filter_path  => "list",
+            op_type      => "enum",
+            version      => "number",
+            version_type => "enum",
+        },
     },
 
     'put_template' => {
@@ -442,7 +557,12 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs => [ "filter_path", "op_type", "version", "version_type" ],
+        qs => {
+            filter_path  => "list",
+            op_type      => "enum",
+            version      => "number",
+            version_type => "enum",
+        },
     },
 
     'scroll' => {
@@ -453,7 +573,7 @@ sub api {
             [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ],
             [ {}, "_search", "scroll" ],
         ],
-        qs => [ "filter_path", "scroll" ],
+        qs => { filter_path => "list", scroll => "time" },
     },
 
     'search' => {
@@ -462,29 +582,44 @@ sub api {
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_search" ],
-            [ { type => 1 }, "_all", "{type}", "_search" ],
             [ { index => 0 }, "{index}", "_search" ],
             [ {}, "_search" ],
         ],
-        qs => [
-            "_source",                  "_source_exclude",
-            "_source_include",          "allow_no_indices",
-            "analyze_wildcard",         "analyzer",
-            "default_operator",         "df",
-            "expand_wildcards",         "explain",
-            "fielddata_fields",         "fields",
-            "filter_path",              "from",
-            "ignore_unavailable",       "lenient",
-            "lowercase_expanded_terms", "preference",
-            "q",                        "query_cache",
-            "routing",                  "scroll",
-            "search_type",              "size",
-            "sort",                     "stats",
-            "suggest_field",            "suggest_mode",
-            "suggest_size",             "suggest_text",
-            "terminate_after",          "timeout",
-            "track_scores",             "version",
-        ],
+        qs => {
+            _source                  => "list",
+            _source_exclude          => "list",
+            _source_include          => "list",
+            allow_no_indices         => "boolean",
+            analyze_wildcard         => "boolean",
+            analyzer                 => "string",
+            default_operator         => "enum",
+            df                       => "string",
+            expand_wildcards         => "enum",
+            explain                  => "boolean",
+            fielddata_fields         => "list",
+            fields                   => "list",
+            filter_path              => "list",
+            from                     => "number",
+            ignore_unavailable       => "boolean",
+            lenient                  => "boolean",
+            lowercase_expanded_terms => "boolean",
+            preference               => "string",
+            q                        => "string",
+            query_cache              => "boolean",
+            routing                  => "list",
+            scroll                   => "time",
+            search_type              => "enum",
+            size                     => "number",
+            sort                     => "list",
+            stats                    => "list",
+            suggest_field            => "string",
+            suggest_mode             => "enum",
+            suggest_size             => "number",
+            suggest_text             => "text",
+            timeout                  => "time",
+            track_scores             => "boolean",
+            version                  => "boolean",
+        },
     },
 
     'search_exists' => {
@@ -497,19 +632,25 @@ sub api {
                 "{type}", "_search",
                 "exists",
             ],
-            [ { type => 1 }, "_all", "{type}", "_search", "exists" ],
             [ { index => 0 }, "{index}", "_search", "exists" ],
             [ {}, "_search", "exists" ],
         ],
-        qs => [
-            "allow_no_indices", "analyze_wildcard",
-            "analyzer",         "default_operator",
-            "df",               "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "lenient",          "lowercase_expanded_terms",
-            "min_score",        "preference",
-            "q",                "routing",
-        ],
+        qs => {
+            allow_no_indices         => "boolean",
+            analyze_wildcard         => "boolean",
+            analyzer                 => "string",
+            default_operator         => "enum",
+            df                       => "string",
+            expand_wildcards         => "enum",
+            filter_path              => "list",
+            ignore_unavailable       => "boolean",
+            lenient                  => "boolean",
+            lowercase_expanded_terms => "boolean",
+            min_score                => "number",
+            preference               => "string",
+            q                        => "string",
+            routing                  => "string",
+        },
     },
 
     'search_shards' => {
@@ -519,16 +660,18 @@ sub api {
             [   { index => 0, type => 1 }, "{index}",
                 "{type}", "_search_shards",
             ],
-            [ { type => 1 }, "_all", "{type}", "_search_shards" ],
             [ { index => 0 }, "{index}", "_search_shards" ],
             [ {}, "_search_shards" ],
         ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "local",            "preference",
-            "routing",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            local              => "boolean",
+            preference         => "string",
+            routing            => "string",
+        },
     },
 
     'search_template' => {
@@ -540,16 +683,19 @@ sub api {
                 "{type}", "_search",
                 "template",
             ],
-            [ { type => 1 }, "_all", "{type}", "_search", "template" ],
             [ { index => 0 }, "{index}", "_search", "template" ],
             [ {}, "_search", "template" ],
         ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "preference",       "routing",
-            "scroll",           "search_type",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            preference         => "string",
+            routing            => "list",
+            scroll             => "time",
+            search_type        => "enum",
+        },
     },
 
     'suggest' => {
@@ -559,11 +705,14 @@ sub api {
         parts => { index => { multi => 1 } },
         paths =>
             [ [ { index => 0 }, "{index}", "_suggest" ], [ {}, "_suggest" ] ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "preference",       "routing",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            preference         => "string",
+            routing            => "string",
+        },
     },
 
     'termvector' => {
@@ -581,40 +730,19 @@ sub api {
             ],
             [ { index => 0, type => 1 }, "{index}", "{type}", "_termvector" ],
         ],
-        qs => [
-            "field_statistics", "fields",
-            "filter_path",      "offsets",
-            "parent",           "payloads",
-            "positions",        "preference",
-            "realtime",         "routing",
-            "term_statistics",
-        ],
-    },
-
-    'termvectors' => {
-        body  => {},
-        doc   => "docs-termvectors",
-        parts => {
-            id    => {},
-            index => { required => 1 },
-            type  => { required => 1 }
+        qs => {
+            field_statistics => "boolean",
+            fields           => "list",
+            filter_path      => "list",
+            offsets          => "boolean",
+            parent           => "string",
+            payloads         => "boolean",
+            positions        => "boolean",
+            preference       => "string",
+            realtime         => "boolean",
+            routing          => "string",
+            term_statistics  => "boolean",
         },
-        paths => [
-            [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}",
-                "_termvectors",
-            ],
-            [ { index => 0, type => 1 }, "{index}", "{type}", "_termvectors" ],
-        ],
-        qs => [
-            "dfs",        "field_statistics",
-            "fields",     "filter_path",
-            "offsets",    "parent",
-            "payloads",   "positions",
-            "preference", "realtime",
-            "routing",    "term_statistics",
-            "version",    "version_type",
-        ],
     },
 
     'update' => {
@@ -631,17 +759,25 @@ sub api {
                 "{index}", "{type}", "{id}", "_update",
             ],
         ],
-        qs => [
-            "consistency", "fields",
-            "filter_path", "lang",
-            "parent",      "refresh",
-            "replication", "retry_on_conflict",
-            "routing",     "script",
-            "script_id",   "scripted_upsert",
-            "timeout",     "timestamp",
-            "ttl",         "version",
-            "version_type",
-        ],
+        qs => {
+            consistency       => "enum",
+            fields            => "list",
+            filter_path       => "list",
+            lang              => "string",
+            parent            => "string",
+            refresh           => "boolean",
+            replication       => "enum",
+            retry_on_conflict => "number",
+            routing           => "string",
+            script            => "string",
+            script_id         => "string",
+            scripted_upsert   => "boolean",
+            timeout           => "time",
+            timestamp         => "time",
+            ttl               => "time",
+            version           => "number",
+            version_type      => "enum",
+        },
     },
 
     'cat.aliases' => {
@@ -651,7 +787,13 @@ sub api {
             [ { name => 2 }, "_cat", "aliases", "{name}" ],
             [ {}, "_cat", "aliases" ],
         ],
-        qs => [ "h", "help", "local", "master_timeout", "v" ],
+        qs => {
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cat.allocation' => {
@@ -661,7 +803,14 @@ sub api {
             [ { node_id => 2 }, "_cat", "allocation", "{node_id}" ],
             [ {}, "_cat", "allocation" ],
         ],
-        qs => [ "bytes", "h", "help", "local", "master_timeout", "v" ],
+        qs => {
+            bytes          => "enum",
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cat.count' => {
@@ -671,7 +820,13 @@ sub api {
             [ { index => 2 }, "_cat", "count", "{index}" ],
             [ {}, "_cat", "count" ],
         ],
-        qs => [ "h", "help", "local", "master_timeout", "v" ],
+        qs => {
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cat.fielddata' => {
@@ -681,21 +836,35 @@ sub api {
             [ { fields => 2 }, "_cat", "fielddata", "{fields}" ],
             [ {}, "_cat", "fielddata" ],
         ],
-        qs => [ "bytes", "h", "help", "local", "master_timeout", "v" ],
+        qs => {
+            bytes          => "enum",
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cat.health' => {
         doc   => "cat-health",
         parts => {},
         paths => [ [ {}, "_cat", "health" ] ],
-        qs    => [ "h", "help", "local", "master_timeout", "ts", "v" ],
+        qs    => {
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            ts             => "boolean",
+            v              => "boolean",
+        },
     },
 
     'cat.help' => {
         doc   => "cat",
         parts => {},
         paths => [ [ {}, "_cat" ] ],
-        qs    => ["help"]
+        qs => { help => "boolean" },
     },
 
     'cat.indices' => {
@@ -705,35 +874,67 @@ sub api {
             [ { index => 2 }, "_cat", "indices", "{index}" ],
             [ {}, "_cat", "indices" ],
         ],
-        qs => [ "bytes", "h", "help", "local", "master_timeout", "pri", "v" ],
+        qs => {
+            bytes          => "enum",
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            pri            => "boolean",
+            v              => "boolean",
+        },
     },
 
     'cat.master' => {
         doc   => "cat-master",
         parts => {},
         paths => [ [ {}, "_cat", "master" ] ],
-        qs    => [ "h", "help", "local", "master_timeout", "v" ],
+        qs    => {
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cat.nodes' => {
         doc   => "cat-nodes",
         parts => {},
         paths => [ [ {}, "_cat", "nodes" ] ],
-        qs    => [ "h", "help", "local", "master_timeout", "v" ],
+        qs    => {
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cat.pending_tasks' => {
         doc   => "cat-pending-tasks",
         parts => {},
         paths => [ [ {}, "_cat", "pending_tasks" ] ],
-        qs    => [ "h", "help", "local", "master_timeout", "v" ],
+        qs    => {
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cat.plugins' => {
         doc   => "cat-plugins",
         parts => {},
         paths => [ [ {}, "_cat", "plugins" ] ],
-        qs    => [ "h", "help", "local", "master_timeout", "v" ],
+        qs    => {
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cat.recovery' => {
@@ -743,7 +944,13 @@ sub api {
             [ { index => 2 }, "_cat", "recovery", "{index}" ],
             [ {}, "_cat", "recovery" ],
         ],
-        qs => [ "bytes", "h", "help", "master_timeout", "v" ],
+        qs => {
+            bytes          => "enum",
+            h              => "list",
+            help           => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cat.segments' => {
@@ -753,7 +960,7 @@ sub api {
             [ { index => 2 }, "_cat", "segments", "{index}" ],
             [ {}, "_cat", "segments" ],
         ],
-        qs => [ "h", "help", "v" ],
+        qs => { h => "list", help => "boolean", v => "boolean" },
     },
 
     'cat.shards' => {
@@ -763,21 +970,39 @@ sub api {
             [ { index => 2 }, "_cat", "shards", "{index}" ],
             [ {}, "_cat", "shards" ],
         ],
-        qs => [ "h", "help", "local", "master_timeout", "v" ],
+        qs => {
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cat.thread_pool' => {
         doc   => "cat-thread-pool",
         parts => {},
         paths => [ [ {}, "_cat", "thread_pool" ] ],
-        qs    => [ "full_id", "h", "help", "local", "master_timeout", "v" ],
+        qs    => {
+            full_id        => "boolean",
+            h              => "list",
+            help           => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+            v              => "boolean",
+        },
     },
 
     'cluster.get_settings' => {
         doc   => "cluster-update-settings",
         parts => {},
         paths => [ [ {}, "_cluster", "settings" ] ],
-        qs => [ "filter_path", "flat_settings", "master_timeout", "timeout" ],
+        qs    => {
+            filter_path    => "list",
+            flat_settings  => "boolean",
+            master_timeout => "time",
+            timeout        => "time",
+        },
     },
 
     'cluster.health' => {
@@ -787,20 +1012,28 @@ sub api {
             [ { index => 2 }, "_cluster", "health", "{index}" ],
             [ {}, "_cluster", "health" ],
         ],
-        qs => [
-            "filter_path",    "level",
-            "local",          "master_timeout",
-            "timeout",        "wait_for_active_shards",
-            "wait_for_nodes", "wait_for_relocating_shards",
-            "wait_for_status",
-        ],
+        qs => {
+            filter_path                => "list",
+            level                      => "enum",
+            local                      => "boolean",
+            master_timeout             => "time",
+            timeout                    => "time",
+            wait_for_active_shards     => "number",
+            wait_for_nodes             => "string",
+            wait_for_relocating_shards => "number",
+            wait_for_status            => "enum",
+        },
     },
 
     'cluster.pending_tasks' => {
         doc   => "cluster-pending",
         parts => {},
         paths => [ [ {}, "_cluster", "pending_tasks" ] ],
-        qs => [ "filter_path", "local", "master_timeout" ],
+        qs    => {
+            filter_path    => "list",
+            local          => "boolean",
+            master_timeout => "time"
+        },
     },
 
     'cluster.put_settings' => {
@@ -809,7 +1042,12 @@ sub api {
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_cluster", "settings" ] ],
-        qs => [ "filter_path", "flat_settings", "master_timeout", "timeout" ],
+        qs     => {
+            filter_path    => "list",
+            flat_settings  => "boolean",
+            master_timeout => "time",
+            timeout        => "time",
+        },
     },
 
     'cluster.reroute' => {
@@ -818,10 +1056,14 @@ sub api {
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_cluster", "reroute" ] ],
-        qs     => [
-            "dry_run", "explain", "filter_path", "master_timeout",
-            "metric",  "timeout",
-        ],
+        qs     => {
+            dry_run        => "boolean",
+            explain        => "boolean",
+            filter_path    => "list",
+            master_timeout => "time",
+            metric         => "list",
+            timeout        => "time",
+        },
     },
 
     'cluster.state' => {
@@ -832,16 +1074,18 @@ sub api {
                 "state", "{metric}",
                 "{index}",
             ],
-            [ { index => 3 }, "_cluster", "state", "_all", "{index}" ],
             [ { metric => 2 }, "_cluster", "state", "{metric}" ],
             [ {}, "_cluster", "state" ],
         ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "filter_path",        "flat_settings",
-            "ignore_unavailable", "local",
-            "master_timeout",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            flat_settings      => "boolean",
+            ignore_unavailable => "boolean",
+            local              => "boolean",
+            master_timeout     => "time",
+        },
     },
 
     'cluster.stats' => {
@@ -851,7 +1095,12 @@ sub api {
             [ { node_id => 3 }, "_cluster", "stats", "nodes", "{node_id}" ],
             [ {}, "_cluster", "stats" ],
         ],
-        qs => [ "filter_path", "flat_settings", "human" ],
+        qs => {
+            filter_path   => "list",
+            flat_settings => "boolean",
+            human         => "boolean",
+            timeout       => "time",
+        },
     },
 
     'indices.analyze' => {
@@ -860,11 +1109,17 @@ sub api {
         parts => { index => {} },
         paths =>
             [ [ { index => 0 }, "{index}", "_analyze" ], [ {}, "_analyze" ] ],
-        qs => [
-            "analyzer", "char_filters", "field",        "filter_path",
-            "filters",  "format",       "prefer_local", "text",
-            "tokenizer",
-        ],
+        qs => {
+            analyzer     => "string",
+            char_filters => "list",
+            field        => "string",
+            filter_path  => "list",
+            filters      => "list",
+            format       => "enum",
+            prefer_local => "boolean",
+            text         => "string",
+            tokenizer    => "string",
+        },
     },
 
     'indices.clear_cache' => {
@@ -875,14 +1130,21 @@ sub api {
             [ { index => 0 }, "{index}", "_cache", "clear" ],
             [ {}, "_cache", "clear" ],
         ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "fielddata",          "fields",
-            "filter",             "filter_cache",
-            "filter_path",        "id_cache",
-            "ignore_unavailable", "query_cache",
-            "recycler",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            fielddata          => "boolean",
+            fields             => "list",
+            filter             => "boolean",
+            filter_cache       => "boolean",
+            filter_keys        => "boolean",
+            filter_path        => "list",
+            id                 => "boolean",
+            id_cache           => "boolean",
+            ignore_unavailable => "boolean",
+            query_cache        => "boolean",
+            recycler           => "boolean",
+        },
     },
 
     'indices.close' => {
@@ -890,11 +1152,14 @@ sub api {
         method => "POST",
         parts  => { index => { required => 1 } },
         paths  => [ [ { index => 0 }, "{index}", "_close" ] ],
-        qs     => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "master_timeout",   "timeout",
-        ],
+        qs     => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            master_timeout     => "time",
+            timeout            => "time",
+        },
     },
 
     'indices.create' => {
@@ -903,7 +1168,11 @@ sub api {
         method => "PUT",
         parts  => { index => { required => 1 } },
         paths  => [ [ { index => 0 }, "{index}" ] ],
-        qs => [ "filter_path", "master_timeout", "timeout" ],
+        qs     => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time"
+        },
     },
 
     'indices.delete' => {
@@ -911,7 +1180,11 @@ sub api {
         method => "DELETE",
         parts  => { index => { multi => 1, required => 1 } },
         paths => [ [ { index => 0 }, "{index}" ] ],
-        qs => [ "filter_path", "master_timeout", "timeout" ],
+        qs => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time"
+        },
     },
 
     'indices.delete_alias' => {
@@ -923,7 +1196,11 @@ sub api {
         },
         paths =>
             [ [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ] ],
-        qs => [ "filter_path", "master_timeout", "timeout" ],
+        qs => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time"
+        },
     },
 
     'indices.delete_mapping' => {
@@ -933,9 +1210,10 @@ sub api {
             index => { multi => 1, required => 1 },
             type  => { multi => 1, required => 1 },
         },
-        paths =>
-            [ [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ] ],
-        qs => [ "filter_path", "master_timeout" ],
+        paths => [
+            [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ]
+        ],
+        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'indices.delete_template' => {
@@ -943,7 +1221,11 @@ sub api {
         method => "DELETE",
         parts  => { name => { required => 1 } },
         paths  => [ [ { name => 1 }, "_template", "{name}" ] ],
-        qs => [ "filter_path", "master_timeout", "timeout" ],
+        qs     => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time"
+        },
     },
 
     'indices.delete_warmer' => {
@@ -955,7 +1237,7 @@ sub api {
         },
         paths =>
             [ [ { index => 0, name => 2 }, "{index}", "_warmer", "{name}" ] ],
-        qs => [ "filter_path", "master_timeout" ],
+        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'indices.exists' => {
@@ -963,10 +1245,12 @@ sub api {
         method => "HEAD",
         parts  => { index => { multi => 1, required => 1 } },
         paths => [ [ { index => 0 }, "{index}" ] ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "local",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            ignore_unavailable => "boolean",
+            local              => "boolean",
+        },
     },
 
     'indices.exists_alias' => {
@@ -978,10 +1262,12 @@ sub api {
             [ { index => 0 }, "{index}", "_alias" ],
             [ { name  => 1 }, "_alias",  "{name}" ],
         ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "local",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            ignore_unavailable => "boolean",
+            local              => "boolean",
+        },
     },
 
     'indices.exists_template' => {
@@ -989,7 +1275,7 @@ sub api {
         method => "HEAD",
         parts  => { name => { required => 1 } },
         paths  => [ [ { name => 1 }, "_template", "{name}" ] ],
-        qs => [ "local", "master_timeout" ],
+        qs => { local => "boolean", master_timeout => "time" },
     },
 
     'indices.exists_type' => {
@@ -1000,23 +1286,28 @@ sub api {
             type  => { multi => 1, required => 1 },
         },
         paths => [ [ { index => 0, type => 1 }, "{index}", "{type}" ] ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "ignore_unavailable", "local",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            ignore_unavailable => "boolean",
+            local              => "boolean",
+        },
     },
 
     'indices.flush' => {
         doc    => "indices-flush",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths  => [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
-        qs     => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "force",
-            "full",             "ignore_unavailable",
-            "wait_if_ongoing",
-        ],
+        paths =>
+            [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            force              => "boolean",
+            ignore_unavailable => "boolean",
+            wait_if_ongoing    => "boolean",
+        },
     },
 
     'indices.flush_synced' => {
@@ -1032,7 +1323,7 @@ sub api {
             [ { index => 0 }, "{index}", "_flush", "synced" ],
             [ {}, "_flush", "synced" ],
         ],
-        qs => ["filter_path"],
+        qs => { filter_path => "list" },
     },
 
     'indices.get' => {
@@ -1045,11 +1336,13 @@ sub api {
             [ { feature => 1, index => 0 }, "{index}", "{feature}" ],
             [ { index => 0 }, "{index}" ],
         ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "local",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            local              => "boolean",
+        },
     },
 
     'indices.get_alias' => {
@@ -1061,11 +1354,13 @@ sub api {
             [ { name  => 1 }, "_alias",  "{name}" ],
             [ {}, "_alias" ],
         ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "local",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            local              => "boolean",
+        },
     },
 
     'indices.get_aliases' => {
@@ -1077,7 +1372,8 @@ sub api {
             [ { name  => 1 }, "_aliases", "{name}" ],
             [ {}, "_aliases" ],
         ],
-        qs => [ "filter_path", "local", "timeout" ],
+        qs =>
+            { filter_path => "list", local => "boolean", timeout => "time" },
     },
 
     'indices.get_field_mapping' => {
@@ -1102,11 +1398,14 @@ sub api {
             ],
             [ { field => 2 }, "_mapping", "field", "{field}" ],
         ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "include_defaults", "local",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            include_defaults   => "boolean",
+            local              => "boolean",
+        },
     },
 
     'indices.get_mapping' => {
@@ -1118,11 +1417,13 @@ sub api {
             [ { type  => 1 }, "_mapping", "{type}" ],
             [ {}, "_mapping" ],
         ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "local",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            local              => "boolean",
+        },
     },
 
     'indices.get_settings' => {
@@ -1134,11 +1435,14 @@ sub api {
             [ { name  => 1 }, "_settings", "{name}" ],
             [ {}, "_settings" ],
         ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "filter_path",        "flat_settings",
-            "ignore_unavailable", "local",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            flat_settings      => "boolean",
+            ignore_unavailable => "boolean",
+            local              => "boolean",
+        },
     },
 
     'indices.get_template' => {
@@ -1146,7 +1450,12 @@ sub api {
         parts => { name => {} },
         paths =>
             [ [ { name => 1 }, "_template", "{name}" ], [ {}, "_template" ] ],
-        qs => [ "filter_path", "flat_settings", "local", "master_timeout" ],
+        qs => {
+            filter_path    => "list",
+            flat_settings  => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+        },
     },
 
     'indices.get_upgrade' => {
@@ -1154,11 +1463,13 @@ sub api {
         parts => { index => { multi => 1 } },
         paths =>
             [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "human",
-            "ignore_unavailable",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            human              => "boolean",
+            ignore_unavailable => "boolean",
+        },
     },
 
     'indices.get_warmer' => {
@@ -1172,17 +1483,18 @@ sub api {
             [   { index => 0, name => 3, type => 1 },
                 "{index}", "{type}", "_warmer", "{name}",
             ],
-            [ { name => 3, type => 1 }, "_all", "{type}", "_warmer", "{name}" ],
             [ { index => 0, name => 2 }, "{index}", "_warmer", "{name}" ],
             [ { index => 0 }, "{index}", "_warmer" ],
             [ { name  => 1 }, "_warmer", "{name}" ],
             [ {}, "_warmer" ],
         ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "local",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            local              => "boolean",
+        },
     },
 
     'indices.open' => {
@@ -1190,26 +1502,35 @@ sub api {
         method => "POST",
         parts  => { index => { required => 1 } },
         paths  => [ [ { index => 0 }, "{index}", "_open" ] ],
-        qs     => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "master_timeout",   "timeout",
-        ],
+        qs     => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            master_timeout     => "time",
+            timeout            => "time",
+        },
     },
 
     'indices.optimize' => {
         doc    => "indices-optimize",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_optimize" ], [ {}, "_optimize" ] ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "flush",
-            "force",            "ignore_unavailable",
-            "max_num_segments", "only_expunge_deletes",
-            "wait_for_merge",
+        paths  => [
+            [ { index => 0 }, "{index}", "_optimize" ],
+            [ {}, "_optimize" ]
         ],
+        qs => {
+            allow_no_indices     => "boolean",
+            expand_wildcards     => "enum",
+            filter_path          => "list",
+            flush                => "boolean",
+            force                => "boolean",
+            ignore_unavailable   => "boolean",
+            max_num_segments     => "number",
+            only_expunge_deletes => "boolean",
+            wait_for_merge       => "boolean",
+        },
     },
 
     'indices.put_alias' => {
@@ -1222,7 +1543,11 @@ sub api {
         },
         paths =>
             [ [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ] ],
-        qs => [ "filter_path", "master_timeout", "timeout" ],
+        qs => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time"
+        },
     },
 
     'indices.put_mapping' => {
@@ -1234,12 +1559,15 @@ sub api {
             [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ],
             [ { type => 1 }, "_mapping", "{type}" ],
         ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "filter_path",        "ignore_conflicts",
-            "ignore_unavailable", "master_timeout",
-            "timeout",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_conflicts   => "boolean",
+            ignore_unavailable => "boolean",
+            master_timeout     => "time",
+            timeout            => "time",
+        },
     },
 
     'indices.put_settings' => {
@@ -1247,13 +1575,18 @@ sub api {
         doc    => "indices-update-settings",
         method => "PUT",
         parts => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_settings" ], [ {}, "_settings" ] ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "filter_path",        "flat_settings",
-            "ignore_unavailable", "master_timeout",
+        paths => [
+            [ { index => 0 }, "{index}", "_settings" ],
+            [ {}, "_settings" ]
         ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            flat_settings      => "boolean",
+            ignore_unavailable => "boolean",
+            master_timeout     => "time",
+        },
     },
 
     'indices.put_template' => {
@@ -1262,11 +1595,14 @@ sub api {
         method => "PUT",
         parts => { name => { required => 1 } },
         paths => [ [ { name => 1 }, "_template", "{name}" ] ],
-        qs => [
-            "create",        "filter_path",
-            "flat_settings", "master_timeout",
-            "order",         "timeout",
-        ],
+        qs => {
+            create         => "boolean",
+            filter_path    => "list",
+            flat_settings  => "boolean",
+            master_timeout => "time",
+            order          => "number",
+            timeout        => "time",
+        },
     },
 
     'indices.put_warmer' => {
@@ -1282,23 +1618,31 @@ sub api {
             [   { index => 0, name => 3, type => 1 },
                 "{index}", "{type}", "_warmer", "{name}",
             ],
-            [ { name => 3, type => 1 }, "_all", "{type}", "_warmer", "{name}" ],
             [ { index => 0, name => 2 }, "{index}", "_warmer", "{name}" ],
             [ { name => 1 }, "_warmer", "{name}" ],
         ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "ignore_unavailable",
-            "master_timeout",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            master_timeout     => "time",
+        },
     },
 
     'indices.recovery' => {
         doc   => "indices-recovery",
         parts => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_recovery" ], [ {}, "_recovery" ] ],
-        qs => [ "active_only", "detailed", "filter_path", "human" ],
+        paths => [
+            [ { index => 0 }, "{index}", "_recovery" ],
+            [ {}, "_recovery" ]
+        ],
+        qs => {
+            active_only => "boolean",
+            detailed    => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+        },
     },
 
     'indices.refresh' => {
@@ -1307,34 +1651,29 @@ sub api {
         parts  => { index => { multi => 1 } },
         paths =>
             [ [ { index => 0 }, "{index}", "_refresh" ], [ {}, "_refresh" ] ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "force",
-            "ignore_unavailable",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            force              => "boolean",
+            ignore_unavailable => "boolean",
+        },
     },
 
     'indices.segments' => {
         doc   => "indices-segments",
         parts => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_segments" ], [ {}, "_segments" ] ],
-        qs => [
-            "allow_no_indices", "expand_wildcards",
-            "filter_path",      "human",
-            "ignore_unavailable",
+        paths => [
+            [ { index => 0 }, "{index}", "_segments" ],
+            [ {}, "_segments" ]
         ],
-    },
-
-    'indices.snapshot_index' => {
-        doc    => "indices-gateway-snapshot",
-        method => "POST",
-        parts  => { index => { multi => 1 } },
-        paths  => [
-            [ { index => 0 }, "{index}", "_gateway", "snapshot" ],
-            [ {}, "_gateway", "snapshot" ],
-        ],
-        qs => [ "allow_no_indices", "expand_wildcards", "ignore_unavailable" ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            human              => "boolean",
+            ignore_unavailable => "boolean",
+        },
     },
 
     'indices.stats' => {
@@ -1346,12 +1685,16 @@ sub api {
             [ { metric => 1 }, "_stats",  "{metric}" ],
             [ {}, "_stats" ],
         ],
-        qs => [
-            "completion_fields", "fielddata_fields",
-            "fields",            "filter_path",
-            "groups",            "human",
-            "level",             "types",
-        ],
+        qs => {
+            completion_fields => "list",
+            fielddata_fields  => "list",
+            fields            => "list",
+            filter_path       => "list",
+            groups            => "list",
+            human             => "boolean",
+            level             => "enum",
+            types             => "list",
+        },
     },
 
     'indices.status' => {
@@ -1359,12 +1702,15 @@ sub api {
         parts => { index => { multi => 1 } },
         paths =>
             [ [ { index => 0 }, "{index}", "_status" ], [ {}, "_status" ] ],
-        qs => [
-            "allow_no_indices",   "expand_wildcards",
-            "filter_path",        "human",
-            "ignore_unavailable", "recovery",
-            "snapshot",
-        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            human              => "boolean",
+            ignore_unavailable => "boolean",
+            recovery           => "boolean",
+            snapshot           => "boolean",
+        },
     },
 
     'indices.update_aliases' => {
@@ -1373,7 +1719,11 @@ sub api {
         method => "POST",
         parts  => {},
         paths => [ [ {}, "_aliases" ] ],
-        qs => [ "filter_path", "master_timeout", "timeout" ],
+        qs => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time"
+        },
     },
 
     'indices.upgrade' => {
@@ -1382,11 +1732,14 @@ sub api {
         parts  => { index => { multi => 1 } },
         paths =>
             [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
-        qs => [
-            "allow_no_indices",      "expand_wildcards",
-            "filter_path",           "ignore_unavailable",
-            "only_ancient_segments", "wait_for_completion",
-        ],
+        qs => {
+            allow_no_indices      => "boolean",
+            expand_wildcards      => "enum",
+            filter_path           => "list",
+            ignore_unavailable    => "boolean",
+            only_ancient_segments => "boolean",
+            wait_for_completion   => "boolean",
+        },
     },
 
     'indices.validate_query' => {
@@ -1398,19 +1751,24 @@ sub api {
                 "{type}", "_validate",
                 "query",
             ],
-            [ { type => 1 }, "_all", "{type}", "_validate", "query" ],
             [ { index => 0 }, "{index}", "_validate", "query" ],
             [ {}, "_validate", "query" ],
         ],
-        qs => [
-            "allow_no_indices",         "analyze_wildcard",
-            "analyzer",                 "default_operator",
-            "df",                       "expand_wildcards",
-            "explain",                  "filter_path",
-            "ignore_unavailable",       "lenient",
-            "lowercase_expanded_terms", "q",
-            "rewrite",
-        ],
+        qs => {
+            allow_no_indices         => "boolean",
+            analyze_wildcard         => "boolean",
+            analyzer                 => "string",
+            default_operator         => "enum",
+            df                       => "string",
+            expand_wildcards         => "enum",
+            explain                  => "boolean",
+            filter_path              => "list",
+            ignore_unavailable       => "boolean",
+            lenient                  => "boolean",
+            lowercase_expanded_terms => "boolean",
+            q                        => "string",
+            rewrite                  => "boolean",
+        },
     },
 
     'nodes.hot_threads' => {
@@ -1420,11 +1778,15 @@ sub api {
             [ { node_id => 1 }, "_nodes", "{node_id}", "hot_threads" ],
             [ {}, "_nodes", "hot_threads" ],
         ],
-        qs => [
-            "filter_path", "ignore_idle_threads",
-            "interval",    "snapshots",
-            "threads",     "type",
-        ],
+        qs => {
+            filter_path         => "list",
+            ignore_idle_threads => "boolean",
+            interval            => "time",
+            snapshots           => "number",
+            threads             => "number",
+            timeout             => "time",
+            type                => "enum",
+        },
     },
 
     'nodes.info' => {
@@ -1434,11 +1796,15 @@ sub api {
             [   { metric => 2, node_id => 1 }, "_nodes",
                 "{node_id}", "{metric}",
             ],
-            [ { metric => 2 }, "_nodes", "_all", "{metric}" ],
             [ { node_id => 1 }, "_nodes", "{node_id}" ],
             [ {}, "_nodes" ],
         ],
-        qs => [ "filter_path", "flat_settings", "human" ],
+        qs => {
+            filter_path   => "list",
+            flat_settings => "boolean",
+            human         => "boolean",
+            timeout       => "time",
+        },
     },
 
     'nodes.shutdown' => {
@@ -1446,10 +1812,13 @@ sub api {
         method => "POST",
         parts  => { node_id => { multi => 1 } },
         paths  => [
-            [ { node_id => 2 }, "_cluster", "nodes", "{node_id}", "_shutdown" ],
+            [   { node_id => 2 }, "_cluster",
+                "nodes", "{node_id}",
+                "_shutdown"
+            ],
             [ {}, "_shutdown" ],
         ],
-        qs => [ "delay", "exit", "filter_path" ],
+        qs => { delay => "time", exit => "boolean", filter_path => "list" },
     },
 
     'nodes.stats' => {
@@ -1463,15 +1832,8 @@ sub api {
             [   { index_metric => 4, metric => 3, node_id => 1 },
                 "_nodes", "{node_id}", "stats", "{metric}", "{index_metric}",
             ],
-            [   { index_metric => 4, node_id => 1 },
-                "_nodes", "{node_id}", "stats", "_all", "{index_metric}",
-            ],
             [   { index_metric => 3, metric => 2 }, "_nodes",
                 "stats", "{metric}",
-                "{index_metric}",
-            ],
-            [   { index_metric => 3 }, "_nodes",
-                "stats", "_all",
                 "{index_metric}",
             ],
             [   { metric => 3, node_id => 1 }, "_nodes",
@@ -1482,12 +1844,17 @@ sub api {
             [ { node_id => 1 }, "_nodes", "{node_id}", "stats" ],
             [ {}, "_nodes", "stats" ],
         ],
-        qs => [
-            "completion_fields", "fielddata_fields",
-            "fields",            "filter_path",
-            "groups",            "human",
-            "level",             "types",
-        ],
+        qs => {
+            completion_fields => "list",
+            fielddata_fields  => "list",
+            fields            => "list",
+            filter_path       => "list",
+            groups            => "boolean",
+            human             => "boolean",
+            level             => "enum",
+            timeout           => "time",
+            types             => "list",
+        },
     },
 
     'snapshot.create' => {
@@ -1503,7 +1870,11 @@ sub api {
                 "{repository}", "{snapshot}",
             ],
         ],
-        qs => [ "filter_path", "master_timeout", "wait_for_completion" ],
+        qs => {
+            filter_path         => "list",
+            master_timeout      => "time",
+            wait_for_completion => "boolean",
+        },
     },
 
     'snapshot.create_repository' => {
@@ -1512,7 +1883,12 @@ sub api {
         method => "PUT",
         parts => { repository => { required => 1 } },
         paths => [ [ { repository => 1 }, "_snapshot", "{repository}" ] ],
-        qs => [ "filter_path", "master_timeout", "timeout", "verify" ],
+        qs => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time",
+            verify         => "boolean",
+        },
     },
 
     'snapshot.delete' => {
@@ -1527,7 +1903,7 @@ sub api {
                 "{repository}", "{snapshot}",
             ],
         ],
-        qs => [ "filter_path", "master_timeout" ],
+        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'snapshot.delete_repository' => {
@@ -1535,7 +1911,11 @@ sub api {
         method => "DELETE",
         parts  => { repository => { multi => 1, required => 1 } },
         paths  => [ [ { repository => 1 }, "_snapshot", "{repository}" ] ],
-        qs => [ "filter_path", "master_timeout", "timeout" ],
+        qs     => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time"
+        },
     },
 
     'snapshot.get' => {
@@ -1549,7 +1929,7 @@ sub api {
                 "{repository}", "{snapshot}",
             ],
         ],
-        qs => [ "filter_path", "master_timeout" ],
+        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'snapshot.get_repository' => {
@@ -1559,7 +1939,11 @@ sub api {
             [ { repository => 1 }, "_snapshot", "{repository}" ],
             [ {}, "_snapshot" ],
         ],
-        qs => [ "filter_path", "local", "master_timeout" ],
+        qs => {
+            filter_path    => "list",
+            local          => "boolean",
+            master_timeout => "time"
+        },
     },
 
     'snapshot.restore' => {
@@ -1576,7 +1960,11 @@ sub api {
                 "_restore",
             ],
         ],
-        qs => [ "filter_path", "master_timeout", "wait_for_completion" ],
+        qs => {
+            filter_path         => "list",
+            master_timeout      => "time",
+            wait_for_completion => "boolean",
+        },
     },
 
     'snapshot.status' => {
@@ -1587,11 +1975,10 @@ sub api {
                 "{repository}", "{snapshot}",
                 "_status",
             ],
-            [ { snapshot => 2 }, "_snapshot", "_all", "{snapshot}", "_status" ],
             [ { repository => 1 }, "_snapshot", "{repository}", "_status" ],
             [ {}, "_snapshot", "_status" ],
         ],
-        qs => [ "filter_path", "master_timeout" ],
+        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'snapshot.verify_repository' => {
@@ -1601,17 +1988,18 @@ sub api {
         paths  => [
             [ { repository => 1 }, "_snapshot", "{repository}", "_verify" ],
         ],
-        qs => [ "filter_path", "master_timeout", "timeout" ],
+        qs => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time"
+        },
     },
 
 #=== AUTOGEN - END ===
 
 );
 
-for ( values %API ) {
-    $_->{qs_handlers} = qs_init( @{ $_->{qs} } );
-}
-
+__PACKAGE__->_qs_init( \%API );
 1;
 
 __END__

@@ -21,9 +21,9 @@ sub parse_request {
             ignore    => delete $params->{ignore} || [],
             method    => $defn->{method}          || 'GET',
             serialize => $defn->{serialize}       || 'std',
-            path => $self->_parse_path( $defn,              $params ),
-            body => $self->_parse_body( $defn->{body},      $params ),
-            qs   => $self->_parse_qs( $defn->{qs}, $params ),
+            path => $self->_parse_path( $defn,         $params ),
+            body => $self->_parse_body( $defn->{body}, $params ),
+            qs   => $self->_parse_qs( $defn->{qs},     $params ),
         };
     }
     catch {
@@ -77,9 +77,6 @@ PATH: for my $path (@$paths) {
         }
         return join "/", '', @parts;
     }
-
-    die "Param (index) required when (type) specified\n"
-        if $defn->{index_when_type} && $args{type} && !$args{index};
 
     throw(
         'Internal',
