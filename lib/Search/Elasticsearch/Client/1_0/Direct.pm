@@ -5,7 +5,65 @@ sub _namespace {__PACKAGE__}
 use Moo;
 with 'Search::Elasticsearch::Client::1_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
-with 'Search::Elasticsearch::Role::Client::Direct::Main';
+
+has 'cluster'             => ( is => 'lazy', init_arg => undef );
+has 'nodes'               => ( is => 'lazy', init_arg => undef );
+has 'indices'             => ( is => 'lazy', init_arg => undef );
+has 'snapshot'            => ( is => 'lazy', init_arg => undef );
+has 'cat'                 => ( is => 'lazy', init_arg => undef );
+has 'tasks'               => ( is => 'lazy', init_arg => undef );
+has 'bulk_helper_class'   => ( is => 'ro',   default  => 'Bulk' );
+has 'scroll_helper_class' => ( is => 'ro',   default  => 'Scroll' );
+has '_bulk_class'         => ( is => 'lazy' );
+has '_scroll_class'       => ( is => 'lazy' );
+
+#===================================
+sub create {
+#===================================
+    my ( $self, $params ) = parse_params(@_);
+    my $defn = $self->api->{index};
+    $params->{op_type} = 'create';
+    $self->perform_request( { %$defn, name => 'create' }, $params );
+}
+
+#===================================
+sub _build__bulk_class {
+#===================================
+    my $self = shift;
+    $self->_build_helper( 'bulk', $self->bulk_helper_class );
+}
+
+#===================================
+sub _build__scroll_class {
+#===================================
+    my $self = shift;
+    $self->_build_helper( 'scroll', $self->scroll_helper_class );
+}
+
+#===================================
+sub bulk_helper {
+#===================================
+    my ( $self, $params ) = parse_params(@_);
+    $params->{es} ||= $self;
+    $self->_bulk_class->new($params);
+}
+
+#===================================
+sub scroll_helper {
+#===================================
+    my ( $self, $params ) = parse_params(@_);
+    $params->{es} ||= $self;
+    $self->_scroll_class->new($params);
+}
+
+#===================================
+sub _build_cluster  { shift->_build_namespace('Cluster') }
+sub _build_nodes    { shift->_build_namespace('Nodes') }
+sub _build_indices  { shift->_build_namespace('Indices') }
+sub _build_snapshot { shift->_build_namespace('Snapshot') }
+sub _build_cat      { shift->_build_namespace('Cat') }
+sub _build_tasks    { shift->_build_namespace('Tasks') }
+#===================================
 
 __PACKAGE__->_install_api('');
 

@@ -2,7 +2,6 @@ package Search::Elasticsearch::Role::Client::Direct;
 
 use Moo::Role;
 with 'Search::Elasticsearch::Role::Client';
-use Search::Elasticsearch::Util::API::Path qw(path_handler);
 use Search::Elasticsearch::Util qw(load_plugin);
 
 use Try::Tiny;
@@ -24,7 +23,7 @@ sub parse_request {
             serialize => $defn->{serialize}       || 'std',
             path => $self->_parse_path( $defn,              $params ),
             body => $self->_parse_body( $defn->{body},      $params ),
-            qs   => $self->_parse_qs( $defn->{qs_handlers}, $params ),
+            qs   => $self->_parse_qs( $defn->{qs}, $params ),
         };
     }
     catch {
@@ -45,7 +44,48 @@ sub _parse_path {
     my ( $self, $defn, $params ) = @_;
     return delete $params->{path}
         if $params->{path};
-    path_handler( $defn, $params );
+    my $paths = $defn->{paths};
+    my $parts = $defn->{parts};
+
+    my %args;
+    keys %$parts;
+    no warnings 'uninitialized';
+    while ( my ( $key, $req ) = each %$parts ) {
+        my $val = delete $params->{$key};
+        if ( ref $val eq 'ARRAY' ) {
+            die "Param ($key) must contain a single value\n"
+                if @$val > 1 and not $req->{multi};
+            $val = join ",", @$val;
+        }
+        if ( !length $val ) {
+            die "Missing required param ($key)\n"
+                if $req->{required};
+            next;
+        }
+        utf8::encode($val);
+        $args{$key} = uri_escape($val);
+    }
+PATH: for my $path (@$paths) {
+        my @keys = keys %{ $path->[0] };
+        next PATH unless @keys == keys %args;
+        for (@keys) {
+            next PATH unless exists $args{$_};
+        }
+        my ( $pos, @parts ) = @$path;
+        for ( keys %$pos ) {
+            $parts[ $pos->{$_} ] = $args{$_};
+        }
+        return join "/", '', @parts;
+    }
+
+    die "Param (index) required when (type) specified\n"
+        if $defn->{index_when_type} && $args{type} && !$args{index};
+
+    throw(
+        'Internal',
+        "Couldn't determine path",
+        { params => $params, defn => $defn }
+    );
 }
 
 #===================================
@@ -65,7 +105,7 @@ sub _parse_body {
 sub _parse_qs {
 #===================================
     my ( $self, $handlers, $params ) = @_;
-    die "No (qs_handlers) defined\n" unless $handlers;
+    die "No (qs) defined\n" unless $handlers;
     my %qs;
 
     if ( my $raw = delete $params->{params} ) {
@@ -75,10 +115,8 @@ sub _parse_qs {
     }
 
     for my $key ( keys %$params ) {
-        my $key_defn = $handlers->{$key}
+        my $handler = $handlers->{$key}
             or die("Unknown param ($key)\n");
-        my $handler = $key_defn->{handler}
-            or die "No (handler) defined for ($key)\n";
         $qs{$key} = $handler->( delete $params->{$key} );
     }
     return \%qs;
@@ -116,6 +154,15 @@ sub _build_namespace {
             logger    => $self->logger
         }
     );
+}
+
+#===================================
+sub _build_helper {
+#===================================
+    my ( $self, $name, $sub_class ) = @_;
+    my $class = load_plugin( 'Search::Elasticsearch', $sub_class );
+    is_compat( $name . '_helper_class', $self->transport, $class );
+    return $class;
 }
 
 1;

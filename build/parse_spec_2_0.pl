@@ -8,14 +8,14 @@ use Path::Class;
 use Perl::Tidy;
 use JSON::XS;
 
-my @api_dirs = qw(
-    rest-api-spec/src/main/resources/rest-api-spec/api
-    plugins/delete-by-query/src/test/resources/rest-api-spec/api
-);
+my @api_dirs = qw(rest-api-spec/src/main/resources/rest-api-spec/api);
 my @files
     = map { file($_) } map { glob "../elasticsearch/$_/*.json" } @api_dirs;
 
 my ( %API, %seen, %seen_combo, %Forbidden );
+
+my %Known_Types
+    = map { $_ => 1 } qw(boolean enum list number string text time );
 
 forbid(
     'GET' => qw(
@@ -76,7 +76,8 @@ for ( 'bulk', 'mget', 'mpercolate', 'mtermvectors' ) {
     $API{$_}{index_when_type} = 1;
 }
 
-update_module( shift(@ARGV) || 'lib/Search/Elasticsearch/Role/API/2_0.pm' );
+update_module( shift(@ARGV)
+        || 'lib/Search/Elasticsearch/Client/2_0/Role/API.pm' );
 
 #===================================
 sub process {
@@ -106,16 +107,16 @@ sub process {
     # parts
     my $parts = $spec{parts} = process_parts( $url->{parts} );
 
-    # default qs params
-    unless ( $method eq 'HEAD' or ( $spec{paths}[0][1] || '' ) eq '_cat' ) {
-        $url->{params}{filter_path} = 1;
+    # filter path
+    my %qs = process_qs( $url->{params} );
+    for ( keys %$parts ) {
+        delete $qs{$_};
+    }
+    if ( $method ne 'HEAD' and ( $spec{paths}[0][1] || '' ) ne '_cat' ) {
+        @qs{filter_path} = 'list';
     }
 
-    # qs
-    $spec{qs} = [
-        sort grep { !$Forbidden{QS}{$_} }
-        grep      { !$parts->{$_} } keys %{ $url->{params} }
-    ];
+    $spec{qs} = \%qs;
 
     # doc
     $spec{doc} = $defn->{documentation} =~ m{/([^/]+)\.html$} ? $1 : '';
@@ -226,6 +227,24 @@ sub process_path {
     $defn->{sig} = join "-", sort keys %{ $defn->{params} };
 
     return $defn;
+}
+
+#===================================
+sub process_qs {
+#===================================
+    my $params = shift || {};
+    my %qs;
+
+    for my $param ( keys %$params ) {
+        next if $Forbidden{QS}{$param};
+        my $def = $params->{$param};
+        my $type = $def->{type} || die "No type specified for param [$param]";
+
+        die "Unknown type [$type] for param [$param]"
+            unless $Known_Types{$type};
+        $qs{$param} = $type;
+    }
+    return %qs;
 }
 
 #===================================
