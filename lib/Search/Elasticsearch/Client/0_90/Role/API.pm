@@ -1,4 +1,4 @@
-package Search::Elasticsearch::Role::API::0_90;
+package Search::Elasticsearch::Client::0_90::Role::API;
 
 use Moo::Role;
 

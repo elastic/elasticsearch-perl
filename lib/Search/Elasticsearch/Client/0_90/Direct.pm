@@ -1,7 +1,7 @@
 package Search::Elasticsearch::Client::0_90::Direct;
 
 use Moo;
-with 'Search::Elasticsearch::Role::API::0_90';
+with 'Search::Elasticsearch::Client::0_90::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 
 use Search::Elasticsearch::Util qw(parse_params is_compat);

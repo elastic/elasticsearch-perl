@@ -1,7 +1,7 @@
 package Search::Elasticsearch::Client::1_0::Direct::Cat;
 
 use Moo;
-with 'Search::Elasticsearch::Role::API::1_0';
+with 'Search::Elasticsearch::Client::1_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use Search::Elasticsearch::Util qw(parse_params);
 use namespace::clean;

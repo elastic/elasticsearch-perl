@@ -1,7 +1,7 @@
 package Search::Elasticsearch::Client::2_0::Direct::Snapshot;
 
 use Moo;
-with 'Search::Elasticsearch::Role::API::2_0';
+with 'Search::Elasticsearch::Client::2_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 __PACKAGE__->_install_api('snapshot');
 
