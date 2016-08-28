@@ -7,6 +7,8 @@ with 'Search::Elasticsearch::Role::Client::Direct';
 use Search::Elasticsearch::Util qw(parse_params is_compat);
 use namespace::clean;
 
+sub _namespace {__PACKAGE__}
+
 has 'cluster'             => ( is => 'lazy' );
 has 'indices'             => ( is => 'lazy' );
 has 'bulk_helper_class'   => ( is => 'ro', default => 'Bulk' );

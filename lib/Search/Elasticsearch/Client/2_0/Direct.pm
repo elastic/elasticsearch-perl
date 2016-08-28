@@ -1,13 +1,13 @@
 package Search::Elasticsearch::Client::2_0::Direct;
 
-sub _namespace {__PACKAGE__}
-
 use Moo;
 with 'Search::Elasticsearch::Client::2_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 
 use Search::Elasticsearch::Util qw(parse_params is_compat);
 use namespace::clean;
+
+sub _namespace {__PACKAGE__}
 
 has 'cluster'             => ( is => 'lazy', init_arg => undef );
 has 'nodes'               => ( is => 'lazy', init_arg => undef );
