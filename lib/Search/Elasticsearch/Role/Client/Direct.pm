@@ -6,6 +6,7 @@ use Search::Elasticsearch::Util qw(load_plugin is_compat);
 
 use Try::Tiny;
 use Package::Stash 0.34 ();
+use Any::URI::Escape qw(uri_escape);
 use namespace::clean;
 
 #===================================
