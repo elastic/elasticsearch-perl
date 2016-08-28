@@ -22,6 +22,25 @@ sub api {
 %API = (
 #===================================
 
+    'bulk.metadata' => {
+        params => [
+            'index',   'type',   'id',        'fields',
+            'routing', 'parent', 'timestamp', 'ttl',
+            'version', 'version_type'
+        ]
+    },
+    'bulk.update' => {
+        params => [
+            'doc',             'upsert',
+            'doc_as_upsert',   'fields',
+            'scripted_upsert', 'script',
+            'script_id',       'script_file',
+            'params',          'lang',
+            'detect_noop',
+        ]
+    },
+    'bulk.required' => { params => [ 'index', 'type' ] },
+
 #=== AUTOGEN - START ===
 
     'bulk' => {

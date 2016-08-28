@@ -22,6 +22,9 @@ has '_buffer_count' => ( is => 'rw', default => 0 );
 has '_serializer'   => ( is => 'lazy' );
 has '_bulk_args'    => ( is => 'ro' );
 has '_last_flush' => ( is => 'rw', default => sub {time} );
+has '_metadata_params' => ( is => 'ro' );
+has '_update_params'   => ( is => 'ro' );
+has '_required_params' => ( is => 'ro' );
 
 our %Actions = (
     'index'  => 1,
@@ -30,11 +33,15 @@ our %Actions = (
     'delete' => 1
 );
 
-our @Metadata_Keys = (
-    'index',   'type',   'id',        'fields',
-    'routing', 'parent', 'timestamp', 'ttl',
-    'version', 'version_type'
-);
+around BUILDARGS => sub {
+    my $orig = shift;
+    my ( $class, $params ) = parse_params(@_);
+    my $es = $params->{es} or throw( 'Param', 'Missing required param <es>' );
+    $params->{_metadata_params} = $es->api('bulk.metadata')->{params};
+    $params->{_update_params}   = $es->api('bulk.update')->{params};
+    $params->{_required_params} = $es->api('bulk.required')->{params};
+    return $class->$orig($params);
+};
 
 #===================================
 sub _build__serializer { shift->es->transport->serializer }
@@ -103,12 +110,6 @@ sub delete_ids {
     $self->add_action( map { ( 'delete' => { _id => $_ } ) } @_ );
 }
 
-our @Update_Params = qw(
-    doc upsert doc_as_upsert fields scripted_upsert
-    script script_id script_file
-    params lang detect_noop
-);
-
 #===================================
 sub _encode_action {
 #===================================
@@ -126,7 +127,7 @@ sub _encode_action {
     my $params     = {%$orig};
     my $serializer = $self->_serializer;
 
-    for (@Metadata_Keys) {
+    for ( @{ $self->_metadata_params } ) {
         my $val
             = exists $params->{$_}    ? delete $params->{$_}
             : exists $params->{"_$_"} ? delete $params->{"_$_"}
@@ -134,14 +135,14 @@ sub _encode_action {
         $metadata{"_$_"} = $val;
     }
 
-    throw( 'Param', "Missing required param <index>" )
-        unless $metadata{_index} || $self->_bulk_args->{index};
-    throw( 'Param', "Missing required param <type>" )
-        unless $metadata{_type} || $self->_bulk_args->{type};
+    for ( @{ $self->_required_params } ) {
+        throw( 'Param', "Missing required param <$_>" )
+            unless $metadata{"_$_"} || $self->_bulk_args->{$_};
+    }
 
     my $source;
     if ( $action eq 'update' ) {
-        for (@Update_Params) {
+        for ( @{ $self->_update_params } ) {
             $source->{$_} = delete $params->{$_}
                 if exists $params->{$_};
         }
@@ -240,7 +241,8 @@ sub _doc_transformer {
     my ( $self, $params ) = @_;
 
     my $bulk_args = $self->_bulk_args;
-    my %allowed = map { $_ => 1, "_$_" => 1 } ( @Metadata_Keys, 'source' );
+    my %allowed = map { $_ => 1, "_$_" => 1 }
+        ( @{ $self->_metadata_params }, 'source' );
     $allowed{fields} = 1;
 
     delete @allowed{ 'index', '_index' } if $bulk_args->{index};

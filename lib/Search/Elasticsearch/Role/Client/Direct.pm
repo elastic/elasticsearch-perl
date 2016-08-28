@@ -2,7 +2,7 @@ package Search::Elasticsearch::Role::Client::Direct;
 
 use Moo::Role;
 with 'Search::Elasticsearch::Role::Client';
-use Search::Elasticsearch::Util qw(load_plugin);
+use Search::Elasticsearch::Util qw(load_plugin is_compat);
 
 use Try::Tiny;
 use Package::Stash 0.34 ();
