@@ -78,7 +78,7 @@ sub _extract_host {
     my $self = shift;
     my $host = shift || return;
     $host =~ s{^inet\[(.+)\]$}{$1};
-    $host =~ s{^[^/]+/}{};
+    $host =~ s{^[^/]*/}{};
     return $host;
 }
 

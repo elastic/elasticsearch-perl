@@ -15,6 +15,9 @@ is $pool->_extract_host('inet[127.0.0.1:9200]'), '127.0.0.1:9200', "inet[IP]";
 is $pool->_extract_host('inet[myhost/127.0.0.1:9200]'), '127.0.0.1:9200',
     "inet[Host/IP]";
 
+is $pool->_extract_host('inet[/127.0.0.1:9200]'), '127.0.0.1:9200',
+    "inet[/IP]";
+
 ok !$pool->_extract_host(), "Undefined";
 
 done_testing;
