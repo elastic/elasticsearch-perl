@@ -35,5 +35,5 @@ forbid(
         )
 );
 
-process_files('lib/Search/Elasticsearch/Client/2_0/Role/API.pm',@files);
+process_files( 'lib/Search/Elasticsearch/Client/2_0/Role/API.pm', @files );
 

@@ -44,10 +44,9 @@ sub api {
 #=== AUTOGEN - START ===
 
     'bulk' => {
-        body            => { required => 1 },
-        doc             => "docs-bulk",
-        index_when_type => 1,
-        method          => "POST",
+        body   => { required => 1 },
+        doc    => "docs-bulk",
+        method => "POST",
         parts => { index => {}, type => {} },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_bulk" ],
@@ -146,7 +145,9 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
         ],
         qs => {
             consistency  => "enum",
@@ -190,8 +191,8 @@ sub api {
         doc    => "modules-scripting",
         method => "DELETE",
         parts  => { id => { required => 1 }, lang => { required => 1 } },
-        paths  => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs     => {
+        paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
+        qs    => {
             filter_path  => "list",
             version      => "number",
             version_type => "enum"
@@ -219,7 +220,9 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
         ],
         qs => {
             parent     => "string",
@@ -289,7 +292,9 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
         ],
         qs => {
             _source         => "list",
@@ -366,7 +371,9 @@ sub api {
             type  => { required => 1 }
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
             [ { index => 0, type => 1 }, "{index}", "{type}" ],
         ],
         qs => {
@@ -392,9 +399,8 @@ sub api {
     },
 
     'mget' => {
-        body            => { required => 1 },
-        doc             => "docs-multi-get",
-        index_when_type => 1,
+        body => { required => 1 },
+        doc  => "docs-multi-get",
         parts => { index => {}, type => {} },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_mget" ],
@@ -414,9 +420,8 @@ sub api {
     },
 
     'mpercolate' => {
-        body            => { required => 1 },
-        doc             => "search-percolate",
-        index_when_type => 1,
+        body => { required => 1 },
+        doc  => "search-percolate",
         parts => { index => {}, type => {} },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_mpercolate" ],
@@ -446,12 +451,13 @@ sub api {
     },
 
     'mtermvectors' => {
-        body            => {},
-        doc             => "docs-multi-termvectors",
-        index_when_type => 1,
-        parts           => { index => {}, type => {} },
-        paths           => [
-            [ { index => 0, type => 1 }, "{index}", "{type}", "_mtermvectors" ],
+        body  => {},
+        doc   => "docs-multi-termvectors",
+        parts => { index => {}, type => {} },
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_mtermvectors"
+            ],
             [ { index => 0 }, "{index}", "_mtermvectors" ],
             [ {}, "_mtermvectors" ],
         ],
@@ -741,7 +747,9 @@ sub api {
                 "{type}", "{id}",
                 "_termvectors",
             ],
-            [ { index => 0, type => 1 }, "{index}", "{type}", "_termvectors" ],
+            [   { index => 0, type => 1 }, "{index}", "{type}",
+                "_termvectors"
+            ],
         ],
         qs => {
             dfs              => "boolean",
@@ -1401,8 +1409,9 @@ sub api {
         doc    => "indices-flush",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths  => [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
-        qs     => {
+        paths =>
+            [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
+        qs => {
             allow_no_indices   => "boolean",
             expand_wildcards   => "enum",
             filter_path        => "list",
@@ -1496,7 +1505,8 @@ sub api {
             [ { name  => 1 }, "_aliases", "{name}" ],
             [ {}, "_aliases" ],
         ],
-        qs => { filter_path => "list", local => "boolean", timeout => "time" },
+        qs =>
+            { filter_path => "list", local => "boolean", timeout => "time" },
     },
 
     'indices.get_field_mapping' => {
@@ -1640,8 +1650,10 @@ sub api {
         doc    => "indices-optimize",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_optimize" ], [ {}, "_optimize" ] ],
+        paths  => [
+            [ { index => 0 }, "{index}", "_optimize" ],
+            [ {}, "_optimize" ]
+        ],
         qs => {
             allow_no_indices     => "boolean",
             expand_wildcards     => "enum",
@@ -1696,8 +1708,10 @@ sub api {
         doc    => "indices-update-settings",
         method => "PUT",
         parts => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_settings" ], [ {}, "_settings" ] ],
+        paths => [
+            [ { index => 0 }, "{index}", "_settings" ],
+            [ {}, "_settings" ]
+        ],
         qs => {
             allow_no_indices   => "boolean",
             expand_wildcards   => "enum",
@@ -1753,8 +1767,10 @@ sub api {
     'indices.recovery' => {
         doc   => "indices-recovery",
         parts => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_recovery" ], [ {}, "_recovery" ] ],
+        paths => [
+            [ { index => 0 }, "{index}", "_recovery" ],
+            [ {}, "_recovery" ]
+        ],
         qs => {
             active_only => "boolean",
             detailed    => "boolean",
@@ -1781,8 +1797,10 @@ sub api {
     'indices.segments' => {
         doc   => "indices-segments",
         parts => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_segments" ], [ {}, "_segments" ] ],
+        paths => [
+            [ { index => 0 }, "{index}", "_segments" ],
+            [ {}, "_segments" ]
+        ],
         qs => {
             allow_no_indices   => "boolean",
             expand_wildcards   => "enum",
