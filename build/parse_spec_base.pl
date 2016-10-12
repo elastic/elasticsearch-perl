@@ -228,7 +228,7 @@ sub update_module {
         source      => \$out,
         destination => $module,
         argv        => '-q --indent-columns=4 --maximum-line-length=80 '
-            . '-pbp -nst -sob -sot -vt=2 -nsob -sbcp=#='
+            . '-pbp -nst -sot -vt=2 -nsob -sbcp=#='
     );
 
 }
