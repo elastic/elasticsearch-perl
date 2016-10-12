@@ -3,8 +3,8 @@ package Search::Elasticsearch::Cxn::NetCurl;
 use Moo;
 with 'Search::Elasticsearch::Role::Cxn', 'Search::Elasticsearch::Role::Is_Sync';
 
-use Search::Elasticsearch 2.03;
-our $VERSION = "2.03";
+use Search::Elasticsearch 5.00;
+our $VERSION = "5.00";
 
 use HTTP::Parser::XS qw(HEADERS_AS_HASHREF parse_http_response);
 use Try::Tiny;

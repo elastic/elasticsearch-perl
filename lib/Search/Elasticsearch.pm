@@ -5,10 +5,10 @@ use Moo 1.003 ();
 use Search::Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
-our $VERSION = '2.03';
+our $VERSION = '5.00';
 
 my %Default_Plugins = (
-    client      => [ 'Search::Elasticsearch::Client',       '2_0::Direct' ],
+    client      => [ 'Search::Elasticsearch::Client',       '5_0::Direct' ],
     cxn_factory => [ 'Search::Elasticsearch::Cxn::Factory', '' ],
     cxn_pool    => [ 'Search::Elasticsearch::CxnPool',      'Static' ],
     logger      => [ 'Search::Elasticsearch::Logger',       'LogAny' ],
@@ -214,7 +214,7 @@ preferably the Java v7 from Sun.
 
 =head1 CREATING A NEW INSTANCE
 
-The L</new()> method returns a new L<client|Search::Elasticsearch::Client::2_0::Direct>
+The L</new()> method returns a new L<client|Search::Elasticsearch::Client::5_0::Direct>
 which can be used to run requests against the Elasticsearch cluster.
 
     use Search::Elasticsearch;
@@ -334,7 +334,7 @@ Other arguments are explained in the respective L<module docs|/MODULES>.
 =head1 RUNNING REQUESTS
 
 When you create a new instance of Search::Elasticsearch, it returns a
-L<client|Search::Elasticsearch::Client::2_0::Direct> object, which can be used for
+L<client|Search::Elasticsearch::Client::5_0::Direct> object, which can be used for
 running requests.
 
     use Search::Elasticsearch;
@@ -355,7 +355,7 @@ running requests.
         }
     );
 
-See L<Search::Elasticsearch::Client::2_0::Direct> for more details about the requests that
+See L<Search::Elasticsearch::Client::5_0::Direct> for more details about the requests that
 can be run.
 
 =head1 MODULES
@@ -387,11 +387,11 @@ methods that can be called to execute requests, such as
 C<search()>, C<index()> or C<delete()>. The client parses the user's
 requests and passes them to the L</transport> class to be executed.
 
-The default version of the client is C<2_0::Direct>, which can
+The default version of the client is C<5_0::Direct>, which can
 be explicitly specified as follows:
 
     $e = Search::Elasticsearch->new(
-        client => '2_0::Direct'
+        client => '5_0::Direct'
     );
 
 See :
@@ -399,14 +399,13 @@ See :
 
 =over
 
-=item * L<Search::Elasticsearch::Client::2_0::Direct> (default, for 2.0 branch)
+=item * L<Search::Elasticsearch::Client::5_0::Direct> (default, for 5.0 branch)
+
+=item * L<Search::Elasticsearch::Client::2_0::Direct> (for 2.0 branch)
 
 =item * L<Search::Elasticsearch::Client::1_0::Direct> (for 1.0 branch)
 
 =item * L<Search::Elasticsearch::Client::0_90::Direct> (for 0.90 branch)
-
-=item * L<Search::Elasticsearch::Client::Compat> (for migration from the old
-L<ElasticSearch> module)
 
 =back
 
@@ -492,93 +491,6 @@ bodies.  See:
 =item * L<Search::Elasticsearch::Serializer::JSON::PP>
 
 =back
-
-=head1 MIGRATING FROM ElasticSearch.pm
-
-See L<Search::Elasticsearch::Compat>, which allows you to run your old
-L<ElasticSearch> code with the new L<Search::Elasticsearch> module.
-
-The L<Search::Elasticsearch> API is pretty similar to the old L<ElasticSearch>
-API, but there are a few differences.  The most notable are:
-
-=head2 C<hosts> vs C<servers>
-
-When instantiating a new Search::Elasticsearch instance, use C<nodes> instead
-of C<servers>:
-
-    $e = Search::Elasticsearch->new(
-        nodes => [ 'search1:9200', 'search2:9200' ]
-    );
-
-=head2 C<no_refresh>
-
-By default, the new client does not sniff the cluster to discover nodes.
-To enable sniffing, use:
-
-    $e = Search::Elasticsearch->new(
-        cxn_pool => 'Sniff',
-        nodes    => [ 'search1:9200', 'search2:9200' ]
-    );
-
-To disable sniffing (the equivalent of setting C<no_refresh> to C<true>), do:
-
-    $e = Search::Elasticsearch->new(
-        nodes    => [ 'search1:9200', 'search2:9200' ]
-    );
-
-=head2 Request parameters
-
-In the old client, you could specify query string and body parameters at
-the same level, eg:
-
-    $e->search(
-        search_type => 'count',
-        query       => {
-            match_all => {}
-        }
-    );
-
-In the new client, body parameters should be passed in a C<body> element:
-
-    $e->search(
-        search_type => 'count',
-        body        => {
-            query       => {
-                match_all => {}
-            }
-        }
-    );
-
-=head2 C<trace_calls>
-
-The new client uses L<Log::Any> for event logging and request tracing.
-To trace requests/responses in C<curl> format, do:
-
-    # To STDERR
-    $e = Search::Elasticsearch->new (trace_to => 'Stderr');
-
-    # To a file
-    $e = Search::Elasticsearch->new (trace_to => ['File','/path/to/file.log']);
-
-=head2 SearchBuilder
-
-The old API integrated L<ElasticSearch::SearchBuilder> for an L<SQL::Abstract>
-style of writing queries and filters in Elasticsearch.
-This integration does not exist in the new client.
-
-=head2 Bulk methods and C<scrolled_search()>
-
-Bulk indexing has changed a lot in the new client.  The helper methods, eg
-C<bulk_index()> and C<reindex()> have been removed from the main client,
-and the C<bulk()> method itself now simply returns the response from
-Elasticsearch. It doesn't interfere with processing at all.
-
-These helper methods have been replaced by the L<Search::Elasticsearch::Bulk>
-class. Similarly, C<scrolled_search()> has been replaced by the
-L<Search::Elasticsearch::Scroll>.  These helper classes are accessible as:
-
-    $bulk   = $e->bulk_helper( %args_to_new );
-    $scroll = $e->scroll_helper( %args_to_new );
 
 =head1 BUGS
 

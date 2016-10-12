@@ -1,13 +1,13 @@
 package Search::Elasticsearch::Async;
 
-use Search::Elasticsearch 2.03;
+use Search::Elasticsearch 5.00;
 use Promises 0.93 ();
 use parent 'Search::Elasticsearch';
 
 use Search::Elasticsearch::Util qw(parse_params);
 use namespace::clean;
 
-our $VERSION = '2.03';
+our $VERSION = '5.00';
 
 #===================================
 sub new {
@@ -454,14 +454,13 @@ See :
 
 =over
 
-=item * L<Search::Elasticsearch::Client::2_0::Direct> (default, for 2.0 branch)
+=item * L<Search::Elasticsearch::Client::5_0::Direct> (default, for 5.0 branch)
+
+=item * L<Search::Elasticsearch::Client::2_0::Direct> (for 2.0 branch)
 
 =item * L<Search::Elasticsearch::Client::1_0::Direct> (for 1.0 branch)
 
 =item * L<Search::Elasticsearch::Client::0_90::Direct> (for 0.90 branch)
-
-=item * L<Search::Elasticsearch::Client::Compat> (for migration from the old
-L<ElasticSearch> module)
 
 =back
 
