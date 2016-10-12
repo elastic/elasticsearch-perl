@@ -1,12 +1,12 @@
-package Search::Elasticsearch::Plugin::XPack::API::1_0;
+package Search::Elasticsearch::Plugin::XPack::1_0::Role::API;
 
 use Moo::Role;
+with 'Search::Elasticsearch::Role::API';
 
 use Search::Elasticsearch::Util qw(throw);
-use Search::Elasticsearch::Util::API::QS qw(qs_init register_qs);
 use namespace::clean;
 
-has 'api_version' => ( is => 'ro', default => '1_0' );
+has 'api_version' => ( is => 'ro', default => '2_0' );
 
 our %API;
 
@@ -27,8 +27,7 @@ sub api {
     'watcher.ack_watch' => {
         doc    => "appendix-api-ack-watch",
         method => "PUT",
-        parts =>
-            { action_id => { multi => 1 }, watch_id => { required => 1 } },
+        parts => { action_id => { multi => 1 }, watch_id => { required => 1 } },
         paths => [
             [   { action_id => 3, watch_id => 2 }, "_watcher",
                 "watch",       "{watch_id}",
@@ -146,10 +145,7 @@ sub api {
 
 );
 
-for ( values %API ) {
-    $_->{qs_handlers} = qs_init( @{ $_->{qs} } );
-}
-
+__PACKAGE__->_qs_init( \%API );
 1;
 
 __END__

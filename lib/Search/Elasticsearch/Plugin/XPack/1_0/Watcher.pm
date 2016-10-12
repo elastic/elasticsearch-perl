@@ -1,7 +1,7 @@
 package Search::Elasticsearch::Plugin::XPack::1_0::Watcher;
 
 use Moo;
-with 'Search::Elasticsearch::Plugin::XPack::API::1_0';
+with 'Search::Elasticsearch::Plugin::XPack::1_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 

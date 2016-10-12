@@ -1,9 +1,9 @@
-package Search::Elasticsearch::Plugin::XPack::API::2_0;
+package Search::Elasticsearch::Plugin::XPack::2_0::Role::API;
 
 use Moo::Role;
+with 'Search::Elasticsearch::Role::API';
 
 use Search::Elasticsearch::Util qw(throw);
-use Search::Elasticsearch::Util::API::QS qw(qs_init register_qs);
 use namespace::clean;
 
 has 'api_version' => ( is => 'ro', default => '2_0' );
@@ -33,17 +33,16 @@ sub api {
                 "{type}", "_graph",
                 "explore",
             ],
-            [ { type => 1 }, "_all", "{type}", "_graph", "explore" ],
             [ { index => 0 }, "{index}", "_graph", "explore" ],
         ],
-        qs => [ "routing", "timeout" ],
+        qs => { filter_path => "list", routing => "string", timeout => "time" },
     },
 
     'license.get' => {
         doc   => "license-management",
         parts => {},
         paths => [ [ {}, "_license" ] ],
-        qs    => ["local"],
+        qs    => { filter_path => "list", local => "boolean" },
     },
 
     'license.post' => {
@@ -52,14 +51,14 @@ sub api {
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_license" ] ],
-        qs     => ["acknowledge"],
+        qs     => { acknowledge => "boolean", filter_path => "list" },
     },
 
     'shield.authenticate' => {
         doc   => "",
         parts => {},
         paths => [ [ {}, "_shield", "authenticate" ] ],
-        qs    => [],
+        qs => { filter_path => "list" },
     },
 
     'shield.clear_cached_realms' => {
@@ -71,17 +70,16 @@ sub api {
                 "_clear_cache"
             ],
         ],
-        qs => ["usernames"],
+        qs => { filter_path => "list", usernames => "string" },
     },
 
     'shield.clear_cached_roles' => {
         doc    => "",
         method => "PUT",
         parts  => { name => { required => 1 } },
-        paths  => [
-            [ { name => 2 }, "_shield", "role", "{name}", "_clear_cache" ]
-        ],
-        qs => [],
+        paths =>
+            [ [ { name => 2 }, "_shield", "role", "{name}", "_clear_cache" ] ],
+        qs => { filter_path => "list" },
     },
 
     'shield.delete_role' => {
@@ -89,7 +87,7 @@ sub api {
         method => "DELETE",
         parts  => { name => { required => 1 } },
         paths  => [ [ { name => 2 }, "_shield", "role", "{name}" ] ],
-        qs     => [],
+        qs => { filter_path => "list" },
     },
 
     'shield.delete_user' => {
@@ -97,7 +95,7 @@ sub api {
         method => "DELETE",
         parts  => { username => { required => 1 } },
         paths  => [ [ { username => 2 }, "_shield", "user", "{username}" ] ],
-        qs     => [],
+        qs => { filter_path => "list" },
     },
 
     'shield.get_role' => {
@@ -107,7 +105,7 @@ sub api {
             [ { name => 2 }, "_shield", "role", "{name}" ],
             [ {}, "_shield", "role" ],
         ],
-        qs => [],
+        qs => { filter_path => "list" },
     },
 
     'shield.get_user' => {
@@ -117,7 +115,7 @@ sub api {
             [ { username => 2 }, "_shield", "user", "{username}" ],
             [ {}, "_shield", "user" ],
         ],
-        qs => [],
+        qs => { filter_path => "list" },
     },
 
     'shield.put_role' => {
@@ -126,7 +124,7 @@ sub api {
         method => "PUT",
         parts => { name => { required => 1 } },
         paths => [ [ { name => 2 }, "_shield", "role", "{name}" ] ],
-        qs => [],
+        qs => { filter_path => "list" },
     },
 
     'shield.put_user' => {
@@ -135,7 +133,7 @@ sub api {
         method => "PUT",
         parts => { username => { required => 1 } },
         paths => [ [ { username => 2 }, "_shield", "user", "{username}" ] ],
-        qs => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.ack_watch' => {
@@ -150,7 +148,7 @@ sub api {
             ],
             [ { watch_id => 2 }, "_watcher", "watch", "{watch_id}", "_ack" ],
         ],
-        qs => ["master_timeout"],
+        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'watcher.activate_watch' => {
@@ -163,7 +161,7 @@ sub api {
                 "_activate",
             ],
         ],
-        qs => ["master_timeout"],
+        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'watcher.deactivate_watch' => {
@@ -176,7 +174,7 @@ sub api {
                 "_deactivate",
             ],
         ],
-        qs => ["master_timeout"],
+        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'watcher.delete_watch' => {
@@ -184,7 +182,11 @@ sub api {
         method => "DELETE",
         parts  => { id => { required => 1 } },
         paths  => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
-        qs => [ "force", "master_timeout" ],
+        qs     => {
+            filter_path    => "list",
+            force          => "boolean",
+            master_timeout => "time"
+        },
     },
 
     'watcher.execute_watch' => {
@@ -196,21 +198,21 @@ sub api {
             [ { id => 2 }, "_watcher", "watch", "{id}", "_execute" ],
             [ {}, "_watcher", "watch", "_execute" ],
         ],
-        qs => ["debug"],
+        qs => { debug => "boolean", filter_path => "list" },
     },
 
     'watcher.get_watch' => {
         doc   => "appendix-api-get-watch",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
-        qs    => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.info' => {
         doc   => "appendix-api-info",
         parts => {},
         paths => [ [ {}, "_watcher" ] ],
-        qs    => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.put_watch' => {
@@ -219,7 +221,11 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
-        qs => [ "active", "master_timeout" ],
+        qs => {
+            active         => "boolean",
+            filter_path    => "list",
+            master_timeout => "time"
+        },
     },
 
     'watcher.restart' => {
@@ -227,7 +233,7 @@ sub api {
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_watcher", "_restart" ] ],
-        qs     => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.start' => {
@@ -235,7 +241,7 @@ sub api {
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_watcher", "_start" ] ],
-        qs     => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.stats' => {
@@ -245,7 +251,7 @@ sub api {
             [ { metric => 2 }, "_watcher", "stats", "{metric}" ],
             [ {}, "_watcher", "stats" ],
         ],
-        qs => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.stop' => {
@@ -253,22 +259,12 @@ sub api {
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_watcher", "_stop" ] ],
-        qs     => [],
+        qs => { filter_path => "list" },
     },
 
 #=== AUTOGEN - END ===
-
 );
-
-register_qs(
-    acknowledge => { type => 'bool' },
-    usernames   => { type => 'list' }
-);
-
-for ( values %API ) {
-    $_->{qs_handlers} = qs_init( @{ $_->{qs} } );
-}
-
+__PACKAGE__->_qs_init( \%API );
 1;
 
 __END__

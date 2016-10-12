@@ -1,7 +1,7 @@
 package Search::Elasticsearch::Plugin::XPack::2_0::Graph;
 
 use Moo;
-with 'Search::Elasticsearch::Plugin::XPack::API::2_0';
+with 'Search::Elasticsearch::Plugin::XPack::2_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
