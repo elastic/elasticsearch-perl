@@ -216,7 +216,7 @@ sub _is_conflict_error {
     if ( ref($error) eq 'HASH' ) {
         return 1 if $error->{type} eq 'document_already_exists_exception';
         return unless $error->{type} eq 'version_conflict_engine_exception';
-        $error->{reason} =~ /version.conflict,.current.\[(\d+)\]/;
+        $error->{reason} =~ /version.conflict,.current.(?:version.)?\[(\d+)\]/;
         return ( 1, $1 );
     }
     return unless $error =~ /

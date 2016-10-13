@@ -9,9 +9,9 @@ use lib 't/lib';
 use Search::Elasticsearch::Async::Bulk;
 use Log::Any::Adapter;
 
-my $es   = do "es_async.pl" or die( $@ || $! );
+my $es = do "es_async.pl" or die( $@ || $! );
 my $TRUE = $es->transport->serializer->decode('{"true":true}')->{true};
-my ( $is_0_90, $is_2 );
+my ( $is_0_90, $is_2, $is_5 );
 
 my $cv = AE::cv;
 
@@ -21,6 +21,7 @@ wait_for(
             my $version = shift()->{version}{number};
             $is_0_90 = $version =~ /^0\.90/;
             $is_2    = $version =~ /^2\./;
+            $is_5    = $version =~ /^5\./;
             $es->indices->delete( index => '_all' );
         }
     )
@@ -32,8 +33,7 @@ my @Std = (
     { id => 1, version => 10, source => {} },
 );
 
-my ( $b, $error, $success_count, $error_count, $custom_count,
-    $conflict_count );
+my ( $b, $error, $success_count, $error_count, $custom_count, $conflict_count );
 
 ## Default error handling
 $b = bulk( { index => 'test', type => 'test' }, @Std );
@@ -106,22 +106,34 @@ $b = bulk(
 
 test_flush( "Success", 1, 2, 0, 0 );
 
+my %on_success_result
+    = $is_5
+    ? (
+    _index   => 'test',
+    _type    => 'test',
+    _id      => 1,
+    _version => 1,
+    status   => 201,
+    ok       => $TRUE,
+    created  => $TRUE,
+    result   => 'created',
+    _shards  => { successful => 1, total => 2, failed => 0 },
+    )
+    : (
+    _index   => 'test',
+    _type    => 'test',
+    _id      => 1,
+    _version => 1,
+    status   => 201,
+    ok       => $TRUE,
+    );
+
 # cbs have correct params
 $b = bulk(
     {   index      => 'test',
         type       => 'test',
-        on_success => test_params(
-            'on_success',
-            {   _index   => 'test',
-                _type    => 'test',
-                _id      => 1,
-                _version => 1,
-                status   => 201,
-                ok       => $TRUE,
-            },
-            0
-        ),
-        on_error => test_params(
+        on_success => test_params( 'on_success', \%on_success_result, 0 ),
+        on_error   => test_params(
             'on_error',
             {   _index => 'test',
                 _type  => 'test',

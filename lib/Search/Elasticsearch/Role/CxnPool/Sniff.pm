@@ -35,7 +35,6 @@ sub parse_sniff {
 #===================================
     my $self = shift;
     my $nodes = shift or return;
-
     my @live_nodes;
     my $max       = 0;
     my $sniff_max = $self->sniff_max_content_length;
@@ -43,7 +42,8 @@ sub parse_sniff {
     for my $node_id ( keys %$nodes ) {
         my $data = $nodes->{$node_id};
 
-        my $host = $self->_extract_host( $data->{"http_address"} )
+        my $addr = $data->{http}{publish_address} || $data->{http_address};
+        my $host = $self->_extract_host($addr)
             or next;
 
         $host = $self->should_accept_node( $host, $node_id, $data )

@@ -62,8 +62,8 @@ SKIP: {
                     mysuggest =>
                         { text => 'green', term => { field => 'color' } }
                 },
-                facets => { color => { terms => { field => 'color' } } },
-                aggs   => { color => { terms => { field => 'color' } } },
+                facets => { switch => { terms => { field => 'switch' } } },
+                aggs   => { switch => { terms => { field => 'switch' } } },
             },
             size       => 10,
             on_results => \&on_results
@@ -86,8 +86,8 @@ SKIP: {
                     mysuggest =>
                         { text => 'green', term => { field => 'color' } }
                 },
-                facets => { color => { terms => { field => 'color' } } },
-                aggs   => { color => { terms => { field => 'color' } } },
+                facets => { switch => { terms => { field => 'switch' } } },
+                aggs   => { switch => { terms => { field => 'switch' } } },
             },
             size       => 10,
             on_results => \&on_results
@@ -100,7 +100,13 @@ SKIP: {
         total_seen => 50,
         max_seen   => 10
     );
+}
 
+SKIP: {
+    skip "Bug in Elasticsearch suggest JSON parsing pre 0.90.3", 1
+        if $es_version lt '0.90.3';
+    skip "Search type scan not supported in 5.x", 1
+        if $es_version ge '5.0.0';
     test_scroll(
         "Scan",
         {   body => {
@@ -109,7 +115,7 @@ SKIP: {
                     mysuggest =>
                         { text => 'green', term => { field => 'color' } }
                 },
-                facets => { color => { terms => { field => 'color' } } },
+                facets => { switch => { terms => { field => 'switch' } } },
             },
             size        => 5,
             on_results  => \&on_results,

@@ -12,6 +12,7 @@ sub _namespace {__PACKAGE__}
 has 'cluster'             => ( is => 'lazy', init_arg => undef );
 has 'nodes'               => ( is => 'lazy', init_arg => undef );
 has 'indices'             => ( is => 'lazy', init_arg => undef );
+has 'ingest'              => ( is => 'lazy', init_arg => undef );
 has 'snapshot'            => ( is => 'lazy', init_arg => undef );
 has 'cat'                 => ( is => 'lazy', init_arg => undef );
 has 'tasks'               => ( is => 'lazy', init_arg => undef );
@@ -63,6 +64,7 @@ sub scroll_helper {
 sub _build_cluster  { shift->_build_namespace('Cluster') }
 sub _build_nodes    { shift->_build_namespace('Nodes') }
 sub _build_indices  { shift->_build_namespace('Indices') }
+sub _build_ingest   { shift->_build_namespace('Ingest') }
 sub _build_snapshot { shift->_build_namespace('Snapshot') }
 sub _build_cat      { shift->_build_namespace('Cat') }
 sub _build_tasks    { shift->_build_namespace('Tasks') }
@@ -123,6 +125,10 @@ Index-level requests:
 
     $e->indices->create( index => 'my_index' );
     $e->indices->delete( index => 'my_index' )
+
+Ingest pipeline requests:
+
+    $e->ingest->get_pipeline( id => 'apache-logs' );
 
 Cluster-level requests:
 
@@ -309,29 +315,36 @@ response, otherwise it throws an error.
 
     $indices_client = $e->indices;
 
-Returns an L<Search::Elasticsearch::Client::5_0::Direct::Indices> object which can be used
+Returns a L<Search::Elasticsearch::Client::5_0::Direct::Indices> object which can be used
 for managing indices, eg creating, deleting indices, managing mapping,
 index settings etc.
+
+=head2 C<ingest()>
+
+    $ingest_client = $e->ingest;
+
+Returns a L<Search::Elasticsearch::Client::5_0::Direct::Ingest> object which can be used
+for managing ingest pipelines.
 
 =head2 C<cluster()>
 
     $cluster_client = $e->cluster;
 
-Returns an L<Search::Elasticsearch::Client::5_0::Direct::Cluster> object which can be used
+Returns a L<Search::Elasticsearch::Client::5_0::Direct::Cluster> object which can be used
 for managing the cluster, eg cluster-wide settings and cluster health.
 
 =head2 C<nodes()>
 
     $node_client = $e->nodes;
 
-Returns an L<Search::Elasticsearch::Client::5_0::Direct::Nodes> object which can be used
+Returns a L<Search::Elasticsearch::Client::5_0::Direct::Nodes> object which can be used
 to retrieve node info and stats.
 
 =head2 C<snapshot()>
 
     $snapshot_client = $e->snapshot;
 
-Returns an L<Search::Elasticsearch::Client::5_0::Direct::Snapshot> object which
+Returns a L<Search::Elasticsearch::Client::5_0::Direct::Snapshot> object which
 is used for managing backup repositories and creating and restoring
 snapshots.
 
@@ -339,14 +352,14 @@ snapshots.
 
     $tasks_client = $e->tasks;
 
-Returns an L<Search::Elasticsearch::Client::5_0::Direct::Tasks> object which
+Returns a L<Search::Elasticsearch::Client::5_0::Direct::Tasks> object which
 is used for accessing the task management API.
 
 =head2 C<cat()>
 
     $cat_client = $e->cat;
 
-Returns an L<Search::Elasticsearch::Client::5_0::Direct::Cat> object which can be used
+Returns a L<Search::Elasticsearch::Client::5_0::Direct::Cat> object which can be used
 to retrieve simple to read text info for debugging and monitoring an
 Elasticsearch cluster.
 
@@ -369,16 +382,17 @@ The C<index()> method is used to index a new document or to reindex
 an existing document.
 
 Query string parameters:
-    C<consistency>,
     C<op_type>,
     C<parent>,
+    C<pipeline>,
     C<refresh>,
     C<routing>,
     C<timeout>,
     C<timestamp>,
     C<ttl>,
     C<version>,
-    C<version_type>
+    C<version_type>,
+    C<wait_for_active_shards>
 
 See the L<index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html>
 for more information.
@@ -427,12 +441,12 @@ Query string parameters:
     C<_source>,
     C<_source_exclude>,
     C<_source_include>,
-    C<fields>,
     C<parent>,
     C<preference>,
     C<realtime>,
     C<refresh>,
     C<routing>,
+    C<stored_fields>,
     C<version>,
     C<version_type>
 
@@ -500,13 +514,13 @@ The C<delete()> method will delete the document with the specified
 C<index>, C<type> and C<id>, or will throw a C<Missing> error.
 
 Query string parameters:
-    C<consistency>,
     C<parent>,
     C<refresh>,
     C<routing>,
     C<timeout>,
     C<version>,
-    C<version_type>
+    C<version_type>,
+    C<wait_for_active_shards>
 
 See the L<delete docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete.html>
 for more information.
@@ -585,22 +599,21 @@ for more information.
 =back
 
 Query string parameters:
-    C<consistency>,
+    C<_source>,
+    C<_source_exclude>,
+    C<_source_include>,
     C<fields>,
     C<lang>,
     C<parent>,
-    C<realtime>,
     C<refresh>,
     C<retry_on_conflict>,
     C<routing>,
-    C<script>,
-    C<script_id>,
-    C<scripted_upsert>,
     C<timeout>,
     C<timestamp>,
     C<ttl>,
     C<version>,
-    C<version_type>
+    C<version_type>,
+    C<wait_for_active_shards>
 
 See the L<update docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update.html>
 for more information.
@@ -620,7 +633,6 @@ offsets and payloads for the specified document, assuming that termvectors
 have been enabled.
 
 Query string parameters:
-    C<dfs>,
     C<field_statistics>,
     C<fields>,
     C<offsets>,
@@ -715,11 +727,15 @@ Each action is performed separately. One failed action will not
 cause the others to fail as well.
 
 Query string parameters:
-    C<consistency>,
+    C<_source>,
+    C<_source_exclude>,
+    C<_source_include>,
     C<fields>,
+    C<pipeline>,
     C<refresh>,
     C<routing>,
-    C<timeout>
+    C<timeout>,
+    C<wait_for_active_shards>
 
 See the L<bulk docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html>
 for more information.
@@ -772,10 +788,10 @@ Query string parameters:
     C<_source>,
     C<_source_exclude>,
     C<_source_include>,
-    C<fields>,
     C<preference>,
     C<realtime>,
-    C<refresh>
+    C<refresh>,
+    C<stored_fields>
 
 See the L<mget docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-multi-get.html>
 for more information.
@@ -870,10 +886,10 @@ Query string parameters:
     C<analyzer>,
     C<default_operator>,
     C<df>,
+    C<docvalue_fields>,
     C<expand_wildcards>,
     C<explain>,
     C<fielddata_fields>,
-    C<fields>,
     C<from>,
     C<ignore_unavailable>,
     C<lenient>,
@@ -887,6 +903,7 @@ Query string parameters:
     C<size>,
     C<sort>,
     C<stats>,
+    C<stored_fields>,
     C<suggest_field>,
     C<suggest_mode>,
     C<suggest_size>,
@@ -900,37 +917,6 @@ See the L<search reference|http://www.elastic.co/guide/en/elasticsearch/referenc
 for more information.
 
 Also see L<Search::Elasticsearch::Transport/send_get_body_as>.
-
-=head2 C<search_exists()>
-
-The C<search_exists()> method is a quick version of search which can be
-used to find out whether there are matching search results or not.
-It doesn't return any results itself.
-
-    $results = $e->search_exists(
-        index   => 'index' | \@indices,     # optional
-        type    => 'type'  | \@types,       # optional
-
-        body    => { search params }        # optional
-    );
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<analyze_wildcard>,
-    C<analyzer>,
-    C<default_operator>,
-    C<df>,
-    C<expand_wildcards>,
-    C<ignore_unavailable>,
-    C<lenient>,
-    C<lowercase_expanded_terms>
-    C<min_score>,
-    C<preference>,
-    C<q>,
-    C<routing>
-
-See the L<search exists reference|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-exists.html>
-for more information.
 
 =head2 C<count()>
 
@@ -1122,9 +1108,45 @@ request).  For instance:
     );
 
 Query string parameters:
+    C<max_concurrent_searches>,
     C<search_type>
 
 See the L<msearch docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html>
+for more information.
+
+=head2 C<msearch_template()>
+
+    $results = $e->msearch_template(
+        index   => 'default_index' | \@indices,     # optional
+        type    => 'default_type'  | \@types,       # optional
+
+        body    => [ search_templates ]             # required
+    );
+
+The C<msearch_template()> method allows you to perform multiple searches in a single
+request using search templates.  Similar to the L</bulk()> request, each search
+request in the C<body> consists of two hashes: the metadata hash then the search request
+hash (the same data that you'd specify in the C<body> of a L</search()>
+request).  For instance:
+
+    $results = $e->msearch(
+        index   => 'default_index',
+        type    => ['default_type_1', 'default_type_2'],
+        body => [
+            # uses defaults
+            {},
+            { inline => { query => { match => { user => "{{user}}" }}} params => { user => 'joe' }},
+
+            # uses a custom index
+            { index => 'not_the_default_index' },
+            { inline => { query => { match => { user => "{{user}}" }}} params => { user => 'joe' }},
+        ]
+    );
+
+Query string parameters:
+    C<search_type>
+
+See the L<msearch-template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/multi-search-template.html>
 for more information.
 
 =head2 C<explain()>
@@ -1160,13 +1182,13 @@ Query string parameters:
     C<analyzer>,
     C<default_operator>,
     C<df>,
-    C<fields>,
     C<lenient>,
     C<lowercase_expanded_terms>,
     C<parent>,
     C<preference>,
     C<q>,
-    C<routing>
+    C<routing>,
+    C<stored_fields>
 
 See the L<explain docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html>
 for more information.
@@ -1221,26 +1243,33 @@ for more information.
     $response = $e->delete_by_query(
         index   => 'index' | \@indices,     # optional
         type    => 'type'  | \@types,       # optional,
-        body    => { delete-by-query }      # optional
+        body    => { delete-by-query }      # required
     );
 
-The C<delete_by_query()> method (available with the
-L<delete-by-query plugin|https://www.elastic.co/guide/en/elasticsearch/plugins/current/plugins-delete-by-query.html>)
-deletes all documents which match the specified query.
+The C<delete_by_query()> method deletes all documents which match the specified query.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<analyze_wildcard>,
     C<analyzer>,
+    C<conflicts>,
     C<default_operator>,
     C<df>,
     C<expand_wildcards>,
-    C<filter_path>,
     C<ignore_unavailable>,
+    C<lenient>,
+    C<lowercase_expanded_terms>,
     C<q>,
+    C<refresh>,
+    C<request_cache>,
+    C<requests_per_second>,
     C<routing>,
-    C<timeout>
+    C<scroll_size>,
+    C<timeout>,
+    C<wait_for_active_shards>,
+    C<wait_for_completion>
 
-See the L<delete-by-query docs|https://www.elastic.co/guide/en/elasticsearch/plugins/current/plugins-delete-by-query.html>
+See the L<delete-by-query docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete-by-query.html>
 for more information.
 
 =head2 C<reindex()>
@@ -1253,10 +1282,10 @@ The C<reindex()> API is used to index documents from one index or multiple indic
 to a new index.
 
 Query string parameters:
-    C<consistency>,
     C<refresh>,
     C<requests_per_second>,
     C<timeout>,
+    C<wait_for_active_shards>,
     C<wait_for_completion>
 
 See the L<reindex docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html>
@@ -1281,17 +1310,17 @@ Query string parameters:
     C<analyze_wildcard>,
     C<analyzer>,
     C<conflicts>,
-    C<consistency>,
     C<default_operator>,
     C<df>,
+    C<docvalue_fields>,
     C<expand_wildcards>,
     C<explain>,
     C<fielddata_fields>,
-    C<fields>,
     C<from>,
     C<ignore_unavailable>,
     C<lenient>,
     C<lowercase_expanded_terms>,
+    C<pipeline>,
     C<preference>,
     C<q>,
     C<refresh>,
@@ -1304,6 +1333,7 @@ Query string parameters:
     C<search_type>,
     C<size>,
     C<sort>,
+    C<stored_fields>,
     C<stats>,
     C<suggest_field>,
     C<suggest_mode>,
@@ -1314,6 +1344,7 @@ Query string parameters:
     C<track_scores>,
     C<version>,
     C<version_type>,
+    C<wait_for_active_shards>,
     C<wait_for_completion>
 
 See the L<update_by_query docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update-by-query.html>
@@ -1497,8 +1528,8 @@ Query string parameters:
 
 =head1 INDEXED SCRIPT METHODS
 
-If dynamic scripting is enabled, Elasticsearch allows you to store scripts in an internal index known as
-C<.scripts> and reference them by id. The methods to manage indexed scripts are as follows:
+If dynamic scripting is enabled, Elasticsearch allows you to store scripts in the cluster state
+and reference them by id. The methods to manage indexed scripts are as follows:
 
 =head2 C<put_script()>
 
@@ -1508,7 +1539,7 @@ C<.scripts> and reference them by id. The methods to manage indexed scripts are 
         body => { script }  # required
     );
 
-The C<put_script()> method is used to store a script in the C<.scripts> index. For instance:
+The C<put_script()> method is used to store a script in the cluster state. For instance:
 
     $result  = $e->put_scripts(
         lang => 'groovy',
@@ -1518,10 +1549,7 @@ The C<put_script()> method is used to store a script in the C<.scripts> index. F
         }
     );
 
-Query string parameters:
-    C<op_type>,
-    C<version>,
-    C<version_type>
+Query string parameters: None
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
@@ -1532,11 +1560,9 @@ See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/refe
         id   => 'id',       # required
     );
 
-Retrieve the indexed script from the C<.scripts> index.
+Retrieve the indexed script from the cluster state.
 
-Query string parameters:
-    C<version>,
-    C<version_type>
+Query string parameters: None
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
@@ -1547,18 +1573,16 @@ See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/refe
         id   => 'id',       # required
     );
 
-Delete the indexed script from the C<.scripts> index.
+Delete the indexed script from the cluster state.
 
-Query string parameters:
-    C<version>,
-    C<version_type>
+Query string parameters: None
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
 =head1 INDEXED SEARCH TEMPLATE METHODS
 
 Mustache templates can be used to create search requests.  These templates can
-be stored in the C<.scripts> index and retrieved by ID. The methods to
+be stored in the cluster state and retrieved by ID. The methods to
 manage indexed scripts are as follows:
 
 =head2 C<put_template()>
@@ -1568,7 +1592,7 @@ manage indexed scripts are as follows:
         body => { template } || "template"  # required
     );
 
-The C<put_template()> method is used to store a template in the C<.scripts> index.
+The C<put_template()> method is used to store a template in the cluster state.
 For instance:
 
     $result  = $e->put_template(
@@ -1594,11 +1618,9 @@ See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsea
         id   => 'id',       # required
     );
 
-Retrieve the indexed template from the C<.scripts> index.
+Retrieve the indexed template from the cluster state.
 
-Query string parameters:
-    C<version>,
-    C<version_type>
+Query string parameters: None
 
 See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
 
@@ -1608,7 +1630,7 @@ See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsea
         id   => 'id',       # required
     );
 
-Delete the indexed template from the C<.scripts> index.
+Delete the indexed template from the cluster state.
 
 Query string parameters: None
 

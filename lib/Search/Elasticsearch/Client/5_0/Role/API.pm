@@ -6,7 +6,7 @@ with 'Search::Elasticsearch::Role::API';
 use Search::Elasticsearch::Util qw(throw);
 use namespace::clean;
 
-has 'api_version' => ( is => 'ro', default => '2_0' );
+has 'api_version' => ( is => 'ro', default => '5_0' );
 
 our %API;
 
@@ -54,12 +54,16 @@ sub api {
             [ {}, "_bulk" ],
         ],
         qs => {
-            consistency => "enum",
-            fields      => "list",
-            filter_path => "list",
-            refresh     => "boolean",
-            routing     => "string",
-            timeout     => "time",
+            _source                => "list",
+            _source_exclude        => "list",
+            _source_include        => "list",
+            fields                 => "list",
+            filter_path            => "list",
+            pipeline               => "string",
+            refresh                => "enum",
+            routing                => "string",
+            timeout                => "time",
+            wait_for_active_shards => "string",
         },
         serialize => "bulk",
     },
@@ -150,40 +154,73 @@ sub api {
             ],
         ],
         qs => {
-            consistency  => "enum",
-            filter_path  => "list",
-            parent       => "string",
-            refresh      => "boolean",
-            routing      => "string",
-            timeout      => "time",
-            version      => "number",
-            version_type => "enum",
+            filter_path            => "list",
+            parent                 => "string",
+            refresh                => "enum",
+            routing                => "string",
+            timeout                => "time",
+            version                => "number",
+            version_type           => "enum",
+            wait_for_active_shards => "string",
         },
     },
 
     'delete_by_query' => {
-        body   => {},
-        doc    => "plugins-delete-by-query",
-        method => "DELETE",
+        body   => { required => 1 },
+        doc    => "docs-delete-by-query",
+        method => "POST",
         parts  => {
             index => { multi => 1, required => 1 },
             type  => { multi => 1 }
         },
         paths => [
-            [ { index => 0, type => 1 }, "{index}", "{type}", "_query" ],
-            [ { index => 0 }, "{index}", "_query" ],
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_delete_by_query",
+            ],
+            [ { index => 0 }, "{index}", "_delete_by_query" ],
         ],
         qs => {
-            allow_no_indices   => "boolean",
-            analyzer           => "string",
-            default_operator   => "enum",
-            df                 => "string",
-            expand_wildcards   => "enum",
-            filter_path        => "list",
-            ignore_unavailable => "boolean",
-            q                  => "string",
-            routing            => "string",
-            timeout            => "time",
+            _source                  => "list",
+            _source_exclude          => "list",
+            _source_include          => "list",
+            allow_no_indices         => "boolean",
+            analyze_wildcard         => "boolean",
+            analyzer                 => "string",
+            conflicts                => "enum",
+            default_operator         => "enum",
+            df                       => "string",
+            docvalue_fields          => "list",
+            expand_wildcards         => "enum",
+            explain                  => "boolean",
+            filter_path              => "list",
+            from                     => "number",
+            ignore_unavailable       => "boolean",
+            lenient                  => "boolean",
+            lowercase_expanded_terms => "boolean",
+            preference               => "string",
+            q                        => "string",
+            refresh                  => "boolean",
+            request_cache            => "boolean",
+            requests_per_second      => "number",
+            routing                  => "list",
+            scroll                   => "time",
+            scroll_size              => "number",
+            search_timeout           => "time",
+            search_type              => "enum",
+            size                     => "number",
+            sort                     => "list",
+            stats                    => "list",
+            stored_fields            => "list",
+            suggest_field            => "string",
+            suggest_mode             => "enum",
+            suggest_size             => "number",
+            suggest_text             => "string",
+            terminate_after          => "number",
+            timeout                  => "time",
+            track_scores             => "boolean",
+            version                  => "boolean",
+            wait_for_active_shards   => "string",
+            wait_for_completion      => "boolean",
         },
     },
 
@@ -192,11 +229,7 @@ sub api {
         method => "DELETE",
         parts  => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs    => {
-            filter_path  => "list",
-            version      => "number",
-            version_type => "enum"
-        },
+        qs => { filter_path => "list" },
     },
 
     'delete_template' => {
@@ -204,11 +237,7 @@ sub api {
         method => "DELETE",
         parts  => { id => { required => 1 } },
         paths  => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs     => {
-            filter_path  => "list",
-            version      => "number",
-            version_type => "enum"
-        },
+        qs => { filter_path => "list" },
     },
 
     'exists' => {
@@ -255,7 +284,6 @@ sub api {
             analyzer                 => "string",
             default_operator         => "enum",
             df                       => "string",
-            fields                   => "list",
             filter_path              => "list",
             lenient                  => "boolean",
             lowercase_expanded_terms => "boolean",
@@ -263,6 +291,7 @@ sub api {
             preference               => "string",
             q                        => "string",
             routing                  => "string",
+            stored_fields            => "list",
         },
     },
 
@@ -300,13 +329,13 @@ sub api {
             _source         => "list",
             _source_exclude => "list",
             _source_include => "list",
-            fields          => "list",
             filter_path     => "list",
             parent          => "string",
             preference      => "string",
             realtime        => "boolean",
             refresh         => "boolean",
             routing         => "string",
+            stored_fields   => "list",
             version         => "number",
             version_type    => "enum",
         },
@@ -316,11 +345,7 @@ sub api {
         doc   => "modules-scripting",
         parts => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs    => {
-            filter_path  => "list",
-            version      => "number",
-            version_type => "enum"
-        },
+        qs => { filter_path => "list" },
     },
 
     'get_source' => {
@@ -354,11 +379,7 @@ sub api {
         doc   => "search-template",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs    => {
-            filter_path  => "list",
-            version      => "number",
-            version_type => "enum"
-        },
+        qs => { filter_path => "list" },
     },
 
     'index' => {
@@ -377,17 +398,18 @@ sub api {
             [ { index => 0, type => 1 }, "{index}", "{type}" ],
         ],
         qs => {
-            consistency  => "enum",
-            filter_path  => "list",
-            op_type      => "enum",
-            parent       => "string",
-            refresh      => "boolean",
-            routing      => "string",
-            timeout      => "time",
-            timestamp    => "time",
-            ttl          => "time",
-            version      => "number",
-            version_type => "enum",
+            filter_path            => "list",
+            op_type                => "enum",
+            parent                 => "string",
+            pipeline               => "string",
+            refresh                => "enum",
+            routing                => "string",
+            timeout                => "time",
+            timestamp              => "time",
+            ttl                    => "time",
+            version                => "number",
+            version_type           => "enum",
+            wait_for_active_shards => "string",
         },
     },
 
@@ -411,11 +433,11 @@ sub api {
             _source         => "list",
             _source_exclude => "list",
             _source_include => "list",
-            fields          => "list",
             filter_path     => "list",
             preference      => "string",
             realtime        => "boolean",
             refresh         => "boolean",
+            stored_fields   => "list",
         },
     },
 
@@ -445,6 +467,26 @@ sub api {
             [ { index => 0, type => 1 }, "{index}", "{type}", "_msearch" ],
             [ { index => 0 }, "{index}", "_msearch" ],
             [ {}, "_msearch" ],
+        ],
+        qs => {
+            filter_path             => "list",
+            max_concurrent_searches => "number",
+            search_type             => "enum",
+        },
+        serialize => "bulk",
+    },
+
+    'msearch_template' => {
+        body => { required => 1 },
+        doc  => "search-template",
+        parts => { index => { multi => 1 }, type => { multi => 1 } },
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_msearch",
+                "template",
+            ],
+            [ { index => 0 }, "{index}", "_msearch", "template" ],
+            [ {}, "_msearch", "template" ],
         ],
         qs        => { filter_path => "list", search_type => "enum" },
         serialize => "bulk",
@@ -525,12 +567,7 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 }, lang => { required => 1 } },
         paths => [ [ { id => 2, lang => 1 }, "_scripts", "{lang}", "{id}" ] ],
-        qs => {
-            filter_path  => "list",
-            op_type      => "enum",
-            version      => "number",
-            version_type => "enum",
-        },
+        qs => { filter_path => "list" },
     },
 
     'put_template' => {
@@ -539,27 +576,22 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_search", "template", "{id}" ] ],
-        qs => {
-            filter_path  => "list",
-            op_type      => "enum",
-            version      => "number",
-            version_type => "enum",
-        },
+        qs => { filter_path => "list" },
     },
 
     'reindex' => {
         body   => { required => 1 },
-        doc    => "plugins-reindex",
+        doc    => "docs-reindex",
         method => "POST",
         parts  => {},
         paths => [ [ {}, "_reindex" ] ],
         qs => {
-            consistency         => "enum",
-            filter_path         => "list",
-            refresh             => "boolean",
-            requests_per_second => "number",
-            timeout             => "time",
-            wait_for_completion => "boolean",
+            filter_path            => "list",
+            refresh                => "boolean",
+            requests_per_second    => "number",
+            timeout                => "time",
+            wait_for_active_shards => "string",
+            wait_for_completion    => "boolean",
         },
     },
 
@@ -612,10 +644,10 @@ sub api {
             analyzer                 => "string",
             default_operator         => "enum",
             df                       => "string",
+            docvalue_fields          => "list",
             expand_wildcards         => "enum",
             explain                  => "boolean",
             fielddata_fields         => "list",
-            fields                   => "list",
             filter_path              => "list",
             from                     => "number",
             ignore_unavailable       => "boolean",
@@ -630,6 +662,7 @@ sub api {
             size                     => "number",
             sort                     => "list",
             stats                    => "list",
+            stored_fields            => "list",
             suggest_field            => "string",
             suggest_mode             => "enum",
             suggest_size             => "number",
@@ -638,37 +671,6 @@ sub api {
             timeout                  => "time",
             track_scores             => "boolean",
             version                  => "boolean",
-        },
-    },
-
-    'search_exists' => {
-        body   => {},
-        doc    => "search-exists",
-        method => "POST",
-        parts  => { index => { multi => 1 }, type => { multi => 1 } },
-        paths  => [
-            [   { index => 0, type => 1 }, "{index}",
-                "{type}", "_search",
-                "exists",
-            ],
-            [ { index => 0 }, "{index}", "_search", "exists" ],
-            [ {}, "_search", "exists" ],
-        ],
-        qs => {
-            allow_no_indices         => "boolean",
-            analyze_wildcard         => "boolean",
-            analyzer                 => "string",
-            default_operator         => "enum",
-            df                       => "string",
-            expand_wildcards         => "enum",
-            filter_path              => "list",
-            ignore_unavailable       => "boolean",
-            lenient                  => "boolean",
-            lowercase_expanded_terms => "boolean",
-            min_score                => "number",
-            preference               => "string",
-            q                        => "string",
-            routing                  => "string",
         },
     },
 
@@ -752,7 +754,6 @@ sub api {
             ],
         ],
         qs => {
-            dfs              => "boolean",
             field_statistics => "boolean",
             fields           => "list",
             filter_path      => "list",
@@ -784,28 +785,28 @@ sub api {
             ],
         ],
         qs => {
-            consistency       => "enum",
-            fields            => "list",
-            filter_path       => "list",
-            lang              => "string",
-            parent            => "string",
-            refresh           => "boolean",
-            retry_on_conflict => "number",
-            routing           => "string",
-            script            => "string",
-            script_id         => "string",
-            scripted_upsert   => "boolean",
-            timeout           => "time",
-            timestamp         => "time",
-            ttl               => "time",
-            version           => "number",
-            version_type      => "enum",
+            _source                => "list",
+            _source_exclude        => "list",
+            _source_include        => "list",
+            fields                 => "list",
+            filter_path            => "list",
+            lang                   => "string",
+            parent                 => "string",
+            refresh                => "enum",
+            retry_on_conflict      => "number",
+            routing                => "string",
+            timeout                => "time",
+            timestamp              => "time",
+            ttl                    => "time",
+            version                => "number",
+            version_type           => "enum",
+            wait_for_active_shards => "string",
         },
     },
 
     'update_by_query' => {
         body   => {},
-        doc    => "plugins-reindex",
+        doc    => "docs-update-by-query",
         method => "POST",
         parts  => {
             index => { multi => 1, required => 1 },
@@ -825,18 +826,18 @@ sub api {
             analyze_wildcard         => "boolean",
             analyzer                 => "string",
             conflicts                => "enum",
-            consistency              => "enum",
             default_operator         => "enum",
             df                       => "string",
+            docvalue_fields          => "list",
             expand_wildcards         => "enum",
             explain                  => "boolean",
             fielddata_fields         => "list",
-            fields                   => "list",
             filter_path              => "list",
             from                     => "number",
             ignore_unavailable       => "boolean",
             lenient                  => "boolean",
             lowercase_expanded_terms => "boolean",
+            pipeline                 => "string",
             preference               => "string",
             q                        => "string",
             refresh                  => "boolean",
@@ -850,6 +851,7 @@ sub api {
             size                     => "number",
             sort                     => "list",
             stats                    => "list",
+            stored_fields            => "list",
             suggest_field            => "string",
             suggest_mode             => "enum",
             suggest_size             => "number",
@@ -859,6 +861,7 @@ sub api {
             track_scores             => "boolean",
             version                  => "boolean",
             version_type             => "boolean",
+            wait_for_active_shards   => "string",
             wait_for_completion      => "boolean",
         },
     },
@@ -871,6 +874,7 @@ sub api {
             [ {}, "_cat", "aliases" ],
         ],
         qs => {
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -888,6 +892,7 @@ sub api {
         ],
         qs => {
             bytes          => "enum",
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -904,6 +909,7 @@ sub api {
             [ {}, "_cat", "count" ],
         ],
         qs => {
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -921,6 +927,7 @@ sub api {
         ],
         qs => {
             bytes          => "enum",
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -934,6 +941,7 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "health" ] ],
         qs    => {
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -959,7 +967,9 @@ sub api {
         ],
         qs => {
             bytes          => "enum",
+            format         => "string",
             h              => "list",
+            health         => "enum",
             help           => "boolean",
             local          => "boolean",
             master_timeout => "time",
@@ -973,6 +983,7 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "master" ] ],
         qs    => {
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -986,6 +997,7 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "nodeattrs" ] ],
         qs    => {
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -999,6 +1011,7 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "nodes" ] ],
         qs    => {
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -1012,6 +1025,7 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "pending_tasks" ] ],
         qs    => {
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -1025,6 +1039,7 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "plugins" ] ],
         qs    => {
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -1042,6 +1057,7 @@ sub api {
         ],
         qs => {
             bytes          => "enum",
+            format         => "string",
             h              => "list",
             help           => "boolean",
             master_timeout => "time",
@@ -1054,6 +1070,7 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "repositories" ] ],
         qs    => {
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -1069,7 +1086,12 @@ sub api {
             [ { index => 2 }, "_cat", "segments", "{index}" ],
             [ {}, "_cat", "segments" ],
         ],
-        qs => { h => "list", help => "boolean", v => "boolean" },
+        qs => {
+            format => "string",
+            h      => "list",
+            help   => "boolean",
+            v      => "boolean"
+        },
     },
 
     'cat.shards' => {
@@ -1080,6 +1102,7 @@ sub api {
             [ {}, "_cat", "shards" ],
         ],
         qs => {
+            format         => "string",
             h              => "list",
             help           => "boolean",
             local          => "boolean",
@@ -1091,9 +1114,12 @@ sub api {
     'cat.snapshots' => {
         doc   => "cat-snapshots",
         parts => { repository => { multi => 1, required => 1 } },
-        paths =>
-            [ [ { repository => 2 }, "_cat", "snapshots", "{repository}" ] ],
+        paths => [
+            [ { repository => 2 }, "_cat", "snapshots", "{repository}" ],
+            [ {}, "_cat", "snapshots" ],
+        ],
         qs => {
+            format             => "string",
             h                  => "list",
             help               => "boolean",
             ignore_unavailable => "boolean",
@@ -1102,17 +1128,53 @@ sub api {
         },
     },
 
+    'cat.tasks' => {
+        doc   => "tasks",
+        parts => {},
+        paths => [ [ {}, "_cat", "tasks" ] ],
+        qs    => {
+            actions     => "list",
+            detailed    => "boolean",
+            format      => "string",
+            h           => "list",
+            help        => "boolean",
+            node_id     => "list",
+            parent_node => "string",
+            parent_task => "number",
+            v           => "boolean",
+        },
+    },
+
     'cat.thread_pool' => {
         doc   => "cat-thread-pool",
         parts => {},
-        paths => [ [ {}, "_cat", "thread_pool" ] ],
+        paths => [
+            [   { thread_pools => 2 }, "_cat", "thread_pool",
+                "{thread_pools}"
+            ],
+            [ {}, "_cat", "thread_pool" ],
+        ],
+        qs => {
+            format               => "string",
+            h                    => "list",
+            help                 => "boolean",
+            local                => "boolean",
+            master_timeout       => "time",
+            size                 => "enum",
+            thread_pool_patterns => "list",
+            v                    => "boolean",
+        },
+    },
+
+    'cluster.allocation_explain' => {
+        body  => {},
+        doc   => "cluster-allocation-explain",
+        parts => {},
+        paths => [ [ {}, "_cluster", "allocation", "explain" ] ],
         qs    => {
-            full_id        => "boolean",
-            h              => "list",
-            help           => "boolean",
-            local          => "boolean",
-            master_timeout => "time",
-            v              => "boolean",
+            filter_path           => "list",
+            include_disk_info     => "boolean",
+            include_yes_decisions => "boolean",
         },
     },
 
@@ -1121,10 +1183,11 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cluster", "settings" ] ],
         qs    => {
-            filter_path    => "list",
-            flat_settings  => "boolean",
-            master_timeout => "time",
-            timeout        => "time",
+            filter_path      => "list",
+            flat_settings    => "boolean",
+            include_defaults => "boolean",
+            master_timeout   => "time",
+            timeout          => "time",
         },
     },
 
@@ -1136,15 +1199,16 @@ sub api {
             [ {}, "_cluster", "health" ],
         ],
         qs => {
-            filter_path                => "list",
-            level                      => "enum",
-            local                      => "boolean",
-            master_timeout             => "time",
-            timeout                    => "time",
-            wait_for_active_shards     => "number",
-            wait_for_nodes             => "string",
-            wait_for_relocating_shards => "number",
-            wait_for_status            => "enum",
+            filter_path                   => "list",
+            level                         => "enum",
+            local                         => "boolean",
+            master_timeout                => "time",
+            timeout                       => "time",
+            wait_for_active_shards        => "string",
+            wait_for_events               => "enum",
+            wait_for_no_relocating_shards => "boolean",
+            wait_for_nodes                => "string",
+            wait_for_status               => "enum",
         },
     },
 
@@ -1185,6 +1249,7 @@ sub api {
             filter_path    => "list",
             master_timeout => "time",
             metric         => "list",
+            retry_failed   => "boolean",
             timeout        => "time",
         },
     },
@@ -1236,12 +1301,10 @@ sub api {
             analyzer     => "string",
             attributes   => "list",
             char_filter  => "list",
-            char_filters => "list",
             explain      => "boolean",
             field        => "string",
             filter       => "list",
             filter_path  => "list",
-            filters      => "list",
             format       => "enum",
             prefer_local => "boolean",
             text         => "list",
@@ -1292,10 +1355,11 @@ sub api {
         parts  => { index => { required => 1 } },
         paths  => [ [ { index => 0 }, "{index}" ] ],
         qs     => {
-            filter_path      => "list",
-            master_timeout   => "time",
-            timeout          => "time",
-            update_all_types => "boolean",
+            filter_path            => "list",
+            master_timeout         => "time",
+            timeout                => "time",
+            update_all_types       => "boolean",
+            wait_for_active_shards => "string",
         },
     },
 
@@ -1337,18 +1401,6 @@ sub api {
             master_timeout => "time",
             timeout        => "time"
         },
-    },
-
-    'indices.delete_warmer' => {
-        doc    => "indices-warmers",
-        method => "DELETE",
-        parts  => {
-            index => { multi => 1, required => 1 },
-            name  => { multi => 1, required => 1 },
-        },
-        paths =>
-            [ [ { index => 0, name => 2 }, "{index}", "_warmer", "{name}" ] ],
-        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'indices.exists' => {
@@ -1396,7 +1448,9 @@ sub api {
             index => { multi => 1, required => 1 },
             type  => { multi => 1, required => 1 },
         },
-        paths => [ [ { index => 0, type => 1 }, "{index}", "{type}" ] ],
+        paths => [
+            [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ]
+        ],
         qs => {
             allow_no_indices   => "boolean",
             expand_wildcards   => "enum",
@@ -1474,6 +1528,7 @@ sub api {
             flat_settings      => "boolean",
             human              => "boolean",
             ignore_unavailable => "boolean",
+            include_defaults   => "boolean",
             local              => "boolean",
         },
     },
@@ -1494,19 +1549,6 @@ sub api {
             ignore_unavailable => "boolean",
             local              => "boolean",
         },
-    },
-
-    'indices.get_aliases' => {
-        doc   => "indices-aliases",
-        parts => { index => { multi => 1 }, name => { multi => 1 } },
-        paths => [
-            [ { index => 0, name => 2 }, "{index}", "_aliases", "{name}" ],
-            [ { index => 0 }, "{index}",  "_aliases" ],
-            [ { name  => 1 }, "_aliases", "{name}" ],
-            [ {}, "_aliases" ],
-        ],
-        qs =>
-            { filter_path => "list", local => "boolean", timeout => "time" },
     },
 
     'indices.get_field_mapping' => {
@@ -1575,6 +1617,7 @@ sub api {
             flat_settings      => "boolean",
             human              => "boolean",
             ignore_unavailable => "boolean",
+            include_defaults   => "boolean",
             local              => "boolean",
         },
     },
@@ -1606,31 +1649,6 @@ sub api {
         },
     },
 
-    'indices.get_warmer' => {
-        doc   => "indices-warmers",
-        parts => {
-            index => { multi => 1 },
-            name  => { multi => 1 },
-            type  => { multi => 1 }
-        },
-        paths => [
-            [   { index => 0, name => 3, type => 1 },
-                "{index}", "{type}", "_warmer", "{name}",
-            ],
-            [ { index => 0, name => 2 }, "{index}", "_warmer", "{name}" ],
-            [ { index => 0 }, "{index}", "_warmer" ],
-            [ { name  => 1 }, "_warmer", "{name}" ],
-            [ {}, "_warmer" ],
-        ],
-        qs => {
-            allow_no_indices   => "boolean",
-            expand_wildcards   => "enum",
-            filter_path        => "list",
-            ignore_unavailable => "boolean",
-            local              => "boolean",
-        },
-    },
-
     'indices.open' => {
         doc    => "indices-open-close",
         method => "POST",
@@ -1643,26 +1661,6 @@ sub api {
             ignore_unavailable => "boolean",
             master_timeout     => "time",
             timeout            => "time",
-        },
-    },
-
-    'indices.optimize' => {
-        doc    => "indices-optimize",
-        method => "POST",
-        parts  => { index => { multi => 1 } },
-        paths  => [
-            [ { index => 0 }, "{index}", "_optimize" ],
-            [ {}, "_optimize" ]
-        ],
-        qs => {
-            allow_no_indices     => "boolean",
-            expand_wildcards     => "enum",
-            filter_path          => "list",
-            flush                => "boolean",
-            ignore_unavailable   => "boolean",
-            max_num_segments     => "number",
-            only_expunge_deletes => "boolean",
-            wait_for_merge       => "boolean",
         },
     },
 
@@ -1719,6 +1717,7 @@ sub api {
             flat_settings      => "boolean",
             ignore_unavailable => "boolean",
             master_timeout     => "time",
+            preserve_existing  => "boolean",
         },
     },
 
@@ -1735,32 +1734,6 @@ sub api {
             master_timeout => "time",
             order          => "number",
             timeout        => "time",
-        },
-    },
-
-    'indices.put_warmer' => {
-        body   => { required => 1 },
-        doc    => "indices-warmers",
-        method => "PUT",
-        parts  => {
-            index => { multi    => 1 },
-            name  => { required => 1 },
-            type  => { multi    => 1 },
-        },
-        paths => [
-            [   { index => 0, name => 3, type => 1 },
-                "{index}", "{type}", "_warmer", "{name}",
-            ],
-            [ { index => 0, name => 2 }, "{index}", "_warmer", "{name}" ],
-            [ { name => 1 }, "_warmer", "{name}" ],
-        ],
-        qs => {
-            allow_no_indices   => "boolean",
-            expand_wildcards   => "enum",
-            filter_path        => "list",
-            ignore_unavailable => "boolean",
-            master_timeout     => "time",
-            request_cache      => "boolean",
         },
     },
 
@@ -1794,6 +1767,25 @@ sub api {
         },
     },
 
+    'indices.rollover' => {
+        body   => {},
+        doc    => "indices-rollover-index",
+        method => "POST",
+        parts  => { alias => { required => 1 }, new_index => {} },
+        paths  => [
+            [   { alias => 0, new_index => 2 }, "{alias}",
+                "_rollover", "{new_index}",
+            ],
+            [ { alias => 0 }, "{alias}", "_rollover" ],
+        ],
+        qs => {
+            filter_path            => "list",
+            master_timeout         => "time",
+            timeout                => "time",
+            wait_for_active_shards => "string",
+        },
+    },
+
     'indices.segments' => {
         doc   => "indices-segments",
         parts => { index => { multi => 1 } },
@@ -1824,6 +1816,22 @@ sub api {
             filter_path        => "list",
             ignore_unavailable => "boolean",
             status             => "list",
+        },
+    },
+
+    'indices.shrink' => {
+        body   => {},
+        doc    => "indices-shrink-index",
+        method => "PUT",
+        parts  => { index => { required => 1 }, target => { required => 1 } },
+        paths  => [
+            [ { index => 0, target => 2 }, "{index}", "_shrink", "{target}" ],
+        ],
+        qs => {
+            filter_path            => "list",
+            master_timeout         => "time",
+            timeout                => "time",
+            wait_for_active_shards => "string",
         },
     },
 
@@ -1904,6 +1912,52 @@ sub api {
             q                        => "string",
             rewrite                  => "boolean",
         },
+    },
+
+    'ingest.delete_pipeline' => {
+        doc    => "ingest",
+        method => "DELETE",
+        parts  => { id => { required => 1 } },
+        paths  => [ [ { id => 2 }, "_ingest", "pipeline", "{id}" ] ],
+        qs     => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time"
+        },
+    },
+
+    'ingest.get_pipeline' => {
+        doc   => "ingest",
+        parts => { id => {} },
+        paths => [
+            [ { id => 2 }, "_ingest", "pipeline", "{id}" ],
+            [ {}, "_ingest", "pipeline" ],
+        ],
+        qs => { filter_path => "list", master_timeout => "time" },
+    },
+
+    'ingest.put_pipeline' => {
+        body   => { required => 1 },
+        doc    => "ingest",
+        method => "PUT",
+        parts => { id => { required => 1 } },
+        paths => [ [ { id => 2 }, "_ingest", "pipeline", "{id}" ] ],
+        qs => {
+            filter_path    => "list",
+            master_timeout => "time",
+            timeout        => "time"
+        },
+    },
+
+    'ingest.simulate' => {
+        body  => { required => 1 },
+        doc   => "ingest",
+        parts => { id       => {} },
+        paths => [
+            [ { id => 2 }, "_ingest", "pipeline", "{id}", "_simulate" ],
+            [ {}, "_ingest", "pipeline", "_simulate" ],
+        ],
+        qs => { filter_path => "list", verbose => "boolean" },
     },
 
     'nodes.hot_threads' => {
@@ -2051,7 +2105,11 @@ sub api {
                 "{repository}", "{snapshot}",
             ],
         ],
-        qs => { filter_path => "list", master_timeout => "time" },
+        qs => {
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            master_timeout     => "time",
+        },
     },
 
     'snapshot.get_repository' => {
@@ -2100,7 +2158,11 @@ sub api {
             [ { repository => 1 }, "_snapshot", "{repository}", "_status" ],
             [ {}, "_snapshot", "_status" ],
         ],
-        qs => { filter_path => "list", master_timeout => "time" },
+        qs => {
+            filter_path        => "list",
+            ignore_unavailable => "boolean",
+            master_timeout     => "time",
+        },
     },
 
     'snapshot.verify_repository' => {
@@ -2118,7 +2180,7 @@ sub api {
     },
 
     'tasks.cancel' => {
-        doc    => "tasks-cancel",
+        doc    => "tasks",
         method => "POST",
         parts  => { task_id => {} },
         paths  => [
@@ -2134,15 +2196,22 @@ sub api {
         },
     },
 
-    'tasks.list' => {
-        doc   => "tasks-list",
+    'tasks.get' => {
+        doc   => "tasks",
         parts => { task_id => {} },
-        paths =>
-            [ [ { task_id => 1 }, "_tasks", "{task_id}" ], [ {}, "_tasks" ] ],
-        qs => {
+        paths => [ [ { task_id => 1 }, "_tasks", "{task_id}" ] ],
+        qs => { filter_path => "list", wait_for_completion => "boolean" },
+    },
+
+    'tasks.list' => {
+        doc   => "tasks",
+        parts => {},
+        paths => [ [ {}, "_tasks" ] ],
+        qs    => {
             actions             => "list",
             detailed            => "boolean",
             filter_path         => "list",
+            group_by            => "enum",
             node_id             => "list",
             parent_node         => "string",
             parent_task         => "string",

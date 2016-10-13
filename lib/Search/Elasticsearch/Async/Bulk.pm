@@ -135,8 +135,7 @@ sub reindex {
     my $promise;
 
     # async scroll
-    if ( blessed($src) && $src->isa('Search::Elasticsearch::Async::Scroll') )
-    {
+    if ( blessed($src) && $src->isa('Search::Elasticsearch::Async::Scroll') ) {
         $promise = $src->start;
     }
     else {
@@ -184,10 +183,13 @@ sub _hash_to_scroll {
         };
     }
     my $es = delete $src->{es} || $self->es;
+    my %body
+        = $es->api_version ge '5_0'
+        ? ( sort => '_docs', size => 1000 )
+        : ( search_type => 'scan', size => 500 );
+
     return $scroll = $es->scroll_helper(
-        search_type => 'scan',
-        size        => 500,
-        %$src,
+        %body, %$src,
         on_results => $on_results,
         on_start   => $on_start,
     );

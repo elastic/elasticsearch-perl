@@ -37,8 +37,9 @@ Query string parameters:
     C<master_timeout>,
     C<timeout>,
     C<wait_for_active_shards>,
+    C<wait_for_events>,
+    C<wait_for_no_relocating_shards>,
     C<wait_for_nodes>,
-    C<wait_for_relocating_shards>,
     C<wait_for_status>
 
 See the L<cluster health docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html>
@@ -69,6 +70,7 @@ have been set with the L</put_settings()> method.
 
 Query string parameters:
     C<flat_settings>,
+    C<include_defaults>,
     C<master_timeout>,
     C<timeout>
 
@@ -128,6 +130,21 @@ Query string parameters:
 See the L<cluster state docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-state.html>
 for more information.
 
+=head2 C<allocation_explain()>
+
+    $response = $e->cluster->allocation_explain(
+        body => { ... shard selectors ...}  # optional
+    );
+
+Returns information about why a shard is allocated or unallocated or why.
+
+Query string parameters:
+    C<include_disk_info>,
+    C<include_yes_decisions>
+
+See the L<cluster allocation explain docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-allocation-explain.html>
+for more information.
+
 =head2 C<pending_tasks()>
 
     $response = $e->cluster->pending_tasks();
@@ -175,6 +192,7 @@ Query string parameters:
     C<explain>,
     C<master_timeout>,
     C<metric>,
+    C<retry_failed>,
     C<timeout>
 
 See the L<reroute docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-reroute.html>

@@ -20,7 +20,6 @@ It does L<Search::Elasticsearch::Role::Client::Direct>.
 
 =head1 METHODS
 
-
 =head2 C<list()>
 
     $response = $e->tasks->list(
@@ -33,9 +32,24 @@ about that task.
 Query string parameters:
     C<actions>,
     C<detailed>,
+    C<group_by>,
     C<node_id>,
     C<parent_node>,
     C<parent_task>,
+    C<wait_for_completion>
+
+See the L<task management docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html>
+for more information.
+
+=head2 C<get()>
+
+    $response = $e->tasks->get(
+        task_id => $task_id  # required
+    );
+
+The C<get()> method returns the task with the specified ID.
+
+Query string parameters:
     C<wait_for_completion>
 
 See the L<task management docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html>

@@ -8,12 +8,13 @@ use lib 't/lib';
 use Search::Elasticsearch::Bulk;
 use Log::Any::Adapter;
 
-my $es   = do "es_sync.pl" or die( $@ || $! );
+my $es = do "es_sync.pl" or die( $@ || $! );
 my $TRUE = $es->transport->serializer->decode('{"true":true}')->{true};
 
 my $version = $es->info->{version}{number};
 my $is_0_90 = $version =~ /^0\.90/;
 my $is_2    = $version =~ /^2\./;
+my $is_5    = $version =~ /^5\./;
 
 $es->indices->delete( index => '_all' );
 
@@ -96,22 +97,34 @@ $b = bulk(
 
 test_flush( "Success", 1, 2, 0, 0 );
 
+my %on_success_result
+    = $is_5
+    ? (
+    _index   => 'test',
+    _type    => 'test',
+    _id      => 1,
+    _version => 1,
+    status   => 201,
+    ok       => $TRUE,
+    created  => $TRUE,
+    result   => 'created',
+    _shards  => { successful => 1, total => 2, failed => 0 },
+    )
+    : (
+    _index   => 'test',
+    _type    => 'test',
+    _id      => 1,
+    _version => 1,
+    status   => 201,
+    ok       => $TRUE,
+    );
+
 # cbs have correct params
 $b = bulk(
     {   index      => 'test',
         type       => 'test',
-        on_success => test_params(
-            'on_success',
-            {   _index   => 'test',
-                _type    => 'test',
-                _id      => 1,
-                _version => 1,
-                status   => 201,
-                ok       => $TRUE,
-            },
-            0
-        ),
-        on_error => test_params(
+        on_success => test_params( 'on_success', \%on_success_result, 0 ),
+        on_error   => test_params(
             'on_error',
             {   _index => 'test',
                 _type  => 'test',

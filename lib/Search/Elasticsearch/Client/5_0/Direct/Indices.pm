@@ -15,7 +15,7 @@ __END__
 
 This module provides methods to make index-level requests, such as
 creating and deleting indices, managing type mappings, index settings,
-warmers, index templates and aliases.
+index templates and aliases.
 
 It does L<Search::Elasticsearch::Role::Client::Direct>.
 
@@ -29,17 +29,18 @@ It does L<Search::Elasticsearch::Role::Client::Direct>.
         body  => {                      # optional
             index settings
             mappings
-            warmers
+            aliases
         }
     );
 
 The C<create()> method is used to create an index. Optionally, index
-settings, type mappings and index warmers can be added at the same time.
+settings, type mappings, and aliases can be added at the same time.
 
 Query string parameters:
     C<master_timeout>,
     C<timeout>,
-    C<update_all_types>
+    C<update_all_types>,
+    C<wait_for_active_shards>
 
 See the L<create index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html>
 for more information.
@@ -51,9 +52,9 @@ for more information.
         feature => 'feature' | \@features   # optional
     );
 
-Returns the aliases, settings, mappings, and warmers for the specified indices.
+Returns the aliases, settings, and mappingsfor the specified indices.
 The C<feature> parameter can be set to none or more of: C<_settings>, C<_mappings>,
-C<_warmers> and C<_aliases>.
+and C<_aliases>.
 
 See the L<get index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-index.html>.
 
@@ -62,6 +63,7 @@ Query string parameters:
     C<expand_wildcards>,
     C<human>,
     C<ignore_unavailable>,
+    C<include_defaults>,
     C<local>
 
 =head2 C<exists()>
@@ -135,6 +137,44 @@ Query string parameters:
     C<timeout>
 
 See the L<open index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html>
+for more information.
+
+=head2 C<rollover()>
+
+    $response = $e->indices->rollover(
+        alias     => $alias,                    # required
+        new_index => $index,                    # optional
+        body      => { rollover conditions }    # optional
+    );
+
+Rollover an index pointed to by C<alias> if it meets rollover conditions
+(eg max age, max docs) to a new index name.
+
+Query string parameters:
+    C<master_timeout>,
+    C<timeout>,
+    C<wait_for_active_shards>
+
+See the L<rollover index docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-rollover-index.html>
+for more information.
+
+=head2 C<shrink()>
+
+    $response = $e->shrink(
+        index  => $index,                           # required
+        target => $target,                          # required
+        body   => { mappings, settings aliases }    # optional
+    );
+
+The shrink API shrinks the shards of an index down to a single shard (or to a factor
+of the original shards).
+
+Query string parameters:
+    C<master_timeout>,
+    C<timeout>,
+    C<wait_for_active_shards>
+
+See the L<shrink index docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-shrink-index.html>
 for more information.
 
 =head2 C<clear_cache()>
@@ -243,30 +283,6 @@ Query string parameters:
     C<wait_for_merge>
 
 See the L<forcemerge docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-forcemerge.html>
-for more information.
-
-=head2 C<optimize()>
-
-The C<optimize()> method is deprecated in 2.x and will be replaced by L<forcemerge()>;
-
-    $response = $e->indices->optimize(
-        index => 'index' | \@indices    # optional
-    );
-
-The C<optimize()> method rewrites all the data in an index into at most
-C<max_num_segments>.  This is a very heavy operation and should only be run
-with care, and only on indices that are no longer being updated.
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<expand_wildcards>,
-    C<flush>,
-    C<ignore_unavailable>,
-    C<max_num_segments>,
-    C<only_expunge_deletes>,
-    C<wait_for_merge>
-
-See the L<optimize index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-optimize.html>
 for more information.
 
 =head2 C<get_upgrade()>
@@ -435,23 +451,6 @@ Query string parameters:
 See the L<update_aliases docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html>
 for more information.
 
-=head2 C<get_aliases()>
-
-    $result = $e->indices->get_aliases(
-        index   => 'index' | \@indices,     # optional
-        alias   => 'alias' | \@aliases      # optional
-    );
-
-The C<get_aliases()> method returns a list of aliases per index for all
-the specified indices.
-
-Query string parameters:
-    C<local>,
-    C<timeout>
-
-See the L<get_aliases docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html>
-for more information.
-
 =head2 C<put_alias()>
 
     $response = $e->indices->put_alias(
@@ -557,7 +556,8 @@ Query string parameters:
     C<expand_wildcards>,
     C<flat_settings>,
     C<ignore_unavailable>,
-    C<master_timeout>
+    C<master_timeout>,
+    C<preserve_existing>
 
 See the L<put_settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html>
 for more information.
@@ -578,6 +578,7 @@ Query string parameters:
     C<flat_settings>,
     C<human>,
     C<ignore_unavailable>,
+    C<include_defaults>,
     C<local>
 
 See the L<get_settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-settings.html>
@@ -656,74 +657,6 @@ See the L<delete_template docs|http://www.elastic.co/guide/en/elasticsearch/refe
 for more information.
 
 
-=head1 WARMER METHODS
-
-=head2 C<put_warmer()>
-
-    $response = $e->indices->put_warmer(
-        index   => 'index' | \@indices,     # optional
-        type    => 'type'  | \@types,       # optional
-        name    => 'warmer',                # required
-
-        body    => { warmer defn }          # required
-    );
-
-The C<put_warmer()> method is used to create or update named warmers which
-are used to I<warm up> new segments in the index before they are exposed
-to user searches.  For instance:
-
-    $response = $e->indices->put_warmer(
-        index   => 'my_index',
-        name    => 'date_field_warmer',
-        body    => {
-            sort => 'date'
-        }
-    );
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<expand_wildcards>,
-    C<ignore_unavailable>,
-    C<master_timeout>,
-    C<request_cache>
-
-See the L<put_warmer docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-warmers.html>
-for more information.
-
-=head2 C<get_warmer()>
-
-    $response = $e->indices->get_warmer(
-        index   => 'index'  | \@indices,    # optional
-        type    => 'type'   | \@types,      # optional
-        name    => 'warmer' | \@warmers,    # optional
-    );
-
-The C<get_warmer()> method is used to retrieve warmers by name.
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<expand_wildcards>,
-    C<ignore_unavailable>,
-    C<local>
-
-See the L<get_warmer docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-warmers.html>
-for more information.
-
-=head2 C<delete_warmer()>
-
-    $response = $e->indices->get_warmer(
-        index   => 'index'  | \@indices,    # required
-        name    => 'warmer' | \@warmers,    # required
-    );
-
-The C<delete_warmer()> method is used to delete warmers by name.
-
-Query string parameters:
-    C<master_timeout>
-
-See the L<delete_warmer docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-warmers.html>
-for more information.
-
 =head1 STATS METHODS
 
 =head2 C<stats()>
@@ -754,8 +687,7 @@ Allowed metrics are:
     C<request_cache>,
     C<search>,
     C<segments>,
-    C<store>,
-    C<warmer>
+    C<store>
 
 
 Query string parameters:

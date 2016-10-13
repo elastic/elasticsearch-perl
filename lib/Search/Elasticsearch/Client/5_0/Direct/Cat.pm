@@ -16,6 +16,20 @@ sub help {
     $self->perform_request( $defn, $params );
 }
 
+#===================================
+around 'perform_request' => sub {
+#===================================
+    my $orig = shift;
+    my $self = shift;
+    my ( $defn, $params ) = parse_params(@_);
+    if ( $params->{help} && $params->{help} ne 'false' ) {
+        $defn = { %$defn, parts => {} };
+    }
+
+    return $orig->( $self, $defn, $params );
+
+};
+
 1;
 
 __END__
@@ -78,6 +92,7 @@ Returns information about index aliases, optionally limited to the specified
 index/alias names.
 
 Query string parameters:
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
@@ -98,6 +113,7 @@ state of disk usage.
 
 Query string parameters:
     C<bytes>,
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
@@ -117,6 +133,7 @@ Provides quick access to the document count of the entire cluster, or
 individual indices.
 
 Query string parameters:
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
@@ -137,6 +154,7 @@ fields) loaded into fielddata.
 
 Query string parameters:
     C<bytes>,
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
@@ -154,7 +172,7 @@ Provides a snapshot of how shards have located around the cluster and the
 state of disk usage.
 
 Query string parameters:
-    C<bytes>,
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
@@ -176,7 +194,9 @@ or individual indices
 
 Query string parameters:
     C<bytes>,
+    C<format>,
     C<h>,
+    C<health>,
     C<help>,
     C<local>,
     C<master_timeout>,
@@ -193,6 +213,7 @@ for more information.
 Displays the master’s node ID, bound IP address, and node name.
 
 Query string parameters:
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
@@ -209,6 +230,7 @@ for more information.
 Returns the node attributes set per node.
 
 Query string parameters:
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
@@ -225,6 +247,7 @@ for more information.
 Provides a snapshot of all of the nodes in your cluster.
 
 Query string parameters:
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
@@ -241,6 +264,7 @@ for more information.
 Returns any cluster-level tasks which are queued on the master.
 
 Query string parameters:
+    C<format>,
     C<local>,
     C<master_timeout>,
     C<h>,
@@ -257,6 +281,7 @@ for more information.
 Returns information about plugins installed on each node.
 
 Query string parameters:
+    C<format>,
     C<local>,
     C<master_timeout>,
     C<h>,
@@ -279,6 +304,7 @@ stuck, try it to see if there’s any movement using C<recovery()>.
 
 Query string parameters:
     C<bytes>,
+    C<format>,
     C<h>,
     C<help>,
     C<master_timeout>,
@@ -294,6 +320,7 @@ for more information.
 Provides a list of registered snapshot repositories.
 
 Query string parameters:
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
@@ -312,6 +339,7 @@ for more information.
 Provides low level information about the segments in the shards of an index.
 
 Query string parameters:
+    C<format>,
     C<h>,
     C<help>,
     C<v>
@@ -329,6 +357,7 @@ Provides a detailed view of what nodes contain which shards, the state and
 size of each shard.
 
 Query string parameters:
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
@@ -347,6 +376,7 @@ for more information.
 Provides a list of all snapshots that belong to the specified repositories.
 
 Query string parameters:
+    C<format>,
     C<h>,
     C<help>,
     C<ignore_unavailable>,
@@ -354,6 +384,26 @@ Query string parameters:
     C<v>
 
 See the L<cat snapshots docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-snapshots.html>
+for more information.
+
+=head2 C<tasks()>
+
+    say $e->cat->tasks()
+
+Provides a list of node-level tasks.
+
+Query string parameters:
+    C<actions>,
+    C<detailed>,
+    C<format>,
+    C<h>,
+    C<help>,
+    C<node_id>,
+    C<parent_node>,
+    C<parent_task>,
+    C<v>
+
+See the L<cat tasks docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html>
 for more information.
 
 
@@ -368,11 +418,13 @@ C<queue> and C<rejected> statistics are returned for the C<bulk>, C<index> and
 C<search> thread pools.
 
 Query string parameters:
-    C<full_id>,
+    C<format>,
     C<h>,
     C<help>,
     C<local>,
     C<master_timeout>,
+    C<size>,
+    C<thread_pool_patterns>,
     C<v>
 
 See the L<cat thread_pool docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-thread-pool.html>

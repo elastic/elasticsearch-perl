@@ -110,6 +110,7 @@ Query string parameters:
 Retrieve snapshots in the named repository.
 
 Query string parameters:
+    C<ignore_unavailable>,
     C<master_timeout>
 
 See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
@@ -159,6 +160,7 @@ for more information.
 Returns status information about the specified snapshots.
 
 Query string parameters:
+    C<ignore_unavailable>,
     C<master_timeout>
 
 See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>

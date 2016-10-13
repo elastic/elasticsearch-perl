@@ -77,10 +77,12 @@ sub reindex {
     if ( ref $src eq 'HASH' ) {
         $src = {%$src};
         my $es = delete $src->{es} || $self->es;
+        my %body
+            = $es->api_version ge '5_0'
+            ? ( sort => '_doc', size => 1000 )
+            : ( search_type => 'scan', size => 500 );
         my $scroll = $es->scroll_helper(
-            search_type => 'scan',
-            size        => 500,
-            %$src
+            %body, %$src
         );
 
         $src = sub {

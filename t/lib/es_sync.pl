@@ -12,7 +12,8 @@ my $version = $ENV{ES_VERSION} || '';
 my $api
     = $version =~ /^0.90/ ? '0_90::Direct'
     : $version =~ /^1\./  ? '1_0::Direct'
-    :                       '2_0::Direct';
+    : $version =~ /^2\./  ? '2_0::Direct'
+    :                       '5_0::Direct';
 my $body     = $ENV{ES_BODY}     || 'GET';
 my $cxn      = $ENV{ES_CXN}      || do "default_cxn.pl" || die( $@ || $! );
 my $cxn_pool = $ENV{ES_CXN_POOL} || 'Static';

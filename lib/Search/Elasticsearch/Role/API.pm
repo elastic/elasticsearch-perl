@@ -14,7 +14,9 @@ our %Handler = (
             ? join( ',', @{ shift() } )
             : shift();
     },
-    boolean => sub { $_[0] ? 'true' : 'false' },
+    boolean => sub {
+        $_[0] && $_[0] ne 'false' ? 'true' : 'false';
+    },
     enum => sub {
         ref $_[0] eq 'ARRAY'
             ? join( ',', @{ shift() } )

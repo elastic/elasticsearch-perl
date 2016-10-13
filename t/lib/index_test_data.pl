@@ -21,9 +21,10 @@ for ( names() ) {
     $b->index(
         {   id     => $i,
             source => {
-                name  => $_,
-                count => $i,
-                color => ( $i % 2 ? 'red' : 'green' )
+                name   => $_,
+                count  => $i,
+                color  => ( $i % 2 ? 'red' : 'green' ),
+                switch => ( $i % 2 ? 1 : 2 )
             }
         }
     );
