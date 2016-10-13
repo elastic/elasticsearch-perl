@@ -11,7 +11,7 @@ use JSON::XS;
 our ( %API, %seen, %seen_combo, %Forbidden );
 
 our %Known_Types
-    = map { $_ => 1 } qw(boolean enum list number string text time );
+    = map { $_ => 1 } qw(boolean enum list number string time );
 
 #===================================
 sub process_files {
