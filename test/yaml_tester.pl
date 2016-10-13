@@ -9,7 +9,7 @@ use Data::Dumper;
 use File::Basename;
 use Scalar::Util qw(looks_like_number);
 use Time::HiRes qw(gettimeofday);
-
+use JSON::PP();
 use lib qw(lib t/lib);
 
 my $client
@@ -22,14 +22,9 @@ my $wrapper   = request_wrapper();
 my $skip_list = load_skip_list();
 
 our %Supported = (
-    regex         => 1,
-    gtelte        => 1,
-    stash_in_path => 1,
-    benchmark     => sub {
-        no warnings;
-        grep { $_->{settings}{node}{bench} eq 'true' }
-            values %{ $es->nodes->info( metric => 'settings' )->{nodes} };
-    },
+    regex            => 1,
+    gtelte           => 1,
+    stash_in_path    => 1,
     groovy_scripting => sub {
         my $scripting;
         eval {
@@ -62,7 +57,7 @@ our %Test_Types = (
     is_false => sub {
         my ( $got, undef, $name ) = @_;
         no warnings 'uninitialized';
-        ok( !$got, $name );
+        ok( !$got || $got eq 'false', $name );
     },
     lt => sub {
         my ( $got, $expect, $name ) = @_;
@@ -174,7 +169,7 @@ sub test_files {
                 if ($setup) {
                     $es->logger->trace_comment("RUNNING SETUP");
                     for (@$setup) {
-                        run_cmd( $_->{do} );
+                        run_cmd( populate_vars('request',$_->{do},{}) );
                     }
                 }
 
@@ -209,7 +204,7 @@ sub run_tests {
         if ( $type eq 'do' ) {
             my $catch = delete $test->{catch};
             $test_name .= ": " . ( $catch ? 'catch ' . $catch : 'do' );
-            $test = populate_vars( $test, \%stash );
+            $test = populate_vars( 'request', $test, \%stash );
             eval { ($val) = run_cmd($test); };
             if ($catch) {
                 $val = $@->{vars}{body}
@@ -237,8 +232,8 @@ sub run_tests {
                 pass("$test_name: set $expect");
                 next;
             }
-            $got = populate_vars( $got, {} );
-            $expect = populate_vars( $expect, \%stash );
+            $got = populate_vars( 'response', $got, {} );
+            $expect = populate_vars( 'expect', $expect, \%stash );
             $field ||= 'response';
             run_test( "$test_name: $field $type", $type, $expect, $got );
         }
@@ -261,20 +256,27 @@ sub run_test {
 #===================================
 sub populate_vars {
 #===================================
-    my ( $val, $stash ) = @_;
+    my ( $type, $val, $stash ) = @_;
 
     if ( ref $val eq 'HASH' ) {
         return {
-            map { $_ => populate_vars( $val->{$_}, $stash ) }
+            map { $_ => populate_vars( $type, $val->{$_}, $stash ) }
                 keys %$val
         };
     }
     if ( ref $val eq 'ARRAY' ) {
-        return [ map { populate_vars( $_, $stash ) } @$val ];
+        return [ map { populate_vars( $type, $_, $stash ) } @$val ];
     }
     return undef unless defined $val;
-    return 1 if $val eq 'true';
-    return 0 if $val eq 'false';
+    if ( $type eq 'request' ) {
+        return JSON::PP::true()  if $val eq 'true';
+        return JSON::PP::false() if $val eq 'false';
+        return 0 + $val          if $val =~ /^\d+(?:\.\d+)?$/;
+        return undef             if $val eq 'null';
+    }
+    elsif ( JSON::PP::is_bool($val) ) {
+        return $val ? 'true' : 'false';
+    }
     return "$val" unless $val =~ /^\$(\w+)/;
     return $stash->{$1};
 }
@@ -289,7 +291,7 @@ sub get_val {
 
     for my $next ( split /(?<!\\)\./, $field ) {
         $next =~ s/\\//g;
-        $next = populate_vars( $next, $stash )
+        $next = populate_vars( 'response', $next, $stash )
             if $next =~ /^\$/;
         if ( ref $val eq 'ARRAY' ) {
             return undef
