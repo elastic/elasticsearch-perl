@@ -6,12 +6,8 @@ use lib 't/lib';
 use strict;
 use warnings;
 
-our ( $es, $es_version, $s, $total_seen, $max_seen );
-
-BEGIN {
-    $es = do "es_async.pl" or die( $@ || $! );
-    use_ok 'Search::Elasticsearch::Async::Scroll';
-}
+our ( $es_version, $s, $total_seen, $max_seen );
+our $es = do "es_async.pl" or die( $@ || $! );
 
 wait_for( $es->indices->delete( index => '_all', ignore => 404 )
         ->then( sub { $es->info } )
@@ -228,12 +224,10 @@ sub test_scroll {
     $max_seen = $total_seen = 0;
     delete $params->{body}{ $es_version ge '1' ? 'facets' : 'aggs' };
     subtest $title => sub {
-        isa_ok $s = Search::Elasticsearch::Async::Scroll->new(
-            es       => $es,
+        $s = $es->scroll_helper(
             on_start => sub { test_start( $title, \%tests, @_ ) },
             %$params
-            ),
-            'Search::Elasticsearch::Async::Scroll', $title;
+        );
         wait_for( $s->start );
 
         is $total_seen, $tests{total_seen}, "$title - total seen";

@@ -1,4 +1,4 @@
-package Search::Elasticsearch::Async::Scroll;
+package Search::Elasticsearch::Client::2_0::Async::Scroll;
 
 use Moo;
 use Search::Elasticsearch::Util qw(parse_params throw);
@@ -14,7 +14,7 @@ has 'on_error'      => ( is => 'lazy', clearer => '_clear_on_error' );
 has '_guard'        => ( is => 'rwp', clearer => '_clear__guard' );
 
 with 'Search::Elasticsearch::Role::Is_Async',
-    'Search::Elasticsearch::Role::Scroll';
+    'Search::Elasticsearch::Client::2_0::Role::Scroll';
 
 #===================================
 sub BUILDARGS {
@@ -267,7 +267,7 @@ B<IMPORTANT>: Deep scrolling can be expensive.  See L</DEEP SCROLLING>
 for more.
 
 
-This class does L<Search::Elasticsearch::Role::Scroll> and
+This class does L<Search::Elasticsearch::Client::2_0::Role::Scroll> and
 L<Search::Elasticsearch::Role::Is_Async>.
 
 
@@ -348,7 +348,7 @@ C<client_id>:
 Very often the I<something> that you will want to do with these results
 involves bulk-indexing them into a new index. The easiest way to
 marry a scrolled search with bulk indexing is to use the
-L<Search::Elasticsearch::Async::Bulk/reindex()> method.
+L<Search::Elasticsearch::Client::2_0::Async::Bulk/reindex()> method.
 
 =head1 DEEP SCROLLING
 
@@ -405,7 +405,7 @@ are memory constrained, you will need to take this into account.
     $scroll->start;
 
 The L<Search::Elasticsearch::Client::2_0::Direct/scroll_helper()> method loads
-L<Search::Elasticsearch::Async::Scroll> class and calls L</new()>,
+L<Search::Elasticsearch::Client::2_0::Async::Scroll> class and calls L</new()>,
 passing in any arguments.
 
 You can specify a C<scroll> duration (which defaults to C<"1m">),
@@ -549,7 +549,7 @@ This value can only be checked once the scroll has completed.
 
 =over
 
-=item * L<Search::Elasticsearch::Async::Bulk/reindex()>
+=item * L<Search::Elasticsearch::Client::2_0::Async::Bulk/reindex()>
 
 =item * L<Search::Elasticsearch::Client::2_0::Direct/search()>
 

@@ -5,17 +5,8 @@ use strict;
 use warnings;
 use lib 't/lib';
 
-my $es;
-$es = do "es_sync.pl" or die( $@ || $! );
-
-BEGIN {
-    $es = do "es_sync.pl" or die( $@ || $! );
-    use_ok "Search::Elasticsearch::Bulk";
-}
-
-isa_ok my $b = Search::Elasticsearch::Bulk->new( es => $es ),
-    'Search::Elasticsearch::Bulk',
-    'Bulk';
+my $es = do "es_sync.pl" or die( $@ || $! );
+my $b = $es->bulk_helper;
 
 $b->_serializer->_set_canonical;
 
@@ -269,14 +260,11 @@ throws_ok { $b->add_action( 'index', 'bar' ) } qr/Missing <params>/,
     'Missing params';
 
 throws_ok { $b->add_action( index => { type => 't' } ) }
-qr/Missing .*<index>/,
-    'Missing index';
+qr/Missing .*<index>/, 'Missing index';
 throws_ok { $b->add_action( index => { index => 'i' } ) }
-qr/Missing .*<type>/,
-    'Missing type';
+qr/Missing .*<type>/, 'Missing type';
 throws_ok { $b->add_action( index => { index => 'i', type => 't' } ) }
-qr/Missing <source>/,
-    'Missing source';
+qr/Missing <source>/, 'Missing source';
 
 throws_ok {
     $b->add_action(

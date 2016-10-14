@@ -6,7 +6,6 @@ use AE;
 use strict;
 use warnings;
 use lib 't/lib';
-use Search::Elasticsearch::Async::Bulk;
 use Log::Any::Adapter;
 
 my $es = do "es_async.pl" or die( $@ || $! );
@@ -174,8 +173,7 @@ wait_for( $es->indices->delete( index => 'test' ) );
 sub bulk {
 #===================================
     my ( $params, @docs ) = @_;
-    my $b = Search::Elasticsearch::Async::Bulk->new(
-        es       => $es,
+    my $b = $es->bulk_helper(
         on_fatal => sub { $error = shift(); $error_count++ },
         %$params,
     );

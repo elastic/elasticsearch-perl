@@ -5,7 +5,6 @@ use Test::Exception;
 use strict;
 use warnings;
 use lib 't/lib';
-use Search::Elasticsearch::Bulk;
 use Log::Any::Adapter;
 
 my $es = do "es_sync.pl" or die( $@ || $! );
@@ -165,11 +164,7 @@ $es->indices->delete( index => 'test' );
 sub bulk {
 #===================================
     my $params = shift;
-    my $b      = Search::Elasticsearch::Bulk->new(
-        es => $es,
-        %$params,
-    );
-
+    my $b      = $es->bulk_helper($params);
     $es->indices->delete( index => 'test', ignore => 404 );
     $es->indices->create( index => 'test' );
     $es->cluster->health( wait_for_status => 'yellow' );

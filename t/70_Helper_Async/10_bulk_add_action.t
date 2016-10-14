@@ -5,21 +5,15 @@ use strict;
 use warnings;
 use lib 't/lib';
 
-my ( $es, $error, $name );
+my ( $error, $name );
 
-BEGIN {
-    $es = do "es_async.pl" or die( $@ || $! );
-    use_ok "Search::Elasticsearch::Async::Bulk";
-}
+my $es = do "es_async.pl" or die( $@ || $! );
 
-isa_ok my $b = Search::Elasticsearch::Async::Bulk->new(
-    es       => $es,
+my $b = $es->bulk_helper(
     on_fatal => sub {
         like shift(), qr/$error/, $name;
     }
-    ),
-    'Search::Elasticsearch::Async::Bulk',
-    'Bulk';
+);
 
 $b->_serializer->_set_canonical;
 

@@ -6,12 +6,7 @@ use lib 't/lib';
 use strict;
 use warnings;
 
-our $es;
-
-BEGIN {
-    $es = do "es_sync.pl" or die( $@ || $! );
-    use_ok 'Search::Elasticsearch::Scroll';
-}
+our $es = do "es_sync.pl" or die( $@ || $! );
 
 my $es_version = $es->info->{version}{number};
 
@@ -234,9 +229,7 @@ sub test_scroll {
     delete $params->{body}{ $es_version ge '1' ? 'facets' : 'aggs' };
 
     subtest $title => sub {
-        isa_ok my $s
-            = Search::Elasticsearch::Scroll->new( es => $es, %$params ),
-            'Search::Elasticsearch::Scroll', $title;
+        my $s = $es->scroll_helper($params);
 
         is $s->total,             $tests{total},     "$title - total";
         cmp_deeply $s->max_score, $tests{max_score}, "$title - max_score";

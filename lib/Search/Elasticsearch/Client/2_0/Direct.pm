@@ -282,7 +282,7 @@ Multiple error codes can be specified with an array:
 =head2 C<bulk_helper_class>
 
 The class to use for the L</bulk_helper()> method. Defaults to
-L<Search::Elasticsearch::Bulk>.
+L<Search::Elasticsearch::Client::2_0::Bulk>.
 
 =head2 C<scroll_helper_class>
 
@@ -652,7 +652,7 @@ that need to be made, bulk requests greatly improve performance.
         body    => [ actions ]          # required
     );
 
-See L<Search::Elasticsearch::Bulk> and L</bulk_helper()> for a helper module that makes
+See L<Search::Elasticsearch::Client::2_0::Bulk> and L</bulk_helper()> for a helper module that makes
 bulk indexing simpler to use.
 
 The C<bulk()> method can perform multiple L</index()>, L</create()>,
@@ -729,7 +729,7 @@ for more information.
     $bulk_helper = $e->bulk_helper( @args );
 
 Returns a new instance of the class specified in the L</bulk_helper_class>,
-which defaults to L<Search::Elasticsearch::Bulk>.
+which defaults to L<Search::Elasticsearch::Client::2_0::Bulk>.
 
 =head2 C<mget()>
 

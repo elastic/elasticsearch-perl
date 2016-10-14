@@ -3,8 +3,6 @@ use Test::Deep;
 use strict;
 use warnings;
 use lib 't/lib';
-use Search::Elasticsearch::Bulk;
-
 my $es = do "es_sync.pl" or die( $@ || $! );
 
 $es->indices->delete( index => '_all' );
@@ -66,11 +64,10 @@ sub test_flush {
 #===================================
     my $title  = shift;
     my $params = shift;
-    my $b      = Search::Elasticsearch::Bulk->new(
+    my $b      = $es->bulk_helper(
         %$params,
         index => 'test',
-        type  => 'test',
-        es    => $es
+        type  => 'test'
     );
 
     my @seq = @_;

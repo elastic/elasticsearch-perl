@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use Search::Elasticsearch::Bulk;
 use lib 't/lib';
 
 local $ENV{ES_CXN};
@@ -11,8 +10,7 @@ $es->indices->delete( index => 'test', ignore => 404 );
 $es->indices->create( index => 'test' );
 $es->cluster->health( wait_for_status => 'yellow' );
 
-my $b = Search::Elasticsearch::Bulk->new(
-    es    => $es,
+my $b = $es->bulk_helper(
     index => 'test',
     type  => 'test'
 );

@@ -1,4 +1,4 @@
-package Search::Elasticsearch::Role::Bulk;
+package Search::Elasticsearch::Client::0_90::Role::Bulk;
 
 use Moo::Role;
 requires 'add_action', 'flush';
@@ -272,4 +272,4 @@ sub _doc_transformer {
 
 1;
 
-# ABSTRACT: Provides common functionality to L<Search::Elasticseach::Bulk> and L<Search::Elasticsearch::Async::Bulk>
+# ABSTRACT: Provides common functionality to L<Elasticseach::Client::0_90::Bulk> and L<Search::Elasticsearch::Client::0_90::Async::Bulk>

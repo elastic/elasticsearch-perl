@@ -6,7 +6,6 @@ use AE;
 use strict;
 use warnings;
 use lib 't/lib';
-use Search::Elasticsearch::Async::Bulk;
 use Log::Any::Adapter;
 
 $ENV{ES}           = '10.255.255.1:9200';

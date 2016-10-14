@@ -1,4 +1,4 @@
-package Search::Elasticsearch::Role::Scroll;
+package Search::Elasticsearch::Client::1_0::Role::Scroll;
 
 use Moo::Role;
 requires 'finish';
@@ -50,4 +50,4 @@ sub DEMOLISH {
 
 1;
 
-# ABSTRACT: Provides common functionality to L<Search::Elasticseach::Scroll> and L<Search::Elasticsearch::Async::Scroll>
+# ABSTRACT: Provides common functionality to L<Search::Elasticseach::Client::1_0::Scroll> and L<Search::Elasticsearch::Client::1_0::Async::Scroll>

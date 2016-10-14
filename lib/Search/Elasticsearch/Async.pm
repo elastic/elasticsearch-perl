@@ -13,15 +13,22 @@ our $VERSION = '5.00';
 sub new {
 #===================================
     my ( $class, $params ) = parse_params(@_);
-    $class->SUPER::new(
-        {   cxn_pool            => 'Async::Static',
-            transport           => 'Async',
-            cxn                 => 'AEHTTP',
-            bulk_helper_class   => 'Async::Bulk',
-            scroll_helper_class => 'Async::Scroll',
+    my $self = $class->SUPER::new(
+        {   cxn_pool  => 'Async::Static',
+            transport => 'Async',
+            cxn       => 'AEHTTP',
             %$params
         }
     );
+    unless ( $self->bulk_helper_class ) {
+        $self->bulk_helper_class(
+            'Client::' . $self->api_version . '::Async::Bulk' );
+    }
+    unless ( $self->scroll_helper_class ) {
+        $self->scroll_helper_class(
+            'Client::' . $self->api_version . '::Async::Scroll' );
+    }
+    return $self;
 }
 
 1;

@@ -5,7 +5,6 @@ use warnings;
 use lib 't/lib';
 use AE;
 use Promises qw(deferred);
-use Search::Elasticsearch::Async::Bulk;
 
 my $es = do "es_async.pl" or die( $@ || $! );
 
@@ -68,11 +67,10 @@ sub test_flush {
 #===================================
     my $title  = shift;
     my $params = shift;
-    my $b      = Search::Elasticsearch::Async::Bulk->new(
+    my $b      = $es->bulk_helper(
         %$params,
         index => 'test',
         type  => 'test',
-        es    => $es
     );
 
     my @seq = @_;

@@ -6,8 +6,6 @@ use lib 't/lib';
 use AE;
 use strict;
 use warnings;
-use Search::Elasticsearch::Async::Scroll;
-use Search::Elasticsearch::Async::Bulk;
 
 our ( $es, $es_version );
 
@@ -24,8 +22,7 @@ do "index_test_data.pl" or die( $@ || $! );
 my ( $b, $s );
 
 # Reindex to new index and new type
-$b = Search::Elasticsearch::Async::Bulk->new(
-    es    => $es,
+$b = $es->bulk_helper(
     index => 'test2',
     type  => 'test2'
 );
@@ -41,7 +38,7 @@ is wait_for(
     'Reindexed to new index and type';
 
 # Reindex to same index
-$b = Search::Elasticsearch::Async::Bulk->new( es => $es );
+$b = $es->bulk_helper();
 wait_for( $b->reindex( source => { index => 'test' } )
         ->then( sub { $es->indices->refresh } ) );
 
@@ -64,7 +61,7 @@ my @docs = map {
 # Reindex from generic source
 wait_for( $es->indices->delete( index => 'test2' ) );
 
-$b = Search::Elasticsearch::Async::Bulk->new( es => $es, index => 'test2' );
+$b = $es->bulk_helper( index => 'test2' );
 wait_for( $b->reindex( index => 'test2', source => sub { shift @docs } )
         ->then( sub { $es->indices->refresh } ) );
 
@@ -79,7 +76,7 @@ is wait_for(
 # Reindex with transform
 wait_for( $es->indices->delete( index => 'test2' ) );
 
-$b = Search::Elasticsearch::Async::Bulk->new( es => $es, index => 'test2' );
+$b = $es->bulk_helper( index => 'test2' );
 wait_for(
     $b->reindex(
         source    => { index => 'test' },
@@ -124,7 +121,7 @@ is wait_for(
 # Reindex with sync Scroll
 wait_for( $es->indices->delete( index => 'test2' ) );
 
-$b = Search::Elasticsearch::Async::Bulk->new( es => $es, index => 'test2' );
+$b = $es->bulk_helper( index => 'test2' );
 {
     local $ENV{ES_CXN};
     local $ENV{ES_CXN_POOL};
@@ -189,7 +186,7 @@ for ( 1 .. 5 ) {
 }
 wait_for( $es->indices->refresh );
 
-$b = Search::Elasticsearch::Async::Bulk->new( es => $es, index => 'test2' );
+$b = $es->bulk_helper( index => 'test2' );
 ok wait_for(
     $b->reindex(
         version_type => 'external',

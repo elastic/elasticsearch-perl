@@ -9,15 +9,15 @@ use namespace::clean;
 
 sub _namespace {__PACKAGE__}
 
-has 'cluster'             => ( is => 'lazy', init_arg => undef );
-has 'nodes'               => ( is => 'lazy', init_arg => undef );
-has 'indices'             => ( is => 'lazy', init_arg => undef );
-has 'ingest'              => ( is => 'lazy', init_arg => undef );
-has 'snapshot'            => ( is => 'lazy', init_arg => undef );
-has 'cat'                 => ( is => 'lazy', init_arg => undef );
-has 'tasks'               => ( is => 'lazy', init_arg => undef );
-has 'bulk_helper_class'   => ( is => 'ro',   default  => 'Bulk' );
-has 'scroll_helper_class' => ( is => 'ro',   default  => 'Scroll' );
+has 'cluster'  => ( is => 'lazy', init_arg => undef );
+has 'nodes'    => ( is => 'lazy', init_arg => undef );
+has 'indices'  => ( is => 'lazy', init_arg => undef );
+has 'ingest'   => ( is => 'lazy', init_arg => undef );
+has 'snapshot' => ( is => 'lazy', init_arg => undef );
+has 'cat'      => ( is => 'lazy', init_arg => undef );
+has 'tasks'    => ( is => 'lazy', init_arg => undef );
+has 'bulk_helper_class'   => ( is => 'rw' );
+has 'scroll_helper_class' => ( is => 'rw' );
 has '_bulk_class'         => ( is => 'lazy' );
 has '_scroll_class'       => ( is => 'lazy' );
 
@@ -33,15 +33,19 @@ sub create {
 #===================================
 sub _build__bulk_class {
 #===================================
-    my $self = shift;
-    $self->_build_helper( 'bulk', $self->bulk_helper_class );
+    my $self       = shift;
+    my $bulk_class = $self->bulk_helper_class
+        || 'Client::' . $self->api_version . '::Bulk';
+    $self->_build_helper( 'bulk', $bulk_class );
 }
 
 #===================================
 sub _build__scroll_class {
 #===================================
-    my $self = shift;
-    $self->_build_helper( 'scroll', $self->scroll_helper_class );
+    my $self         = shift;
+    my $scroll_class = $self->scroll_helper_class
+        || 'Client::' . $self->api_version . '::Scroll';
+    $self->_build_helper( 'scroll', $scroll_class );
 }
 
 #===================================
@@ -288,7 +292,7 @@ Multiple error codes can be specified with an array:
 =head2 C<bulk_helper_class>
 
 The class to use for the L</bulk_helper()> method. Defaults to
-L<Search::Elasticsearch::Bulk>.
+L<Search::Elasticsearch::Client::5_0::Bulk>.
 
 =head2 C<scroll_helper_class>
 
@@ -664,7 +668,7 @@ that need to be made, bulk requests greatly improve performance.
         body    => [ actions ]          # required
     );
 
-See L<Search::Elasticsearch::Bulk> and L</bulk_helper()> for a helper module that makes
+See L<Search::Elasticsearch::Client::5_0::Bulk> and L</bulk_helper()> for a helper module that makes
 bulk indexing simpler to use.
 
 The C<bulk()> method can perform multiple L</index()>, L</create()>,
@@ -745,7 +749,7 @@ for more information.
     $bulk_helper = $e->bulk_helper( @args );
 
 Returns a new instance of the class specified in the L</bulk_helper_class>,
-which defaults to L<Search::Elasticsearch::Bulk>.
+which defaults to L<Search::Elasticsearch::Client::5_0::Bulk>.
 
 =head2 C<mget()>
 

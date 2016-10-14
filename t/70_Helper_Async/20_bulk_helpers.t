@@ -3,13 +3,11 @@ use Test::Deep;
 use Test::Exception;
 use strict;
 use warnings;
-use Search::Elasticsearch::Async::Bulk;
 use lib 't/lib';
 
 my $es = do "es_async.pl" or die( $@ || $! );
 
-my $b = Search::Elasticsearch::Async::Bulk->new(
-    es    => $es,
+my $b = $es->bulk_helper(
     index => 'i',
     type  => 't'
 );
@@ -111,8 +109,7 @@ ok $b->create_docs(), 'Create_docs empty';
 ok $b->create_docs( { foo => 'bar' }, { foo => 'baz' } ), 'Create docs';
 
 cmp_deeply $b->_buffer,
-    [ q({"create":{}}), q({"foo":"bar"}), q({"create":{}}),
-    q({"foo":"baz"}) ],
+    [ q({"create":{}}), q({"foo":"bar"}), q({"create":{}}), q({"foo":"baz"}) ],
     "Create docs in buffer";
 
 is $b->_buffer_size,  56, "Create docs buffer size";
