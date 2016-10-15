@@ -339,7 +339,8 @@ sub process_response {
 
         $error_args{current_version} = $1
             if $error_type eq 'Conflict'
-            and $msg =~ /: version conflict, current \[(\d+)\]/;
+            and $msg
+            =~ /: version conflict, current (?:version )?\[(\d+)\]/;
     }
     $msg ||= $error_type;
 

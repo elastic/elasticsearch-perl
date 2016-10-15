@@ -93,7 +93,7 @@ throws_ok {
 qr/\[409\] VersionConflictEngineException/, "Conflict error v1";
 is $@->{vars}{current_version}, 1, "Error has current version v1";
 
-### Conflict error >= v2
+### Conflict error = v2
 throws_ok {
     $c->process_response(
         { method => 'GET', ignore => [] },
@@ -105,6 +105,19 @@ throws_ok {
 }
 qr/\[409\] \[version_conflict_engine_exception\]/, "Conflict error v2";
 is $@->{vars}{current_version}, 1, "Error has current version v2";
+
+### Conflict error >= v5
+throws_ok {
+    $c->process_response(
+        { method => 'GET', ignore => [] },
+        409,
+        "Conflict",
+        '{"error":{"root_cause":[{"type":"version_conflict_engine_exception","reason":"[t][1]: version conflict, current version [1] is different than the one provided [2]","index_uuid":"iPS5AZjCT_GAG_TAryp8Bg","shard":"0","index":"t"}],"type":"version_conflict_engine_exception","reason":"[t][1]: version conflict, current version [1] is different than the one provided [2]","index_uuid":"iPS5AZjCT_GAG_TAryp8Bg","shard":"0","index":"t"},"status":409}',
+        { 'content-type' => 'application/json' }
+    );
+}
+qr/\[409\] \[version_conflict_engine_exception\]/, "Conflict error v5";
+is $@->{vars}{current_version}, 1, "Error has current version v5";
 
 ### Timeout error
 throws_ok {
