@@ -67,7 +67,8 @@ sub api {
         doc    => "search-request-scroll",
         method => "DELETE",
         parts  => { scroll_id => { multi => 1 } },
-        paths => [ [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ] ],
+        paths =>
+            [ [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ] ],
         qs => { filter_path => "list" },
     },
 
@@ -100,7 +101,9 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
         ],
         qs => {
             consistency  => "enum",
@@ -151,7 +154,9 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
         ],
         qs => {
             parent     => "string",
@@ -204,7 +209,9 @@ sub api {
             type  => { required => 1 },
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
         ],
         qs => {
             _source         => "list",
@@ -257,7 +264,9 @@ sub api {
             type  => { required => 1 }
         },
         paths => [
-            [ { id => 2, index => 0, type => 1 }, "{index}", "{type}", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
             [ { index => 0, type => 1 }, "{index}", "{type}" ],
         ],
         qs => {
@@ -547,7 +556,10 @@ sub api {
         method => "POST",
         parts  => { node_id => { multi => 1 } },
         paths  => [
-            [ { node_id => 2 }, "_cluster", "nodes", "{node_id}", "_shutdown" ],
+            [   { node_id => 2 }, "_cluster",
+                "nodes", "{node_id}",
+                "_shutdown"
+            ],
             [ {}, "_shutdown" ],
         ],
         qs => { delay => "time", exit => "boolean", filter_path => "list" },
@@ -741,8 +753,9 @@ sub api {
             index => { multi    => 1, required => 1 },
             type  => { required => 1 }
         },
-        paths =>
-            [ [ { index => 0, type => 1 }, "{index}", "{type}", "_mapping" ] ],
+        paths => [
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_mapping" ]
+        ],
         qs => { filter_path => "list", master_timeout => "time" },
     },
 
@@ -813,8 +826,9 @@ sub api {
         doc    => "indices-flush",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths  => [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
-        qs     => {
+        paths =>
+            [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
+        qs => {
             filter_path    => "list",
             force          => "boolean",
             full           => "boolean",
@@ -879,8 +893,10 @@ sub api {
     'indices.get_settings' => {
         doc   => "indices-get-mapping",
         parts => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_settings" ], [ {}, "_settings" ] ],
+        paths => [
+            [ { index => 0 }, "{index}", "_settings" ],
+            [ {}, "_settings" ]
+        ],
         qs => { filter_path => "list" },
     },
 
@@ -925,8 +941,10 @@ sub api {
         doc    => "indices-optimize",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_optimize" ], [ {}, "_optimize" ] ],
+        paths  => [
+            [ { index => 0 }, "{index}", "_optimize" ],
+            [ {}, "_optimize" ]
+        ],
         qs => {
             filter_path          => "list",
             flush                => "boolean",
@@ -964,8 +982,9 @@ sub api {
             index => { multi    => 1, required => 1 },
             type  => { required => 1 }
         },
-        paths =>
-            [ [ { index => 0, type => 1 }, "{index}", "{type}", "_mapping" ] ],
+        paths => [
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_mapping" ]
+        ],
         qs => {
             filter_path      => "list",
             ignore_conflicts => "boolean",
@@ -979,8 +998,10 @@ sub api {
         doc    => "indices-update-settings",
         method => "PUT",
         parts => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_settings" ], [ {}, "_settings" ] ],
+        paths => [
+            [ { index => 0 }, "{index}", "_settings" ],
+            [ {}, "_settings" ]
+        ],
         qs => { filter_path => "list", master_timeout => "time" },
     },
 
@@ -1028,8 +1049,10 @@ sub api {
     'indices.segments' => {
         doc   => "indices-segments",
         parts => { index => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_segments" ], [ {}, "_segments" ] ],
+        paths => [
+            [ { index => 0 }, "{index}", "_segments" ],
+            [ {}, "_segments" ]
+        ],
         qs => { filter_path => "list", ignore_indices => "enum" },
     },
 

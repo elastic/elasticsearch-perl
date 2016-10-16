@@ -1814,6 +1814,7 @@ sub api {
             [   { metric => 2, node_id => 1 }, "_nodes",
                 "{node_id}", "{metric}",
             ],
+            [ { metric  => 1 }, "_nodes", "{metric}" ],
             [ { node_id => 1 }, "_nodes", "{node_id}" ],
             [ {}, "_nodes" ],
         ],

@@ -16,7 +16,6 @@ forbid(
     'GET' => qw(
         /_nodes/hotthreads
         /_nodes/{node_id}/hotthreads
-        /_nodes/{metric}
         )
 );
 
