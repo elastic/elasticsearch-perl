@@ -45,3 +45,5 @@ sub _qs_init {
 }
 
 1;
+
+# ABSTRACT: Provides common functionality for API implementations

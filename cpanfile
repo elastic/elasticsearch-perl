@@ -10,8 +10,11 @@ requires "HTTP::Parser::XS" => "0";
 requires "HTTP::Request" => "0";
 requires "HTTP::Tiny" => "0.043";
 requires "Hijk" => "0";
+requires "IO::Compress::Deflate" => "0";
+requires "IO::Compress::Gzip" => "0";
 requires "IO::Select" => "0";
 requires "IO::Socket" => "0";
+requires "IO::Uncompress::Gunzip" => "0";
 requires "IO::Uncompress::Inflate" => "0";
 requires "JSON::MaybeXS" => "1.002002";
 requires "JSON::PP" => "0";
@@ -35,7 +38,6 @@ requires "URI" => "0";
 requires "namespace::clean" => "0";
 requires "overload" => "0";
 requires "parent" => "0";
-requires "strict" => "0";
 requires "warnings" => "0";
 recommends "URI::Escape::XS" => "0";
 
@@ -52,6 +54,7 @@ on 'test' => sub {
   requires "YAML" => "0";
   requires "base" => "2.18";
   requires "lib" => "0";
+  requires "strict" => "0";
 };
 
 on 'test' => sub {

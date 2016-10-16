@@ -131,11 +131,29 @@ itself is a flexible and powerful open source, distributed real-time
 search and analytics engine for the cloud.  You can read more about it
 on L<elastic.co|http://www.elastic.co>.
 
-=head1 BACKWARDS COMPATIBILITY
+=head1 PREVIOUS VERSIONS OF ELASTICSEARCH
 
-This version of the client supports the Elasticsearch 5.0 branch by
-default, see L</Client> section below for details of working with 2.0, 1.0,
-and 0.90 branches.
+This version of the client supports the Elasticsearch 5.0 branch,
+which is not backwards compatible with earlier branches.
+
+If you need to talk to a version of Elasticsearch before 5.0.0, please
+install one of the following packages:
+
+=over
+
+=item *
+
+L<Search::Elasticsearch::Client::2_0>
+
+=item *
+
+L<Search::Elasticsearch::Client::1_0>
+
+=item *
+
+L<Search::Elasticsearch::Client::0_90>
+
+=back
 
 =head2 Motivation
 
@@ -392,21 +410,6 @@ be explicitly specified as follows:
     $e = Search::Elasticsearch->new(
         client => '5_0::Direct'
     );
-
-See :
-
-
-=over
-
-=item * L<Search::Elasticsearch::Client::5_0::Direct> (default, for 5.0 branch)
-
-=item * L<Search::Elasticsearch::Client::2_0::Direct> (for 2.0 branch)
-
-=item * L<Search::Elasticsearch::Client::1_0::Direct> (for 1.0 branch)
-
-=item * L<Search::Elasticsearch::Client::0_90::Direct> (for 0.90 branch)
-
-=back
 
 =head2 C<transport>
 

@@ -122,6 +122,30 @@ L<Mojolicious> or with any of the event loops supported by L<AnyEvent>.
 L<Search::Elasticsearch::Async> builds on L<Search::Elasticsearch>, which
 you should see for the main documentation.
 
+=head1 PREVIOUS VERSIONS OF ELASTICSEARCH
+
+This version of the async client supports the Elasticsearch 5.0 branch,
+which is not backwards compatible with earlier branches.
+
+If you need to talk to a version of Elasticsearch before 5.0.0, please
+install one of the following packages:
+
+=over
+
+=item *
+
+L<Search::Elasticsearch::Client::2_0::Async>
+
+=item *
+
+L<Search::Elasticsearch::Client::1_0::Async>
+
+=item *
+
+L<Search::Elasticsearch::Client::0_90::Async>
+
+=back
+
 =head1 USING PROMISES
 
 First, go and read L<Promises::Cookbook::GentleIntro>, which tells you

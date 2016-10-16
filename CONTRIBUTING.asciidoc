@@ -24,9 +24,6 @@ cd dist
 # install developer requirements
 dzil --authordeps --missing | cpanm
 
-# if ReadmeFromPod doesn't install cleanly, pin it to version 0.21:
-cpanm Dist::Zilla::Plugin::ReadmeFromPod@0.21 Test::Pod
-
 # install build requirements:
 dzil --listdeps --missing | cpanm
 
