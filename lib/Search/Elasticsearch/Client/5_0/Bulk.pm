@@ -65,45 +65,11 @@ sub flush {
     return defined wantarray ? $results : undef;
 }
 
-#===================================
-sub reindex {
-#===================================
-    my ( $self, $params ) = parse_params(@_);
-    my $src = $params->{source}
-        or throw( 'Param', "Missing required param <source>" );
-
-    my $transform = $self->_doc_transformer($params);
-
-    if ( ref $src eq 'HASH' ) {
-        $src = {%$src};
-        my $es = delete $src->{es} || $self->es;
-        my $scroll = $es->scroll_helper(
-            sort => '_doc',
-            size => 1000,
-            %$src
-        );
-
-        $src = sub {
-            $scroll->refill_buffer;
-            $scroll->drain_buffer;
-        };
-
-        print "Reindexing " . $scroll->total . " docs\n"
-            if $self->verbose;
-    }
-
-    while ( my @docs = grep {defined} $src->() ) {
-        $self->index( grep {$_} map { $transform->($_) } @docs );
-    }
-    $self->flush;
-    return 1;
-}
-
 1;
 
 __END__
 
-# ABSTRACT: A helper module for the Bulk API and for reindexing
+# ABSTRACT: A helper module for the Bulk API
 
 =head1 SYNOPSIS
 
@@ -136,20 +102,11 @@ __END__
     # Manual flush
     $bulk->flush;
 
-    # Reindex docs:
-    my $bulk = $es->bulk_helper(
-        index   => 'new_index',
-        verbose => 1
-    );
-
-    $bulk->reindex( source => { index => 'old_index' });
-
 =head1 DESCRIPTION
 
 This module provides a wrapper for the L<Search::Elasticsearch::Client::5_0::Direct/bulk()>
 method which makes it easier to run multiple create, index, update or delete
-actions in a single request. It also provides a simple interface
-for L<reindexing documents|/REINDEXING DOCUMENTS>.
+actions in a single request.
 
 The L<Search::Elasticsearch::Client::5_0::Bulk> module acts as a queue, buffering up actions
 until it reaches a maximum count of actions, or a maximum size of JSON request
@@ -436,154 +393,4 @@ An update can either use a I<partial doc> which gets merged with an existing
 doc (example 1 above), or can use a C<script> to update an existing doc
 (example 2 above). More information on C<script> can be found here:
 L<Search::Elasticsearch::Client::5_0::Direct/update()>.
-
-=head1 REINDEXING DOCUMENTS
-
-A common use case for bulk indexing is to reindex a whole index when
-changing the type mappings or analysis chain. This typically
-combines bulk indexing with L<scrolled searches|Search::Elasticsearch::Client::5_0::Scroll>:
-the scrolled search pulls all of the data from the source index, and
-the bulk indexer indexes the data into the new index.
-
-=head2 C<reindex()>
-
-    $bulk->reindex(
-        source       => $source,                # required
-        transform    => \&transform,            # optional
-        version_type => 'external|internal',    # optional
-    );
-
-The C<reindex()> method requires a C<$source> parameter, which provides
-the source for the documents which are to be reindexed.
-
-=head2 Reindexing from another index
-
-If the C<source> argument is a HASH ref, then the hash is passed to
-L<Search::Elasticsearch::Client::5_0::Scroll/new()> to create a new scrolled search.
-
-    my $bulk = $es->bulk_helper(
-        index   => 'new_index',
-        verbose => 1
-    );
-
-    $bulk->reindex(
-        source  => {
-            index       => 'old_index',
-            size        => 500,         # default
-            search_type => 'scan'       # default
-        }
-    );
-
-If a default C<index> or C<type> has been specified in the call to
-L</new()>, then it will replace the C<index> and C<type> values for
-the docs returned from the scrolled search. In the example above,
-all docs will be retrieved from C<"old_index"> and will be bulk indexed
-into C<"new_index">.
-
-=head2 Reindexing from a generic source
-
-The C<source> parameter also accepts a coderef or an anonymous sub,
-which should return one or more new documents every time it is executed.
-This allows you to pass any iterator, wrapped in an anonymous sub:
-
-    my $iter = get_iterator_from_somewhere();
-
-    $bulk->reindex(
-        source => sub { $iter->next }
-    );
-
-=head2 Transforming docs on the fly
-
-The C<transform> parameter allows you to change documents on the fly,
-using a callback.  The callback receives the document as the only argument,
-and should return the updated document, or C<undef> if the document should
-not be indexed:
-
-    $bulk->reindex(
-        source      => { index => 'old_index' },
-        transform   => sub {
-            my $doc = shift;
-
-            # don't index doc marked as valid:false
-            return undef unless $doc->{_source}{valid};
-
-            # convert $tag to @tags
-            $doc->{_source}{tags} = [ delete $doc->{_source}{tag}];
-            return $doc
-        }
-    );
-
-=head2 Reindexing from another cluster
-
-By default, L</reindex()> expects the source and destination indices
-to be in the same cluster. To pull data from one cluster and index it into
-another, you can use two separate C<$es> objects:
-
-    $es_target  = Search::Elasticsearch->new( nodes => 'localhost:9200' );
-    $es_source  = Search::Elasticsearch->new( nodes => 'search1:9200' );
-
-    my $bulk = $es_targert->bulk_helper(
-        verbose => 1
-    )
-    -> reindex(
-          source => {
-              es    => $es_source,
-              index => 'my_index'
-          }
-       );
-
-=head2 Parents and routing
-
-If you are using parent-child relationships or custom C<routing> values,
-and you want to preserve these when you reindex your documents, then
-you will need to request these values specifically, as follows:
-
-    $bulk->reindex(
-        source => {
-            index   => 'old_index',
-            fields  => ['_source','_parent','_routing']
-        }
-    );
-
-=head2 Working with version numbers
-
-Every document in Elasticsearch has a current C<version> number, which
-is used for L<optimistic concurrency control|http://en.wikipedia.org/wiki/Optimistic_concurrency_control>,
-that is, to ensure that you don't overwrite changes that have been made
-by another process.
-
-All CRUD operations accept a C<version> parameter and a C<version_type>
-parameter which tells Elasticsearch that the change should only be made
-if the current document corresponds to these parameters. The
-C<version_type> parameter can have the following values:
-
-=over
-
-=item * C<internal>
-
-Use Elasticsearch version numbers.  Documents are only changed if the
-document in Elasticsearch has the B<same> C<version> number that is
-specified in the CRUD operation. After the change, the new
-version number is C<version+1>.
-
-=item * C<external>
-
-Use an external versioning system, such as timestamps or version numbers
-from an external database.  Documents are only changed if the document
-in Elasticsearch has a B<lower> C<version> number than the one
-specified in the CRUD operation. After the change, the new version
-number is C<version>.
-
-=back
-
-If you would like to reindex documents from one index to another, preserving
-the C<version> numbers from the original index, then you need the following:
-
-    $bulk->reindex(
-        source => {
-            index   => 'old_index',
-            version => 1,               # retrieve version numbers in search
-        },
-        version_type => 'external'      # use these "external" version numbers
-    );
 

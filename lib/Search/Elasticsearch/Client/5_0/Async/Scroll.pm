@@ -348,7 +348,7 @@ C<client_id>:
 Very often the I<something> that you will want to do with these results
 involves bulk-indexing them into a new index. The easiest way to
 marry a scrolled search with bulk indexing is to use the
-L<Search::Elasticsearch::Client::5_0::Async::Bulk/reindex()> method.
+L<Search::Elasticsearch::Client::5_0::Direct/reindex()> method.
 
 =head1 DEEP SCROLLING
 
@@ -549,10 +549,10 @@ This value can only be checked once the scroll has completed.
 
 =over
 
-=item * L<Search::Elasticsearch::Client::5_0::Async::Bulk/reindex()>
-
 =item * L<Search::Elasticsearch::Client::5_0::Direct/search()>
 
 =item * L<Search::Elasticsearch::Client::5_0::Direct/scroll()>
+
+=item * L<Search::Elasticsearch::Client::5_0::Direct/reindex()>
 
 =back
