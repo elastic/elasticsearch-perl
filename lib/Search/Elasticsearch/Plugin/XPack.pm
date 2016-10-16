@@ -50,6 +50,10 @@ L<Search::Elasticsearch::Plugin::XPack::5_0>
 
 =item *
 
+L<Search::Elasticsearch::Plugin::XPack::2_0>
+
+=item *
+
 L<Search::Elasticsearch::Plugin::XPack::1_0>
 
 =back

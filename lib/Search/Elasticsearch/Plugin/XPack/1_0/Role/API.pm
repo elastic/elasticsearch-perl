@@ -27,7 +27,8 @@ sub api {
     'watcher.ack_watch' => {
         doc    => "appendix-api-ack-watch",
         method => "PUT",
-        parts => { action_id => { multi => 1 }, watch_id => { required => 1 } },
+        parts =>
+            { action_id => { multi => 1 }, watch_id => { required => 1 } },
         paths => [
             [   { action_id => 3, watch_id => 2 }, "_watcher",
                 "watch",       "{watch_id}",
@@ -35,33 +36,7 @@ sub api {
             ],
             [ { watch_id => 2 }, "_watcher", "watch", "{watch_id}", "_ack" ],
         ],
-        qs => ["master_timeout"],
-    },
-
-    'watcher.activate_watch' => {
-        doc    => "",
-        method => "PUT",
-        parts  => { watch_id => { required => 1 } },
-        paths  => [
-            [   { watch_id => 2 }, "_watcher",
-                "watch", "{watch_id}",
-                "_activate",
-            ],
-        ],
-        qs => ["master_timeout"],
-    },
-
-    'watcher.deactivate_watch' => {
-        doc    => "",
-        method => "PUT",
-        parts  => { watch_id => { required => 1 } },
-        paths  => [
-            [   { watch_id => 2 }, "_watcher",
-                "watch", "{watch_id}",
-                "_deactivate",
-            ],
-        ],
-        qs => ["master_timeout"],
+        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'watcher.delete_watch' => {
@@ -69,7 +44,11 @@ sub api {
         method => "DELETE",
         parts  => { id => { required => 1 } },
         paths  => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
-        qs => [ "force", "master_timeout" ],
+        qs     => {
+            filter_path    => "list",
+            force          => "boolean",
+            master_timeout => "time"
+        },
     },
 
     'watcher.execute_watch' => {
@@ -81,21 +60,21 @@ sub api {
             [ { id => 2 }, "_watcher", "watch", "{id}", "_execute" ],
             [ {}, "_watcher", "watch", "_execute" ],
         ],
-        qs => ["debug"],
+        qs => { debug => "boolean", filter_path => "list" },
     },
 
     'watcher.get_watch' => {
         doc   => "appendix-api-get-watch",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
-        qs    => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.info' => {
         doc   => "appendix-api-info",
         parts => {},
         paths => [ [ {}, "_watcher" ] ],
-        qs    => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.put_watch' => {
@@ -104,7 +83,7 @@ sub api {
         method => "PUT",
         parts => { id => { required => 1 } },
         paths => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
-        qs => [ "active", "master_timeout" ],
+        qs => { filter_path => "list", master_timeout => "time" },
     },
 
     'watcher.restart' => {
@@ -112,7 +91,7 @@ sub api {
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_watcher", "_restart" ] ],
-        qs     => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.start' => {
@@ -120,7 +99,7 @@ sub api {
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_watcher", "_start" ] ],
-        qs     => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.stats' => {
@@ -130,7 +109,7 @@ sub api {
             [ { metric => 2 }, "_watcher", "stats", "{metric}" ],
             [ {}, "_watcher", "stats" ],
         ],
-        qs => [],
+        qs => { filter_path => "list" },
     },
 
     'watcher.stop' => {
@@ -138,7 +117,7 @@ sub api {
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_watcher", "_stop" ] ],
-        qs     => [],
+        qs => { filter_path => "list" },
     },
 
 #=== AUTOGEN - END ===

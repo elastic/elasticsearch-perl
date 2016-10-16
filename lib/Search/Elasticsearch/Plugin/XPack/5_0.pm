@@ -31,7 +31,7 @@ sub _build_watcher {
 
 1;
 
-# ABSTRACT: Plugin providing XPack APIs for Search::Elasticsearch v2.x
+# ABSTRACT: Plugin providing XPack APIs for Search::Elasticsearch v5.x
 
 =head1 SYNOPSIS
 
@@ -50,7 +50,7 @@ sub _build_watcher {
 =head2 DESCRIPTION
 
 This class extends the L<Search::Elasticsearch> client to add support
-for the X-Pack commercial plugins for Elasticsearch 2.x.
+for the X-Pack commercial plugins for Elasticsearch 5.x.
 
 It extends the L<Search::Elasticsearch> client with a C<graph>, C<license>,
 C<shield>, and C<watcher> namespace, to support the APIs for the X-Pack plugins:

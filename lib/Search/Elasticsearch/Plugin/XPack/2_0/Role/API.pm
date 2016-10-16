@@ -35,7 +35,8 @@ sub api {
             ],
             [ { index => 0 }, "{index}", "_graph", "explore" ],
         ],
-        qs => { filter_path => "list", routing => "string", timeout => "time" },
+        qs =>
+            { filter_path => "list", routing => "string", timeout => "time" },
     },
 
     'license.get' => {
@@ -77,8 +78,9 @@ sub api {
         doc    => "",
         method => "PUT",
         parts  => { name => { required => 1 } },
-        paths =>
-            [ [ { name => 2 }, "_shield", "role", "{name}", "_clear_cache" ] ],
+        paths  => [
+            [ { name => 2 }, "_shield", "role", "{name}", "_clear_cache" ]
+        ],
         qs => { filter_path => "list" },
     },
 
