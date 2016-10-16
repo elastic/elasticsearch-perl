@@ -94,7 +94,7 @@ sub sniff {
         }
 
         unless ( @all || $done_seeds++ ) {
-            $self->logger->infof("No live nodes available. Trying seed nodes.");
+            $self->logger->info("No live nodes available. Trying seed nodes.");
             @all = $self->_seeds_as_cxns;
         }
 

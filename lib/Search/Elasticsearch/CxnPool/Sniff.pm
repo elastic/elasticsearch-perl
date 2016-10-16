@@ -50,7 +50,7 @@ sub sniff {
         $self->sniff_cxn($cxn) and return;
     }
 
-    $self->logger->infof("No live nodes available. Trying seed nodes.");
+    $self->logger->info("No live nodes available. Trying seed nodes.");
     for my $seed ( @{ $self->seed_nodes } ) {
         my $cxn = $self->cxn_factory->new_cxn($seed);
         $self->sniff_cxn($cxn) and return;

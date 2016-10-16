@@ -28,6 +28,19 @@ sub _build_trace_handle {
     Log::Any->get_logger( category => $self->trace_as );
 }
 
+#===================================
+sub _build_deprecate_handle {
+#===================================
+    my $self = shift;
+    if ( my @args = to_list( $self->deprecate_to ) ) {
+        Log::Any::Adapter->set( { category => $self->deprecate_as }, @args );
+    }
+    Log::Any->get_logger(
+        default_adapter => 'Stderr',
+        category        => $self->deprecate_as
+    );
+}
+
 1;
 
 # ABSTRACT: A Log::Any-based Logger implementation
@@ -46,6 +59,9 @@ to Elasticsearch nodes.  Tracing can be enabled for debugging purposes,
 or for generating a pretty-printed C<curl> script which can be used for
 reporting problems.
 
+I<Deprecations> refers to deprecation warnings returned by Elasticsearch
+5.x and above. Deprecations are logged to STDERR by default.
+
 =head1 CONFIGURATION
 
 Logging and tracing can be enabled using L<Log::Any::Adapter>, or by
@@ -59,7 +75,7 @@ Send all logging and tracing to C<STDERR>:
     use Search::Elasticsearch;
     my $e = Search::Elasticsearch->new;
 
-Send logging to a file, and tracing to Stderr:
+Send logging and deprecations to a file, and tracing to Stderr:
 
     use Log::Any::Adapter();
     Log::Any::Adapter->set(
@@ -71,26 +87,33 @@ Send logging to a file, and tracing to Stderr:
         { category => 'elasticsearch.trace' },
         'Stderr'
     );
+    Log::Any::Adapter->set(
+        { category => 'elasticsearch.deprecation' },
+        'File',
+        '/path/to/deprecations.log'
+    );
 
     use Search::Elasticsearch;
     my $e = Search::Elasticsearch->new;
 
-=head2 USING C<log_to> AND C<trace_to>
+=head2 USING C<log_to>, C<trace_to> AND C<deprecate_to>
 
 Send all logging and tracing to C<STDERR>:
 
     use Search::Elasticsearch;
     my $e = Search::Elasticsearch->new(
         log_to   => 'Stderr',
-        trace_to => 'Stderr'
+        trace_to => 'Stderr',
+        deprecate_to => 'Stderr'  # default
     );
 
-Send logging to a file, and tracing to Stderr:
+Send logging and deprecations to a file, and tracing to Stderr:
 
     use Search::Elasticsearch;
     my $e = Search::Elasticsearch->new(
-        log_to   => ['File', '/path/to/file.log'],
-        trace_to => 'Stderr'
+        log_to       => ['File', '/path/to/file.log'],
+        trace_to     => 'Stderr',
+        deprecate_to => ['File', '/path/to/deprecations.log'],
     );
 
 See L<Log::Any::Adapter> for more.

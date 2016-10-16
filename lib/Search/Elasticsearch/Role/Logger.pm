@@ -7,11 +7,14 @@ use Try::Tiny;
 use Search::Elasticsearch::Util qw(new_error);
 use namespace::clean;
 
-has 'serializer' => ( is => 'ro', required => 1 );
-has 'log_as'     => ( is => 'ro', default  => 'elasticsearch.event' );
-has 'trace_as'   => ( is => 'ro', default  => 'elasticsearch.trace' );
-has 'log_to'     => ( is => 'ro' );
-has 'trace_to'   => ( is => 'ro' );
+has 'serializer'   => ( is => 'ro', required => 1 );
+has 'log_as'       => ( is => 'ro', default  => 'elasticsearch.event' );
+has 'trace_as'     => ( is => 'ro', default  => 'elasticsearch.trace' );
+has 'deprecate_as' => ( is => 'ro', default  => 'elasticsearch.deprecation' );
+has 'log_to'       => ( is => 'ro' );
+has 'trace_to'     => ( is => 'ro' );
+has 'deprecate_to' => ( is => 'ro' );
+
 has 'trace_handle' => (
     is      => 'lazy',
     handles => [qw( trace tracef is_trace)]
@@ -28,6 +31,8 @@ has 'log_handle' => (
             )
     ]
 );
+
+has 'deprecate_handle' => ( is => 'lazy' );
 
 #===================================
 sub throw_error {
@@ -123,6 +128,12 @@ sub trace_comment {
     $self->trace("$comment\n");
 }
 
+#===================================
+sub deprecation {
+#===================================
+    my $self = shift;
+    $self->deprecate_handle->warnf( "[DEPRECATION] %s. In request: %s", @_ );
+}
 1;
 
 # ABSTRACT: Provides common functionality to Logger implementations
@@ -141,7 +152,7 @@ See L<Search::Elasticsearch::Logger::LogAny> for the default implementation.
 
 Parameters passed to C<log_to> are used by L<Search::Elasticsearch::Role::Logger>
 implementations to setup the L</log_handle()>.  See
-L<Search::Elasticsearch::Logger::LogAny/log_to> for details.
+L<Search::Elasticsearch::Logger::LogAny> for details.
 
 =head2 C<log_as>
 
@@ -153,13 +164,26 @@ category C<"elasticsearch.event">, which can be configured with C<log_as>.
 
 Parameters passed to C<trace_to> are used by L<Search::Elasticsearch::Role::Logger>
 implementations to setup the L</trace_handle()>. See
-L<Search::Elasticsearch::Logger::LogAny/trace_to> for details.
+L<Search::Elasticsearch::Logger::LogAny> for details.
 
 =head2 C<trace_as>
 
 By default, trace output emitted by L</trace_request()>, L</trace_response()>,
 L</trace_error()> and L</trace_comment()> are logged under the category
 C<elasticsearch.trace>, which can be configured with C<trace_as>.
+
+=head2 C<deprecate_to>
+
+Parameters passed to C<deprecate_to> are used by L<Search::Elasticsearch::Role::Logger>
+implementations to setup the L</deprecate_handle()>.  See
+L<Search::Elasticsearch::Logger::LogAny> for details.
+
+=head2 C<deprecate_as>
+
+By default, events emitted by L</deprecation()> are logged to the
+L</deprecate_handle()> under the
+category C<"elasticsearch.deprecation">, which can be configured with C<deprecate_as>.
+
 
 =head1 METHODS
 
@@ -174,6 +198,10 @@ C<is_error()>, C<critical()>, C<criticalf()> and  C<is_critical()>.
 
 Returns an object which can handle the methods:
 C<trace()>, C<tracef()> and C<is_trace()>.
+
+=head2 C<deprecate_handle()>
+
+Returns an object which can handle the C<warnf()> method.
 
 =head2 C<trace_request()>
 
@@ -203,6 +231,11 @@ object.
 
 Used to insert debugging comments into trace output.
 
+=head2 C<deprecation()>
+
+    $logger->deprecation($warning,$request)
+
+Issues a deprecation warning to the deprecation logger.
 
 
 

@@ -301,6 +301,12 @@ sub process_response {
 
     my $is_encoded = $mime_type && $mime_type ne 'text/plain';
 
+    # Deprecation warnings
+    if (my $warnings = $headers->{warning}) {
+        $warnings = join ("; ",@$warnings) if ref $warnings eq 'ARRAY';
+        $self->logger->deprecation($warnings,$params);
+    }
+
     # Request is successful
 
     if ( $code >= 200 and $code <= 209 ) {
