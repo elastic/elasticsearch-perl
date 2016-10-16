@@ -4,6 +4,9 @@ use Moo;
 with 'Search::Elasticsearch::Client::1_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 
+our $VERSION='5.00';
+use Search::Elasticsearch 5.00 ();
+
 use Search::Elasticsearch::Util qw(parse_params is_compat);
 use namespace::clean;
 
@@ -160,7 +163,7 @@ Snapshot and restore:
 =head1 DESCRIPTION
 
 The L<Search::Elasticsearch::Client::1_0::Direct> class provides the
-client that is returned by:
+Elasticsearch 1.x compatible client that is returned by:
 
     $e = Search::Elasticsearch->new( cxn => '1_0::Direct' );
 
@@ -173,30 +176,6 @@ This class provides the methods for L<document CRUD|/DOCUMENT CRUD METHODS>,
 L<bulk document CRUD|/BULK DOCUMENT CRUD METHODS> and L<search|/SEARCH METHODS>.
 It also provides access to clients for managing L<indices|/indices()>
 and the L<cluster|/cluster()>.
-
-=head1 BACKWARDS COMPATIBILITY AND ELASTICSEARCH 0.90.x
-
-This version of the client supports the Elasticsearch 1.0 branch,
-which is not backwards compatible with the 0.90 branch.
-
-If you need to talk to a version of Elasticsearch before 1.0.0,
-please use L<Search::Elasticsearch::Client::0_90::Direct> as follows:
-
-    $es = Search::Elasticsearch->new(
-        client => '0_90::Direct'
-    );
-
-=head1 ELASTICSEARCH 2.x
-
-A client compatible with version 2.x of Elasticsearch is
-available as:
-
-    $es = Search::Elasticsearch->new(
-        client => '2_0::Direct'  # default
-    );
-
-See L<Search::Elasticsearch::Client::2_0::Direct> for docs about the 2.x compatible
-client.
 
 =head1 CONVENTIONS
 

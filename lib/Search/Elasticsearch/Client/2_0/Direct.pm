@@ -4,6 +4,9 @@ use Moo;
 with 'Search::Elasticsearch::Client::2_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 
+our $VERSION='5.00';
+use Search::Elasticsearch 5.00 ();
+
 use Search::Elasticsearch::Util qw(parse_params is_compat);
 use namespace::clean;
 
@@ -163,8 +166,8 @@ Task management:
 
 =head1 DESCRIPTION
 
-The L<Search::Elasticsearch::Client::2_0::Direct> class provides a client
-compatible with the as-yet-unreleased version 2.x of Elasticsearch.
+The L<Search::Elasticsearch::Client::2_0::Direct> class provides the
+Elasticsearch 2.x compatible client returned by:
 
     $e = Search::Elasticsearch->new(
         client => "2_0::Direct"
@@ -179,19 +182,6 @@ This class provides the methods for L<document CRUD|/DOCUMENT CRUD METHODS>,
 L<bulk document CRUD|/BULK DOCUMENT CRUD METHODS> and L<search|/SEARCH METHODS>.
 It also provides access to clients for managing L<indices|/indices()>
 and the L<cluster|/cluster()>.
-
-=head1 BACKWARDS COMPATIBILITY AND ELASTICSEARCH 1.x and 0.90.x
-
-This version of the client supports the Elasticsearch 2.0 branch,
-which is not backwards compatible with the 1.x and 0.90 branch.
-
-If you need to talk to a version of Elasticsearch before 2.0.0,
-please use L<Search::Elasticsearch::Client::1_0::Direct>
-or L<Search::Elasticsearch::Client::0_90::Direct> as follows:
-
-    $es = Search::Elasticsearch->new(
-        client => '1_0::Direct'  # or '0_90::Direct'
-    );
 
 =head1 CONVENTIONS
 
@@ -291,7 +281,7 @@ L<Search::Elasticsearch::Client::2_0::Bulk>.
 =head2 C<scroll_helper_class>
 
 The class to use for the L</scroll_helper()> method. Defaults to
-L<Search::Elasticsearch::Scroll>.
+L<Search::Elasticsearch::Client::2_0::Scroll>.
 
 =head1 GENERAL METHODS
 
@@ -1061,7 +1051,7 @@ B<NOTE:> you will almost always want to set the
 C<search_type> to C<scan> in your
 original C<search()> request.
 
-See L</scroll_helper()> and L<Search::Elasticsearch::Scroll> for a helper utility
+See L</scroll_helper()> and L<Search::Elasticsearch::Client::2_0::Scroll> for a helper utility
 which makes managing scroll requests much easier.
 
 Query string parameters:
@@ -1093,7 +1083,7 @@ up resources on the server.
     $scroll_helper = $e->scroll_helper( @args );
 
 Returns a new instance of the class specified in the L</scroll_helper_class>,
-which defaults to L<Search::Elasticsearch::Scroll>.
+which defaults to L<Search::Elasticsearch::Client::2_0::Scroll>.
 
 
 =head2 C<msearch()>

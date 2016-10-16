@@ -4,6 +4,9 @@ use Moo;
 with 'Search::Elasticsearch::Client::5_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 
+our $VERSION='5.00';
+use Search::Elasticsearch 5.00 ();
+
 use Search::Elasticsearch::Util qw(parse_params is_compat);
 use namespace::clean;
 
@@ -80,7 +83,7 @@ __PACKAGE__->_install_api('');
 
 __END__
 
-# ABSTRACT: Thin client with full support for Elasticsearch 2.x APIs
+# ABSTRACT: Thin client with full support for Elasticsearch 5.x APIs
 
 =head1 SYNOPSIS
 
@@ -169,11 +172,11 @@ Task management:
 
 =head1 DESCRIPTION
 
-The L<Search::Elasticsearch::Client::5_0::Direct> class provides a client
-compatible with the as-yet-unreleased version 2.x of Elasticsearch.
+The L<Search::Elasticsearch::Client::5_0::Direct> class provides the
+Elasticsearch 5.x compatible client returned by:
 
     $e = Search::Elasticsearch->new(
-        client => "5_0::Direct"
+        client => "5_0::Direct"  # default
     );
 
 It is intended to be as close as possible to the native REST API that
@@ -186,18 +189,29 @@ L<bulk document CRUD|/BULK DOCUMENT CRUD METHODS> and L<search|/SEARCH METHODS>.
 It also provides access to clients for managing L<indices|/indices()>
 and the L<cluster|/cluster()>.
 
-=head1 BACKWARDS COMPATIBILITY AND ELASTICSEARCH 1.x and 0.90.x
+=head1 PREVIOUS VERSIONS OF ELASTICSEARCH
 
-This version of the client supports the Elasticsearch 2.0 branch,
-which is not backwards compatible with the 1.x and 0.90 branch.
+This version of the client supports the Elasticsearch 5.0 branch,
+which is not backwards compatible with earlier branches.
 
-If you need to talk to a version of Elasticsearch before 2.0.0,
-please use L<Search::Elasticsearch::Client::1_0::Direct>
-or L<Search::Elasticsearch::Client::0_90::Direct> as follows:
+If you need to talk to a version of Elasticsearch before 5.0.0, please
+install one of the following modules:
 
-    $es = Search::Elasticsearch->new(
-        client => '1_0::Direct'  # or '0_90::Direct'
-    );
+=over
+
+=item *
+
+L<Search::Elasticsearch::Client::2_0>
+
+=item *
+
+L<Search::Elasticsearch::Client::1_0>
+
+=item *
+
+L<Search::Elasticsearch::Client::0_90>
+
+=back
 
 =head1 CONVENTIONS
 
@@ -297,7 +311,7 @@ L<Search::Elasticsearch::Client::5_0::Bulk>.
 =head2 C<scroll_helper_class>
 
 The class to use for the L</scroll_helper()> method. Defaults to
-L<Search::Elasticsearch::Scroll>.
+L<Search::Elasticsearch::Client::5_0::Scroll>.
 
 =head1 GENERAL METHODS
 
@@ -406,7 +420,7 @@ for more information.
     $response = $e->create(
         index   => 'index_name',        # required
         type    => 'type_name',         # required
-        id      => 'doc_id',            # optional, otherwise auto-generated
+        id      => 'doc_id',            # required
 
         body    => { document }         # required
     );
@@ -565,10 +579,6 @@ C<index>, C<type> and C<id> if it exists. Updates can be performed either by:
         }
     );
 
-Make sure you enable
-L<dynamic scripting|https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#enable-dynamic-scripting>
-and know its implications.
-
 =item * with an indexed script:
 
     $response = $e->update(
@@ -576,6 +586,7 @@ and know its implications.
         body => {
             script => {
                 id     => $id,
+                lang   => 'painless',
                 params => { incr => 5 }
             }
         }
@@ -591,7 +602,7 @@ for more information.
         body => {
             script => {
                 file   => 'counter',
-                lang   => 'groovy',
+                lang   => 'painless',
                 params => { incr => 5 }
             }
         }
@@ -1043,11 +1054,7 @@ C<scroll> parameter, the C<scroll()>
 method allows you to keep pulling more results until the results
 are exhausted.
 
-B<NOTE:> you will almost always want to set the
-C<search_type> to C<scan> in your
-original C<search()> request.
-
-See L</scroll_helper()> and L<Search::Elasticsearch::Scroll> for a helper utility
+See L</scroll_helper()> and L<Search::Elasticsearch::Client::5_0::Scroll> for a helper utility
 which makes managing scroll requests much easier.
 
 Query string parameters:
@@ -1079,7 +1086,7 @@ up resources on the server.
     $scroll_helper = $e->scroll_helper( @args );
 
 Returns a new instance of the class specified in the L</scroll_helper_class>,
-which defaults to L<Search::Elasticsearch::Scroll>.
+which defaults to L<Search::Elasticsearch::Client::5_0::Scroll>.
 
 
 =head2 C<msearch()>
@@ -1532,7 +1539,7 @@ Query string parameters:
 
 =head1 INDEXED SCRIPT METHODS
 
-If dynamic scripting is enabled, Elasticsearch allows you to store scripts in the cluster state
+Elasticsearch allows you to store scripts in the cluster state
 and reference them by id. The methods to manage indexed scripts are as follows:
 
 =head2 C<put_script()>
@@ -1546,7 +1553,7 @@ and reference them by id. The methods to manage indexed scripts are as follows:
 The C<put_script()> method is used to store a script in the cluster state. For instance:
 
     $result  = $e->put_scripts(
-        lang => 'groovy',
+        lang => 'painless',
         id   => 'hello_world',
         body => {
           script => q(return "hello world");

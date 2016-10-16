@@ -50,4 +50,4 @@ sub DEMOLISH {
 
 1;
 
-# ABSTRACT: Provides common functionality to L<Search::Elasticseach::Client::0_90::Scroll> and L<Search::Elasticsearch::Client::0_90::Async::Scroll>
+# ABSTRACT: Provides common functionality to L<Search::Elasticsearch::Client::0_90::Scroll> and L<Search::Elasticsearch::Client::0_90::Async::Scroll>

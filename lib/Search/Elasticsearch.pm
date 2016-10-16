@@ -133,8 +133,8 @@ on L<elastic.co|http://www.elastic.co>.
 
 =head1 BACKWARDS COMPATIBILITY
 
-This version of the client supports the Elasticsearch 2.0 branch by
-default, see L</Client> section below for details of working with 1.0
+This version of the client supports the Elasticsearch 5.0 branch by
+default, see L</Client> section below for details of working with 2.0, 1.0,
 and 0.90 branches.
 
 =head2 Motivation
@@ -186,9 +186,8 @@ Good defaults
 =item *
 
 Helper utilities for more complex operations, such as
-L<bulk indexing|Search::Elasticsearch::Client::5_0::Bulk>,
-L<scrolled searches|Search::Elasticsearch::Client::5_0::Scroll> and
-L<reindexing|Search::Elasticsearch::Client::5_0::Bulk/"reindex()">.
+L<bulk indexing|Search::Elasticsearch::Client::5_0::Bulk>, and
+L<scrolled searches|Search::Elasticsearch::Client::5_0::Scroll>
 
 =item *
 
@@ -196,7 +195,7 @@ Logging support via L<Log::Any>
 
 =item *
 
-Compatibility with the official clients for Python, Ruby, PHP and Javascript
+Compatibility with the official clients for Python, Ruby, PHP, and Javascript
 
 =item *
 
@@ -208,9 +207,9 @@ Easy extensibility
 
 You can download the latest version of Elasticsearch from
 L<http://www.elastic.co/download>. See the
-L<installation instructions|http://www.elastic.co/guide/reference/setup/installation/>
+L<installation instructions|https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html>
 for details. You will need to have a recent version of Java installed,
-preferably the Java v7 from Sun.
+preferably the Java v8 from Sun.
 
 =head1 CREATING A NEW INSTANCE
 
@@ -532,7 +531,7 @@ C<irc.freenode.net>.
 
 =item * Mailing list
 
-The main L<Elasticsearch mailing list|http://www.elastic.co/community>.
+The main L<Elasticsearch mailing list|http://discuss.elastic.co>.
 
 =back
 

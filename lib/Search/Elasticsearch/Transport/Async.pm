@@ -91,7 +91,7 @@ L<Search::Elasticsearch::Role::Is_Async>.
         send_get_body_as => 'POST'
     );
 
-Certain endpoints like L<Search::Elasticsearch::Client::2_0::Direct/search()>
+Certain endpoints like L<Search::Elasticsearch::Client::5_0::Direct/search()>
 default to using a C<GET> method, even when they include a request body.
 Some proxy servers do not support C<GET> requests with a body.  To work
 around this, the C<send_get_body_as>  parameter accepts the following:

@@ -6,7 +6,7 @@ with 'Search::Elasticsearch::Role::API';
 use Search::Elasticsearch::Util qw(throw);
 use namespace::clean;
 
-has 'api_version' => ( is => 'ro', default => '2_0' );
+has 'api_version' => ( is => 'ro', default => '1_0' );
 
 our %API;
 

@@ -1182,24 +1182,38 @@ __END__
 =head1 DESCRIPTION
 
 All of the Elasticsearch APIs are defined in this role. The example given below
-is the definition for the L<Search::Elasticsearch::Client::0_90::Direct/index()> method:
+is the definition for the L<Search::Elasticsearch::Client::5_0::Direct/index()> method:
 
     'index' => {
-        body => {
-            desc     => 'The document',
-            required => 1
+        body   => { required => 1 },
+        doc    => "docs-index_",
+        method => "POST",
+        parts  => {
+            id    => {},
+            index => { required => 1 },
+            type  => { required => 1 }
         },
-
-        doc    => '/api/index_/',
-        method => 'PUT',
-        path   => '{index}/{type}/{id|blank}',
-        qs     => [
-            'consistency', 'op_type',     'parent',  'percolate',
-            'refresh',     'replication', 'routing', 'timeout',
-            'timestamp',   'ttl',         'version', 'version_type'
+        paths => [
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
+            [ { index => 0, type => 1 }, "{index}", "{type}" ],
         ],
+        qs => {
+            filter_path            => "list",
+            op_type                => "enum",
+            parent                 => "string",
+            pipeline               => "string",
+            refresh                => "enum",
+            routing                => "string",
+            timeout                => "time",
+            timestamp              => "time",
+            ttl                    => "time",
+            version                => "number",
+            version_type           => "enum",
+            wait_for_active_shards => "string",
+        },
     },
-
 
 These definitions can be used by different L<Search::Elasticsearch::Role::Client>
 implementations to provide distinct user interfaces.
@@ -1223,18 +1237,10 @@ C<indices> or C<cluster> namespace use the namespace as a prefix, eg:
 
 =item *
 
-L<Search::Elasticsearch::Util::API::Path>
+L<Search::Elasticsearch::Role::API>
 
 =item *
 
-L<Search::Elasticsearch::Util::API::QS>
-
-=item *
-
-L<Search::Elasticsearch::Client::1_0::Direct>
-
-=item *
-
-L<Search::Elasticsearch::Client::2_0::Direct>
+L<Search::Elasticsearch::Client::0_90::Direct>
 
 =back

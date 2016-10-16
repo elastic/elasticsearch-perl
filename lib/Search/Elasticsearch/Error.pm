@@ -232,7 +232,7 @@ L<max_content_length|Search::Elasticsearch::Role::Cxn/max_content_length>.
 
 The request took longer than the specified C<timeout>.  Currently only
 applies to the
-L<cluster_health|Search::Elasticsearch::Client::2_0::Direct::Cluster/cluster_health()>
+L<cluster_health|Search::Elasticsearch::Client::5_0::Direct::Cluster/cluster_health()>
 request.
 
 =back

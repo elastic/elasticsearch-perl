@@ -128,8 +128,11 @@ __END__
 
     my $scroll = $es->scroll_helper(
         index       => 'my_index',
-        search_type => 'scan',
-        size        => 500
+        body => {
+            query   => {...},
+            size    => 1000,
+            sort    => '_doc'
+        }
     );
 
     say "Total hits: ". $scroll->total;
@@ -154,9 +157,6 @@ This module is a helper utility that wraps the functionality of the
 L<search()|Search::Elasticsearch::Client::5_0::Direct/search()> and
 L<scroll()|Search::Elasticsearch::Client::5_0::Direct/scroll()> methods to make
 them easier to use.
-
-B<IMPORTANT>: Deep scrolling can be expensive.  See L</DEEP SCROLLING>
-for more.
 
 This class does L<Search::Elasticsearch::Client::5_0::Role::Scroll> and
 L<Search::Elasticsearch::Role::Is_Sync>.
@@ -208,14 +208,14 @@ C<client_id>:
 
     my $scroll = $es->scroll_helper(
         index       => 'my_index',
-        search_type => 'scan',          # important!
-        size        => 500,
+        size        => 1000,
         body        => {
             query => {
                 match => {
                     client_id => 123
                 }
-            }
+            },
+            sort => '_doc'
         }
     );
 
@@ -225,42 +225,8 @@ C<client_id>:
 
 Very often the I<something> that you will want to do with these results
 involves bulk-indexing them into a new index. The easiest way to
-marry a scrolled search with bulk indexing is to use the
-L<Search::Elasticsearch::Client::5_0::Direct/reindex()> method.
-
-=head1 DEEP SCROLLING
-
-Deep scrolling (and deep pagination) are very expensive in a distributed
-environment, and the reason they are expensive is that results need to
-be sorted in a global order.
-
-For example, if we have an index with 5 shards, and we request the first
-10 results, each shard has to return its top 10, and then the I<requesting
-node> (the node that is handling the search request) has to resort these
-50 results to return a global top 10. Now, if we request page 1,000
-(ie results 10,001 .. 10,010), then each shard has to return 10,010 results,
-and the requesting node has to sort through 50,050 results just to return
-10 of them!
-
-You can see how this can get very heavy very quickly. This is the reason that
-web search engines never return more than 1,000 results.
-
-=head2 Disable sorting for efficient scrolling
-
-The problem with deep scrolling is the sorting phase.  If we disable sorting,
-then we can happily scroll through millions of documents efficiently.  The
-way to do this is to set C<search_type> to C<scan>:
-
-    my $scroll = $es->scroll_helper(
-        search_type => 'scan',
-        size        => 500,
-    );
-
-Scanning disables sorting and will just return C<size> results from each
-shard until there are no more results to return. B<Note>: this means
-that, when querying an index with 5 shards, the scrolled search
-will pull C<size * 5> results at a time. If you have large documents or
-are memory constrained, you will need to take this into account.
+do this is to use the built-in L<Search::Elasticsearch::Client::5_0::Direct/reindex()>
+functionality provided by Elasticsearch.
 
 =head1 METHODS
 
