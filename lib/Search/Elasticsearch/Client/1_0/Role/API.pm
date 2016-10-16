@@ -21,16 +21,23 @@ sub api {
 #===================================
 %API = (
 #===================================
-    'bulk.metadata_params' => [
-        'index',   'type',   'id',        'fields',
-        'routing', 'parent', 'timestamp', 'ttl',
-        'version', 'version_type'
-    ],
-    'bulk.update_params' => [
-        'doc',             'upsert', 'doc_as_upsert', 'fields',
-        'scripted_upsert', 'script', 'script_id',     'script_file',
-        'params',          'lang',   'detect_noop',
-    ],
+    'bulk.metadata' => {
+        params => [
+            'index',   'type',   'id',        'fields',
+            'routing', 'parent', 'timestamp', 'ttl',
+            'version', 'version_type'
+        ]
+    },
+    'bulk.update' => {
+        params => [
+            'doc',             'upsert',
+            'doc_as_upsert',   'fields',
+            'scripted_upsert', 'script',
+            'script_id',       'script_file',
+            'params',          'lang',
+            'detect_noop',
+        ]
+    },
     'bulk.required' => { params => [ 'index', 'type' ] },
 
 #=== AUTOGEN - START ===
@@ -626,7 +633,7 @@ sub api {
             suggest_field            => "string",
             suggest_mode             => "enum",
             suggest_size             => "number",
-            suggest_text             => "text",
+            suggest_text             => "string",
             timeout                  => "time",
             track_scores             => "boolean",
             version                  => "boolean",

@@ -11,8 +11,8 @@ sub _namespace {__PACKAGE__}
 
 has 'cluster'             => ( is => 'lazy' );
 has 'indices'             => ( is => 'lazy' );
-has 'bulk_helper_class'   => ( is => 'ro', default => 'Bulk' );
-has 'scroll_helper_class' => ( is => 'ro', default => 'Scroll' );
+has 'bulk_helper_class'   => ( is => 'rw' );
+has 'scroll_helper_class' => ( is => 'rw' );
 has '_bulk_class'         => ( is => 'lazy' );
 has '_scroll_class'       => ( is => 'lazy' );
 
@@ -56,24 +56,19 @@ around 'clear_scroll' => sub {
 #===================================
 sub _build__bulk_class {
 #===================================
-    my $self = shift;
-    $self->_build_helper( 'bulk', $self->bulk_helper_class );
+    my $self       = shift;
+    my $bulk_class = $self->bulk_helper_class
+        || 'Client::' . $self->api_version . '::Bulk';
+    $self->_build_helper( 'bulk', $bulk_class );
 }
 
 #===================================
 sub _build__scroll_class {
 #===================================
-    my $self = shift;
-    $self->_build_helper( 'scroll', $self->scroll_helper_class );
-}
-
-#===================================
-sub _build_helper {
-#===================================
-    my ( $self, $name, $sub_class ) = @_;
-    my $class = load_plugin( 'Search::Elasticsearch', $sub_class );
-    is_compat( $name . '_helper_class', $self->transport, $class );
-    return $class;
+    my $self         = shift;
+    my $scroll_class = $self->scroll_helper_class
+        || 'Client::' . $self->api_version . '::Scroll';
+    $self->_build_helper( 'scroll', $scroll_class );
 }
 
 #===================================

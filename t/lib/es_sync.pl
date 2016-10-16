@@ -8,17 +8,14 @@ my $trace
     : $ENV{TRACE} eq '1' ? 'Stderr'
     :                      [ 'File', $ENV{TRACE} ];
 
-my $version = $ENV{ES_VERSION} || '';
-my $api
-    = $version =~ /^0.90/ ? '0_90::Direct'
-    : $version =~ /^1\./  ? '1_0::Direct'
-    : $version =~ /^2\./  ? '2_0::Direct'
-    :                       '5_0::Direct';
-my $body     = $ENV{ES_BODY}     || 'GET';
-my $cxn      = $ENV{ES_CXN}      || do "default_cxn.pl" || die( $@ || $! );
+die 'No $ENV{ES_VERSION} specified' unless $ENV{ES_VERSION};
+
+my $api      = "$ENV{ES_VERSION}::Direct";
+my $body     = $ENV{ES_BODY} || 'GET';
+my $cxn      = $ENV{ES_CXN} || do "default_cxn.pl" || die( $@ || $! );
 my $cxn_pool = $ENV{ES_CXN_POOL} || 'Static';
-my $timeout  = $ENV{ES_TIMEOUT}  || 30;
-my @plugins = split /,/, ( $ENV{ES_PLUGINS} || '' );
+my $timeout  = $ENV{ES_TIMEOUT} || 30;
+my @plugins  = split /,/, ( $ENV{ES_PLUGINS} || '' );
 our %Auth;
 
 my $es;
@@ -46,6 +43,18 @@ if ( $ENV{ES} ) {
 unless ($es) {
     plan skip_all => 'No Elasticsearch test node available';
     exit;
+}
+
+unless ( $ENV{ES_SKIP_PING} ) {
+    my $version = $es->info->{version}{number};
+    my $api     = $es->api_version;
+    unless ( $api eq '0_90' && $version =~ /^0\.9/
+        || substr( $api, 0, 1 ) eq substr( $version, 0, 1 ) )
+    {
+        plan skip_all =>
+            "Tests are for API version $api but Elasticsearch is version $version\n";
+        exit;
+    }
 }
 
 return $es;

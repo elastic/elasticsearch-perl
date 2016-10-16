@@ -15,8 +15,8 @@ has 'indices'             => ( is => 'lazy', init_arg => undef );
 has 'snapshot'            => ( is => 'lazy', init_arg => undef );
 has 'cat'                 => ( is => 'lazy', init_arg => undef );
 has 'tasks'               => ( is => 'lazy', init_arg => undef );
-has 'bulk_helper_class'   => ( is => 'ro',   default  => 'Bulk' );
-has 'scroll_helper_class' => ( is => 'ro',   default  => 'Scroll' );
+has 'bulk_helper_class'   => ( is => 'rw' );
+has 'scroll_helper_class' => ( is => 'rw' );
 has '_bulk_class'         => ( is => 'lazy' );
 has '_scroll_class'       => ( is => 'lazy' );
 
@@ -32,15 +32,19 @@ sub create {
 #===================================
 sub _build__bulk_class {
 #===================================
-    my $self = shift;
-    $self->_build_helper( 'bulk', $self->bulk_helper_class );
+    my $self       = shift;
+    my $bulk_class = $self->bulk_helper_class
+        || 'Client::' . $self->api_version . '::Bulk';
+    $self->_build_helper( 'bulk', $bulk_class );
 }
 
 #===================================
 sub _build__scroll_class {
 #===================================
-    my $self = shift;
-    $self->_build_helper( 'scroll', $self->scroll_helper_class );
+    my $self         = shift;
+    my $scroll_class = $self->scroll_helper_class
+        || 'Client::' . $self->api_version . '::Scroll';
+    $self->_build_helper( 'scroll', $scroll_class );
 }
 
 #===================================
