@@ -1,5 +1,9 @@
 Revision history for Search::Elasticsearch
 
+5.01    2016-10-19
+
+        Doc fixes
+
 5.00    2016-10-19
 
         This version adds Elasticsearch 5.x compatibility, and makes it the default.
