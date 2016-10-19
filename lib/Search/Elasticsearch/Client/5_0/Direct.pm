@@ -22,15 +22,6 @@ has '_bulk_class'         => ( is => 'lazy' );
 has '_scroll_class'       => ( is => 'lazy' );
 
 #===================================
-sub create {
-#===================================
-    my ( $self, $params ) = parse_params(@_);
-    my $defn = $self->api->{index};
-    $params->{op_type} = 'create';
-    $self->perform_request( { %$defn, name => 'create' }, $params );
-}
-
-#===================================
 sub _build__bulk_class {
 #===================================
     my $self       = shift;
