@@ -1,4 +1,4 @@
-package Search::Elasticsearch::Client::1_0;
+package Search::Elasticsearch::Client::2_0;
 
 our $VERSION='5.00';
 use Search::Elasticsearch 5.00 ();

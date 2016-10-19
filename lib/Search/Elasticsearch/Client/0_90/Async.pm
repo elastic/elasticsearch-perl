@@ -1,7 +1,7 @@
 package Search::Elasticsearch::Client::0_90::Async;
 
 our $VERSION='5.00';
-use Search::Elasticsearch 5.00 ();
+use Search::Elasticsearch::Client::0_90 5.00 ();
 
 1;
 

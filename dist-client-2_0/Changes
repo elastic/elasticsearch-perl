@@ -1,0 +1,5 @@
+Revision history for Search::Elasticsearch::Client::2_0
+
+5.00    2016-10-19
+
+        First release of the 2_0 client module for Search::Elasticsearch 5.00

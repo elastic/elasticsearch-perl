@@ -1,5 +1,29 @@
 Revision history for Search::Elasticsearch
 
+5.00    2016-10-19
+
+        This version adds Elasticsearch 5.x compatibility, and makes it the default.
+        It also adds deprecation logging which logs to STDERR by default.
+
+        The Hijk backend will not work with Elasticsearch 5.x until this bug
+        is fixed: https://rt.cpan.org/Ticket/Display.html?id=118425
+
+        BREAKING CHANGES:
+        * The 0.90, 1.x, and 2.x compatible clients no longer ship by default.
+          You should install one of the following:
+              * Search::Elasticsearch::Client::2_0
+              * Search::Elasticsearch::Client::2_0::Async
+              * Search::Elasticsearch::Client::1_0
+              * Search::Elasticsearch::Client::1_0::Async
+              * Search::Elasticsearch::Client::0_90
+              * Search::Elasticsearch::Client::0_90::Async
+        * The code has been reorganised so that all client-related modules
+          are under the S::E::API_VERSION::Client namespace.
+          This includes S::E::Bulk and S::E::Scroll.
+        * Plugin authors note: the format for the API in ...Role::API has changed.
+        * S::E::Cxn::HTTP has been rolled into S::E::Cxn as Elasticsearch
+          no longer supports other protocols.
+
 2.03    2016-05-24
 
         Added register_qs() to allow plugins to expand known query string params

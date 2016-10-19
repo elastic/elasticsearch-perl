@@ -1,5 +1,9 @@
 Revision history for Search::Elasticsearch::Plugin::XPack
 
+5.00    2016-10-19
+        Updated to provide X-Pack clients for 0_90, 1_0, 2_0, and 5_0
+        Requires Search::Elasticsearch 5.00
+
 2.03    2016-05-24
 
         First release.
