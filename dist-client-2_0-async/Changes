@@ -1,5 +1,9 @@
 Revision history for Search::Elasticsearch::Client::2_0::Async
 
+5.01    2016-10-19
+
+        Doc fixes
+
 5.00    2016-10-19
 
         First release of the 2_0 async client module for Search::Elasticsearch 5.00

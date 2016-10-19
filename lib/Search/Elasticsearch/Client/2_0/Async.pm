@@ -1,6 +1,6 @@
 package Search::Elasticsearch::Client::2_0::Async;
 
-our $VERSION='5.00';
+our $VERSION='5.01';
 use Search::Elasticsearch::Client::2_0 5.00 ();
 
 1;
@@ -19,6 +19,6 @@ with L<Search::Elasticsearch::Async> as follows:
         client => "2_0::Direct"
     );
 
-See C<Search::Elasticsearch::Client::2_0::Direct> for documentation
+See L<Search::Elasticsearch::Client::2_0::Direct> for documentation
 about how to use the client itself.
 

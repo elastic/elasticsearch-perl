@@ -7,7 +7,7 @@ use Search::Elasticsearch 5.00 ();
 
 __END__
 
-# ABSTRACT: Thin client with full support for Elasticsearch 2.x APIs
+# ABSTRACT: Thin client with full support for Elasticsearch 0_90.x APIs
 
 =head1 DESCRIPTION
 
@@ -19,5 +19,5 @@ with L<Search::Elasticsearch> as follows:
         client => "0_90::Direct"
     );
 
-See C<Search::Elasticsearch::Client::0_90::Direct> for documentation
+See L<Search::Elasticsearch::Client::0_90::Direct> for documentation
 about how to use the client itself.

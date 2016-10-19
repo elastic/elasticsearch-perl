@@ -19,6 +19,6 @@ with L<Search::Elasticsearch::Async> as follows:
         client => "1_0::Direct"
     );
 
-See C<Search::Elasticsearch::Client::1_0::Direct> for documentation
+See L<Search::Elasticsearch::Client::1_0::Direct> for documentation
 about how to use the client itself.
 

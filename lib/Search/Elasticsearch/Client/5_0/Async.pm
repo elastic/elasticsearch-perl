@@ -19,7 +19,7 @@ with L<Search::Elasticsearch::Async> as follows:
         client => "5_0::Direct"
     );
 
-See C<Search::Elasticsearch::Client::5_0::Direct> for documentation
+See L<Search::Elasticsearch::Client::5_0::Direct> for documentation
 about how to use the client itself.
 
 =head1 PREVIOUS VERSIONS OF ELASTICSEARCH
