@@ -12,7 +12,7 @@ __END__
 =head1 DESCRIPTION
 
 The L<Search::Elasticsearch::Client::2_0> package provides a client
-compatible with Elasticsearch 1.x.  It should be used in conjunction
+compatible with Elasticsearch 2.x.  It should be used in conjunction
 with L<Search::Elasticsearch> as follows:
 
     $e = Search::Elasticsearch->new(
