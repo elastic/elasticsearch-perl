@@ -3,7 +3,7 @@ package Search::Elasticsearch::Cxn::Hijk;
 use Moo;
 with 'Search::Elasticsearch::Role::Cxn', 'Search::Elasticsearch::Role::Is_Sync';
 
-use Hijk;
+use Hijk 0.27;
 use Try::Tiny;
 use namespace::clean;
 
