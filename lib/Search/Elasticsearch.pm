@@ -126,7 +126,7 @@ __END__
 =head1 DESCRIPTION
 
 L<Search::Elasticsearch> is the official Perl client for Elasticsearch,
-supported by L<elasticsearch.com|http://www.elasticsearch.com>.  Elasticsearch
+supported by L<elastic.co|http://elastic.co>.  Elasticsearch
 itself is a flexible and powerful open source, distributed real-time
 search and analytics engine for the cloud.  You can read more about it
 on L<elastic.co|http://www.elastic.co>.
