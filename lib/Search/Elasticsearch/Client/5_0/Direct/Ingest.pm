@@ -27,7 +27,7 @@ It does L<Search::Elasticsearch::Role::Client::Direct>.
         body => { pipeline defn }   # required
     );
 
-The C<put_pipeline()> method creates or updates a pipeline with the specfied ID.
+The C<put_pipeline()> method creates or updates a pipeline with the specified ID.
 
 Query string parameters:
     C<master_timeout>,
@@ -57,7 +57,7 @@ for more information.
         id   => $id,                # required
     );
 
-The C<delete_pipeline()> method deletes the pipeline with the specfied ID.
+The C<delete_pipeline()> method deletes the pipeline with the specified ID.
 
 Query string parameters:
     C<master_timeout>,
