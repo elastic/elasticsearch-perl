@@ -11,3 +11,5 @@ log
 bench_cxn.pl
 *.xml
 shield/*
+.DS_Store
+
