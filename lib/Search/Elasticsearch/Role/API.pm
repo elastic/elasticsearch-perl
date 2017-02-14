@@ -15,7 +15,7 @@ our %Handler = (
             : shift();
     },
     boolean => sub {
-        $_[0] && $_[0] ne 'false' ? 'true' : 'false';
+        $_[0] && !( $_[0] eq 'false' || $_[0] eq \0 ) ? 'true' : 'false';
     },
     enum => sub {
         ref $_[0] eq 'ARRAY'
