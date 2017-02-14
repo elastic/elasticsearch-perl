@@ -302,9 +302,11 @@ sub process_response {
     my $is_encoded = $mime_type && $mime_type ne 'text/plain';
 
     # Deprecation warnings
-    if (my $warnings = $headers->{warning}) {
-        $warnings = join ("; ",@$warnings) if ref $warnings eq 'ARRAY';
-        $self->logger->deprecation($warnings,$params);
+    if ( my $warnings = $headers->{warning} ) {
+        $warnings = join( "; ", @$warnings ) if ref $warnings eq 'ARRAY';
+        my %temp = (%$params);
+        delete $temp{data};
+        $self->logger->deprecation( $warnings, \%temp );
     }
 
     # Request is successful
@@ -345,8 +347,7 @@ sub process_response {
 
         $error_args{current_version} = $1
             if $error_type eq 'Conflict'
-            and $msg
-            =~ /: version conflict, current (?:version )?\[(\d+)\]/;
+            and $msg =~ /: version conflict, current (?:version )?\[(\d+)\]/;
     }
     $msg ||= $error_type;
 
