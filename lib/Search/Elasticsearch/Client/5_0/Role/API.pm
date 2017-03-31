@@ -25,7 +25,7 @@ sub api {
     'bulk.metadata' => {
         params => [
             'index',   'type',   'id',        'fields',
-            'routing', 'parent', 'timestamp', 'ttl',
+            'routing', 'parent', 'pipeline', 'timestamp', 'ttl',
             'version', 'version_type'
         ]
     },
