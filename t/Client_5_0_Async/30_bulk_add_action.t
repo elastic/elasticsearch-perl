@@ -31,6 +31,7 @@ ok $b->add_action(
         id           => 1,
         routing      => 1,
         parent       => 1,
+        pipeline     => 'foobar',
         timestamp    => 1380019061000,
         ttl          => '10m',
         version      => 1,
@@ -43,6 +44,7 @@ ok $b->add_action(
         _id           => 2,
         _routing      => 2,
         _parent       => 2,
+        _pipeline     => 'foobar',
         _timestamp    => 1380019061000,
         _ttl          => '10m',
         _version      => 1,
@@ -54,14 +56,14 @@ ok $b->add_action(
 
 cmp_deeply $b->_buffer,
     [
-    q({"index":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"index":{"_id":1,"_index":"foo","_parent":1,"_pipeline":"foobar","_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"foo":"bar"}),
-    q({"index":{"_id":2,"_index":"foo","_parent":2,"_routing":2,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"index":{"_id":2,"_index":"foo","_parent":2,"_pipeline":"foobar","_routing":2,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"foo":"bar"})
     ],
     "Index actions in buffer";
 
-is $b->_buffer_size,  336, "Index actions buffer size";
+is $b->_buffer_size,  378, "Index actions buffer size";
 is $b->_buffer_count, 2,   "Index actions buffer count";
 
 $b->clear_buffer;
@@ -75,6 +77,7 @@ ok $b->add_action(
         id           => 1,
         routing      => 1,
         parent       => 1,
+        pipeline     => 'foobar',
         timestamp    => 1380019061000,
         ttl          => '10m',
         version      => 1,
@@ -87,6 +90,7 @@ ok $b->add_action(
         _id           => 2,
         _routing      => 2,
         _parent       => 2,
+        _pipeline     => 'foobar',
         _timestamp    => 1380019061000,
         _ttl          => '10m',
         _version      => 1,
@@ -98,14 +102,14 @@ ok $b->add_action(
 
 cmp_deeply $b->_buffer,
     [
-    q({"create":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"create":{"_id":1,"_index":"foo","_parent":1,"_pipeline":"foobar","_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"foo":"bar"}),
-    q({"create":{"_id":2,"_index":"foo","_parent":2,"_routing":2,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"create":{"_id":2,"_index":"foo","_parent":2,"_pipeline":"foobar","_routing":2,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"foo":"bar"})
     ],
     "Create actions in buffer";
 
-is $b->_buffer_size,  338, "Create actions buffer size";
+is $b->_buffer_size,  380, "Create actions buffer size";
 is $b->_buffer_count, 2,   "Create actions buffer count";
 
 $b->clear_buffer;
@@ -119,6 +123,7 @@ ok $b->add_action(
         id           => 1,
         routing      => 1,
         parent       => 1,
+        pipeline     => 'foobar',
         version      => 1,
         version_type => 'external',
     },
@@ -128,6 +133,7 @@ ok $b->add_action(
         _id           => 2,
         _routing      => 2,
         _parent       => 2,
+        _pipeline     => 'foobar',
         _version      => 1,
         _version_type => 'external',
     }
@@ -136,12 +142,12 @@ ok $b->add_action(
 
 cmp_deeply $b->_buffer,
     [
-    q({"delete":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_type":"bar","_version":1,"_version_type":"external"}}),
-    q({"delete":{"_id":2,"_index":"foo","_parent":2,"_routing":2,"_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"delete":{"_id":1,"_index":"foo","_parent":1,"_pipeline":"foobar","_routing":1,"_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"delete":{"_id":2,"_index":"foo","_parent":2,"_pipeline":"foobar","_routing":2,"_type":"bar","_version":1,"_version_type":"external"}}),
     ],
     "Delete actions in buffer";
 
-is $b->_buffer_size,  230, "Delete actions buffer size";
+is $b->_buffer_size,  272, "Delete actions buffer size";
 is $b->_buffer_count, 2,   "Delete actions buffer count";
 
 $b->clear_buffer;
@@ -155,6 +161,7 @@ ok $b->add_action(
         id            => 1,
         routing       => 1,
         parent        => 1,
+        pipeline     => 'foobar',
         timestamp     => 1380019061000,
         ttl           => '10m',
         version       => 1,
@@ -168,6 +175,7 @@ ok $b->add_action(
         id           => 1,
         routing      => 1,
         parent       => 1,
+        pipeline     => 'foobar',
         timestamp    => 1380019061000,
         ttl          => '10m',
         version      => 1,
@@ -183,6 +191,7 @@ ok $b->add_action(
         _id           => 1,
         _routing      => 1,
         _parent       => 1,
+        _pipeline     => 'foobar',
         _timestamp    => 1380019061000,
         _ttl          => '10m',
         _version      => 1,
@@ -196,6 +205,7 @@ ok $b->add_action(
         _id           => 1,
         _routing      => 1,
         _parent       => 1,
+        _pipeline     => 'foobar',
         _timestamp    => 1380019061000,
         _ttl          => '10m',
         _version      => 1,
@@ -211,6 +221,7 @@ ok $b->add_action(
         _id           => 1,
         _routing      => 1,
         _parent       => 1,
+        _pipeline     => 'foobar',
         _timestamp    => 1380019061000,
         _ttl          => '10m',
         _version      => 1,
@@ -225,6 +236,7 @@ ok $b->add_action(
         _id           => 1,
         _routing      => 1,
         _parent       => 1,
+        _pipeline     => 'foobar',
         _timestamp    => 1380019061000,
         _ttl          => '10m',
         _version      => 1,
@@ -240,22 +252,22 @@ ok $b->add_action(
 
 cmp_deeply $b->_buffer,
     [
-    q({"update":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"update":{"_id":1,"_index":"foo","_parent":1,"_pipeline":"foobar","_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"doc":{"foo":"bar"},"doc_as_upsert":1}),
-    q({"update":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"update":{"_id":1,"_index":"foo","_parent":1,"_pipeline":"foobar","_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"lang":"mvel","params":{"incr":1},"script":"_ctx.source.counter+=incr","upsert":{"counter":0}}),
-    q({"update":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"update":{"_id":1,"_index":"foo","_parent":1,"_pipeline":"foobar","_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"doc":{"foo":"bar"},"doc_as_upsert":1}),
-    q({"update":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"update":{"_id":1,"_index":"foo","_parent":1,"_pipeline":"foobar","_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"lang":"mvel","params":{"incr":1},"script":"_ctx.source.counter+=incr","upsert":{"counter":0}}),
-    q({"update":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"update":{"_id":1,"_index":"foo","_parent":1,"_pipeline":"foobar","_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"detect_noop":1,"doc":{"foo":"bar"},"doc_as_upsert":1}),
-    q({"update":{"_id":1,"_index":"foo","_parent":1,"_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
+    q({"update":{"_id":1,"_index":"foo","_parent":1,"_pipeline":"foobar","_routing":1,"_timestamp":1380019061000,"_ttl":"10m","_type":"bar","_version":1,"_version_type":"external"}}),
     q({"detect_noop":1,"lang":"mvel","params":{"incr":1},"script":"_ctx.source.counter+=incr","upsert":{"counter":0}}),
     ],
     "Update actions in buffer";
 
-is $b->_buffer_size,  1370, "Update actions buffer size";
+is $b->_buffer_size,  1496, "Update actions buffer size";
 is $b->_buffer_count, 6,    "Update actions buffer count";
 
 $b->clear_buffer;
