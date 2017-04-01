@@ -8,7 +8,7 @@ use warnings;
 use lib 't/lib';
 use Log::Any::Adapter;
 
-$ENV{ES_VERSION} = '5_0';
+$ENV{ES_VERSION}   = '5_0';
 $ENV{ES}           = '10.255.255.1:9200';
 $ENV{ES_SKIP_PING} = 1;
 $ENV{ES_CXN_POOL}  = 'Async::Static';

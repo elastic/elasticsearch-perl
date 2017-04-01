@@ -33,16 +33,6 @@ our %Actions = (
     'delete' => 1
 );
 
-around BUILDARGS => sub {
-    my $orig = shift;
-    my ( $class, $params ) = parse_params(@_);
-    my $es = $params->{es} or throw( 'Param', 'Missing required param <es>' );
-    $params->{_metadata_params} = $es->api('bulk.metadata')->{params};
-    $params->{_update_params}   = $es->api('bulk.update')->{params};
-    $params->{_required_params} = $es->api('bulk.required')->{params};
-    return $class->$orig($params);
-};
-
 #===================================
 sub _build__serializer { shift->es->transport->serializer }
 #===================================
@@ -62,10 +52,14 @@ sub _build_on_error {
 sub BUILDARGS {
 #===================================
     my ( $class, $params ) = parse_params(@_);
+    my $es = $params->{es} or throw( 'Param', 'Missing required param <es>' );
+    $params->{_metadata_params} = $es->api('bulk.metadata')->{params};
+    $params->{_update_params}   = $es->api('bulk.update')->{params};
+    $params->{_required_params} = $es->api('bulk.required')->{params};
+    my $bulk_spec = $es->api('bulk');
     my %args;
-    for (qw(index type consistency fields refresh replication routing timeout))
-    {
-        $args{$_} = $params->{$_}
+    for ( keys %{ $bulk_spec->{qs} }, keys %{ $bulk_spec->{parts} } ) {
+        $args{$_} = delete $params->{$_}
             if exists $params->{$_};
     }
     $params->{_bulk_args} = \%args;
@@ -100,7 +94,7 @@ sub update {
 sub create_docs {
 #===================================
     my $self = shift;
-    $self->add_action( map { ( 'create' => { _source => $_ } ) } @_ );
+    $self->add_action( map { ( 'create' => { source => $_ } ) } @_ );
 }
 
 #===================================
@@ -127,12 +121,10 @@ sub _encode_action {
     my $params     = {%$orig};
     my $serializer = $self->_serializer;
 
-    for ( @{ $self->_metadata_params } ) {
-        my $val
-            = exists $params->{$_}    ? delete $params->{$_}
-            : exists $params->{"_$_"} ? delete $params->{"_$_"}
-            :                           next;
-        $metadata{"_$_"} = $val;
+    my $meta_params = $self->_metadata_params;
+    for ( keys %$meta_params ) {
+        next unless exists $params->{$_};
+        $metadata{ $meta_params->{$_} } = delete $params->{$_};
     }
 
     for ( @{ $self->_required_params } ) {
@@ -148,14 +140,10 @@ sub _encode_action {
         }
     }
     elsif ( $action ne 'delete' ) {
-        $source
-            = delete $params->{_source}
-            || delete $params->{source}
-            || throw(
-            'Param',
+        $source = delete $params->{source}
+            || throw( 'Param',
             "Missing <source> for action <$action>: "
-                . $serializer->encode($orig)
-            );
+                . $serializer->encode($orig) );
     }
 
     throw(    "Unknown params <"

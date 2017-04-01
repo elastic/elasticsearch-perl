@@ -305,8 +305,8 @@ See the individual helper methods below for details.
 B<Note:> Parameters like C<index> or C<type> can be specified as C<index> or as
 C<_index>, so the following two lines are equivalent:
 
-    index => { index  => 'index', type  => 'type', id  => 1, source  => {...}},
-    index => { _index => 'index', _type => 'type', _id => 1, _source => {...}},
+    index => { index  => 'index', type  => 'type', id  => 1, source => {...}},
+    index => { _index => 'index', _type => 'type', _id => 1, source => {...}},
 
 B<Note:> The C<index> and C<type> parameters can be specified in the
 params for any action, but if not specified, will default to the C<index>
@@ -379,7 +379,6 @@ In this case, all you have to do is to pass in a list of IDs.
           doc_as_upsert => 1
         },
         { id            => 2,
-          lang          => 'mvel',
           script        => { script }
           upsert        => { upsert doc }
         },

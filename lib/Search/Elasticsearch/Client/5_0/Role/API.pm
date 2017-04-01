@@ -23,20 +23,35 @@ sub api {
 #===================================
 
     'bulk.metadata' => {
-        params => [
-            'index',   'type',   'id',        'fields',
-            'routing', 'parent', 'timestamp', 'ttl',
-            'version', 'version_type'
-        ]
+        params => {
+            '_index'        => '_index',
+            'index'         => '_index',
+            '_type'         => '_type',
+            'type'          => '_type',
+            '_id'           => '_id',
+            'id'            => '_id',
+            'pipeline'      => 'pipeline',
+            'routing'       => 'routing',
+            '_routing'      => 'routing',
+            'parent'        => 'parent',
+            '_parent'       => 'parent',
+            'timestamp'     => 'timestamp',
+            '_timestamp'    => 'timestamp',
+            'ttl'           => 'ttl',
+            '_ttl'          => 'ttl',
+            'version'       => 'version',
+            '_version'      => 'version',
+            'version_type'  => 'version_type',
+            '_version_type' => 'version_type'
+        }
     },
     'bulk.update' => {
         params => [
-            'doc',             'upsert',
-            'doc_as_upsert',   'fields',
-            'scripted_upsert', 'script',
-            'script_id',       'script_file',
-            'params',          'lang',
-            'detect_noop',
+            '_source',         '_source_include',
+            '_source_exclude', 'detect_noop',
+            'doc',             'doc_as_upsert',
+            'fields',          'scripted_upsert',
+            'script',          'upsert',
         ]
     },
     'bulk.required' => { params => [ 'index', 'type' ] },
