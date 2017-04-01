@@ -1036,7 +1036,9 @@ for more information.
 
     $results = $e->scroll(
         scroll      => '1m',
-        scroll_id   => $id
+        body => {
+            scroll_id   => $id
+        }
     );
 
 When a L</search()> has been performed with the
@@ -1058,15 +1060,10 @@ for more information.
 =head2 C<clear_scroll()>
 
     $response = $e->clear_scroll(
-        scroll_id => $id | \@ids    # required
+        body => {
+            scroll_id => $id | \@ids    # required
+        }
     );
-
-Or
-
-    $response = $e->clear_scroll(
-        body => $id
-    );
-
 
 The C<clear_scroll()> method can clear unfinished scroll requests, freeing
 up resources on the server.

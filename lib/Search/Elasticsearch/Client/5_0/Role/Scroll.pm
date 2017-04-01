@@ -5,7 +5,6 @@ requires 'finish';
 use Search::Elasticsearch::Util qw(parse_params throw);
 use Devel::GlobalDestruction;
 use namespace::clean;
-
 has 'es' => ( is => 'ro', required => 1 );
 has 'scroll'        => ( is => 'ro' );
 has 'scroll_in_qs'  => ( is => 'ro' );
@@ -35,7 +34,7 @@ sub scroll_request {
         $args{scroll_id} = $self->_scroll_id;
     }
     else {
-        $args{body} = $self->_scroll_id;
+        $args{body} = { scroll_id => $self->_scroll_id };
     }
     $self->es->scroll(%args);
 }

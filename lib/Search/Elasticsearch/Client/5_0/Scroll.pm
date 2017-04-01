@@ -109,7 +109,7 @@ sub finish {
     my %args
         = $self->scroll_in_qs
         ? ( scroll_id => $scroll_id )
-        : ( body => $scroll_id );
+        : ( body => { scroll_id => $scroll_id } );
     eval { $self->es->clear_scroll(%args) };
     return 1;
 }
