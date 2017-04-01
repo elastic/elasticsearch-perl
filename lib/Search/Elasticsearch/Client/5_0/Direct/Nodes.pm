@@ -45,6 +45,7 @@ Allowed metrics are:
     C<transport>
 
 Query string parameters:
+    C<error_trace>,
     C<flat_settings>,
     C<human>
 
@@ -72,6 +73,7 @@ Allowed metrics are:
     C<breaker>,
     C<fs>,
     C<http>,
+    C<include_segment_file_sizes>,
     C<indices>,
     C<jvm>,
     C<network>,
@@ -114,6 +116,7 @@ Allowed index metrics are:
 
 Query string parameters:
     C<completion_fields>,
+    C<error_trace>,
     C<fielddata_fields>,
     C<fields>,
     C<groups>,
@@ -134,6 +137,8 @@ The C<hot_threads()> method is a useful tool for diagnosing busy nodes. It
 takes a snapshot of which threads are consuming the most CPU.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<ignore_idle_threads>,
     C<interval>,
     C<snapshots>,

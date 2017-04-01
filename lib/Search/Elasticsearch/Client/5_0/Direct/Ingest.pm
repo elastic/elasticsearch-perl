@@ -30,6 +30,8 @@ It does L<Search::Elasticsearch::Role::Client::Direct>.
 The C<put_pipeline()> method creates or updates a pipeline with the specified ID.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>
 
@@ -45,6 +47,8 @@ for more information.
 The C<get_pipeline()> method returns pipelines with the specified IDs (or all pipelines).
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>
 
@@ -60,6 +64,8 @@ for more information.
 The C<delete_pipeline()> method deletes the pipeline with the specified ID.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>
 
@@ -78,6 +84,8 @@ against the docs provided in the body and provides debugging output of the execu
 process.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<verbose>
 
 See the L<simulate pipeline docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/simulate-pipeline-api.html>

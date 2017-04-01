@@ -32,6 +32,8 @@ It does L<Search::Elasticsearch::Role::Client::Direct>.
 Create a repository for backups.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>,
     C<verify>
@@ -48,6 +50,8 @@ for more information.
 Retrieve existing repositories.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<local>,
     C<master_timeout>
 
@@ -63,6 +67,8 @@ for more information.
 Verify existing repository.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>
 
@@ -78,6 +84,8 @@ for more information.
 Delete repositories by name.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>
 
@@ -97,6 +105,8 @@ Create a snapshot of the whole cluster or individual indices in the named
 repository.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<wait_for_completion>
 
@@ -110,6 +120,8 @@ Query string parameters:
 Retrieve snapshots in the named repository.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<ignore_unavailable>,
     C<master_timeout>
 
@@ -126,6 +138,8 @@ for more information.
 Delete snapshot in the named repository.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>
 
 See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
@@ -144,6 +158,8 @@ for more information.
 Restore a named snapshot.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<wait_for_completion>
 
@@ -160,6 +176,8 @@ for more information.
 Returns status information about the specified snapshots.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<ignore_unavailable>,
     C<master_timeout>
 

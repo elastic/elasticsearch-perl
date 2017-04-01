@@ -92,11 +92,14 @@ Returns information about index aliases, optionally limited to the specified
 index/alias names.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat aliases docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-aliases.html>
@@ -113,11 +116,14 @@ state of disk usage.
 
 Query string parameters:
     C<bytes>,
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat allocation docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-allocation.html>
@@ -133,11 +139,14 @@ Provides quick access to the document count of the entire cluster, or
 individual indices.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat count docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-count.html>
@@ -154,11 +163,14 @@ fields) loaded into fielddata.
 
 Query string parameters:
     C<bytes>,
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat fielddata docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-fielddata.html>
@@ -172,12 +184,15 @@ Provides a snapshot of how shards have located around the cluster and the
 state of disk usage.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
     C<ts>,
+    C<s>,
     C<v>
 
 See the L<cat health docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-health.html>
@@ -194,13 +209,16 @@ or individual indices
 
 Query string parameters:
     C<bytes>,
+    C<error_trace>,
     C<format>,
     C<h>,
     C<health>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
     C<pri>,
+    C<s>,
     C<v>
 
 See the L<cat indices docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-indices.html>
@@ -213,11 +231,14 @@ for more information.
 Displays the master’s node ID, bound IP address, and node name.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat master docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-master.html>
@@ -230,11 +251,14 @@ for more information.
 Returns the node attributes set per node.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat nodeattrs docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-nodeattrs.html>
@@ -247,11 +271,14 @@ for more information.
 Provides a snapshot of all of the nodes in your cluster.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat nodes docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-nodes.html>
@@ -264,11 +291,14 @@ for more information.
 Returns any cluster-level tasks which are queued on the master.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
+    C<human>,
     C<local>,
     C<master_timeout>,
     C<h>,
     C<help>,
+    C<s>,
     C<v>
 
 See the L<cat pending-tasks docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-pending-tasks.html>
@@ -281,11 +311,14 @@ for more information.
 Returns information about plugins installed on each node.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
+    C<human>,
     C<local>,
     C<master_timeout>,
     C<h>,
     C<help>,
+    C<s>,
     C<v>
 
 See the L<cat plugins docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-plugins.html>
@@ -304,10 +337,13 @@ stuck, try it to see if there’s any movement using C<recovery()>.
 
 Query string parameters:
     C<bytes>,
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat recovery docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-recovery.html>
@@ -320,11 +356,14 @@ for more information.
 Provides a list of registered snapshot repositories.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat repositories docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-repositories.html>
@@ -339,9 +378,12 @@ for more information.
 Provides low level information about the segments in the shards of an index.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
+    C<s>,
     C<v>
 
 See the L<cat shards docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-segments.html>
@@ -357,11 +399,14 @@ Provides a detailed view of what nodes contain which shards, the state and
 size of each shard.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat shards docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-shards.html>
@@ -376,11 +421,14 @@ for more information.
 Provides a list of all snapshots that belong to the specified repositories.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<ignore_unavailable>,
     C<master_timeout>,
+    C<s>,
     C<v>
 
 See the L<cat snapshots docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-snapshots.html>
@@ -395,15 +443,40 @@ Provides a list of node-level tasks.
 Query string parameters:
     C<actions>,
     C<detailed>,
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<node_id>,
     C<parent_node>,
     C<parent_task>,
+    C<s>,
     C<v>
 
 See the L<cat tasks docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html>
+for more information.
+
+=head2 C<templates()>
+
+    say $e->cat->templates(
+        name => $name # optional
+    )
+
+Provides a list of index templates.
+
+Query string parameters:
+    C<error_trace>,
+    C<format>,
+    C<h>,
+    C<help>,
+    C<human>,
+    C<local>,
+    C<master_timeout>,
+    C<s>,
+    C<v>
+
+See the L<cat templates docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/templates.html>
 for more information.
 
 
@@ -418,13 +491,15 @@ C<queue> and C<rejected> statistics are returned for the C<bulk>, C<index> and
 C<search> thread pools.
 
 Query string parameters:
+    C<error_trace>,
     C<format>,
     C<h>,
     C<help>,
+    C<human>,
     C<local>,
     C<master_timeout>,
     C<size>,
-    C<thread_pool_patterns>,
+    C<s>,
     C<v>
 
 See the L<cat thread_pool docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cat-thread-pool.html>

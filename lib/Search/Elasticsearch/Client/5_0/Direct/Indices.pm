@@ -37,6 +37,8 @@ The C<create()> method is used to create an index. Optionally, index
 settings, type mappings, and aliases can be added at the same time.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>,
     C<update_all_types>,
@@ -60,7 +62,9 @@ See the L<get index docs|http://www.elastic.co/guide/en/elasticsearch/reference/
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<flat_settings>,
     C<human>,
     C<ignore_unavailable>,
     C<include_defaults>,
@@ -77,8 +81,12 @@ whether the specified index or indices exist.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<flat_settings>,
+    C<human>,
     C<ignore_unavailable>,
+    C<include_defaults>,
     C<local>
 
 See the L<index exists docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-indices-exists.html>
@@ -94,7 +102,9 @@ The C<delete()> method deletes the specified indices.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<master_timeout>,
     C<timeout>
@@ -113,7 +123,9 @@ but allowing them to be reopened later.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>
     C<master_timeout>,
     C<timeout>
@@ -131,7 +143,9 @@ The C<open()> method opens closed indices.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>
     C<master_timeout>,
     C<timeout>
@@ -151,6 +165,9 @@ Rollover an index pointed to by C<alias> if it meets rollover conditions
 (eg max age, max docs) to a new index name.
 
 Query string parameters:
+    C<dry_run>,
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>,
     C<wait_for_active_shards>
@@ -170,6 +187,8 @@ The shrink API shrinks the shards of an index down to a single shard (or to a fa
 of the original shards).
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>,
     C<wait_for_active_shards>
@@ -188,9 +207,11 @@ or id cache for the specified indices.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<fielddata>,
     C<fields>,
+    C<human>,
     C<ignore_unavailable>,
     C<query>,
     C<recycler>,
@@ -211,8 +232,10 @@ happens automatically once every second by default.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<force>,
+    C<human>,
     C<ignore_unavailable>
 
 See the L<refresh index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-refresh.html>
@@ -230,8 +253,10 @@ This process normally happens automatically.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<force>,
+    C<human>,
     C<ignore_unavailable>,
     C<wait_if_ongoing>
 
@@ -260,7 +285,9 @@ for more information.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>
 
 =head2 C<forcemerge()>
@@ -275,8 +302,10 @@ with care, and only on indices that are no longer being updated.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<flush>,
+    C<human>,
     C<ignore_unavailable>,
     C<max_num_segments>,
     C<only_expunge_deletes>,
@@ -296,6 +325,7 @@ upgraded, which can be done with the C<upgrade()> method.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<human>,
     C<ignore_unavailable>
@@ -313,7 +343,9 @@ The C<upgrade()> method upgrades all segments in the specified indices to the la
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<only_ancient_segments>,
     C<wait_for_completion>
@@ -353,7 +385,9 @@ For instance:
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<master_timeout>,
     C<timeout>,
@@ -375,7 +409,9 @@ all types in one, more or all indices.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<local>
 
@@ -397,7 +433,9 @@ all fields in one, more or all types and indices.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<include_defaults>,
     C<local>
@@ -417,7 +455,9 @@ in all specified indices, and returns C<1> or the empty string.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<local>
 
@@ -445,6 +485,8 @@ index aliases atomically. For instance:
     );
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>
 
@@ -471,6 +513,8 @@ The C<put_alias()> method creates an index alias. For instance:
     );
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>
 
@@ -489,7 +533,9 @@ aliases in the specified indices.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<local>
 
@@ -508,7 +554,9 @@ whether the specified aliases exist in the specified indices.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<local>
 
@@ -526,6 +574,8 @@ The C<delete_alias()> method deletes one or more aliases from one or more
 indices.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>
 
@@ -553,8 +603,10 @@ indices or all indices. For instance:
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<flat_settings>,
+    C<human>,
     C<ignore_unavailable>,
     C<master_timeout>,
     C<preserve_existing>
@@ -574,6 +626,7 @@ indices or all indices.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<flat_settings>,
     C<human>,
@@ -597,7 +650,9 @@ The C<put_template()> method is used to create or update index templates.
 
 Query string parameters:
     C<create>,
+    C<error_trace>,
     C<flat_settings>,
+    C<human>,
     C<master_timeout>,
     C<op_type>,
     C<order>,
@@ -617,7 +672,9 @@ for more information.
 The C<get_template()> method is used to retrieve a named template.
 
 Query string parameters:
+    C<error_trace>,
     C<flat_settings>,
+    C<human>,
     C<local>,
     C<master_timeout>
 
@@ -633,6 +690,9 @@ for more information.
 The C<exists_template()> method is used to check whether the named template exists.
 
 Query string parameters:
+    C<error_trace>,
+    C<flat_settings>,
+    C<human>,
     C<local>,
     C<master_timeout>
 
@@ -648,6 +708,8 @@ for more information.
 The C<delete_template()> method is used to delete a named template.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<master_timeout>,
     C<timeout>,
     C<version>,
@@ -692,10 +754,12 @@ Allowed metrics are:
 
 Query string parameters:
     C<completion_fields>,
+    C<error_trace>,
     C<fielddata_fields>,
     C<fields>,
     C<groups>,
     C<human>,
+    C<include_segment_file_sizes>,
     C<level>,
     C<types>
 
@@ -713,6 +777,7 @@ Provides insight into on-going shard recoveries.
 Query string parameters:
     C<active_only>,
     C<detailed>,
+    C<error_trace>,
     C<human>
 
 See the L<recovery docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-recovery.html>
@@ -729,6 +794,7 @@ that an index contains.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<human>,
     C<ignore_unavailable>,
@@ -748,6 +814,7 @@ copies of which shards, whether the shards are allocated or not.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<human>,
     C<ignore_unavailable>,
@@ -774,6 +841,7 @@ Query string parameters:
     C<analyzer>,
     C<attributes>,
     C<char_filter>,
+    C<error_trace>,
     C<explain>,
     C<field>,
     C<filter>,
@@ -799,16 +867,17 @@ whether the query is valid or not.  Most useful when C<explain> is set
 to C<true>, in which case it includes an execution plan in the output.
 
 Query string parameters:
+    C<all_shards>,
     C<allow_no_indices>,
     C<analyze_wildcard>,
     C<analyzer>,
     C<default_operator>,
     C<df>,
+    C<error_trace>,
     C<explain>,
     C<expand_wildcards>,
     C<ignore_unavailable>,
     C<lenient>,
-    C<lowercase_expanded_terms>
     C<q>,
     C<rewrite>
 

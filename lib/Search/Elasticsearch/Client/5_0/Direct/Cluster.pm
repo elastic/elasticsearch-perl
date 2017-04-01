@@ -32,6 +32,8 @@ health, returning C<red>, C<yellow> or C<green> to indicate the state
 of the cluster, indices or shards.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<level>,
     C<local>,
     C<master_timeout>,
@@ -54,6 +56,7 @@ for more information.
 Returns high-level cluster stats, optionally limited to the listed nodes.
 
 Query string parameters:
+    C<error_trace>,
     C<flat_settings>,
     C<human>,
     C<timeout>
@@ -69,7 +72,9 @@ The C<get_settings()> method is used to retrieve cluster-wide settings that
 have been set with the L</put_settings()> method.
 
 Query string parameters:
+    C<error_trace>,
     C<flat_settings>,
+    C<human>,
     C<include_defaults>,
     C<master_timeout>,
     C<timeout>
@@ -94,7 +99,9 @@ For instance:
     );
 
 Query string parameters:
-    C<flat_settings>
+    C<error_trace>,
+    C<flat_settings>,
+    C<human>
 
 See the L<cluster settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html>
  for more information.
@@ -121,8 +128,10 @@ parameter.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<flat_settings>,
+    C<human>,
     C<ignore_unavailable>,
     C<local>,
     C<master_timeout>
@@ -139,6 +148,8 @@ for more information.
 Returns information about why a shard is allocated or unallocated or why.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<include_disk_info>,
     C<include_yes_decisions>
 
@@ -152,6 +163,8 @@ for more information.
 Returns a list of cluster-level tasks still pending on the master node.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<local>,
     C<master_timeout>
 
@@ -189,7 +202,9 @@ which changes should be made. For instance:
 
 Query string parameters:
     C<dry_run>,
+    C<error_trace>,
     C<explain>,
+    C<human>,
     C<master_timeout>,
     C<metric>,
     C<retry_failed>,

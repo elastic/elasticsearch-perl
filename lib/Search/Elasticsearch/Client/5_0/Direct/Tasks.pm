@@ -32,7 +32,9 @@ about that task.
 Query string parameters:
     C<actions>,
     C<detailed>,
+    C<error_trace>,
     C<group_by>,
+    C<human>,
     C<node_id>,
     C<parent_node>,
     C<parent_task>,
@@ -50,6 +52,8 @@ for more information.
 The C<get()> method returns the task with the specified ID.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<wait_for_completion>
 
 See the L<task management docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html>
@@ -65,6 +69,8 @@ The C<cancel()> method attempts to cancel the specified C<task_id> or multiple t
 
 Query string parameters:
     C<actions>,
+    C<error_trace>,
+    C<human>,
     C<node_id>,
     C<parent_node>,
     C<parent_task>

@@ -388,6 +388,8 @@ The C<index()> method is used to index a new document or to reindex
 an existing document.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<op_type>,
     C<parent>,
     C<pipeline>,
@@ -419,6 +421,8 @@ C<index>, C<type> and C<id> already exists.
 
 Query string parameters:
     C<consistency>,
+    C<error_trace>,
+    C<human>,
     C<op_type>,
     C<parent>,
     C<refresh>,
@@ -447,6 +451,8 @@ Query string parameters:
     C<_source>,
     C<_source_exclude>,
     C<_source_include>,
+    C<error_trace>,
+    C<human>,
     C<parent>,
     C<preference>,
     C<realtime>,
@@ -476,6 +482,8 @@ Query string parameters:
     C<_source>,
     C<_source_exclude>,
     C<_source_include>,
+    C<error_trace>,
+    C<human>,
     C<parent>,
     C<preference>,
     C<realtime>,
@@ -499,11 +507,18 @@ The C<exists()> method returns C<1> if a document with the specified
 C<index>, C<type> and C<id> exists, or an empty string if it doesn't.
 
 Query string parameters:
+    C<_source>,
+    C<_source_exclude>,
+    C<_source_include>,
+    C<error_trace>,
+    C<human>,
     C<parent>,
     C<preference>,
     C<realtime>,
     C<refresh>,
-    C<routing>
+    C<routing>,
+    C<version>,
+    C<version_type>
 
 See the L<exists docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html>
 for more information.
@@ -520,6 +535,8 @@ The C<delete()> method will delete the document with the specified
 C<index>, C<type> and C<id>, or will throw a C<Missing> error.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<parent>,
     C<refresh>,
     C<routing>,
@@ -605,7 +622,9 @@ Query string parameters:
     C<_source>,
     C<_source_exclude>,
     C<_source_include>,
+    C<error_trace>,
     C<fields>,
+    C<human>,
     C<lang>,
     C<parent>,
     C<refresh>,
@@ -636,8 +655,10 @@ offsets and payloads for the specified document, assuming that termvectors
 have been enabled.
 
 Query string parameters:
+    C<error_trace>,
     C<field_statistics>,
     C<fields>,
+    C<human>,
     C<offsets>,
     C<parent>,
     C<payloads>,
@@ -733,7 +754,9 @@ Query string parameters:
     C<_source>,
     C<_source_exclude>,
     C<_source_include>,
+    C<error_trace>,
     C<fields>,
+    C<human>,
     C<pipeline>,
     C<refresh>,
     C<routing>,
@@ -791,9 +814,12 @@ Query string parameters:
     C<_source>,
     C<_source_exclude>,
     C<_source_include>,
+    C<error_trace>,
+    C<human>,
     C<preference>,
     C<realtime>,
     C<refresh>,
+    C<routing>,
     C<stored_fields>
 
 See the L<mget docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-multi-get.html>
@@ -821,8 +847,10 @@ Runs multiple L</termvector()> requests in a single request, eg:
     );
 
 Query string parameters:
+    C<error_trace>,
     C<field_statistics>,
     C<fields>,
+    C<human>,
     C<ids>,
     C<offsets>,
     C<parent>,
@@ -887,16 +915,18 @@ Query string parameters:
     C<allow_no_indices>,
     C<analyze_wildcard>,
     C<analyzer>,
+    C<batched_reduce_size>,
     C<default_operator>,
     C<df>,
     C<docvalue_fields>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<explain>,
     C<fielddata_fields>,
     C<from>,
+    C<human>,
     C<ignore_unavailable>,
     C<lenient>,
-    C<lowercase_expanded_terms>,
     C<preference>,
     C<q>,
     C<request_cache>,
@@ -914,6 +944,7 @@ Query string parameters:
     C<terminate_after>,
     C<timeout>,
     C<track_scores>,
+    C<typed_keys>,
     C<version>
 
 See the L<search reference|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html>
@@ -947,7 +978,9 @@ Query string parameters:
     C<analyzer>,
     C<default_operator>,
     C<df>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<lenient>,
     C<lowercase_expanded_terms>
@@ -994,13 +1027,16 @@ for more information.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<explain>,
+    C<human>,
     C<ignore_unavailable>,
     C<preference>,
     C<profile>,
     C<scroll>,
-    C<search_type>
+    C<search_type>,
+    C<typed_keys>
 
 =head2 C<render_search_template()>
 
@@ -1050,6 +1086,8 @@ See L</scroll_helper()> and L<Search::Elasticsearch::Client::5_0::Scroll> for a 
 which makes managing scroll requests much easier.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<scroll>,
     C<scroll_id>
 
@@ -1106,8 +1144,11 @@ request).  For instance:
     );
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<max_concurrent_searches>,
-    C<search_type>
+    C<search_type>,
+    C<typed_keys>
 
 See the L<msearch docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html>
 for more information.
@@ -1142,7 +1183,10 @@ request).  For instance:
     );
 
 Query string parameters:
-    C<search_type>
+    C<error_trace>,
+    C<human>,
+    C<search_type>,
+    C<typed_keys>
 
 See the L<msearch-template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/multi-search-template.html>
 for more information.
@@ -1180,8 +1224,9 @@ Query string parameters:
     C<analyzer>,
     C<default_operator>,
     C<df>,
+    C<error_trace>,
+    C<human>,
     C<lenient>,
-    C<lowercase_expanded_terms>,
     C<parent>,
     C<preference>,
     C<q>,
@@ -1205,8 +1250,10 @@ The C<field-stats> API returns statistical properties of a field
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<fields>,
+    C<human>,
     C<ignore_unavailable>,
     C<level>
 
@@ -1225,7 +1272,9 @@ which nodes will execute a search request.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<local>,
     C<preference>,
@@ -1256,11 +1305,12 @@ Query string parameters:
     C<conflicts>,
     C<default_operator>,
     C<df>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<from>,
+    C<human>,
     C<ignore_unavailable>,
     C<lenient>,
-    C<lowercase_expanded_terms>,
     C<preference>,
     C<q>,
     C<refresh>,
@@ -1272,6 +1322,7 @@ Query string parameters:
     C<search_timeout>,
     C<search_type>,
     C<size>,
+    C<slices>,
     C<sort>,
     C<stats>,
     C<terminate_after>,
@@ -1293,8 +1344,11 @@ The C<reindex()> API is used to index documents from one index or multiple indic
 to a new index.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<refresh>,
     C<requests_per_second>,
+    C<slices>,
     C<timeout>,
     C<wait_for_active_shards>,
     C<wait_for_completion>
@@ -1323,11 +1377,12 @@ Query string parameters:
     C<conflicts>,
     C<default_operator>,
     C<df>,
+    C<error_trace>,
     C<expand_wildcards>,
     C<from>,
+    C<human>,
     C<ignore_unavailable>,
     C<lenient>,
-    C<lowercase_expanded_terms>,
     C<pipeline>,
     C<preference>,
     C<q>,
@@ -1340,6 +1395,7 @@ Query string parameters:
     C<search_timeout>,
     C<search_type>,
     C<size>,
+    C<slices>,
     C<sort>,
     C<stats>,
     C<terminate_after>,
@@ -1363,6 +1419,8 @@ The C<reindex_rethrottle()> API is used to dynamically update the throtting
 of an existing reindex request, identified by C<task_id>.
 
 Query string parameters:
+    C<error_trace>,
+    C<human>,
     C<requests_per_second>
 
 See the L<reindex docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html>
@@ -1401,7 +1459,9 @@ C<_source> field of the document under the C<doc> key:
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<percolate_format>,
     C<percolate_index>,
@@ -1442,7 +1502,9 @@ of the queries themselves.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<percolate_index>,
     C<percolate_type>,
@@ -1489,7 +1551,9 @@ in a single request.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>
 
 See the L<mpercolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html>
@@ -1523,7 +1587,9 @@ suggestion requests, which can also be run as part of a L</search()> request.
 
 Query string parameters:
     C<allow_no_indices>,
+    C<error_trace>,
     C<expand_wildcards>,
+    C<human>,
     C<ignore_unavailable>,
     C<preference>,
     C<routing>
@@ -1551,7 +1617,10 @@ The C<put_script()> method is used to store a script in the cluster state. For i
         }
     );
 
-Query string parameters: None
+Query string parameters:
+    C<error_trace>,
+    C<human>
+
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
@@ -1564,7 +1633,9 @@ See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/refe
 
 Retrieve the indexed script from the cluster state.
 
-Query string parameters: None
+Query string parameters:
+    C<error_trace>,
+    C<human>
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
@@ -1577,7 +1648,9 @@ See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/refe
 
 Delete the indexed script from the cluster state.
 
-Query string parameters: None
+Query string parameters:
+    C<error_trace>,
+    C<human>
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 
@@ -1610,7 +1683,9 @@ For instance:
       }
     );
 
-Query string parameters: None
+Query string parameters:
+    C<error_trace>,
+    C<human>
 
 See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
 
@@ -1622,7 +1697,9 @@ See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsea
 
 Retrieve the indexed template from the cluster state.
 
-Query string parameters: None
+Query string parameters:
+    C<error_trace>,
+    C<human>
 
 See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
 
@@ -1634,7 +1711,9 @@ See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsea
 
 Delete the indexed template from the cluster state.
 
-Query string parameters: None
+Query string parameters:
+    C<error_trace>,
+    C<human>
 
 See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
 
