@@ -27,3 +27,5 @@ sub command_line {
 }
 
 1
+
+# ABSTRACT: Client-specific backend for Search::Elasticsearch::TestServer
