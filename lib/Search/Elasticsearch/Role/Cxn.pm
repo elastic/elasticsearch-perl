@@ -47,6 +47,7 @@ my %Code_To_Error = (
     404 => 'Missing',
     408 => 'RequestTimeout',
     409 => 'Conflict',
+    417 => 'ContentLength',
     502 => 'BadGateway',
     503 => 'Unavailable',
     504 => 'GatewayTimeout'
