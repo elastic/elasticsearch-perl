@@ -8,10 +8,11 @@ use FindBin;
 
 do "$FindBin::RealBin/parse_spec_base.pl" || die $@;
 
-my @files
-    = map { file($_) }
+my @files = map { file($_) } (
+    '../elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/api/_common.json',
     glob
-    '../x-plugins/elasticsearch/src/test/resources/rest-api-spec/api/*.json';
+        '../elasticsearch-extra/x-pack-elasticsearch/plugin/src/test/resources/rest-api-spec/api/*.json'
+);
 
 process_files( 'lib/Search/Elasticsearch/Plugin/XPack/5_0/Role/API.pm',
     @files );

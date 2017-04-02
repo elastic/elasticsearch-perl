@@ -5,7 +5,7 @@ use namespace::clean;
 
 has 'graph'   => ( is => 'lazy', init_arg => undef );
 has 'license' => ( is => 'lazy', init_arg => undef );
-has 'shield'  => ( is => 'lazy', init_arg => undef );
+has 'security'  => ( is => 'lazy', init_arg => undef );
 has 'watcher' => ( is => 'lazy', init_arg => undef );
 
 
@@ -19,9 +19,9 @@ sub _build_license {
         '+Search::Elasticsearch::Plugin::XPack::5_0::License');
 }
 
-sub _build_shield {
+sub _build_security {
     shift->_build_namespace(
-        '+Search::Elasticsearch::Plugin::XPack::5_0::Shield');
+        '+Search::Elasticsearch::Plugin::XPack::5_0::Security');
 }
 
 sub _build_watcher {
@@ -44,7 +44,7 @@ sub _build_watcher {
 
     $es->graph;
     $es->license;
-    $es->shield;
+    $es->security;
     $es->watcher;
 
 =head2 DESCRIPTION
@@ -53,7 +53,7 @@ This class extends the L<Search::Elasticsearch> client to add support
 for the X-Pack commercial plugins for Elasticsearch 5.x.
 
 It extends the L<Search::Elasticsearch> client with a C<graph>, C<license>,
-C<shield>, and C<watcher> namespace, to support the APIs for the X-Pack plugins:
+C<security>, and C<watcher> namespace, to support the APIs for the X-Pack plugins:
 Graph, License, Shield, and Watcher.
 
 In other words, it can be used as follows:
@@ -80,7 +80,7 @@ L<license()/Search::Elasticsearch::Plugin::XPack::5_0::License>
 
 =item *
 
-L<shield()/Search::Elasticsearch::Plugin::XPack::5_0::Shield>
+L<shield()/Search::Elasticsearch::Plugin::XPack::5_0::Security>
 
 =item *
 

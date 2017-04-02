@@ -5,7 +5,7 @@ with 'Search::Elasticsearch::Plugin::XPack::5_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('license');
+__PACKAGE__->_install_api('xpack.license');
 
 1;
 
@@ -39,7 +39,7 @@ In other words, it can be used as follows:
 =head1 METHODS
 
 The full documentation for the License plugin is available here:
-L<https://www.elastic.co/guide/en/shield/current/license-management.html>
+L<https://www.elastic.co/guide/en/x-pack/current/license-management.html>
 
 =head2 C<get()>
 
@@ -47,19 +47,27 @@ L<https://www.elastic.co/guide/en/shield/current/license-management.html>
 
 The C<get()> method returns the currently installed license.
 
-See the L<license.get docs|https://www.elastic.co/guide/en/shield/current/license-management.html#listing-licenses>
+See the L<license.get docs|https://www.elastic.co/guide/en/x-pack/current/listing-licenses.html>
 for more information.
 
+Query string parameters:
+    C<error_trace>,
+    C<human>,
+    C<local>
 
-=head2 C<put()>
+=head2 C<post()>
 
-    $response = $es->license->put(
+    $response = $es->license->post(
         body     => {...}          # required
     );
 
-The C<put()> method adds or updates the license for the cluster. The C<body>
+The C<post()> method adds or updates the license for the cluster. The C<body>
 can be passed as JSON or as a string.
 
-See the L<license.put docs|https://www.elastic.co/guide/en/shield/current/license-management.html#installing-license>
+See the L<license.put docs|https://www.elastic.co/guide/en/x-pack/current/installing-license.html>
 for more information.
 
+Query string parameters:
+    C<acknowledge>,
+    C<error_trace>,
+    C<human>

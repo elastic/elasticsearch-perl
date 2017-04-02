@@ -5,7 +5,7 @@ with 'Search::Elasticsearch::Plugin::XPack::5_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('graph');
+__PACKAGE__->_install_api('xpack.graph');
 
 1;
 
@@ -53,5 +53,11 @@ L<https://www.elastic.co/guide/en/graph/current/index.html>
 The C<explore()> method allows you to discover vertices and connections which relate
 to your query.
 
-See the L<explore docs|https://www.elastic.co/guide/en/graph/current/graph-api-rest.html>
+See the L<explore docs|https://www.elastic.co/guide/en/x-pack/current/graph-api-explore.html>
 for more information.
+
+Query string parameters:
+    C<error_trace>,
+    C<human>,
+    C<routing>,
+    C<timeout>
