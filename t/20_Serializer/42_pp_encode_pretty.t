@@ -5,6 +5,7 @@ eval { require JSON::PP; 1 } or do {
     done_testing;
 };
 
+use lib '.';
 our $JSON_BACKEND = 'JSON::PP';
 do 't/20_Serializer/encode_decode.pl' or die( $@ || $! );
 
