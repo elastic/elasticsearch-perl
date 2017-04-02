@@ -10,18 +10,20 @@ use HTTP::Tiny;
 use Search::Elasticsearch::Util qw(parse_params throw);
 use namespace::clean;
 
-has 'es_home'   => ( is => 'ro', required => 1 );
-has 'instances' => ( is => 'ro', default  => 1 );
-has 'http_port' => ( is => 'ro', default  => 9600 );
-has 'es_port'   => ( is => 'ro', default  => 9700 );
-has 'pids'      => (
+has 'es_home'    => ( is => 'ro', required => 1 );
+has 'es_version' => ( is => 'ro', required => 1 );
+has 'instances'  => ( is => 'ro', default  => 1 );
+has 'http_port'  => ( is => 'ro', default  => 9600 );
+has 'es_port'    => ( is => 'ro', default  => 9700 );
+has 'pids'       => (
     is        => 'ro',
     default   => sub { [] },
     clearer   => 1,
     predicate => 1
 );
-has 'dir'          => ( is => 'ro', clearer  => 1 );
-has 'conf'         => ( is => 'ro', default  => sub { [] } );
+
+has 'dirs' => ( is => 'ro', default => sub { [] } );
+has 'conf' => ( is => 'ro', default => sub { [] } );
 has '_starter_pid' => ( is => 'rw', required => 0, predicate => 1 );
 
 #===================================
@@ -31,6 +33,7 @@ sub start {
 
     my $home = $self->es_home
         or throw( 'Param', "Missing required param <es_home>" );
+
     my $instances = $self->instances;
     my $port      = $self->http_port;
     my $es_port   = $self->es_port;
@@ -48,8 +51,9 @@ sub start {
         exit(1);
     };
 
-    my $dir = File::Temp->newdir();
     for ( 0 .. $instances - 1 ) {
+        my $dir = File::Temp->newdir();
+        push @{$self->dirs}, $dir;
         print "Starting node: http://127.0.0.1:$http[$_]\n";
         $self->_start_node( $dir, $transport[$_], $http[$_] );
     }
@@ -146,7 +150,7 @@ sub shutdown {
     return unless @$pids;
 
     kill 9, @$pids;
-    $self->clear_dir;
+    $self->clear_dirs;
 }
 
 #===================================
@@ -154,22 +158,18 @@ sub _command_line {
 #===================================
     my ( $self, $pid_file, $dir, $transport, $http ) = @_;
 
-    return (
-        $self->es_home . '/bin/elasticsearch',
-        '-p',
-        $pid_file->filename,
-        map {"-Des.$_"} (
-            'path.data=' . $dir,
-            'network.host=127.0.0.1',
-            'cluster.name=es_test',
-            'discovery.zen.ping.multicast.enabled=false',
-            'discovery.zen.ping_timeout=1s',
-            'discovery.zen.ping.unicast.hosts=127.0.0.1:' . $self->es_port,
-            'transport.tcp.port=' . $transport,
-            'http.port=' . $http,
-            @{ $self->conf }
-        )
-    );
+    my $version = $self->es_version;
+    my $class = "Search::Elasticsearch::Client::${version}::TestServer";
+    eval "require $class" || die $@;
+
+    return $class->command_line(@_);
+}
+
+#===================================
+sub clear_dirs {
+#===================================
+    my $self = shift;
+    @{$self->dirs()} = ();
 }
 
 #===================================
@@ -192,7 +192,8 @@ be shutdown automatically.
     use Search::Elasticsearch::TestServer;
 
     my $server = Search::Elasticsearch::TestServer->new(
-        es_home   => '/path/to/elasticsearch',
+        es_home    => '/path/to/elasticsearch',
+        es_version => '5_0'
     );
 
     my $nodes = $server->start;
@@ -205,11 +206,12 @@ be shutdown automatically.
 =head2 C<new()>
 
     my $server = Search::Elasticsearch::TestServer->new(
-        es_home   => '/path/to/elasticsearch',
+        es_home    => '/path/to/elasticsearch',
+        es_version => '5_0',
         instances => 1,
         http_port => 9600,
         es_port   => 9700,
-        conf      => ['script.disable_dynamic=false'],
+        conf      => ['attr.foo=bar'],
     );
 
 Params:
@@ -220,6 +222,10 @@ Params:
 
 Required. Must point to the Elasticsearch home directory, which contains
 C<./bin/elasticsearch>.
+
+=item * C<es_version>
+
+Required. Accepts a version of the client, eg `5_0`, `2_0`, `1_0`, `0_90`
 
 =item * C<instances>
 
