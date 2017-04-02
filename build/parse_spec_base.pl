@@ -8,16 +8,30 @@ use Path::Class;
 use Perl::Tidy;
 use JSON::XS;
 
-our ( %API, %seen, %seen_combo, %Forbidden );
+our ( %API, %Common, %seen, %seen_combo, %Forbidden );
 
-our %Known_Types
-    = map { $_ => 1 } qw(boolean enum list number string time );
+our %Known_Types = map { $_ => 1 } qw(boolean enum list number string time );
 
 #===================================
 sub process_files {
 #===================================
     my $module = shift();
-    for my $file (@_) {
+    my @files;
+
+    while ( my $file = shift() ) {
+        unless ( $file =~ /_common.json$/ ) {
+            push @files, $file;
+            next;
+        }
+
+        say $file;
+        my $data = decode_json( $file->slurp );
+        %Common = ( %Common, process_qs( $data->{params} ) );
+    }
+
+    delete @Common{ 'pretty', 'source' };
+
+    for my $file (@files) {
         say $file;
         my $data = decode_json( $file->slurp );
         my ( $name, $defn ) = %$data;
@@ -60,19 +74,17 @@ sub process {
     my $parts = $spec{parts} = process_parts( $url->{parts} );
 
     # filter path
-    my %qs = process_qs( $url->{params} );
+    my %qs = ( %Common, process_qs( $url->{params} ) );
     for ( keys %$parts ) {
         delete $qs{$_};
-    }
-    if ( $method ne 'HEAD' and ( $spec{paths}[0][1] || '' ) ne '_cat' ) {
-        @qs{filter_path} = 'list';
     }
 
     $spec{qs} = \%qs;
 
     # doc
-    $spec{doc} = $defn->{documentation} =~ m{/([^/]+)\.html$} ? $1 : '';
-
+    if ( $defn->{documentation} ) {
+        $spec{doc} = $defn->{documentation} =~ m{/([^/]+)\.html$} ? $1 : '';
+    }
     return \%spec;
 }
 
