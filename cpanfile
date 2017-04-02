@@ -9,7 +9,7 @@ requires "HTTP::Headers" => "0";
 requires "HTTP::Parser::XS" => "0";
 requires "HTTP::Request" => "0";
 requires "HTTP::Tiny" => "0.043";
-requires "Hijk" => "0";
+requires "Hijk" => "0.27";
 requires "IO::Compress::Deflate" => "0";
 requires "IO::Compress::Gzip" => "0";
 requires "IO::Select" => "0";
@@ -24,7 +24,7 @@ requires "Log::Any" => "1.02";
 requires "Log::Any::Adapter" => "0";
 requires "MIME::Base64" => "0";
 requires "Module::Runtime" => "0";
-requires "Moo" => "1.003";
+requires "Moo" => "2.001000";
 requires "Moo::Role" => "0";
 requires "Net::Curl::Easy" => "0";
 requires "POSIX" => "0";
@@ -38,6 +38,7 @@ requires "URI" => "0";
 requires "namespace::clean" => "0";
 requires "overload" => "0";
 requires "parent" => "0";
+requires "strict" => "0";
 requires "warnings" => "0";
 recommends "URI::Escape::XS" => "0";
 
@@ -54,7 +55,6 @@ on 'test' => sub {
   requires "YAML" => "0";
   requires "base" => "2.18";
   requires "lib" => "0";
-  requires "strict" => "0";
 };
 
 on 'test' => sub {
