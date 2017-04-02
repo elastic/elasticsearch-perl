@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch::Client::0_90
 
+5.02    2017-04-02
+        Updated to work with Search::Elasticsearch 5.02
+
 5.01    2016-10-19
 
         Doc fixes
