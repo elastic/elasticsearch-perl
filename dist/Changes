@@ -1,5 +1,16 @@
 Revision history for Search::Elasticsearch
 
+5.02    2017-04-02
+
+        * Boolean query params must be "true" or "false"
+        * Added deprecation warnings
+        * The scroll API requires a body with a named scroll_id parameter
+        * Added support for pipeline parameter to bulk API, top level and metadata level
+        * Added support for 413 HTTP status code - Request entity too large
+        * Search::Elasticsearch::TestServer now takes an es_version parameter and
+          works with 0.90, 1.0, 2.0, and 5.0
+        * Added common parameters error_trace and human to all params
+
 5.01    2016-10-19
 
         Doc fixes
