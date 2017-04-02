@@ -6,7 +6,7 @@ use v5.12;
 use Path::Class;
 use FindBin;
 
-do "$FindBin::RealBin/parse_spec_base.pl" || die $?;
+do "$FindBin::RealBin/parse_spec_base.pl" || die $@;
 
 my @api_dirs = qw(rest-api-spec/src/main/resources/rest-api-spec/api
     plugins/delete-by-query/src/test/resources/rest-api-spec/api
