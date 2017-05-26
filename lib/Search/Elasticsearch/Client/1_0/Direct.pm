@@ -239,7 +239,7 @@ you can do:
 
     $e->search(
         query => {...},
-        filter_paths => [ 'hits.total', 'hits.hits._source' ]
+        filter_path => [ 'hits.total', 'hits.hits._source' ]
     );
 
 This parameter was added in Elasticsearch 1.6.0.
