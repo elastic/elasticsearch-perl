@@ -263,7 +263,7 @@ you can do:
 
     $e->search(
         query => {...},
-        filter_paths => [ 'hits.total', 'hits.hits._source' ]
+        filter_path => [ 'hits.total', 'hits.hits._source' ]
     );
 
 =head2 Ignore parameter
