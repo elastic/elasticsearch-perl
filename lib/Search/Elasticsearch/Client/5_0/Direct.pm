@@ -255,7 +255,7 @@ UTF-8 bytes and passed as is:
 
 =head2 Filter path parameter
 
-Any API which returns a JSON body accepts a C<filter_path> parameter
+Any API which returns a JSON body accepts a C<filter_paths> parameter
 which will filter the JSON down to only the specified paths.  For instance,
 if you are running a search request and only want the C<total> hits and
 the C<_source> field for each hit (without the C<_id>, C<_index> etc),
