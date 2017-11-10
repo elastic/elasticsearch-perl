@@ -1,8 +1,8 @@
 use Test::More;
 use Test::Exception;
 use Search::Elasticsearch::Async;
-use lib 't/lib';
-do 'LogCallback.pl' or die( $@ || $! );
+
+do './t/lib/LogCallback.pl' or die( $@ || $! );
 
 isa_ok my $l = Search::Elasticsearch::Async->new->logger,
     'Search::Elasticsearch::Logger::LogAny',

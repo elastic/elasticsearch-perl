@@ -5,7 +5,6 @@ eval { require Cpanel::JSON::XS; 1 } or do {
     done_testing;
 };
 
-use lib '.';
 our $JSON_BACKEND = 'JSON::Cpanel';
-do 't/20_Serializer/encode_decode.pl' or die( $@ || $! );
+do './t/20_Serializer/encode_decode.pl' or die( $@ || $! );
 

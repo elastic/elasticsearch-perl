@@ -1,6 +1,5 @@
 use Test::More;
 use Search::Elasticsearch::Async;
-use lib 't/lib';
 
 my $pool
     = Search::Elasticsearch::Async->new( cxn_pool => 'Async::Sniff' )

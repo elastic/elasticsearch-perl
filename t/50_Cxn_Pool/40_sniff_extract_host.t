@@ -1,6 +1,5 @@
 use Test::More;
 use Search::Elasticsearch;
-use lib 't/lib';
 
 my $pool
     = Search::Elasticsearch->new( cxn_pool => 'Sniff' )->transport->cxn_pool;

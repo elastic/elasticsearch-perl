@@ -1,8 +1,8 @@
 use Test::More;
 use Test::Exception;
 use Search::Elasticsearch::Async;
-use lib 't/lib';
-do 'LogCallback.pl' or die( $@ || $! );
+
+do './t/lib/LogCallback.pl' or die( $@ || $! );
 
 ok my $e
     = Search::Elasticsearch::Async->new(
