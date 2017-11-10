@@ -10,11 +10,11 @@ use HTTP::Tiny;
 use Search::Elasticsearch::Util qw(parse_params throw);
 use namespace::clean;
 
-has 'es_home'    => ( is => 'ro', required => 1 );
-has 'es_version' => ( is => 'ro', required => 1 );
-has 'instances'  => ( is => 'ro', default  => 1 );
-has 'http_port'  => ( is => 'ro', default  => 9600 );
-has 'es_port'    => ( is => 'ro', default  => 9700 );
+has 'es_home'    => ( is => 'ro', default => $ENV{ES_HOME} );
+has 'es_version' => ( is => 'ro', default => $ENV{ES_VERSION} );
+has 'instances'  => ( is => 'ro', default => 1 );
+has 'http_port'  => ( is => 'ro', default => 9600 );
+has 'es_port'    => ( is => 'ro', default => 9700 );
 has 'pids'       => (
     is        => 'ro',
     default   => sub { [] },
@@ -33,6 +33,8 @@ sub start {
 
     my $home = $self->es_home
         or throw( 'Param', "Missing required param <es_home>" );
+    $self->es_version
+        or throw( 'Param', "Missing required param <es_version>" );
 
     my $instances = $self->instances;
     my $port      = $self->http_port;
@@ -53,7 +55,7 @@ sub start {
 
     for ( 0 .. $instances - 1 ) {
         my $dir = File::Temp->newdir();
-        push @{$self->dirs}, $dir;
+        push @{ $self->dirs }, $dir;
         print "Starting node: http://127.0.0.1:$http[$_]\n";
         $self->_start_node( $dir, $transport[$_], $http[$_] );
     }
@@ -159,7 +161,7 @@ sub _command_line {
     my ( $self, $pid_file, $dir, $transport, $http ) = @_;
 
     my $version = $self->es_version;
-    my $class = "Search::Elasticsearch::Client::${version}::TestServer";
+    my $class   = "Search::Elasticsearch::Client::${version}::TestServer";
     eval "require $class" || die $@;
 
     return $class->command_line(@_);
@@ -169,7 +171,7 @@ sub _command_line {
 sub clear_dirs {
 #===================================
     my $self = shift;
-    @{$self->dirs()} = ();
+    @{ $self->dirs() } = ();
 }
 
 #===================================
@@ -221,11 +223,12 @@ Params:
 =item * C<es_home>
 
 Required. Must point to the Elasticsearch home directory, which contains
-C<./bin/elasticsearch>.
+C<./bin/elasticsearch>.  Defaults to C<$ENV{ES_HOME}>
 
 =item * C<es_version>
 
-Required. Accepts a version of the client, eg `5_0`, `2_0`, `1_0`, `0_90`
+Required. Accepts a version of the client, eg `5_0`, `2_0`, `1_0`, `0_90`.
+Defaults to C<$ENV{ES_VERSION}>.
 
 =item * C<instances>
 

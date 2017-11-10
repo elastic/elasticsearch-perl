@@ -16,10 +16,7 @@ SKIP: {
     skip 'ES_HOME not set', 8 unless $ENV{ES_HOME};
 
     my $tempdir = File::Temp->newdir( 'testserver-XXXXX', DIR => '/tmp' );
-    my $server = Search::Elasticsearch::TestServer->new(
-        es_home => $ENV{ES_HOME},
-        conf    => [ "path.data=$tempdir", "path.logs=$tempdir", ]
-    );
+    my $server = Search::Elasticsearch::TestServer->new();
 
     my $nodes = $server->start();
 
