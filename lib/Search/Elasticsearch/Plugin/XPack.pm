@@ -2,8 +2,8 @@ package Search::Elasticsearch::Plugin::XPack;
 
 use Moo;
 
-our $VERSION = '5.02';
-use Search::Elasticsearch 5.02 ();
+our $VERSION = '6.00';
+use Search::Elasticsearch 6.00 ();
 
 #===================================
 sub _init_plugin {
@@ -16,7 +16,9 @@ sub _init_plugin {
         "Search::Elasticsearch::Plugin::XPack::${api_version}" );
 }
 
-1
+1;
+
+# fix docs - remove watcher.info() remove plugins => ['Watcher'] and fix doc samples so they work
 
 __END__
 

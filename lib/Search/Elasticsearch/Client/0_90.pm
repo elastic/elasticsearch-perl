@@ -1,7 +1,7 @@
 package Search::Elasticsearch::Client::0_90;
 
-our $VERSION='5.02';
-use Search::Elasticsearch 5.02 ();
+our $VERSION='6.00';
+use Search::Elasticsearch 6.00 ();
 
 1;
 
