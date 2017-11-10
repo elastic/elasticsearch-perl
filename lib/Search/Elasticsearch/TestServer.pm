@@ -194,8 +194,8 @@ be shutdown automatically.
     use Search::Elasticsearch::TestServer;
 
     my $server = Search::Elasticsearch::TestServer->new(
-        es_home    => '/path/to/elasticsearch',
-        es_version => '5_0'
+        es_home    => '/path/to/elasticsearch',  # defaults to $ENV{ES_HOME}
+        es_version => '6_0'                      # defaults to $ENV{ES_VERSION}
     );
 
     my $nodes = $server->start;
@@ -209,7 +209,7 @@ be shutdown automatically.
 
     my $server = Search::Elasticsearch::TestServer->new(
         es_home    => '/path/to/elasticsearch',
-        es_version => '5_0',
+        es_version => '6_0',
         instances => 1,
         http_port => 9600,
         es_port   => 9700,
@@ -227,7 +227,7 @@ C<./bin/elasticsearch>.  Defaults to C<$ENV{ES_HOME}>
 
 =item * C<es_version>
 
-Required. Accepts a version of the client, eg `5_0`, `2_0`, `1_0`, `0_90`.
+Required. Accepts a version of the client, eg `6_0`, `5_0`, `2_0`, `1_0`, `0_90`.
 Defaults to C<$ENV{ES_VERSION}>.
 
 =item * C<instances>

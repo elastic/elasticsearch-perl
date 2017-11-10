@@ -47,6 +47,10 @@ For more details, see:
 
 =item *
 
+L<Search::Elasticsearch::Plugin::XPack::6_0>
+
+=item *
+
 L<Search::Elasticsearch::Plugin::XPack::5_0>
 
 =item *

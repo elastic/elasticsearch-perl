@@ -288,7 +288,7 @@ is repeated until the application is interrupted with C<Ctrl-C>.:
 
 =head1 CREATING A NEW INSTANCE
 
-The L</new()> method returns a new L<client|Search::Elasticsearch::Client::5_0::Direct>
+The L</new()> method returns a new L<client|Search::Elasticsearch::Client::6_0::Direct>
 which can be used to run requests against the Elasticsearch cluster.
 
     use Search::Elasticsearch::Async;
@@ -408,7 +408,7 @@ Other arguments are explained in the respective L<module docs|/MODULES>.
 =head1 RUNNING REQUESTS
 
 When you create a new instance of Search::Elasticsearch::Async, it returns a
-L<client|Search::Elasticsearch::Client::5_0::Direct> object, which can be used for
+L<client|Search::Elasticsearch::Client::6_0::Direct> object, which can be used for
 running requests.
 
     use Search::Elasticsearch::Async;
@@ -432,7 +432,7 @@ running requests.
         );
     });
 
-See L<Search::Elasticsearch::Client::5_0::Direct> for more details about the requests
+See L<Search::Elasticsearch::Client::6_0::Direct> for more details about the requests
 that can be run.
 
 =head1 MODULES
@@ -464,18 +464,20 @@ methods that can be called to execute requests, such as
 C<search()>, C<index()> or C<delete()>. The client parses the user's
 requests and passes them to the L</transport> class to be executed.
 
-The default version of the client is C<5_0::Direct>, which can
+The default version of the client is C<6_0::Direct>, which can
 be explicitly specified as follows:
 
     $e = Search::Elasticsearch::Async->new(
-        client => '5_0::Direct'
+        client => '6_0::Direct'
     );
 
 See :
 
 =over
 
-=item * L<Search::Elasticsearch::Client::5_0::Direct> (default, for 5.0 branch)
+=item * L<Search::Elasticsearch::Client::6_0::Direct> (default, for 6.0 branch)
+
+=item * L<Search::Elasticsearch::Client::5_0::Direct> (for 5.0 branch)
 
 =item * L<Search::Elasticsearch::Client::2_0::Direct> (for 2.0 branch)
 
@@ -566,7 +568,7 @@ bodies.  See:
 
 =head1 HELPER MODULES
 
-L<Search::Elasticsearch::Client::5_0::Async::Bulk> and L<Search::Elasticsearch::Client::5_0::Async::Scroll>
+L<Search::Elasticsearch::Client::6_0::Async::Bulk> and L<Search::Elasticsearch::Client::6_0::Async::Scroll>
 are helper modules which assist with bulk indexing and scrolled searching, eg:
 
     $es->scroll_helper(
