@@ -37,7 +37,7 @@ sub _to_bool {
     return
           $val eq \0 ? 'false'
         : $val eq \1 ? 'true'
-        : "$val"     ? 'true'
+        : '' . $val  ? 'true'
         :              'false';
 
 }
