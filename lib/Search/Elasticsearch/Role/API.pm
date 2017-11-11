@@ -10,16 +10,16 @@ use namespace::clean;
 our %Handler = (
     string => sub {"$_[0]"},
     list   => sub {
-        ref $_[0] eq 'ARRAY'
-            ? join( ',', @{ shift() } )
+        join ",", map { _to_bool($_) } ref $_[0] eq 'ARRAY'
+            ? @{ shift() }
             : shift();
     },
     boolean => sub {
         $_[0] && !( $_[0] eq 'false' || $_[0] eq \0 ) ? 'true' : 'false';
     },
     enum => sub {
-        ref $_[0] eq 'ARRAY'
-            ? join( ',', @{ shift() } )
+        join ",", map { _to_bool($_) } ref $_[0] eq 'ARRAY'
+            ? @{ shift() }
             : shift();
     },
     number => sub { 0 + $_[0] },
@@ -28,6 +28,19 @@ our %Handler = (
     double => sub { 0 + $_[0] },
     time   => sub {"$_[0]"}
 );
+
+#===================================
+sub _to_bool {
+#===================================
+    my $val = shift;
+    return $val unless ref $val;
+    return
+          $val eq \0 ? 'false'
+        : $val eq \1 ? 'true'
+        : "$val"     ? 'true'
+        :              'false';
+
+}
 
 #===================================
 sub _qs_init {
