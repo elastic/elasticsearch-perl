@@ -104,6 +104,7 @@ our %Errors = (
     conflict        => 'Search::Elasticsearch::Error::Conflict',
     forbidden       => 'Search::Elasticsearch::Error::Forbidden',
     param           => 'Search::Elasticsearch::Error::Param',
+    bad_request     => 'Search::Elasticsearch::Error::Request',
     request         => 'Search::Elasticsearch::Error::Request',
     request_timeout => 'Search::Elasticsearch::Error::RequestTimeout',
     unavailable     => 'Search::Elasticsearch::Error::Unavailable',
@@ -169,7 +170,7 @@ sub test_files {
                 if ($setup) {
                     $es->logger->trace_comment("RUNNING SETUP");
                     for (@$setup) {
-                        run_cmd( populate_vars('request',$_->{do},{}) );
+                        run_cmd( populate_vars( 'request', $_->{do}, {} ) );
                     }
                 }
 
