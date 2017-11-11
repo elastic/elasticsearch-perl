@@ -10,7 +10,7 @@ use JSON::XS;
 
 our ( %API, %Common, %seen, %seen_combo, %Forbidden );
 
-our %Known_Types = map { $_ => 1 } qw(boolean enum list number string time );
+our %Known_Types = map { $_ => 1 } qw(boolean enum list number int float double string time );
 
 #===================================
 sub process_files {

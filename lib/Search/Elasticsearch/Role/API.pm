@@ -23,6 +23,9 @@ our %Handler = (
             : shift();
     },
     number => sub { 0 + $_[0] },
+    int    => sub { 0 + $_[0] },
+    float  => sub { 0 + $_[0] },
+    double => sub { 0 + $_[0] },
     time   => sub {"$_[0]"}
 );
 
