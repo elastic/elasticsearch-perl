@@ -132,7 +132,8 @@ sub trace_comment {
 sub deprecation {
 #===================================
     my $self = shift;
-    $self->deprecate_handle->warnf( "[DEPRECATION] %s. In request: %s", @_ );
+
+    $self->deprecate_handle->warnf( "[DEPRECATION] %s - In request: %s", @_ );
 }
 1;
 
