@@ -101,15 +101,16 @@ $b = bulk(
         type       => 'test',
         on_success => test_params(
             'on_success',
-            {   _index   => 'test',
-                _type    => 'test',
-                _id      => 1,
-                _version => 1,
-                status   => 201,
-                created  => $TRUE,
-                result   => 'created',
-                _shards => { successful => 1, total => 2, failed => 0 },
-
+            {   _index        => 'test',
+                _type         => 'test',
+                _id           => 1,
+                _version      => 1,
+                status        => 201,
+                created       => $TRUE,
+                result        => 'created',
+                _shards       => { successful => 1, total => 2, failed => 0 },
+                _primary_term => 1,
+                _seq_no       => 0,
             },
             0
         ),
@@ -139,8 +140,7 @@ $b = bulk(
                 ),
                 status => 409,
             },
-            2,
-            1
+            2, 1
         ),
     },
     @Std
