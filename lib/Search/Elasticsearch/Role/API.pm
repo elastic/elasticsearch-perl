@@ -8,38 +8,56 @@ use Search::Elasticsearch::Util qw(throw);
 use namespace::clean;
 
 our %Handler = (
-    string => sub {"$_[0]"},
-    list   => sub {
-        join ",", map { _to_bool($_) } ref $_[0] eq 'ARRAY'
-            ? @{ shift() }
-            : shift();
-    },
-    boolean => sub {
-        $_[0] && !( $_[0] eq 'false' || $_[0] eq \0 ) ? 'true' : 'false';
-    },
-    enum => sub {
-        join ",", map { _to_bool($_) } ref $_[0] eq 'ARRAY'
-            ? @{ shift() }
-            : shift();
-    },
-    number => sub { 0 + $_[0] },
-    int    => sub { 0 + $_[0] },
-    float  => sub { 0 + $_[0] },
-    double => sub { 0 + $_[0] },
-    time   => sub {"$_[0]"}
+    string  => \&_string,
+    time    => \&_string,
+    list    => \&_list,
+    boolean => \&_bool,
+    enum    => \&_list,
+    number  => \&_num,
+    int     => \&_num,
+    float   => \&_num,
+    double  => \&_num,
 );
 
 #===================================
-sub _to_bool {
+sub _bool {
+#===================================
+    my $val = _detect_bool(@_);
+    return ( $val && $val ne 'false' ) ? 'true' : 'false';
+}
+
+#===================================
+sub _detect_bool {
 #===================================
     my $val = shift;
-    return $val unless ref $val;
-    return
-          $val eq \0 ? 'false'
-        : $val eq \1 ? 'true'
-        : '' . $val  ? 'true'
-        :              'false';
+    return '' unless defined $val;
+    if ( ref $val eq 'SCALAR' ) {
+        return 'false' if $$val eq 0;
+        return 'true'  if $$val eq 1;
+    }
+    elsif ( UNIVERSAL::isa( $val, "JSON::PP::Boolean" ) ) {
+        return "$val" ? 'true' : 'false';
+    }
+    return "$val";
+}
 
+#===================================
+sub _list {
+#===================================
+    return join ",", map { _detect_bool($_) }    #
+        ref $_[0] eq 'ARRAY' ? @{ $_[0] } : $_[0];
+}
+
+#===================================
+sub _num {
+#===================================
+    return 0 + $_[0];
+}
+
+#===================================
+sub _string {
+#===================================
+    return "$_[0]";
 }
 
 #===================================
