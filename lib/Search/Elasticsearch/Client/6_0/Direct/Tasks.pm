@@ -35,9 +35,9 @@ Query string parameters:
     C<error_trace>,
     C<group_by>,
     C<human>,
-    C<node_id>,
+    C<nodes>,
     C<parent_node>,
-    C<parent_task>,
+    C<parent_task_id>,
     C<wait_for_completion>
 
 See the L<task management docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html>
@@ -71,9 +71,9 @@ Query string parameters:
     C<actions>,
     C<error_trace>,
     C<human>,
-    C<node_id>,
+    C<nodes>,
     C<parent_node>,
-    C<parent_task>
+    C<parent_task_id>
 
 See the L<task management docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html>
 for more information.

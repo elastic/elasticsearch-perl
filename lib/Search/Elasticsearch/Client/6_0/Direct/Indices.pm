@@ -50,13 +50,10 @@ for more information.
 =head2 C<get()>
 
     $response = $e->indices->get(
-        index   => 'index'   | \@indices    # optional
-        feature => 'feature' | \@features   # optional
+        index   => 'index'   | \@indices    # required
     );
 
-Returns the aliases, settings, and mappingsfor the specified indices.
-The C<feature> parameter can be set to none or more of: C<_settings>, C<_mappings>,
-and C<_aliases>.
+Returns the aliases, settings, and mappings for the specified indices.
 
 See the L<get index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-index.html>.
 
@@ -234,7 +231,6 @@ Query string parameters:
     C<allow_no_indices>,
     C<error_trace>,
     C<expand_wildcards>,
-    C<force>,
     C<human>,
     C<ignore_unavailable>
 
@@ -684,7 +680,7 @@ for more information.
 =head2 C<exists_template()>
 
     $result = $e->indices->exists_template(
-        name  => 'template'                 # required
+        name  => 'template'                 # optional
     );
 
 The C<exists_template()> method is used to check whether the named template exists.
@@ -838,17 +834,9 @@ with a particular index or field - and returns the tokens.  Very useful
 for debugging analyzer configurations.
 
 Query string parameters:
-    C<analyzer>,
-    C<attributes>,
-    C<char_filter>,
     C<error_trace>,
-    C<explain>,
-    C<field>,
-    C<filter>,
     C<format>,
-    C<prefer_local>,
-    C<text>,
-    C<tokenizer>
+    C<prefer_local>
 
 See the L<analyze docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-analyze.html>
 for more information.

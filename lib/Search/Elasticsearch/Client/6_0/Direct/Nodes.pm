@@ -88,7 +88,7 @@ L<indices_stats|Search::Elasticsearch::Client::6_0::Direct::Indices/indices_stat
 information is returned on a per-node basis. Which indices stats are
 returned can be controlled with the C<index_metric> parameter:
 
-    $response = $e->cluster->node_stats(
+    $response = $e->nodes->stats(
         node_id       => 'node_1',
         metric        => ['indices','fs']
         index_metric  => ['docs','fielddata']
@@ -124,7 +124,7 @@ Query string parameters:
     C<level>,
     C<types>
 
-See the L<node_stats docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-stats.html>
+See the L<stats docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-stats.html>
 for more information.
 
 =head2 C<hot_threads()>
@@ -147,5 +147,22 @@ Query string parameters:
     C<type>
 
 See the L<hot_threads docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-hot-threads.html>
+for more information.
+
+=head2 C<usage()>
+
+    $response = $e->nodes->usage(
+        node_id => $node_id | \@node_ids       # optional
+        metric  => $metric  | \@metrics        # optional
+    )
+
+The C<usage()> API retrieve sinformation on the usage of features for each node.
+
+Query string parameters:
+    C<error_trace>,
+    C<human>,
+    C<timeout>
+
+See the L<nodes_usage docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-usage.html>
 for more information.
 

@@ -257,6 +257,21 @@ UTF-8 bytes and passed as is:
 
     $e->indices->analyze( body => "The quick brown fox");
 
+=head2 Boolean parameters
+
+Elasticsearch 6.0.0 and above no longer accepts truthy and falsey values for booleans.  Instead,
+it will accept only a JSON C<true> or C<false>, or the string equivalents C<"true"> or C<"false">.
+
+In the Perl client, you can use the following values:
+
+=over
+
+=item * True: C<true>, C<\1>, or a L<JSON::PP::Boolean> object.
+
+=item * False: C<false>, C<\0>, or a L<JSON::PP::Boolean> object.
+
+=back
+
 =head2 Filter path parameter
 
 Any API which returns a JSON body accepts a C<filter_path> parameter
@@ -926,11 +941,12 @@ Query string parameters:
     C<error_trace>,
     C<expand_wildcards>,
     C<explain>,
-    C<fielddata_fields>,
     C<from>,
     C<human>,
     C<ignore_unavailable>,
     C<lenient>,
+    C<max_concurrent_shard_requests>,
+    C<pre_filter_shard_size>,
     C<preference>,
     C<q>,
     C<request_cache>,
@@ -948,6 +964,7 @@ Query string parameters:
     C<terminate_after>,
     C<timeout>,
     C<track_scores>,
+    C<track_total_hits>,
     C<typed_keys>,
     C<version>
 
@@ -991,7 +1008,8 @@ Query string parameters:
     C<min_score>,
     C<preference>,
     C<q>,
-    C<routing>
+    C<routing>,
+    Cterminate_after>
 
 See the L<count docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html>
 for more information.
@@ -1151,6 +1169,7 @@ Query string parameters:
     C<error_trace>,
     C<human>,
     C<max_concurrent_searches>,
+    C<pre_filter_shard_size>,
     C<search_type>,
     C<typed_keys>
 
@@ -1189,10 +1208,11 @@ request).  For instance:
 Query string parameters:
     C<error_trace>,
     C<human>,
+    C<max_concurrent_searches>,
     C<search_type>,
     C<typed_keys>
 
-See the L<msearch-template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/multi-search-template.html>
+See the L<msearch-template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html>
 for more information.
 
 =head2 C<explain()>
@@ -1240,17 +1260,14 @@ Query string parameters:
 See the L<explain docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html>
 for more information.
 
-=head2 C<field_stats()>
+=head2 C<field_caps()>
 
-    $response = $e->field_stats(
+    $response = $e->field_caps(
         index   => 'index'   | \@indices,   # optional
-        fields  => 'field'   | \@fields,    # optional
-        level   => 'cluster' | 'indices',   # optional
         body    => { filters }              # optional
     );
 
-The C<field-stats> API returns statistical properties of a field
-(such as min and max values) without executing a search.
+The C<field-caps> API returns field types and abilities, merged across indices.
 
 Query string parameters:
     C<allow_no_indices>,
@@ -1258,17 +1275,15 @@ Query string parameters:
     C<expand_wildcards>,
     C<fields>,
     C<human>,
-    C<ignore_unavailable>,
-    C<level>
+    C<ignore_unavailable>
 
-See the L<field-stats docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-field-stats.html>
+See the L<field-caps docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-field-caps.html>
 for more information.
 
 =head2 C<search_shards()>
 
     $response = $e->search_shards(
         index   => 'index' | \@indices,     # optional
-        type    => 'type'  | \@types,       # optional
     )
 
 The C<search_shards()> method returns information about which shards on
@@ -1430,174 +1445,6 @@ Query string parameters:
 See the L<reindex docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html>
 for more information.
 
-
-=head1 PERCOLATION METHODS
-
-=head2 C<percolate()>
-
-    $results = $e->percolate(
-        index   => 'my_index',      # required
-        type    => 'my_type',       # required
-
-        body    => { percolation }  # required
-    );
-
-Percolation is search inverted: instead of finding docs which match a
-particular query, it finds queries which match a particular document, eg
-for I<alert-me-when> functionality.
-
-The C<percolate()> method runs a percolation request to find the
-queries matching a particular document. In the C<body> you should pass the
-C<_source> field of the document under the C<doc> key:
-
-    $results = $e->percolate(
-        index   => 'my_index',
-        type    => 'my_type',
-        body    => {
-            doc => {
-                title => 'Elasticsearch rocks'
-            }
-        }
-    );
-
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<error_trace>,
-    C<expand_wildcards>,
-    C<human>,
-    C<ignore_unavailable>,
-    C<percolate_format>,
-    C<percolate_index>,
-    C<percolate_preference>,
-    C<percolate_routing>,
-    C<percolate_type>,
-    C<preference>,
-    C<routing>,
-    C<version>,
-    C<version_type>
-
-See the L<percolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html>
-for more information.
-
-=head2 C<count_percolate()>
-
-    $results = $e->count_percolate(
-        index   => 'my_index',      # required
-        type    => 'my_type',       # required
-
-        body    => { percolation }  # required
-    );
-
-The L</count_percolate()> request works just like the L</percolate()>
-request except that it returns a count of all matching queries, instead
-of the queries themselves.
-
-    $results = $e->count_percolate(
-        index   => 'my_index',
-        type    => 'my_type',
-        body    => {
-            doc => {
-                title => 'Elasticsearch rocks'
-            }
-        }
-    );
-
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<error_trace>,
-    C<expand_wildcards>,
-    C<human>,
-    C<ignore_unavailable>,
-    C<percolate_index>,
-    C<percolate_type>,
-    C<preference>,
-    C<routing>,
-    C<version>,
-    C<version_type>
-
-See the L<percolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html>
-for more information.
-
-=head2 C<mpercolate()>
-
-    $results = $e->mpercolate(
-        index   => 'my_index',               # required if type
-        type    => 'my_type',                # optional
-
-        body    => [ percolation requests ]  # required
-    );
-
-Multi-percolation allows multiple L</percolate()> requests to be run
-in a single request.
-
-    $results = $e->mpercolate(
-        index   => 'my_index',
-        type    => 'my_type',
-        body    => [
-            # first request
-            { percolate => {
-                index => 'twitter',
-                type  => 'tweet'
-            }},
-            { doc => {message => 'some_text' }},
-
-            # second request
-            { percolate => {
-                index => 'twitter',
-                type  => 'tweet',
-                id    => 1
-            }},
-            {},
-        ]
-    );
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<error_trace>,
-    C<expand_wildcards>,
-    C<human>,
-    C<ignore_unavailable>
-
-See the L<mpercolate docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-percolate.html>
-for more information.
-
-=head2 C<suggest()>
-
-    $results = $e->suggest(
-        index   => 'index' | \@indices,     # optional
-
-        body    => { suggest request }      # required
-    );
-
-The C<suggest()> method is used to run
-L<did-you-mean|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesteres-phrase.html>
-or L<search-as-you-type|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html>
-suggestion requests, which can also be run as part of a L</search()> request.
-
-    $results = $e->suggest(
-        index   => 'my_index',
-        body    => {
-            my_suggestions => {
-                phrase  => {
-                    text    => 'johnny walker',
-                    field   => 'title'
-                }
-            }
-        }
-    );
-
-
-Query string parameters:
-    C<allow_no_indices>,
-    C<error_trace>,
-    C<expand_wildcards>,
-    C<human>,
-    C<ignore_unavailable>,
-    C<preference>,
-    C<routing>
-
 =head1 INDEXED SCRIPT METHODS
 
 Elasticsearch allows you to store scripts in the cluster state
@@ -1606,18 +1453,18 @@ and reference them by id. The methods to manage indexed scripts are as follows:
 =head2 C<put_script()>
 
     $result  = $e->put_script(
-        lang => 'lang',     # required
-        id   => 'id',       # required
-        body => { script }  # required
+        id      => 'id',       # required
+        context => $context,   # optional
+        body    => { script }  # required
     );
 
 The C<put_script()> method is used to store a script in the cluster state. For instance:
 
     $result  = $e->put_scripts(
-        lang => 'painless',
         id   => 'hello_world',
         body => {
-          script => q(return "hello world");
+          lang   => 'painless',
+          source => q(return "hello world");
         }
     );
 
@@ -1631,7 +1478,6 @@ See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/refe
 =head2 C<get_script()>
 
     $script = $e->get_script(
-        lang => 'lang',     # required
         id   => 'id',       # required
     );
 
@@ -1646,7 +1492,6 @@ See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/refe
 =head2 C<delete_script()>
 
     $script = $e->delete_script(
-        lang => 'lang',     # required
         id   => 'id',       # required
     );
 
@@ -1654,70 +1499,9 @@ Delete the indexed script from the cluster state.
 
 Query string parameters:
     C<error_trace>,
-    C<human>
+    C<human>,
+    C<master_timeout>,
+    C<timeout>
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
-
-=head1 INDEXED SEARCH TEMPLATE METHODS
-
-Mustache templates can be used to create search requests.  These templates can
-be stored in the cluster state and retrieved by ID. The methods to
-manage indexed scripts are as follows:
-
-=head2 C<put_template()>
-
-    $result  = $e->put_template(
-        id   => 'id',                       # required
-        body => { template } || "template"  # required
-    );
-
-The C<put_template()> method is used to store a template in the cluster state.
-For instance:
-
-    $result  = $e->put_template(
-        id   => 'hello_world',
-        body => {
-          template => {
-            query => {
-              match => {
-                title => "hello world"
-              }
-            }
-          }
-      }
-    );
-
-Query string parameters:
-    C<error_trace>,
-    C<human>
-
-See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
-
-=head2 C<get_template()>
-
-    $script = $e->get_template(
-        id   => 'id',       # required
-    );
-
-Retrieve the indexed template from the cluster state.
-
-Query string parameters:
-    C<error_trace>,
-    C<human>
-
-See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
-
-=head2 C<delete_template()>
-
-    $script = $e->delete_template(
-        id   => 'id',       # required
-    );
-
-Delete the indexed template from the cluster state.
-
-Query string parameters:
-    C<error_trace>,
-    C<human>
-
-See the L<indexed search template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-template.html#_pre_registered_template> for more.
 

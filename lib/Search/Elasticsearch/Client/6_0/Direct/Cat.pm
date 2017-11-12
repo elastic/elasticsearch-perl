@@ -378,6 +378,7 @@ for more information.
 Provides low level information about the segments in the shards of an index.
 
 Query string parameters:
+    C<bytes>,
     C<error_trace>,
     C<format>,
     C<h>,
@@ -399,6 +400,7 @@ Provides a detailed view of what nodes contain which shards, the state and
 size of each shard.
 
 Query string parameters:
+    C<bytes>,
     C<error_trace>,
     C<format>,
     C<h>,
@@ -415,7 +417,7 @@ for more information.
 =head2 C<snapshots()>
 
     say $e->cat->snapshots(
-        repository => 'repository' | \@repositories # required
+        repository => 'repository' | \@repositories # optional
     )
 
 Provides a list of all snapshots that belong to the specified repositories.

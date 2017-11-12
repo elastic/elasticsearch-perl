@@ -92,3 +92,35 @@ See the L<simulate pipeline docs|https://www.elastic.co/guide/en/elasticsearch/r
 for more information.
 
 
+=head2 C<simulate()>
+
+    $response = $e->ingest->put_pipeline(
+        id   => $id,                # optional
+        body => { simulate args }   # required
+    );
+
+The C<simulate()> method executes the pipeline specified by ID or inline in the body
+against the docs provided in the body and provides debugging output of the execution
+process.
+
+Query string parameters:
+    C<error_trace>,
+    C<human>,
+    C<verbose>
+
+See the L<simulate pipeline docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/simulate-pipeline-api.html>
+for more information.
+
+=head2 C<processor_grok>
+
+    $response = $e->inges->processor_grok()
+
+Retrieves the configured patterns associated with the Grok processor.
+
+Query string parameters:
+    C<error_trace>,
+    C<human>
+
+See the L<grok processor docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/grok-processor.html>
+for more information.
+
