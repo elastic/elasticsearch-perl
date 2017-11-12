@@ -9,7 +9,7 @@ __PACKAGE__->_install_api('xpack.license');
 
 1;
 
-# ABSTRACT: Plugin providing License API for Search::Elasticsearch 2.x
+# ABSTRACT: Plugin providing License API for Search::Elasticsearch 6.x
 
 =head1 SYNOPSIS
 
@@ -20,7 +20,7 @@ __PACKAGE__->_install_api('xpack.license');
         plugins  => ['XPack']
     );
 
-    my $response = $es->license->get();
+    my $response = $es->xpack->license->get();
 
 =head2 DESCRIPTION
 
@@ -34,7 +34,7 @@ In other words, it can be used as follows:
         plugins  => ['XPack']
     );
 
-    my $response = $es->license->get();
+    my $response = $es->xpack->license->get();
 
 =head1 METHODS
 
@@ -43,7 +43,7 @@ L<https://www.elastic.co/guide/en/x-pack/current/license-management.html>
 
 =head2 C<get()>
 
-    $response = $es->license->get()
+    $response = $es->xpack->license->get()
 
 The C<get()> method returns the currently installed license.
 
@@ -57,7 +57,7 @@ Query string parameters:
 
 =head2 C<post()>
 
-    $response = $es->license->post(
+    $response = $es->xpack->license->post(
         body     => {...}          # required
     );
 
