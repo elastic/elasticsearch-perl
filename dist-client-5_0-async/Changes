@@ -2,6 +2,7 @@ Revision history for Search::Elasticsearch::Client::5_0::Async
 
 6.00    2017-11-12
         Moved into a separate package - no longer the default version for Search::Elasticsearch
+        Fixed scroll ID cleanup (bug in ES which only accepted an array)
 
 5.02    2017-04-02
         Updated to work with Search::Elasticsearch 5.02
