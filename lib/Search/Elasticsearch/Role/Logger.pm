@@ -67,16 +67,19 @@ sub trace_request {
         ? $self->serializer->encode_pretty( $params->{body} )
         : $params->{data};
 
+    my $content_type = '';
     if ( defined $body ) {
         $body =~ s/'/\\u0027/g;
-        $body = " -d '\n$body'\n";
+        $body         = " -d '\n$body'\n";
+        $content_type = '-H "Content-type: ' . $params->{mime_type} . '" ';
     }
     else { $body = "\n" }
 
     my $msg = sprintf(
-        "# Request to: %s\n"         #
-            . "curl -X%s '%s'%s",    #
+        "# Request to: %s\n"           #
+            . "curl %s-X%s '%s'%s",    #
         $cxn->stringify,
+        $content_type,
         $params->{method},
         $uri,
         $body

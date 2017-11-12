@@ -40,13 +40,14 @@ ok $l->trace_request(
         path      => '/xyz',
         body      => { foo => qq(bar\n'baz) },
         data      => qq({"foo":"bar\n'baz"}),
+        mime_type => 'application/json',
     }
     ),
     'Body';
 
 is $format, <<'REQUEST', 'Body - format';
 # Request to: https://foo.bar:444/some/path
-curl -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
+curl -H "Content-type: application/json" -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
 {
    "foo" : "bar\n\u0027baz"
 }
@@ -63,13 +64,14 @@ ok $l->trace_request(
         path      => '/xyz',
         body      => [ { foo => qq(bar\n'baz) }, { foo => qq(bar\n'baz) } ],
         data => qq({"foo":"bar\\n\\u0027baz"}\n{"foo":"bar\\n\\u0027baz"}\n),
+        mime_type => 'application/json',
     }
     ),
     'Bulk';
 
 is $format, <<'REQUEST', 'Bulk - format';
 # Request to: https://foo.bar:444/some/path
-curl -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
+curl -H "Content-type: application/json" -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
 {"foo":"bar\n\u0027baz"}
 {"foo":"bar\n\u0027baz"}
 '
@@ -84,13 +86,14 @@ ok $l->trace_request(
         serialize => 'std',
         path      => '/xyz',
         body => qq(The quick brown fox\njumped over the lazy dog's basket),
+        mime_type => 'application/json',
     }
     ),
     'Body string';
 
 is $format, <<'REQUEST', 'Body string - format';
 # Request to: https://foo.bar:444/some/path
-curl -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
+curl -H "Content-type: application/json" -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
 The quick brown fox
 jumped over the lazy dog\u0027s basket'
 REQUEST

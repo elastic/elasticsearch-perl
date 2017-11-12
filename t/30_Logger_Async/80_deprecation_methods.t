@@ -11,6 +11,6 @@ isa_ok my $l = Search::Elasticsearch->new->logger,
 ( $method, $format ) = ();
 ok $l->deprecation( "foo", { foo => 1 } ), "deprecation";
 is $method, "warning", "deprecation - method";
-is $format, "[DEPRECATION] foo. In request: {foo => 1}", "deprecation - format";
+is $format, "[DEPRECATION] foo - In request: {foo => 1}", "deprecation - format";
 
 done_testing;
