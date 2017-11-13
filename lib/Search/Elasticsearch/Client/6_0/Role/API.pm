@@ -646,6 +646,21 @@ sub api {
         },
     },
 
+    'render_search_template' => {
+        body  => {},
+        doc   => "search-template",
+        parts => { id => {} },
+        paths => [
+            [ { id => 2 }, "_render", "template", "{id}" ],
+            [ {}, "_render", "template" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'scroll' => {
         body  => {},
         doc   => "search-request-scroll",
@@ -1966,21 +1981,6 @@ sub api {
             filter_path        => "list",
             human              => "boolean",
             ignore_unavailable => "boolean",
-        },
-    },
-
-    'indices.render_search_template' => {
-        body  => {},
-        doc   => "search-template",
-        parts => { id => {} },
-        paths => [
-            [ { id => 2 }, "_render", "template", "{id}" ],
-            [ {}, "_render", "template" ],
-        ],
-        qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
         },
     },
 
