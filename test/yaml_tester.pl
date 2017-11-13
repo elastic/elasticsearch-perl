@@ -89,7 +89,7 @@ our %Test_Types = (
             like $got, qr/$expect/x, $name;
         }
         elsif ( looks_like_number($got) and looks_like_number($expect) ) {
-            cmp_deeply( $got + 0, $expect + 0, $name );
+            cmp_deeply( $got + 0, num( $expect, 0.0001 ), $name );
         }
         else {
             cmp_deeply(@_);
