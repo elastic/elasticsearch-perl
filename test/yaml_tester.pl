@@ -203,7 +203,8 @@ sub run_tests {
         my ( $type, $test ) = key_val($_);
 
         if ( $type eq 'do' ) {
-            my $catch = delete $test->{catch};
+            my $headers = delete $test->{headers};    # ignore headers
+            my $catch   = delete $test->{catch};
             $test_name .= ": " . ( $catch ? 'catch ' . $catch : 'do' );
             $test = populate_vars( 'request', $test, \%stash );
             eval { ($val) = run_cmd($test); };
