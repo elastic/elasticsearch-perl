@@ -24,6 +24,7 @@ use Net::Curl::Easy qw(
     CURLOPT_HEADERDATA
     CURLINFO_RESPONSE_CODE
     CURLOPT_TCP_NODELAY
+    CURLOPT_NOBODY
 );
 
 has 'connect_timeout' => ( is => 'ro', default => 2 );
@@ -46,6 +47,7 @@ sub perform_request {
     $handle->setopt( CURLOPT_TCP_NODELAY,   1 );
     $handle->setopt( CURLOPT_URL,           $uri );
     $handle->setopt( CURLOPT_CUSTOMREQUEST, $method );
+    $handle->setopt( CURLOPT_NOBODY,        1 ) if $method eq 'HEAD';
 
     $handle->setopt( CURLOPT_CONNECTTIMEOUT_MS, $self->connect_timeout * 1000 );
     $handle->setopt( CURLOPT_TIMEOUT_MS,
