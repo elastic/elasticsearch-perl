@@ -10,6 +10,7 @@ use namespace::clean;
 our %Handler = (
     string  => \&_string,
     time    => \&_string,
+    date    => \&_string,
     list    => \&_list,
     boolean => \&_bool,
     enum    => \&_list,
