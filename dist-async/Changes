@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch::Async
 
+6.00    2017-11-14
+        Bumped to version 6.00
+
 5.02    2017-04-02
         Updated to work with Search::Elasticsearch 5.02
 

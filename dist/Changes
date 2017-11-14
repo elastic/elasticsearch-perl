@@ -1,5 +1,14 @@
 Revision history for Search::Elasticsearch
 
+6.00    2017-11-14
+        Released 6.00 with default API for 6_0.
+        Legacy 5_0 API now released separately
+        Trace logging now includes content-type headers where appropriate
+        Deprecation warnings are now parsed to extract the message only
+        Improved boolean value handling in query string params - now accepts
+          true, false, \1, \0, or a JSON::PP::Boolean object
+        Handle removal of '.' from @INC in perl 5.26
+
 5.02    2017-04-02
 
         * Boolean query params must be "true" or "false"
