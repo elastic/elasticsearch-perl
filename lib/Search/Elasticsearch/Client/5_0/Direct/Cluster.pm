@@ -213,3 +213,18 @@ Query string parameters:
 See the L<reroute docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-reroute.html>
 for more information.
 
+=head2 C<remote_info()>
+
+    $response = $e->cluster->remote_info();
+
+The C<remote_info()> API retrieves all of the configured remote cluster information.
+
+Query string parameters:
+    C<error_trace>,
+    C<human>
+
+See the L<remote_info docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-remote-info.html>
+for more information.
+
+
+

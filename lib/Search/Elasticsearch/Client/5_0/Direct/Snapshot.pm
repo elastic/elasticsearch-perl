@@ -123,7 +123,8 @@ Query string parameters:
     C<error_trace>,
     C<human>,
     C<ignore_unavailable>,
-    C<master_timeout>
+    C<master_timeout>,
+    C<verbose>
 
 See the L<"snapshot/restore docs"|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-snapshot.html>
 for more information.

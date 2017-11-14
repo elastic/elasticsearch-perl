@@ -927,6 +927,8 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>,
     C<lenient>,
+    C<max_concurrent_shard_requests>,
+    C<pre_filter_shard_size>,
     C<preference>,
     C<q>,
     C<request_cache>,
@@ -987,7 +989,8 @@ Query string parameters:
     C<min_score>,
     C<preference>,
     C<q>,
-    C<routing>
+    C<routing>,
+    C<terminate_after>
 
 See the L<count docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html>
 for more information.
@@ -1147,6 +1150,7 @@ Query string parameters:
     C<error_trace>,
     C<human>,
     C<max_concurrent_searches>,
+    C<pre_filter_shard_size>,
     C<search_type>,
     C<typed_keys>
 
@@ -1185,6 +1189,7 @@ request).  For instance:
 Query string parameters:
     C<error_trace>,
     C<human>,
+    C<max_concurrent_searches>,
     C<search_type>,
     C<typed_keys>
 
@@ -1234,6 +1239,26 @@ Query string parameters:
     C<stored_fields>
 
 See the L<explain docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html>
+for more information.
+
+=head2 C<field_caps()>
+
+    $response = $e->field_caps(
+        index   => 'index'   | \@indices,   # optional
+        body    => { filters }              # optional
+    );
+
+The C<field-caps> API returns field types and abilities, merged across indices.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<error_trace>,
+    C<expand_wildcards>,
+    C<fields>,
+    C<human>,
+    C<ignore_unavailable>
+
+See the L<field-caps docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-field-caps.html>
 for more information.
 
 =head2 C<field_stats()>
@@ -1619,7 +1644,9 @@ The C<put_script()> method is used to store a script in the cluster state. For i
 
 Query string parameters:
     C<error_trace>,
-    C<human>
+    C<human>,
+    C<master_timeout>,
+    C<timeout>
 
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
@@ -1650,7 +1677,9 @@ Delete the indexed script from the cluster state.
 
 Query string parameters:
     C<error_trace>,
-    C<human>
+    C<human>,
+    C<master_timeout>,
+    C<timeout>
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 

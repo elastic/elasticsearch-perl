@@ -234,7 +234,6 @@ Query string parameters:
     C<allow_no_indices>,
     C<error_trace>,
     C<expand_wildcards>,
-    C<force>,
     C<human>,
     C<ignore_unavailable>
 
@@ -684,7 +683,7 @@ for more information.
 =head2 C<exists_template()>
 
     $result = $e->indices->exists_template(
-        name  => 'template'                 # required
+        name  => 'template' | \@templates   # required
     );
 
 The C<exists_template()> method is used to check whether the named template exists.
