@@ -27,6 +27,7 @@ has 'dead_timeout'          => ( is => 'ro', default  => 60 );
 has 'max_dead_timeout'      => ( is => 'ro', default  => 3600 );
 has 'serializer'            => ( is => 'ro', required => 1 );
 has 'logger'                => ( is => 'ro', required => 1 );
+has 'cxn_auth'              => ( is => 'ro', required => 1 );
 has 'handle_args'           => ( is => 'ro', default  => sub { {} } );
 has 'default_qs_params'     => ( is => 'ro', default  => sub { {} } );
 has 'scheme'             => ( is => 'ro' );
@@ -222,6 +223,10 @@ sub build_uri {
     $uri->path( $uri->path . $params->{path} );
     my %qs = ( %{ $self->default_qs_params }, %{ $params->{qs} || {} } );
     $uri->query_form( \%qs );
+
+    #Do the authentication here
+    my $additional_headers = $self->cxn_auth->authenticate_request( $uri, $params  );
+
     return $uri;
 }
 
