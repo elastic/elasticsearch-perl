@@ -1638,7 +1638,10 @@ The C<put_script()> method is used to store a script in the cluster state. For i
         lang => 'painless',
         id   => 'hello_world',
         body => {
-          script => q(return "hello world");
+          script => {
+            lang   => 'painless',
+            source => q(return "hello world")
+          }
         }
     );
 

@@ -1463,8 +1463,10 @@ The C<put_script()> method is used to store a script in the cluster state. For i
     $result  = $e->put_scripts(
         id   => 'hello_world',
         body => {
-          lang   => 'painless',
-          source => q(return "hello world");
+          script => {
+            lang   => 'painless',
+            source => q(return "hello world")
+          }
         }
     );
 
