@@ -21,16 +21,20 @@ sub perform_request {
     my $method = $params->{method};
 
     my %args;
+    my $headers = {};
+
     if ( defined $params->{data} ) {
         $args{content}                     = $params->{data};
-        $args{headers}{'Content-Type'}     = $params->{mime_type};
-        $args{headers}{'Content-Encoding'} = $params->{encoding}
+        $headers->{'Content-Type'}     = $params->{mime_type};
+        $headers->{'Content-Encoding'} = $params->{encoding}
             if $params->{encoding};
     }
 
     my $handle = $self->handle;
     $handle->timeout( $params->{timeout} || $self->request_timeout );
 
+    ($uri, $headers) = $self->cxn_auth->authenticate_request( $method, $uri, $headers, $args{content} );
+    $args{headers} = $headers;
     my $response = $handle->request( $method, "$uri", \%args );
 
     return $self->process_response(

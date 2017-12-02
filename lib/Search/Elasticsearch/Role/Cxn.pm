@@ -32,7 +32,6 @@ has 'handle_args'           => ( is => 'ro', default  => sub { {} } );
 has 'default_qs_params'     => ( is => 'ro', default  => sub { {} } );
 has 'scheme'             => ( is => 'ro' );
 has 'is_https'           => ( is => 'ro' );
-has 'userinfo'           => ( is => 'ro' );
 has 'max_content_length' => ( is => 'ro' );
 has 'default_headers'    => ( is => 'ro' );
 has 'deflate'            => ( is => 'ro' );
@@ -79,12 +78,10 @@ sub BUILDARGS {
             host     => $uri->host,
             port     => $uri->port,
             path     => $uri->path,
-            userinfo => $uri->userinfo
         };
     }
 
     my $host = $node->{host} || 'localhost';
-    my $userinfo = $node->{userinfo} || $params->{userinfo} || '';
     my $scheme
         = $node->{scheme} || ( $params->{use_https} ? 'https' : 'http' );
     my $port
@@ -97,11 +94,8 @@ sub BUILDARGS {
 
     my %default_headers = %{ $params->{default_headers} || {} };
 
-    if ($userinfo) {
-        require MIME::Base64;
-        my $auth = MIME::Base64::encode_base64($userinfo);
-        chomp $auth;
-        $default_headers{Authorization} = "Basic $auth";
+    if( my %additionnal_default_headers = %{$params->{cxn_auth}->default_authentication_headers()} ) {
+        %default_headers = (%default_headers, %additionnal_default_headers);
     }
 
     if ( $params->{gzip} ) {
@@ -117,7 +111,6 @@ sub BUILDARGS {
     $params->{host}            = $host;
     $params->{port}            = $port;
     $params->{path}            = $path;
-    $params->{userinfo}        = $userinfo;
     $params->{uri}             = URI->new("$scheme://$host:$port$path");
     $params->{default_headers} = \%default_headers;
 
@@ -223,9 +216,6 @@ sub build_uri {
     $uri->path( $uri->path . $params->{path} );
     my %qs = ( %{ $self->default_qs_params }, %{ $params->{qs} || {} } );
     $uri->query_form( \%qs );
-
-    #Do the authentication here
-    my $additional_headers = $self->cxn_auth->authenticate_request( $uri, $params  );
 
     return $uri;
 }
