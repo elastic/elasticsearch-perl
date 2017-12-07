@@ -37,6 +37,58 @@ is_cxn "Userinfo", new_cxn( nodes => 'http://foo:bar@localhost/' ),
     userinfo        => 'foo:bar'
     };
 
+is_cxn "IPv4",
+    new_cxn( nodes => '127.0.0.1' ),
+    { host => '127.0.0.1', port => '80', uri => 'http://127.0.0.1:80' };
+
+is_cxn "Scheme:IPv4",
+    new_cxn( nodes => 'https://127.0.0.1' ),
+    {
+    host   => '127.0.0.1',
+    port   => '443',
+    uri    => 'https://127.0.0.1:443',
+    scheme => 'https'
+    };
+
+is_cxn "IPv4:Port",
+    new_cxn( nodes => '127.0.0.1:1000' ),
+    { host => '127.0.0.1', port => '1000', uri => 'http://127.0.0.1:1000' };
+
+is_cxn "Scheme:IPv4:Port",
+    new_cxn( nodes => 'https://127.0.0.1:1000' ),
+    {
+    host   => '127.0.0.1',
+    port   => '1000',
+    uri    => 'https://127.0.0.1:1000',
+    scheme => 'https'
+    };
+
+is_cxn "IPv6",
+    new_cxn( nodes => '::1' ),
+    { host => '::1', port => '80', uri => 'http://[::1]:80' };
+
+is_cxn "Scheme:IPv6",
+    new_cxn( nodes => 'https://[::1]' ),
+    {
+    host   => '::1',
+    port   => '443',
+    uri    => 'https://[::1]:443',
+    scheme => 'https'
+    };
+
+is_cxn "IPv6:Port",
+    new_cxn( nodes => '[::1]:1000' ),
+    { host => '::1', port => '1000', uri => 'http://[::1]:1000' };
+
+is_cxn "Scheme:IPv6:Port",
+    new_cxn( nodes => 'https://[::1]:1000' ),
+    {
+    host   => '::1',
+    port   => '1000',
+    uri    => 'https://[::1]:1000',
+    scheme => 'https'
+    };
+
 ### Options with scalar ###
 
 is_cxn "HTTPS option", new_cxn( nodes => 'foo', use_https => 1 ),
@@ -90,6 +142,14 @@ is_cxn "Deflate option",
     new_cxn( deflate => 1 ),
     { default_headers => { 'Accept-Encoding' => 'deflate' } };
 
+is_cxn "IPv4 with Port",
+    new_cxn( nodes => '127.0.0.1', port => 456),
+    { host => '127.0.0.1', port => '456', uri => 'http://127.0.0.1:456' };
+
+is_cxn "IPv6 with Port",
+    new_cxn( nodes => '::1', port => 456),
+    { host => '::1', port => '456', uri => 'http://[::1]:456' };
+
 ### Hash ###
 is_cxn "Hash host",
     new_cxn( nodes => { host => 'foo' } ),
@@ -102,6 +162,14 @@ is_cxn "Hash port",
 is_cxn "Hash path",
     new_cxn( nodes => { path => 'baz' } ),
     { port => 80, uri => 'http://localhost:80/baz' };
+
+is_cxn "Hash IPv4 host",
+    new_cxn( nodes => { host => '127.0.0.1' } ),
+    { host => '127.0.0.1', port => 80, uri => 'http://127.0.0.1:80' };
+
+is_cxn "Hash IPv6 host",
+    new_cxn( nodes => { host => '::1' } ),
+    { host => '::1', port => 80, uri => 'http://[::1]:80' };
 
 # Build URI
 is new_cxn()->build_uri( { path => '/' } ), 'http://localhost:9200/',

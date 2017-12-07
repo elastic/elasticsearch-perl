@@ -27,6 +27,7 @@ requires "Module::Runtime" => "0";
 requires "Moo" => "2.001000";
 requires "Moo::Role" => "0";
 requires "Net::Curl::Easy" => "0";
+requires "Net::IP" => "0";
 requires "POSIX" => "0";
 requires "Package::Stash" => "0.34";
 requires "Promises" => "0.93";
