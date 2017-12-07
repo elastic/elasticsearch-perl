@@ -46,9 +46,12 @@ sub perform_request {
     if ( defined $params->{data} ) {
         $args{body} = $params->{data};
         $args{head} = [ 'Content-Type', $params->{mime_type} ];
-        push @{ $args{headers} }, ( 'Content-Encoding', $params->{encoding} )
+        push @{ $args{head} }, ( 'Content-Encoding', $params->{encoding} )
             if $params->{encoding};
     }
+
+    push @{ $args{head} }, %{$self->default_headers}
+        if %{$self->default_headers};
 
     my $response;
     try {
