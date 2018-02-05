@@ -597,7 +597,7 @@ C<index>, C<type> and C<id> if it exists. Updates can be performed either by:
         ...,
         body => {
             script => {
-                inline => "ctx._source.counter += incr",
+                source => "ctx._source.counter += incr",
                 params => { incr => 6 }
             }
         }
@@ -1028,7 +1028,7 @@ within the C<body>) and parameters to use with the template, eg:
 
     $results = $e->search_template(
         body => {
-            inline => {
+            source => {
                 query => {
                     match => {
                         "{{my_field}}" => "{{my_value}}"
@@ -1071,7 +1071,7 @@ Renders the template, filling in the passed-in parameters and returns the result
 
     $results = $e->render_search_template(
         body => {
-            inline => {
+            source => {
                 query => {
                     match => {
                         "{{my_field}}" => "{{my_value}}"
@@ -1197,11 +1197,11 @@ request).  For instance:
         body => [
             # uses defaults
             {},
-            { inline => { query => { match => { user => "{{user}}" }}} params => { user => 'joe' }},
+            { source => { query => { match => { user => "{{user}}" }}} params => { user => 'joe' }},
 
             # uses a custom index
             { index => 'not_the_default_index' },
-            { inline => { query => { match => { user => "{{user}}" }}} params => { user => 'joe' }},
+            { source => { query => { match => { user => "{{user}}" }}} params => { user => 'joe' }},
         ]
     );
 
