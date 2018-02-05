@@ -11,6 +11,7 @@ my %Default_Plugins = (
     client      => [ 'Search::Elasticsearch::Client',       '6_0::Direct' ],
     cxn_factory => [ 'Search::Elasticsearch::Cxn::Factory', '' ],
     cxn_pool    => [ 'Search::Elasticsearch::CxnPool',      'Static' ],
+    cxn_auth    => [ 'Search::Elasticsearch::CxnAuth', 'Basic' ],
     logger      => [ 'Search::Elasticsearch::Logger',       'LogAny' ],
     serializer  => [ 'Search::Elasticsearch::Serializer',   'JSON' ],
     transport   => [ 'Search::Elasticsearch::Transport',    '' ],
@@ -19,6 +20,7 @@ my %Default_Plugins = (
 my @Load_Order = qw(
     serializer
     logger
+    cxn_auth
     cxn_factory
     cxn_pool
     transport

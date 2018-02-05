@@ -40,18 +40,22 @@ sub perform_request {
         read_timeout    => $params->{timeout} || $self->request_timeout,
         method          => $method,
         path            => $uri->path,
-        query_string    => $uri->query,
         %{ $self->handle_args }
     );
+
+    my $headers = {};
     if ( defined $params->{data} ) {
         $args{body} = $params->{data};
-        $args{head} = [ 'Content-Type', $params->{mime_type} ];
-        push @{ $args{head} }, ( 'Content-Encoding', $params->{encoding} )
+        $headers->{'Content-Type'} = $params->{mime_type};
+        $headers->{'Content-Encoding'} = $params->{encoding}
             if $params->{encoding};
     }
 
-    push @{ $args{head} }, %{$self->default_headers}
-        if %{$self->default_headers};
+    ($uri, $headers) = $self->cxn_auth->authenticate_request( $method, $uri, $headers, $params->{data} );
+
+    push @{ $args{head} }, %$headers, %{ $self->default_headers };
+
+    $args{query_string} = $uri->query;
 
     my $response;
     try {

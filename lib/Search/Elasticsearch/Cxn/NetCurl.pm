@@ -65,9 +65,12 @@ sub perform_request {
         $handle->setopt( CURLOPT_POSTFIELDSIZE, length $data );
     }
 
+    my $all_headers;
+    ($uri, $all_headers) = $self->cxn_auth->authenticate_request( $method, $uri, \%headers, $params->{data} );
+
     $handle->setopt( CURLOPT_HTTPHEADER,
-        [ map { "$_: " . $headers{$_} } keys %headers ] )
-        if %headers;
+        [ map { "$_: " . $all_headers->{$_} } keys %$all_headers ] )
+        if %$all_headers;
 
     my %opts = %{ $self->handle_args };
     if ( $self->is_https ) {
