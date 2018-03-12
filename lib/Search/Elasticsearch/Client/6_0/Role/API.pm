@@ -50,8 +50,9 @@ sub api {
             '_source',         '_source_include',
             '_source_exclude', 'detect_noop',
             'doc',             'doc_as_upsert',
-            'fields',          'scripted_upsert',
-            'script',          'upsert',
+            'fields',          'retry_on_conflict',
+            'scripted_upsert', 'script',
+            'upsert',
         ]
     },
     'bulk.required' => { params => [ 'index', 'type' ] },

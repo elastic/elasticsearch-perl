@@ -36,7 +36,7 @@ sub api {
             'scripted_upsert', 'script',
             'script_id',       'script_file',
             'params',          'lang',
-            'detect_noop',
+            'detect_noop',     '_retry_on_conflict',
         ]
     },
     'bulk.required' => { params => [ 'index', 'type' ] },
