@@ -11,6 +11,7 @@ use IO::Compress::Gzip();
 use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use Search::Elasticsearch::Util qw(to_list);
 use namespace::clean;
+use Net::IP;
 
 requires qw(perform_request error_from_text handle);
 
@@ -66,10 +67,11 @@ sub BUILDARGS {
         || { host => 'localhost', port => '9200' };
 
     unless ( ref $node eq 'HASH' ) {
+        $node = "[$node]" if Net::IP::ip_is_ipv6($node);
         unless ( $node =~ m{^http(s)?://} ) {
             $node = ( $params->{use_https} ? 'https://' : 'http://' ) . $node;
         }
-        if ( $params->{port} && $node !~ m{//[^/]+:\d+} ) {
+        if ( $params->{port} && $node !~ m{//[^/\[]+:\d+} ) {
             $node =~ s{(//[^/]+)}{$1:$params->{port}};
         }
         my $uri = URI->new($node);
@@ -117,6 +119,7 @@ sub BUILDARGS {
     $params->{port}            = $port;
     $params->{path}            = $path;
     $params->{userinfo}        = $userinfo;
+    $host                      = "[$host]" if Net::IP::ip_is_ipv6($host);
     $params->{uri}             = URI->new("$scheme://$host:$port$path");
     $params->{default_headers} = \%default_headers;
 
