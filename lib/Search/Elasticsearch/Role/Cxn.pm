@@ -100,7 +100,7 @@ sub BUILDARGS {
 
     if ($userinfo) {
         require MIME::Base64;
-        my $auth = MIME::Base64::encode_base64($userinfo);
+        my $auth = MIME::Base64::encode_base64($userinfo, '');
         chomp $auth;
         $default_headers{Authorization} = "Basic $auth";
     }
