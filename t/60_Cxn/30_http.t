@@ -2,8 +2,14 @@ use Test::More;
 use Test::Exception;
 use Test::Deep;
 use Search::Elasticsearch;
+use MIME::Base64;
 
 sub is_cxn(@);
+
+my $username     = 'ThisIsAVeryLongUsernameAndThatIsOKYouSee';
+my $password     = 'CorrectHorseBatteryStapleCorrectHorseBatteryStaple';
+my $userinfo     = "$username:$password";
+my $userinfo_b64 = MIME::Base64::encode_base64($userinfo,"");
 
 ### Scalar nodes ###
 
@@ -29,12 +35,12 @@ is_cxn "Path",
     new_cxn( nodes => 'foo/bar' ),
     { host => 'foo', port => '80', uri => 'http://foo:80/bar' };
 
-is_cxn "Userinfo", new_cxn( nodes => 'http://foo:bar@localhost/' ),
+is_cxn "Userinfo", new_cxn( nodes => "http://$userinfo\@localhost/" ),
     {
     port            => '80',
     uri             => 'http://localhost:80',
-    default_headers => { Authorization => 'Basic Zm9vOmJhcg==' },
-    userinfo        => 'foo:bar'
+    default_headers => { Authorization => "Basic $userinfo_b64" },
+    userinfo        => $userinfo
     };
 
 is_cxn "IPv4",
@@ -99,23 +105,25 @@ is_cxn "Path option with settings",
     new_cxn( nodes => 'foo/baz/', path_prefix => '/bar/' ),
     { host => 'foo', port => 80, uri => 'http://foo:80/baz' };
 
-is_cxn "Userinfo option", new_cxn( nodes => 'foo', userinfo => 'foo:bar' ),
+is_cxn "Userinfo option", new_cxn( nodes => 'foo', userinfo => $userinfo ),
     {
     host            => 'foo',
     port            => 80,
     uri             => 'http://foo:80',
-    default_headers => { Authorization => 'Basic Zm9vOmJhcg==' },
-    userinfo        => 'foo:bar'
+    default_headers => { Authorization => "Basic $userinfo_b64" },
+    userinfo        => $userinfo
     };
 
 is_cxn "Userinfo option with settings",
-    new_cxn( nodes => 'foo:bar@foo', userinfo => 'foo:baz' ),
+    # Note that userinfo as specified is explicitly different to that
+    # provided in the nodes string
+    new_cxn( nodes => "$userinfo\@foo", userinfo => 'foo:baz' ),
     {
     host            => 'foo',
     port            => 80,
     uri             => 'http://foo:80',
-    default_headers => { Authorization => 'Basic Zm9vOmJhcg==' },
-    userinfo        => 'foo:bar'
+    default_headers => { Authorization => "Basic $userinfo_b64" },
+    userinfo        => $userinfo
     };
 
 is_cxn "Deflate option",
