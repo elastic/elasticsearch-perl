@@ -47,8 +47,7 @@ is_cxn "IPv4",
     new_cxn( nodes => '127.0.0.1' ),
     { host => '127.0.0.1', port => '80', uri => 'http://127.0.0.1:80' };
 
-is_cxn "Scheme:IPv4",
-    new_cxn( nodes => 'https://127.0.0.1' ),
+is_cxn "Scheme:IPv4", new_cxn( nodes => 'https://127.0.0.1' ),
     {
     host   => '127.0.0.1',
     port   => '443',
@@ -60,8 +59,7 @@ is_cxn "IPv4:Port",
     new_cxn( nodes => '127.0.0.1:1000' ),
     { host => '127.0.0.1', port => '1000', uri => 'http://127.0.0.1:1000' };
 
-is_cxn "Scheme:IPv4:Port",
-    new_cxn( nodes => 'https://127.0.0.1:1000' ),
+is_cxn "Scheme:IPv4:Port", new_cxn( nodes => 'https://127.0.0.1:1000' ),
     {
     host   => '127.0.0.1',
     port   => '1000',
@@ -73,8 +71,7 @@ is_cxn "IPv6",
     new_cxn( nodes => '::1' ),
     { host => '::1', port => '80', uri => 'http://[::1]:80' };
 
-is_cxn "Scheme:IPv6",
-    new_cxn( nodes => 'https://[::1]' ),
+is_cxn "Scheme:IPv6", new_cxn( nodes => 'https://[::1]' ),
     {
     host   => '::1',
     port   => '443',
@@ -86,8 +83,7 @@ is_cxn "IPv6:Port",
     new_cxn( nodes => '[::1]:1000' ),
     { host => '::1', port => '1000', uri => 'http://[::1]:1000' };
 
-is_cxn "Scheme:IPv6:Port",
-    new_cxn( nodes => 'https://[::1]:1000' ),
+is_cxn "Scheme:IPv6:Port", new_cxn( nodes => 'https://[::1]:1000' ),
     {
     host   => '::1',
     port   => '1000',
@@ -152,11 +148,11 @@ is_cxn "Deflate option",
     { default_headers => { 'Accept-Encoding' => 'deflate' } };
 
 is_cxn "IPv4 with Port",
-    new_cxn( nodes => '127.0.0.1', port => 456),
+    new_cxn( nodes => '127.0.0.1', port => 456 ),
     { host => '127.0.0.1', port => '456', uri => 'http://127.0.0.1:456' };
 
 is_cxn "IPv6 with Port",
-    new_cxn( nodes => '::1', port => 456),
+    new_cxn( nodes => '::1', port => 456 ),
     { host => '::1', port => '456', uri => 'http://[::1]:456' };
 
 ### Hash ###
@@ -197,10 +193,9 @@ is new_cxn( { default_qs_params => { session => 'key' } } )
 my $uri = new_cxn( { default_qs_params => { session => 'key' } } )
     ->build_uri( { path => '/_search', qs => { foo => 'bar' } } );
 
-like $uri, qr{^http://localhost:9200/_search?},
-    "default_qs_params and qs - 1";
-like $uri, qr{session=key}, "default_qs_params and qs - 2";
-like $uri, qr{foo=bar},     "default_qs_params and qs - 3";
+like $uri, qr{^http://localhost:9200/_search?}, "default_qs_params and qs - 1";
+like $uri, qr{session=key},                     "default_qs_params and qs - 2";
+like $uri, qr{foo=bar},                         "default_qs_params and qs - 3";
 
 is new_cxn( { default_qs_params => { session => 'key' } } )
     ->build_uri( { path => '/_search', qs => { session => 'bar' } } ),

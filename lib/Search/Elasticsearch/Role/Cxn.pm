@@ -100,7 +100,7 @@ sub BUILDARGS {
 
     if ($userinfo) {
         require MIME::Base64;
-        my $auth = MIME::Base64::encode_base64($userinfo,"");
+        my $auth = MIME::Base64::encode_base64( $userinfo, "" );
         chomp $auth;
         $default_headers{Authorization} = "Basic $auth";
     }
@@ -113,13 +113,13 @@ sub BUILDARGS {
         $default_headers{'Accept-Encoding'} = "deflate";
     }
 
-    $params->{scheme}          = $scheme;
-    $params->{is_https}        = $scheme eq 'https';
-    $params->{host}            = $host;
-    $params->{port}            = $port;
-    $params->{path}            = $path;
-    $params->{userinfo}        = $userinfo;
-    $host                      = "[$host]" if Net::IP::ip_is_ipv6($host);
+    $params->{scheme}   = $scheme;
+    $params->{is_https} = $scheme eq 'https';
+    $params->{host}     = $host;
+    $params->{port}     = $port;
+    $params->{path}     = $path;
+    $params->{userinfo} = $userinfo;
+    $host = "[$host]" if Net::IP::ip_is_ipv6($host);
     $params->{uri}             = URI->new("$scheme://$host:$port$path");
     $params->{default_headers} = \%default_headers;
 
@@ -308,7 +308,7 @@ sub process_response {
     # Deprecation warnings
     if ( my $warnings = $headers->{warning} ) {
         my $warning_string = _parse_warnings($warnings);
-        my %temp = (%$params);
+        my %temp           = (%$params);
         delete $temp{data};
         $self->logger->deprecation( $warning_string, \%temp );
     }
@@ -368,8 +368,7 @@ sub _parse_warnings {
     for (@warnings) {
         if ( $_ =~ /^\d+\s+\S+\s+"((?:\\"|[^"])+)"/ ) {
             my $msg = $1;
-            $msg=~s/\\"/"/g,
-            push @str, $msg;
+            $msg =~ s/\\"/"/g, push @str, $msg;
         }
         else {
             push @str, $_;
