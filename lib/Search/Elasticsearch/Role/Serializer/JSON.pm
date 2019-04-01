@@ -66,6 +66,7 @@ sub encode_pretty {
         $self->JSON->pretty(0);
         die "$@";
     }
+    $self->JSON->pretty(0);
 
     return $json;
 }
