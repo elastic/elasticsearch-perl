@@ -2,7 +2,6 @@ package Search::Elasticsearch::Cxn::Mojo;
 
 use Mojo::UserAgent();
 use Promises qw(deferred);
-use Try::Tiny;
 use Moo;
 
 with 'Search::Elasticsearch::Role::Cxn::Async';
@@ -51,7 +50,7 @@ sub perform_request {
 
             my $headers = $res->headers->to_hash;
             $headers->{ lc($_) } = delete $headers->{$_} for keys %{$headers};
-            try {
+            eval {
                 my ( $code, $response ) = $self->process_response(
                     $params,    # request
                     ( $res->code || 500 ),    # status
@@ -60,10 +59,10 @@ sub perform_request {
                     $headers,                 # headers
                 );
                 $deferred->resolve( $code, $response );
-            }
-            catch {
-                $deferred->reject($_);
             };
+            if ($@) {
+                $deferred->reject($@);
+            }
         }
     );
     $deferred->promise;

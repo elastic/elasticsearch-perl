@@ -4,7 +4,6 @@ use Moo;
 with 'Search::Elasticsearch::Client::1_0::Role::Bulk',
     'Search::Elasticsearch::Role::Is_Sync';
 use Search::Elasticsearch::Util qw(parse_params throw);
-use Try::Tiny;
 use namespace::clean;
 
 #===================================
@@ -49,18 +48,18 @@ sub flush {
         print ".";
     }
     my $buffer  = $self->_buffer;
-    my $results = try {
+    my $results = eval {
         my $res = $self->es->bulk( %{ $self->_bulk_args }, body => $buffer );
         $self->clear_buffer;
         return $res;
-    }
-    catch {
-        my $error = $_;
+    };
+    if ($@) {
+        my $error = $@;
         $self->clear_buffer
             unless $error->is( 'Cxn', 'NoNodes' );
 
         die $error;
-    };
+    }
     $self->_report( $buffer, $results );
     return defined wantarray ? $results : undef;
 }

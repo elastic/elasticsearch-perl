@@ -4,7 +4,6 @@ use Moo;
 with 'Search::Elasticsearch::Role::Cxn', 'Search::Elasticsearch::Role::Is_Sync';
 
 use Hijk 0.27;
-use Try::Tiny;
 use namespace::clean;
 
 has 'connect_timeout' => ( is => 'ro', default => 2 );
@@ -54,16 +53,16 @@ sub perform_request {
         if %{$self->default_headers};
 
     my $response;
-    try {
+    eval {
         local $SIG{PIPE} = sub { die $! };
         $response = Hijk::request( \%args );
-    }
-    catch {
+    };
+    if ($@) {
         $response = {
             status => 500,
-            error  => $_ || 'Unknown error'
+            error  => $@ || 'Unknown error'
         };
-    };
+    }
 
     my $head = $response->{head} || {};
     my %head = map { lc($_) => $head->{$_} } keys %$head;

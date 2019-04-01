@@ -7,7 +7,6 @@ use namespace::clean;
 
 use Search::Elasticsearch::Util qw(parse_params);
 use List::Util qw(min);
-use Try::Tiny;
 
 has 'sniff_interval' => ( is => 'ro', default => 300 );
 has 'next_sniff'     => ( is => 'rw', default => 0 );

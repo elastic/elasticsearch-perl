@@ -7,7 +7,6 @@ use Search::Elasticsearch 6.00;
 our $VERSION = "6.00";
 
 use HTTP::Parser::XS qw(HEADERS_AS_HASHREF parse_http_response);
-use Try::Tiny;
 use Net::Curl::Easy qw(
     CURLOPT_HEADER
     CURLOPT_VERBOSE
@@ -94,18 +93,18 @@ sub perform_request {
 
     my ( $code, $msg, $headers );
 
-    try {
+    eval {
         $handle->perform;
         ( undef, undef, $code, $msg, $headers )
             = parse_http_response( $head, HEADERS_AS_HASHREF );
-    }
-    catch {
+    };
+    if ($@) {
         $code = 509;
-        $msg  = ( 0 + $_ ) . ": $_";
+        $msg  = ( 0 + $@ ) . ": $@";
         $msg . ", " . $handle->error
             if $handle->error;
         undef $content;
-    };
+    }
 
     return $self->process_response(
         $params,     # request

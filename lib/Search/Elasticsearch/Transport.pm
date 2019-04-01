@@ -4,7 +4,6 @@ use Moo;
 
 use URI();
 use Time::HiRes qw(time);
-use Try::Tiny;
 use Search::Elasticsearch::Util qw(upgrade_error);
 use namespace::clean;
 
@@ -19,9 +18,9 @@ sub perform_request {
     my $pool   = $self->cxn_pool;
     my $logger = $self->logger;
 
-    my ( $code, $response, $cxn, $error );
+    my ( $code, $response, $cxn );
 
-    try {
+    eval {
         $cxn = $pool->next_cxn;
         my $start = time();
         $logger->trace_request( $cxn, $params );
@@ -29,18 +28,17 @@ sub perform_request {
         ( $code, $response ) = $cxn->perform_request($params);
         $pool->request_ok($cxn);
         $logger->trace_response( $cxn, $code, $response, time() - $start );
-    }
-    catch {
-        $error = upgrade_error(
-            $_,
+    };
+
+    if ($@) {
+        my $error = upgrade_error(
+            $@,
             {   request     => $params,
                 status_code => $code,
                 body        => $response
             }
         );
-    };
 
-    if ($error) {
         if ( $pool->request_failed( $cxn, $error ) ) {
             $logger->debugf( "[%s] %s", $cxn->stringify, "$error" );
             $logger->info('Retrying request on a new cxn');

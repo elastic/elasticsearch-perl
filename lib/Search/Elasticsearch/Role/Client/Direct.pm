@@ -4,7 +4,6 @@ use Moo::Role;
 with 'Search::Elasticsearch::Role::Client';
 use Search::Elasticsearch::Util qw(load_plugin is_compat throw);
 
-use Try::Tiny;
 use Package::Stash 0.34 ();
 use Any::URI::Escape qw(uri_escape);
 use namespace::clean;
@@ -17,7 +16,7 @@ sub parse_request {
     my $params = { ref $_[0] ? %{ shift() } : @_ };
 
     my $request;
-    try {
+    eval {
         $request = {
             ignore    => delete $params->{ignore} || [],
             method    => $defn->{method}          || 'GET',
@@ -26,12 +25,13 @@ sub parse_request {
             body => $self->_parse_body( $defn->{body}, $params ),
             qs   => $self->_parse_qs( $defn->{qs},     $params ),
         };
-    }
-    catch {
-        chomp $_;
-        my $name = $defn->{name} || '<unknown method>';
-        $self->logger->throw_error( 'Param', "$_ in ($name) request. " );
     };
+    if ($@) {
+        my $error = $@;
+        chomp $error;
+        my $name = $defn->{name} || '<unknown method>';
+        $self->logger->throw_error( 'Param', "$@ in ($name) request. " );
+    }
     return $request;
 }
 

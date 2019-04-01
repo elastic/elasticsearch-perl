@@ -3,7 +3,6 @@ package Search::Elasticsearch::Role::Cxn;
 use Moo::Role;
 use Search::Elasticsearch::Util qw(parse_params throw to_list);
 use List::Util qw(min);
-use Try::Tiny;
 use URI();
 use IO::Compress::Deflate();
 use IO::Uncompress::Inflate();
@@ -179,7 +178,8 @@ sub pings_ok {
 #===================================
     my $self = shift;
     $self->logger->infof( 'Pinging [%s]', $self->stringify );
-    return try {
+    my $result;
+    eval {
         $self->perform_request(
             {   method  => 'HEAD',
                 path    => '/',
@@ -188,13 +188,14 @@ sub pings_ok {
         );
         $self->logger->infof( 'Marking [%s] as live', $self->stringify );
         $self->mark_live;
-        1;
-    }
-    catch {
-        $self->logger->debug("$_");
-        $self->mark_dead;
-        0;
+        $result = 1;
     };
+    if ($@) {
+        $self->logger->debug("$@");
+        $self->mark_dead;
+        $result = 0;
+    }
+    return $result;
 }
 
 #===================================
@@ -202,7 +203,7 @@ sub sniff {
 #===================================
     my $self = shift;
     $self->logger->infof( 'Sniffing [%s]', $self->stringify );
-    return try {
+    my $result = eval {
         $self->perform_request(
             {   method  => 'GET',
                 path    => '/_nodes/http',
@@ -210,11 +211,12 @@ sub sniff {
                 timeout => $self->sniff_request_timeout,
             }
         )->{nodes};
-    }
-    catch {
-        $self->logger->debug($_);
-        return;
     };
+    if ($@) {
+        $self->logger->debug($@);
+        return;
+    }
+    return $result;
 }
 
 #===================================

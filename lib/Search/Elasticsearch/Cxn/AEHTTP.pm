@@ -2,7 +2,6 @@ package Search::Elasticsearch::Cxn::AEHTTP;
 
 use AnyEvent::HTTP qw(http_request);
 use Promises qw(deferred);
-use Try::Tiny;
 use Moo;
 
 with 'Search::Elasticsearch::Role::Cxn::Async';
@@ -49,7 +48,7 @@ sub perform_request {
         ( $self->is_https ? ( tls_ctx => $self->_tls_ctx ) : () ),
         sub {
             my ( $body, $headers ) = @_;
-            try {
+            eval {
                 my ( $code, $response ) = $self->process_response(
                     $params,                      # request
                     delete $headers->{Status},    # code
@@ -58,9 +57,9 @@ sub perform_request {
                     $headers                      # headers
                 );
                 $deferred->resolve( $code, $response );
-            }
-            catch {
-                $deferred->reject($_);
+            };
+            if ($@) {
+                $deferred->reject($@);
             }
 
         }

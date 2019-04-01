@@ -4,7 +4,6 @@ use Moo::Role;
 requires 'JSON';
 
 use Search::Elasticsearch::Util qw(throw);
-use Try::Tiny;
 use Encode qw(encode_utf8 decode_utf8 is_utf8);
 use namespace::clean;
 
@@ -21,8 +20,11 @@ sub encode {
             ? encode_utf8($var)
             : $var;
     }
-    return try { $self->JSON->encode($var) }
-    catch { throw( "Serializer", $_, { var => $var } ) };
+    my $result = eval { $self->JSON->encode($var) };
+    if ($@) {
+        throw( "Serializer", $@, { var => $var } );
+    }
+    return $result;
 }
 
 #===================================
@@ -38,13 +40,16 @@ sub encode_bulk {
     my $json = '';
     throw( "Param", "Var must be an array ref" )
         unless ref $var eq 'ARRAY';
-    return try {
+    eval {
         for (@$var) {
             $json .= ( ref($_) ? $self->JSON->encode($_) : $_ ) . "\n";
         }
         return $json;
+    };
+    if ($@) {
+        throw( "Serializer", $@, { var => $var } );
     }
-    catch { throw( "Serializer", $_, { var => $var } ) };
+    return $json;
 }
 
 #===================================
@@ -54,15 +59,13 @@ sub encode_pretty {
     $self->JSON->pretty(1);
 
     my $json;
-    try {
+    eval {
         $json = $self->encode($var);
-    }
-    catch {
-        die "$_";
-    }
-    finally {
-        $self->JSON->pretty(0);
     };
+    if ($@) {
+        $self->JSON->pretty(0);
+        die "$@";
+    }
 
     return $json;
 }
@@ -77,12 +80,13 @@ sub decode {
     return is_utf8($json) ? $json : decode_utf8($json)
         unless substr( $json, 0, 1 ) =~ /^[\[{]/;
 
-    return try {
+    my $result = eval {
         $self->JSON->decode($json);
-    }
-    catch {
-        throw( "Serializer", $_, { json => $json } );
     };
+    if ($@) {
+        throw( "Serializer", $@, { json => $json } );
+    }
+    return $result;
 }
 
 #===================================
