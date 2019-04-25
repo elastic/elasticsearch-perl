@@ -20,8 +20,11 @@ sub encode {
             ? encode_utf8($var)
             : $var;
     }
-    my $result = eval { $self->JSON->encode($var) };
-    if ($@) {
+    my $result;
+    unless (eval {
+        $result = $self->JSON->encode($var);
+        1;
+    }) {
         throw( "Serializer", $@, { var => $var } );
     }
     return $result;
@@ -40,13 +43,12 @@ sub encode_bulk {
     my $json = '';
     throw( "Param", "Var must be an array ref" )
         unless ref $var eq 'ARRAY';
-    eval {
+    unless (eval {
         for (@$var) {
             $json .= ( ref($_) ? $self->JSON->encode($_) : $_ ) . "\n";
         }
-        return $json;
-    };
-    if ($@) {
+        1;
+    }) {
         throw( "Serializer", $@, { var => $var } );
     }
     return $json;
@@ -59,12 +61,13 @@ sub encode_pretty {
     $self->JSON->pretty(1);
 
     my $json;
-    eval {
+    unless (eval {
         $json = $self->encode($var);
-    };
-    if ($@) {
+        1;
+    }) {
+        my $error = $@;
         $self->JSON->pretty(0);
-        die "$@";
+        die "$error";
     }
     $self->JSON->pretty(0);
 
@@ -81,10 +84,11 @@ sub decode {
     return is_utf8($json) ? $json : decode_utf8($json)
         unless substr( $json, 0, 1 ) =~ /^[\[{]/;
 
-    my $result = eval {
-        $self->JSON->decode($json);
-    };
-    if ($@) {
+    my $result;
+    unless (eval {
+        $result = $self->JSON->decode($json);
+        1;
+    }) {
         throw( "Serializer", $@, { json => $json } );
     }
     return $result;

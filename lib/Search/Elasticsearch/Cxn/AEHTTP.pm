@@ -48,7 +48,7 @@ sub perform_request {
         ( $self->is_https ? ( tls_ctx => $self->_tls_ctx ) : () ),
         sub {
             my ( $body, $headers ) = @_;
-            eval {
+            unless (eval {
                 my ( $code, $response ) = $self->process_response(
                     $params,                      # request
                     delete $headers->{Status},    # code
@@ -57,8 +57,8 @@ sub perform_request {
                     $headers                      # headers
                 );
                 $deferred->resolve( $code, $response );
-            };
-            if ($@) {
+                1;
+            }) {
                 $deferred->reject($@);
             }
 

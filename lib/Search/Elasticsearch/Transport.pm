@@ -20,7 +20,7 @@ sub perform_request {
 
     my ( $code, $response, $cxn );
 
-    eval {
+    unless (eval {
         $cxn = $pool->next_cxn;
         my $start = time();
         $logger->trace_request( $cxn, $params );
@@ -28,9 +28,8 @@ sub perform_request {
         ( $code, $response ) = $cxn->perform_request($params);
         $pool->request_ok($cxn);
         $logger->trace_response( $cxn, $code, $response, time() - $start );
-    };
-
-    if ($@) {
+        1;
+    }) {
         my $error = upgrade_error(
             $@,
             {   request     => $params,

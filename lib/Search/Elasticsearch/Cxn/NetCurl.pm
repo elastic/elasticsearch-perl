@@ -93,12 +93,12 @@ sub perform_request {
 
     my ( $code, $msg, $headers );
 
-    eval {
+    unless (eval {
         $handle->perform;
         ( undef, undef, $code, $msg, $headers )
             = parse_http_response( $head, HEADERS_AS_HASHREF );
-    };
-    if ($@) {
+        1;
+    }) {
         $code = 509;
         $msg  = ( 0 + $@ ) . ": $@";
         $msg . ", " . $handle->error

@@ -50,7 +50,7 @@ sub perform_request {
 
             my $headers = $res->headers->to_hash;
             $headers->{ lc($_) } = delete $headers->{$_} for keys %{$headers};
-            eval {
+            unless (eval {
                 my ( $code, $response ) = $self->process_response(
                     $params,    # request
                     ( $res->code || 500 ),    # status
@@ -59,8 +59,8 @@ sub perform_request {
                     $headers,                 # headers
                 );
                 $deferred->resolve( $code, $response );
-            };
-            if ($@) {
+                1;
+            }) {
                 $deferred->reject($@);
             }
         }

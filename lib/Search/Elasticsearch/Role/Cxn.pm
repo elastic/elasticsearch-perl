@@ -179,7 +179,7 @@ sub pings_ok {
     my $self = shift;
     $self->logger->infof( 'Pinging [%s]', $self->stringify );
     my $result;
-    eval {
+    unless (eval {
         $self->perform_request(
             {   method  => 'HEAD',
                 path    => '/',
@@ -189,8 +189,8 @@ sub pings_ok {
         $self->logger->infof( 'Marking [%s] as live', $self->stringify );
         $self->mark_live;
         $result = 1;
-    };
-    if ($@) {
+        1;
+    }) {
         $self->logger->debug("$@");
         $self->mark_dead;
         $result = 0;
@@ -203,17 +203,19 @@ sub sniff {
 #===================================
     my $self = shift;
     $self->logger->infof( 'Sniffing [%s]', $self->stringify );
-    my $result = eval {
-        $self->perform_request(
+    my $result;
+    unless (eval {
+        $result = $self->perform_request(
             {   method  => 'GET',
                 path    => '/_nodes/http',
                 qs      => { timeout => $self->sniff_timeout . 's' },
                 timeout => $self->sniff_request_timeout,
             }
         )->{nodes};
-    };
-    if ($@) {
-        $self->logger->debug($@);
+        1;
+    }) {
+        my $error = $@;
+        $self->logger->debug($error);
         return;
     }
     return $result;

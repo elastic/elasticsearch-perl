@@ -16,7 +16,7 @@ sub parse_request {
     my $params = { ref $_[0] ? %{ shift() } : @_ };
 
     my $request;
-    eval {
+    unless (eval {
         $request = {
             ignore    => delete $params->{ignore} || [],
             method    => $defn->{method}          || 'GET',
@@ -25,8 +25,8 @@ sub parse_request {
             body => $self->_parse_body( $defn->{body}, $params ),
             qs   => $self->_parse_qs( $defn->{qs},     $params ),
         };
-    };
-    if ($@) {
+        1;
+    }) {
         my $error = $@;
         chomp $error;
         my $name = $defn->{name} || '<unknown method>';

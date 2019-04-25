@@ -48,12 +48,12 @@ sub flush {
         print ".";
     }
     my $buffer  = $self->_buffer;
-    my $results = eval {
-        my $res = $self->es->bulk( %{ $self->_bulk_args }, body => $buffer );
+    my $results;
+    unless (eval {
+        $results = $self->es->bulk( %{ $self->_bulk_args }, body => $buffer );
         $self->clear_buffer;
-        return $res;
-    };
-    if ($@) {
+        1;
+    }) {
         my $error = $@;
         $self->clear_buffer
             unless $error->is( 'Cxn', 'NoNodes' );

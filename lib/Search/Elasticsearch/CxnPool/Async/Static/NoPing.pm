@@ -13,11 +13,11 @@ around 'next_cxn' => sub {
     my ( $orig, $self ) = @_;
 
     my $deferred = deferred;
-    eval {
+    unless (eval {
         my $cxn = $orig->($self);
         $deferred->resolve($cxn);
-    };
-    if ($@) {
+        1;
+    }) {
         $deferred->reject($@);
     }
     $deferred->promise;

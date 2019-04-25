@@ -35,12 +35,14 @@ sub add_action {
     my $weak_add;
     my $add = sub {
         while (@actions) {
-            my @json = eval {
-                $self->_encode_action( splice( @actions, 0, 2 ) );
-            };
-            if ($@) {
-                $self->on_fatal->($@);
-                $deferred->reject($@);
+            my @json;
+            unless (eval {
+                @json = $self->_encode_action( splice( @actions, 0, 2 ) );
+                1;
+            }) {
+                my $error = $@;
+                $self->on_fatal->($error);
+                $deferred->reject($error);
             }
             return unless @json;
 

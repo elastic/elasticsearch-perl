@@ -53,11 +53,11 @@ sub perform_request {
         if %{$self->default_headers};
 
     my $response;
-    eval {
+    unless (eval {
         local $SIG{PIPE} = sub { die $! };
         $response = Hijk::request( \%args );
-    };
-    if ($@) {
+        1;
+    }) {
         $response = {
             status => 500,
             error  => $@ || 'Unknown error'
