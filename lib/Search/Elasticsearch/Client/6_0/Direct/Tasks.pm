@@ -36,8 +36,8 @@ Query string parameters:
     C<group_by>,
     C<human>,
     C<nodes>,
-    C<parent_node>,
     C<parent_task_id>,
+    C<timeout>,
     C<wait_for_completion>
 
 See the L<task management docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html>
@@ -62,7 +62,7 @@ for more information.
 =head2 C<cancel()>
 
     $response = $e->tasks->cancel(
-        task_id => $task_id  # option
+        task_id => $task_id  # required
     );
 
 The C<cancel()> method attempts to cancel the specified C<task_id> or multiple tasks.
@@ -72,8 +72,8 @@ Query string parameters:
     C<error_trace>,
     C<human>,
     C<nodes>,
-    C<parent_node>,
-    C<parent_task_id>
+    C<parent_task_id>,
+    C<timeout>
 
 See the L<task management docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/tasks.html>
 for more information.

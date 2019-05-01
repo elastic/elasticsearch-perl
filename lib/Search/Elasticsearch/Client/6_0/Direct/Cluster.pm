@@ -40,6 +40,7 @@ Query string parameters:
     C<timeout>,
     C<wait_for_active_shards>,
     C<wait_for_events>,
+    C<wait_for_no_initializing_shards>,
     C<wait_for_no_relocating_shards>,
     C<wait_for_nodes>,
     C<wait_for_status>
@@ -134,7 +135,9 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>,
     C<local>,
-    C<master_timeout>
+    C<master_timeout>,
+    C<wait_for_metadata_version>,
+    C<wait_for_timeout>
 
 See the L<cluster state docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-state.html>
 for more information.

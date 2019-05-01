@@ -409,14 +409,14 @@ an existing document.
 Query string parameters:
     C<error_trace>,
     C<human>,
+    C<if_primary_term>,
+    C<if_seq_no>,
     C<op_type>,
     C<parent>,
     C<pipeline>,
     C<refresh>,
     C<routing>,
     C<timeout>,
-    C<timestamp>,
-    C<ttl>,
     C<version>,
     C<version_type>,
     C<wait_for_active_shards>
@@ -447,8 +447,6 @@ Query string parameters:
     C<refresh>,
     C<routing>,
     C<timeout>,
-    C<timestamp>,
-    C<ttl>,
     C<version>,
     C<version_type>
 
@@ -468,8 +466,8 @@ C<index>, C<type> and C<id>, or will throw a C<Missing> error.
 
 Query string parameters:
     C<_source>,
-    C<_source_exclude>,
-    C<_source_include>,
+    C<_source_excludes>,
+    C<_source_includes>,
     C<error_trace>,
     C<human>,
     C<parent>,
@@ -499,8 +497,8 @@ plus the document metadata, ie the C<_index>, C<_type> etc.
 
 Query string parameters:
     C<_source>,
-    C<_source_exclude>,
-    C<_source_include>,
+    C<_source_excludes>,
+    C<_source_includes>,
     C<error_trace>,
     C<human>,
     C<parent>,
@@ -527,8 +525,8 @@ C<index>, C<type> and C<id> exists, or an empty string if it doesn't.
 
 Query string parameters:
     C<_source>,
-    C<_source_exclude>,
-    C<_source_include>,
+    C<_source_excludes>,
+    C<_source_includes>,
     C<error_trace>,
     C<human>,
     C<parent>,
@@ -556,6 +554,8 @@ C<index>, C<type> and C<id>, or will throw a C<Missing> error.
 Query string parameters:
     C<error_trace>,
     C<human>,
+    C<if_primary_term>,
+    C<if_seq_no>,
     C<parent>,
     C<refresh>,
     C<routing>,
@@ -639,19 +639,19 @@ for more information.
 
 Query string parameters:
     C<_source>,
-    C<_source_exclude>,
-    C<_source_include>,
+    C<_source_excludes>,
+    C<_source_includes>,
     C<error_trace>,
     C<fields>,
     C<human>,
+    C<if_primary_term>,
+    C<if_seq_no>,
     C<lang>,
     C<parent>,
     C<refresh>,
     C<retry_on_conflict>,
     C<routing>,
     C<timeout>,
-    C<timestamp>,
-    C<ttl>,
     C<version>,
     C<version_type>,
     C<wait_for_active_shards>
@@ -771,8 +771,8 @@ cause the others to fail as well.
 
 Query string parameters:
     C<_source>,
-    C<_source_exclude>,
-    C<_source_include>,
+    C<_source_excludes>,
+    C<_source_includes>,
     C<error_trace>,
     C<fields>,
     C<human>,
@@ -831,8 +831,8 @@ C<ids> of the documents to retrieve:
 
 Query string parameters:
     C<_source>,
-    C<_source_exclude>,
-    C<_source_include>,
+    C<_source_excludes>,
+    C<_source_includes>,
     C<error_trace>,
     C<human>,
     C<preference>,
@@ -929,9 +929,10 @@ L<request body|http://www.elastic.co/guide/en/elasticsearch/reference/current/se
 
 Query string parameters:
     C<_source>,
-    C<_source_exclude>,
-    C<_source_include>,
+    C<_source_excludes>,
+    C<_source_includes>,
     C<allow_no_indices>,
+    C<allow_partial_search_results>,
     C<analyze_wildcard>,
     C<analyzer>,
     C<batched_reduce_size>,
@@ -943,6 +944,7 @@ Query string parameters:
     C<explain>,
     C<from>,
     C<human>,
+    C<ignore_throttled>,
     C<ignore_unavailable>,
     C<lenient>,
     C<max_concurrent_shard_requests>,
@@ -950,9 +952,11 @@ Query string parameters:
     C<preference>,
     C<q>,
     C<request_cache>,
+    C<rest_total_hits_as_int>,
     C<routing>,
     C<scroll>,
     C<search_type>,
+    C<seq_no_primary_term>,
     C<size>,
     C<sort>,
     C<stats>,
@@ -1002,6 +1006,7 @@ Query string parameters:
     C<error_trace>,
     C<expand_wildcards>,
     C<human>,
+    C<ignore_throttled>,
     C<ignore_unavailable>,
     C<lenient>,
     C<lowercase_expanded_terms>
@@ -1020,7 +1025,7 @@ for more information.
         index   => 'index' | \@indices,     # optional
         type    => 'type'  | \@types,       # optional
 
-        body    => { search params }        # optional
+        body    => { search params }        # required
     );
 
 Perform a search by specifying a template (either predefined or defined
@@ -1053,9 +1058,11 @@ Query string parameters:
     C<expand_wildcards>,
     C<explain>,
     C<human>,
+    C<ignore_throttled>,
     C<ignore_unavailable>,
     C<preference>,
     C<profile>,
+    C<rest_total_hits_as_int>,
     C<scroll>,
     C<search_type>,
     C<typed_keys>
@@ -1110,6 +1117,7 @@ which makes managing scroll requests much easier.
 Query string parameters:
     C<error_trace>,
     C<human>,
+    C<rest_total_hits_as_int>,
     C<scroll>,
     C<scroll_id>
 
@@ -1169,7 +1177,9 @@ Query string parameters:
     C<error_trace>,
     C<human>,
     C<max_concurrent_searches>,
+    C<max__concurrent_shard_requests>,
     C<pre_filter_shard_size>,
+    C<rest_total_hits_as_int>,
     C<search_type>,
     C<typed_keys>
 
@@ -1209,6 +1219,7 @@ Query string parameters:
     C<error_trace>,
     C<human>,
     C<max_concurrent_searches>,
+    C<rest_total_hits_as_int>,
     C<search_type>,
     C<typed_keys>
 
@@ -1242,8 +1253,8 @@ For instance:
 
 Query string parameters:
     C<_source>,
-    C<_source_exclude>,
-    C<_source_include>,
+    C<_source_excludes>,
+    C<_source_includes>,
     C<analyze_wildcard>,
     C<analyzer>,
     C<default_operator>,
@@ -1316,8 +1327,8 @@ The C<delete_by_query()> method deletes all documents which match the specified 
 
 Query string parameters:
     C<_source>,
-    C<_source_exclude>,
-    C<_source_include>,
+    C<_source_excludes>,
+    C<_source_includes>,
     C<allow_no_indices>,
     C<analyze_wildcard>,
     C<analyzer>,
@@ -1388,8 +1399,8 @@ multiple indices using a script.
 
 Query string parameters:
     C<_source>,
-    C<_source_exclude>,
-    C<_source_include>,
+    C<_source_excludes>,
+    C<_source_includes>,
     C<allow_no_indices>,
     C<analyze_wildcard>,
     C<analyzer>,
@@ -1487,7 +1498,8 @@ Retrieve the indexed script from the cluster state.
 
 Query string parameters:
     C<error_trace>,
-    C<human>
+    C<human>,
+    C<master_timeout>
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
 

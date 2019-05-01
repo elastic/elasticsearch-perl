@@ -39,6 +39,7 @@ settings, type mappings, and aliases can be added at the same time.
 Query string parameters:
     C<error_trace>,
     C<human>,
+    C<include_type_name>,
     C<master_timeout>,
     C<timeout>,
     C<update_all_types>,
@@ -65,7 +66,9 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>,
     C<include_defaults>,
-    C<local>
+    C<include_type_name>,
+    C<local>,
+    C<master_timeout>
 
 =head2 C<exists()>
 
@@ -145,7 +148,8 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>
     C<master_timeout>,
-    C<timeout>
+    C<timeout>,
+    C<wait_for_active_shards>
 
 See the L<open index docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html>
 for more information.
@@ -165,6 +169,7 @@ Query string parameters:
     C<dry_run>,
     C<error_trace>,
     C<human>,
+    C<include_type_name>,
     C<master_timeout>,
     C<timeout>,
     C<wait_for_active_shards>
@@ -184,13 +189,36 @@ The shrink API shrinks the shards of an index down to a single shard (or to a fa
 of the original shards).
 
 Query string parameters:
+    C<copy_settings>,
     C<error_trace>,
+    C<filter_path>,
     C<human>,
     C<master_timeout>,
     C<timeout>,
     C<wait_for_active_shards>
 
 See the L<shrink index docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-shrink-index.html>
+for more information.
+
+=head2 C<split()>
+
+    $response = $e->split(
+        index  => $index,                           # required
+        target => $target,                          # required
+    );
+
+The split API splits a shard into multiple shards.
+
+Query string parameters:
+    C<copy_settings>,
+    C<error_trace>,
+    C<filter_path>,
+    C<human>,
+    C<master_timeout>,
+    C<timeout>,
+    C<wait_for_active_shards>
+
+See the L<split index docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-split-index.html>
 for more information.
 
 =head2 C<clear_cache()>
@@ -211,7 +239,6 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>,
     C<query>,
-    C<recycler>,
     C<request>
 
 See the L<clear_cache docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-clearcache.html>
@@ -304,8 +331,7 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>,
     C<max_num_segments>,
-    C<only_expunge_deletes>,
-    C<wait_for_merge>
+    C<only_expunge_deletes>
 
 See the L<forcemerge docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-forcemerge.html>
 for more information.
@@ -355,7 +381,7 @@ for more information.
 
     $response = $e->indices->put_mapping(
         index => 'index' | \@indices    # optional,
-        type  => 'type',                # required
+        type  => 'type',                # optional
 
         body  => { mapping }            # required
     )
@@ -385,6 +411,7 @@ Query string parameters:
     C<expand_wildcards>,
     C<human>,
     C<ignore_unavailable>,
+    C<include_type_name>,
     C<master_timeout>,
     C<timeout>,
     C<update_all_types>
@@ -409,7 +436,9 @@ Query string parameters:
     C<expand_wildcards>,
     C<human>,
     C<ignore_unavailable>,
-    C<local>
+    C<include_type_name>,
+    C<local>,
+    C<master_timeout>
 
 See the L<get_mapping docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-mapping.html>
 for more information.
@@ -434,6 +463,7 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>,
     C<include_defaults>,
+    C<include_type_name>,
     C<local>
 
 See the L<get_mapping docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-field-mapping.html>
@@ -542,7 +572,7 @@ for more information.
 
     $bool = $e->indices->exists_alias(
         index   => 'index' | \@indices,     # optional
-        name    => 'alias' | \@aliases      # optional
+        name    => 'alias' | \@aliases      # required
     );
 
 The C<exists_alias()> method returns C<1> or the empty string depending on
@@ -605,7 +635,8 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>,
     C<master_timeout>,
-    C<preserve_existing>
+    C<preserve_existing>,
+    C<timeout>
 
 See the L<put_settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html>
 for more information.
@@ -628,7 +659,8 @@ Query string parameters:
     C<human>,
     C<ignore_unavailable>,
     C<include_defaults>,
-    C<local>
+    C<local>,
+    C<master_timeout>
 
 See the L<get_settings docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-settings.html>
 for more information.
@@ -649,12 +681,10 @@ Query string parameters:
     C<error_trace>,
     C<flat_settings>,
     C<human>,
+    C<include_type_name>,
     C<master_timeout>,
-    C<op_type>,
     C<order>,
-    C<timeout>,
-    C<version>,
-    C<version_type>
+    C<timeout>
 
 See the L<put_template docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html>
 for more information.
@@ -671,6 +701,7 @@ Query string parameters:
     C<error_trace>,
     C<flat_settings>,
     C<human>,
+    C<include_type_name>,
     C<local>,
     C<master_timeout>
 
@@ -835,8 +866,7 @@ for debugging analyzer configurations.
 
 Query string parameters:
     C<error_trace>,
-    C<format>,
-    C<prefer_local>
+    C<human>
 
 See the L<analyze docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-analyze.html>
 for more information.
