@@ -10,7 +10,7 @@ use JSON::XS;
 
 our ( %API, %Common, %seen, %seen_combo, %Forbidden );
 
-our %Known_Types = map { $_ => 1 } qw(boolean enum list number int float double string time );
+our %Known_Types = map { $_ => 1 } qw(boolean enum date list number int float double string time );
 
 #===================================
 sub process_files {
@@ -191,7 +191,7 @@ sub process_qs {
         next if $Forbidden{QS}{$param};
         my $def = $params->{$param};
         my $type = $def->{type} || die "No type specified for param [$param]";
-
+        $type = 'time' if $type eq 'date';
         die "Unknown type [$type] for param [$param]"
             unless $Known_Types{$type};
         $qs{$param} = $type;
