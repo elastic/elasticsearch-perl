@@ -244,6 +244,23 @@ sub api {
         },
     },
 
+    'delete_by_query_rethrottle' => {
+        doc    => "docs-delete-by-query",
+        method => "POST",
+        parts  => { task_id => { required => 1 } },
+        paths  => [
+            [   { task_id => 1 }, "_delete_by_query",
+                "{task_id}", "_rethrottle",
+            ],
+        ],
+        qs => {
+            error_trace         => "boolean",
+            filter_path         => "list",
+            human               => "boolean",
+            requests_per_second => "number",
+        },
+    },
+
     'delete_script' => {
         doc    => "modules-scripting",
         method => "DELETE",
@@ -621,6 +638,24 @@ sub api {
         },
     },
 
+    'rank_eval' => {
+        body => { required => 1 },
+        doc  => "search-rank-eval",
+        parts => { index => { multi => 1 } },
+        paths => [
+            [ { index => 0 }, "{index}", "_rank_eval" ],
+            [ {}, "_rank_eval" ]
+        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            error_trace        => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            human              => "boolean",
+            ignore_unavailable => "boolean",
+        },
+    },
+
     'reindex' => {
         body   => { required => 1 },
         doc    => "docs-reindex",
@@ -663,6 +698,18 @@ sub api {
             [ {}, "_render", "template" ],
         ],
         qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'scripts_painless_execute' => {
+        body  => {},
+        doc   => "painless-execute-api",
+        parts => {},
+        paths => [ [ {}, "_scripts", "painless", "_execute" ] ],
+        qs    => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -918,6 +965,23 @@ sub api {
             version_type           => "boolean",
             wait_for_active_shards => "string",
             wait_for_completion    => "boolean",
+        },
+    },
+
+    'update_by_query_rethrottle' => {
+        doc    => "docs-update-by-query",
+        method => "POST",
+        parts  => { task_id => { required => 1 } },
+        paths  => [
+            [   { task_id => 1 }, "_update_by_query",
+                "{task_id}", "_rethrottle",
+            ],
+        ],
+        qs => {
+            error_trace         => "boolean",
+            filter_path         => "list",
+            human               => "boolean",
+            requests_per_second => "number",
         },
     },
 
@@ -2305,6 +2369,24 @@ sub api {
             flat_settings => "boolean",
             human         => "boolean",
             timeout       => "time",
+        },
+    },
+
+    'nodes.reload_secure_settings' => {
+        doc    => "",
+        method => "POST",
+        parts  => { node_id => { multi => 1 } },
+        paths  => [
+            [   { node_id => 1 }, "_nodes",
+                "{node_id}", "reload_secure_settings",
+            ],
+            [ {}, "_nodes", "reload_secure_settings" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            timeout     => "time",
         },
     },
 

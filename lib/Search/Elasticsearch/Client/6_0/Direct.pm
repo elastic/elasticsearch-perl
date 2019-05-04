@@ -1313,6 +1313,27 @@ Query string parameters:
 See the L<search-shards docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-shards.html>
 for more information.
 
+=head2 C<rank_eval()>
+
+    $result = $e->rank_eval(
+        index   => 'index' | \@indices,     # optional
+        body    => {...}                    # required
+    );
+
+The ranking evaluation API provides a way to execute test cases to determine whether search results
+are improving or worsening.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<error_trace>,
+    C<expand_wildcards>,
+    C<filter_path>,
+    C<human>,
+    C<ignore_unavailable>
+
+See the L<rank-eval docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/search-rank-eval.html>
+for more information.
+
 =head1 CRUD-BY-QUERY METHODS
 
 =head2 C<delete_by_query()>
@@ -1364,6 +1385,25 @@ Query string parameters:
 See the L<delete-by-query docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete-by-query.html>
 for more information.
 
+=head2 C<delete_by_query_rethrottle()>
+
+    $response = $e->delete_by_query_rethrottle(
+        task_id             => 'id'         # required
+        requests_per_second => num
+    );
+
+The C<delete_by_query_rethrottle()> API is used to dynamically update the throtting
+of an existing delete-by-query request, identified by C<task_id>.
+
+Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>,
+    C<requests_per_second>
+
+See the L<delete-by-query-rethrottle docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete-by-query.html>
+for more information.
+
 =head2 C<reindex()>
 
     $response = $e->reindex(
@@ -1385,6 +1425,26 @@ Query string parameters:
 
 See the L<reindex docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html>
 for more information.
+
+=head2 C<reindex_rethrottle()>
+
+    $response = $e->delete_by_query_rethrottle(
+        task_id => 'id',            # required
+        requests_per_second => num
+    );
+
+The C<reindex_rethrottle()> API is used to dynamically update the throtting
+of an existing reindex request, identified by C<task_id>.
+
+Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>,
+    C<requests_per_second>
+
+See the L<reindex-rethrottle docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html>
+for more information.
+
 
 =head2 C<update_by_query()>
 
@@ -1438,23 +1498,25 @@ Query string parameters:
 See the L<update_by_query docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update-by-query.html>
 for more information.
 
-=head2 C<reindex_rethrottle>
+=head2 C<update_by_query_rethrottle()>
 
-    $response = $e->reindex_rethrottle(
-        task_id             => 'task_id',       # required
-        requests_per_second => $req_per_second
+    $response = $e->update_by_query_rethrottle(
+        task_id             => 'id'         # required
+        requests_per_second => num
     );
 
-The C<reindex_rethrottle()> API is used to dynamically update the throtting
-of an existing reindex request, identified by C<task_id>.
+The C<update_by_query_rethrottle()> API is used to dynamically update the throtting
+of an existing update-by-query request, identified by C<task_id>.
 
 Query string parameters:
     C<error_trace>,
+    C<filter_path>,
     C<human>,
     C<requests_per_second>
 
-See the L<reindex docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html>
+See the L<update-by-query-rethrottle docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update-by-query.html>
 for more information.
+
 
 =head1 INDEXED SCRIPT METHODS
 
@@ -1518,4 +1580,19 @@ Query string parameters:
     C<timeout>
 
 See the L<indexed scripts docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html#_indexed_scripts> for more.
+
+=head2 C<scripts_painless_execute()>
+
+    $result = $e->scripts_painless_execute(
+        body => {...}   # required
+    );
+
+The Painless execute API allows an arbitrary script to be executed and a result to be returned.
+
+Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>
+
+See the L<painless execution docs|https://www.elastic.co/guide/en/elasticsearch/painless/current/painless-execute-api.html> for more.
 

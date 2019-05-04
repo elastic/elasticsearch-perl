@@ -149,6 +149,24 @@ Query string parameters:
 See the L<hot_threads docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-nodes-hot-threads.html>
 for more information.
 
+=head2 C<reload_secure_settings()>
+
+    $response = $e->nodes->reload_secure_settings(
+        node_id => $node_id | \@node_ids    # optional
+    );
+
+The C<reload_secure_settings()> API will reload the reloadable settings stored in the keystore
+on each node.
+
+Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>,
+    C<timeout>
+
+See the L<reload-secure-settings docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/secure-settings.html>
+for more information.
+
 =head2 C<usage()>
 
     $response = $e->nodes->usage(
