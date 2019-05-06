@@ -83,7 +83,11 @@ sub _first_results {
 #===================================
     my ( $self, $results ) = @_;
 
-    my $total = $self->_set_total( $results->{hits}{total} );
+    my $total = $results->{hits}{total};
+    if (ref $total) {
+        $total = $total->{value};
+    }
+    $self->_set_total($total);
     $self->_set_max_score( $results->{hits}{max_score} );
     $self->_set_aggregations( $results->{aggregations} );
     $self->_set_facets( $results->{facets} );

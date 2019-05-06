@@ -24,6 +24,9 @@ sub BUILDARGS {
     my $results      = $es->search($params);
 
     my $total = $results->{hits}{total};
+    if (ref $total) {
+        $total = $total->{value}
+    }
 
     return {
         es           => $es,
