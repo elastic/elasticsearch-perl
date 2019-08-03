@@ -46,7 +46,7 @@ L<https://www.elastic.co/guide/en/x-pack/current/xpack-alerting.html>
 
     $response = $es->xpack->watcher->put_watch(
         id    => $watch_id,     # required
-        body  => {...}          # required
+        body  => {...}
     );
 
 The C<put_watch()> method is used to register a new watcher or to update
@@ -59,7 +59,10 @@ Query string parameters:
     C<active>,
     C<error_trace>,
     C<human>,
-    C<master_timeout>
+    C<if_primary_term>,
+    C<if_seq_no>,
+    C<master_timeout>,
+    C<version>
 
 =head2 C<get_watch()>
 

@@ -24,6 +24,342 @@ sub api {
 
 #=== AUTOGEN - START ===
 
+    'ccr.delete_auto_follow_pattern' => {
+        doc    => "ccr-delete-auto-follow-pattern",
+        method => "DELETE",
+        parts  => { name => { required => 1 } },
+        paths  => [ [ { name => 2 }, "_ccr", "auto_follow", "{name}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ccr.follow' => {
+        body   => { required => 1 },
+        doc    => "ccr-put-follow",
+        method => "PUT",
+        parts => { index => { required => 1 } },
+        paths => [ [ { index => 0 }, "{index}", "_ccr", "follow" ] ],
+        qs => {
+            error_trace            => "boolean",
+            filter_path            => "list",
+            human                  => "boolean",
+            wait_for_active_shards => "string",
+        },
+    },
+
+    'ccr.follow_info' => {
+        doc   => "ccr-get-follow-info",
+        parts => { index => { multi => 1 } },
+        paths => [ [ { index => 0 }, "{index}", "_ccr", "info" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ccr.follow_stats' => {
+        doc   => "ccr-get-follow-stats",
+        parts => { index => { multi => 1 } },
+        paths => [ [ { index => 0 }, "{index}", "_ccr", "stats" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ccr.forget_follower' => {
+        body   => { required => 1 },
+        doc    => "",
+        method => "POST",
+        parts => { index => { required => 1 } },
+        paths => [ [ { index => 0 }, "{index}", "_ccr", "forget_follower" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ccr.get_auto_follow_pattern' => {
+        doc   => "ccr-get-auto-follow-pattern",
+        parts => { name => {} },
+        paths => [
+            [ { name => 2 }, "_ccr", "auto_follow", "{name}" ],
+            [ {}, "_ccr", "auto_follow" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ccr.pause_follow' => {
+        doc    => "ccr-post-pause-follow",
+        method => "POST",
+        parts  => { index => { required => 1 } },
+        paths  => [ [ { index => 0 }, "{index}", "_ccr", "pause_follow" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ccr.put_auto_follow_pattern' => {
+        body   => { required => 1 },
+        doc    => "ccr-put-auto-follow-pattern",
+        method => "PUT",
+        parts => { name => { required => 1 } },
+        paths => [ [ { name => 2 }, "_ccr", "auto_follow", "{name}" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ccr.resume_follow' => {
+        body   => {},
+        doc    => "ccr-post-resume-follow",
+        method => "POST",
+        parts  => { index => { required => 1 } },
+        paths  => [ [ { index => 0 }, "{index}", "_ccr", "resume_follow" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ccr.stats' => {
+        doc   => "ccr-get-stats",
+        parts => {},
+        paths => [ [ {}, "_ccr", "stats" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ccr.unfollow' => {
+        doc    => "",
+        method => "POST",
+        parts  => { index => { required => 1 } },
+        paths  => [ [ { index => 0 }, "{index}", "_ccr", "unfollow" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ilm.delete_lifecycle' => {
+        doc    => "ilm-delete-lifecycle",
+        method => "DELETE",
+        parts  => { policy => {} },
+        paths  => [ [ { policy => 2 }, "_ilm", "policy", "{policy}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ilm.explain_lifecycle' => {
+        doc   => "ilm-explain-lifecycle",
+        parts => { index => {} },
+        paths => [ [ { index => 0 }, "{index}", "_ilm", "explain" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ilm.get_lifecycle' => {
+        doc   => "ilm-get-lifecycle",
+        parts => { policy => {} },
+        paths => [
+            [ { policy => 2 }, "_ilm", "policy", "{policy}" ],
+            [ {}, "_ilm", "policy" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ilm.get_status' => {
+        doc   => "ilm-get-status",
+        parts => {},
+        paths => [ [ {}, "_ilm", "status" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ilm.move_to_step' => {
+        body   => {},
+        doc    => "ilm-move-to-step",
+        method => "POST",
+        parts  => { index => {} },
+        paths  => [ [ { index => 2 }, "_ilm", "move", "{index}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ilm.put_lifecycle' => {
+        body   => {},
+        doc    => "ilm-put-lifecycle",
+        method => "PUT",
+        parts  => { policy => {} },
+        paths  => [ [ { policy => 2 }, "_ilm", "policy", "{policy}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ilm.remove_policy' => {
+        doc    => "ilm-remove-policy",
+        method => "POST",
+        parts  => { index => {} },
+        paths  => [ [ { index => 0 }, "{index}", "_ilm", "remove" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ilm.retry' => {
+        doc    => "ilm-retry-policy",
+        method => "POST",
+        parts  => { index => {} },
+        paths  => [ [ { index => 0 }, "{index}", "_ilm", "retry" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ilm.start' => {
+        doc    => "ilm-start",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_ilm", "start" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ilm.stop' => {
+        doc    => "ilm-stop",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_ilm", "stop" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'indices.freeze' => {
+        doc    => "frozen",
+        method => "POST",
+        parts  => { index => { required => 1 } },
+        paths  => [ [ { index => 0 }, "{index}", "_freeze" ] ],
+        qs     => {
+            allow_no_indices       => "boolean",
+            error_trace            => "boolean",
+            expand_wildcards       => "enum",
+            filter_path            => "list",
+            human                  => "boolean",
+            ignore_unavailable     => "boolean",
+            master_timeout         => "time",
+            timeout                => "time",
+            wait_for_active_shards => "string",
+        },
+    },
+
+    'indices.unfreeze' => {
+        doc    => "frozen",
+        method => "POST",
+        parts  => { index => { required => 1 } },
+        paths  => [ [ { index => 0 }, "{index}", "_unfreeze" ] ],
+        qs     => {
+            allow_no_indices       => "boolean",
+            error_trace            => "boolean",
+            expand_wildcards       => "enum",
+            filter_path            => "list",
+            human                  => "boolean",
+            ignore_unavailable     => "boolean",
+            master_timeout         => "time",
+            timeout                => "time",
+            wait_for_active_shards => "string",
+        },
+    },
+
+    'security.create_api_key' => {
+        body   => { required => 1 },
+        doc    => "security-api-create-api-key",
+        method => "PUT",
+        parts  => {},
+        paths => [ [ {}, "_security", "api_key" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            refresh     => "enum",
+        },
+    },
+
+    'security.get_api_key' => {
+        doc   => "security-api-get-api-key",
+        parts => {},
+        paths => [ [ {}, "_security", "api_key" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            id          => "string",
+            name        => "string",
+            realm_name  => "string",
+            username    => "string",
+        },
+    },
+
+    'security.invalidate_api_key' => {
+        body   => { required => 1 },
+        doc    => "security-api-invalidate-api-key",
+        method => "DELETE",
+        parts  => {},
+        paths => [ [ {}, "_security", "api_key" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'xpack.graph.explore' => {
         body  => {},
         doc   => "graph-explore-api",
@@ -57,7 +393,7 @@ sub api {
     },
 
     'xpack.license.delete' => {
-        doc    => "license-management",
+        doc    => "delete-license",
         method => "DELETE",
         parts  => {},
         paths  => [ [ {}, "_xpack", "license" ] ],
@@ -69,7 +405,7 @@ sub api {
     },
 
     'xpack.license.get' => {
-        doc   => "license-management",
+        doc   => "get-license",
         parts => {},
         paths => [ [ {}, "_xpack", "license" ] ],
         qs    => {
@@ -80,9 +416,31 @@ sub api {
         },
     },
 
+    'xpack.license.get_basic_status' => {
+        doc   => "get-trial-status",
+        parts => {},
+        paths => [ [ {}, "_xpack", "license", "basic_status" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.license.get_trial_status' => {
+        doc   => "get-basic-status",
+        parts => {},
+        paths => [ [ {}, "_xpack", "license", "trial_status" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'xpack.license.post' => {
         body   => {},
-        doc    => "license-management",
+        doc    => "update-license",
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_xpack", "license" ] ],
@@ -91,6 +449,33 @@ sub api {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean",
+        },
+    },
+
+    'xpack.license.post_start_basic' => {
+        doc    => "start-basic",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_xpack", "license", "start_basic" ] ],
+        qs     => {
+            acknowledge => "boolean",
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+        },
+    },
+
+    'xpack.license.post_start_trial' => {
+        doc    => "start-trial",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_xpack", "license", "start_trial" ] ],
+        qs     => {
+            acknowledge => "boolean",
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            type        => "string",
         },
     },
 
@@ -145,6 +530,7 @@ sub api {
     },
 
     'xpack.ml.close_job' => {
+        body   => {},
         doc    => "ml-close-job",
         method => "POST",
         parts  => { job_id => { required => 1 } },
@@ -155,11 +541,64 @@ sub api {
             ],
         ],
         qs => {
+            allow_no_jobs => "boolean",
+            error_trace   => "boolean",
+            filter_path   => "list",
+            force         => "boolean",
+            human         => "boolean",
+            timeout       => "time",
+        },
+    },
+
+    'xpack.ml.delete_calendar' => {
+        method => "DELETE",
+        parts  => { calendar_id => { required => 1 } },
+        paths  => [
+            [   { calendar_id => 3 }, "_xpack",
+                "ml", "calendars",
+                "{calendar_id}",
+            ],
+        ],
+        qs => {
             error_trace => "boolean",
             filter_path => "list",
-            force       => "boolean",
-            human       => "boolean",
-            timeout     => "time",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.ml.delete_calendar_event' => {
+        method => "DELETE",
+        parts  => {
+            calendar_id => { required => 1 },
+            event_id    => { required => 1 }
+        },
+        paths => [
+            [   { calendar_id => 3, event_id => 5 },
+                "_xpack", "ml", "calendars", "{calendar_id}", "events",
+                "{event_id}",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.ml.delete_calendar_job' => {
+        method => "DELETE",
+        parts =>
+            { calendar_id => { required => 1 }, job_id => { required => 1 } },
+        paths => [
+            [   { calendar_id => 3, job_id => 5 },
+                "_xpack", "ml", "calendars", "{calendar_id}", "jobs",
+                "{job_id}",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
         },
     },
 
@@ -180,6 +619,54 @@ sub api {
             human       => "boolean",
         },
     },
+
+    'xpack.ml.delete_expired_data' => {
+        method => "DELETE",
+        parts  => {},
+        paths  => [ [ {}, "_xpack", "ml", "_delete_expired_data" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.ml.delete_filter' => {
+        method => "DELETE",
+        parts  => { filter_id => { required => 1 } },
+        paths  => [
+            [ { filter_id => 3 }, "_xpack", "ml", "filters", "{filter_id}" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.ml.delete_forecast' => {
+        doc    => "ml-delete-forecast",
+        method => "DELETE",
+        parts  => { forecast_id => {}, job_id => { required => 1 } },
+        paths  => [
+            [   { forecast_id => 5, job_id => 3 },
+                "_xpack", "ml", "anomaly_detectors", "{job_id}", "_forecast",
+                "{forecast_id}",
+            ],
+            [   { job_id => 3 }, "_xpack",
+                "ml",       "anomaly_detectors",
+                "{job_id}", "_forecast",
+            ],
+        ],
+        qs => {
+            allow_no_forecasts => "boolean",
+            error_trace        => "boolean",
+            filter_path        => "list",
+            human              => "boolean",
+            timeout            => "time",
+        },
+    },
+
     'xpack.ml.delete_job' => {
         doc    => "ml-delete-job",
         method => "DELETE",
@@ -191,10 +678,11 @@ sub api {
             ],
         ],
         qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            force       => "boolean",
-            human       => "boolean",
+            error_trace         => "boolean",
+            filter_path         => "list",
+            force               => "boolean",
+            human               => "boolean",
+            wait_for_completion => "boolean",
         },
     },
 
@@ -214,6 +702,33 @@ sub api {
             filter_path => "list",
             human       => "boolean"
         },
+    },
+
+    'xpack.ml.find_file_structure' => {
+        body   => { required => 1 },
+        doc    => "ml-find-file-structure",
+        method => "POST",
+        parts  => {},
+        paths => [ [ {}, "_xpack", "ml", "find_file_structure" ] ],
+        qs => {
+            charset            => "string",
+            column_names       => "list",
+            delimiter          => "string",
+            error_trace        => "boolean",
+            explain            => "boolean",
+            filter_path        => "list",
+            format             => "enum",
+            grok_pattern       => "string",
+            has_header_row     => "boolean",
+            human              => "boolean",
+            lines_to_sample    => "int",
+            quote              => "string",
+            should_trim_fields => "boolean",
+            timeout            => "time",
+            timestamp_field    => "string",
+            timestamp_format   => "string",
+        },
+        serialize => "bulk",
     },
 
     'xpack.ml.flush_job' => {
@@ -236,6 +751,24 @@ sub api {
             human        => "boolean",
             skip_time    => "string",
             start        => "string",
+        },
+    },
+
+    'xpack.ml.forecast' => {
+        method => "POST",
+        parts  => { job_id => { required => 1 } },
+        paths  => [
+            [   { job_id => 3 }, "_xpack",
+                "ml",       "anomaly_detectors",
+                "{job_id}", "_forecast",
+            ],
+        ],
+        qs => {
+            duration    => "time",
+            error_trace => "boolean",
+            expires_in  => "time",
+            filter_path => "list",
+            human       => "boolean",
         },
     },
 
@@ -267,6 +800,44 @@ sub api {
             size            => "int",
             sort            => "string",
             start           => "string",
+        },
+    },
+
+    'xpack.ml.get_calendar_events' => {
+        parts => { calendar_id => { required => 1 } },
+        paths => [
+            [   { calendar_id => 3 }, "_xpack",
+                "ml",            "calendars",
+                "{calendar_id}", "events",
+            ],
+        ],
+        qs => {
+            end         => "time",
+            error_trace => "boolean",
+            filter_path => "list",
+            from        => "int",
+            human       => "boolean",
+            job_id      => "string",
+            size        => "int",
+            start       => "string",
+        },
+    },
+
+    'xpack.ml.get_calendars' => {
+        parts => { calendar_id => {} },
+        paths => [
+            [   { calendar_id => 3 }, "_xpack",
+                "ml", "calendars",
+                "{calendar_id}",
+            ],
+            [ {}, "_xpack", "ml", "calendars" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            from        => "int",
+            human       => "boolean",
+            size        => "int",
         },
     },
 
@@ -306,9 +877,10 @@ sub api {
             [ {}, "_xpack", "ml", "datafeeds", "_stats" ],
         ],
         qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
+            allow_no_datafeeds => "boolean",
+            error_trace        => "boolean",
+            filter_path        => "list",
+            human              => "boolean",
         },
     },
 
@@ -323,11 +895,28 @@ sub api {
             [ {}, "_xpack", "ml", "datafeeds" ],
         ],
         qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
+            allow_no_datafeeds => "boolean",
+            error_trace        => "boolean",
+            filter_path        => "list",
+            human              => "boolean",
         },
     },
+
+    'xpack.ml.get_filters' => {
+        parts => { filter_id => {} },
+        paths => [
+            [ { filter_id => 3 }, "_xpack", "ml", "filters", "{filter_id}" ],
+            [ {}, "_xpack", "ml", "filters" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            from        => "int",
+            human       => "boolean",
+            size        => "int",
+        },
+    },
+
     'xpack.ml.get_influencers' => {
         body  => {},
         doc   => "ml-get-influencer",
@@ -365,9 +954,10 @@ sub api {
             [ {}, "_xpack", "ml", "anomaly_detectors", "_stats" ],
         ],
         qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
+            allow_no_jobs => "boolean",
+            error_trace   => "boolean",
+            filter_path   => "list",
+            human         => "boolean",
         },
     },
 
@@ -382,9 +972,10 @@ sub api {
             [ {}, "_xpack", "ml", "anomaly_detectors" ],
         ],
         qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
+            allow_no_jobs => "boolean",
+            error_trace   => "boolean",
+            filter_path   => "list",
+            human         => "boolean",
         },
     },
 
@@ -415,6 +1006,31 @@ sub api {
         },
     },
 
+    'xpack.ml.get_overall_buckets' => {
+        body  => {},
+        doc   => "ml-get-overall-buckets",
+        parts => { job_id => { required => 1 } },
+        paths => [
+            [   { job_id => 3 }, "_xpack",
+                "ml",       "anomaly_detectors",
+                "{job_id}", "results",
+                "overall_buckets",
+            ],
+        ],
+        qs => {
+            allow_no_jobs   => "boolean",
+            bucket_span     => "string",
+            end             => "string",
+            error_trace     => "boolean",
+            exclude_interim => "boolean",
+            filter_path     => "list",
+            human           => "boolean",
+            overall_score   => "double",
+            start           => "string",
+            top_n           => "int",
+        },
+    },
+
     'xpack.ml.get_records' => {
         body  => {},
         doc   => "ml-get-record",
@@ -441,6 +1057,16 @@ sub api {
         },
     },
 
+    'xpack.ml.info' => {
+        parts => {},
+        paths => [ [ {}, "_xpack", "ml", "info" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'xpack.ml.open_job' => {
         doc    => "ml-open-job",
         method => "POST",
@@ -453,6 +1079,23 @@ sub api {
             [   { job_id => 3 }, "_xpack",
                 "ml",       "anomaly_detectors",
                 "{job_id}", "_open",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.ml.post_calendar_events' => {
+        body   => { required => 1 },
+        method => "POST",
+        parts => { calendar_id => { required => 1 } },
+        paths => [
+            [   { calendar_id => 3 }, "_xpack",
+                "ml",            "calendars",
+                "{calendar_id}", "events",
             ],
         ],
         qs => {
@@ -499,6 +1142,40 @@ sub api {
         },
     },
 
+    'xpack.ml.put_calendar' => {
+        body   => {},
+        method => "PUT",
+        parts  => { calendar_id => { required => 1 } },
+        paths  => [
+            [   { calendar_id => 3 }, "_xpack",
+                "ml", "calendars",
+                "{calendar_id}",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.ml.put_calendar_job' => {
+        method => "PUT",
+        parts =>
+            { calendar_id => { required => 1 }, job_id => { required => 1 } },
+        paths => [
+            [   { calendar_id => 3, job_id => 5 },
+                "_xpack", "ml", "calendars", "{calendar_id}", "jobs",
+                "{job_id}",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'xpack.ml.put_datafeed' => {
         body   => { required => 1 },
         doc    => "ml-put-datafeed",
@@ -509,6 +1186,20 @@ sub api {
                 "ml", "datafeeds",
                 "{datafeed_id}",
             ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.ml.put_filter' => {
+        body   => { required => 1 },
+        method => "PUT",
+        parts => { filter_id => { required => 1 } },
+        paths => [
+            [ { filter_id => 3 }, "_xpack", "ml", "filters", "{filter_id}" ],
         ],
         qs => {
             error_trace => "boolean",
@@ -556,6 +1247,20 @@ sub api {
         },
     },
 
+    'xpack.ml.set_upgrade_mode' => {
+        doc    => "ml-set-upgrade-mode",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_xpack", "ml", "set_upgrade_mode" ] ],
+        qs     => {
+            enabled     => "boolean",
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            timeout     => "time",
+        },
+    },
+
     'xpack.ml.start_datafeed' => {
         body   => {},
         doc    => "ml-start-datafeed",
@@ -588,11 +1293,12 @@ sub api {
             ],
         ],
         qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            force       => "boolean",
-            human       => "boolean",
-            timeout     => "time",
+            allow_no_datafeeds => "boolean",
+            error_trace        => "boolean",
+            filter_path        => "list",
+            force              => "boolean",
+            human              => "boolean",
+            timeout            => "time",
         },
     },
 
@@ -605,6 +1311,23 @@ sub api {
             [   { datafeed_id => 3 }, "_xpack",
                 "ml",            "datafeeds",
                 "{datafeed_id}", "_update",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.ml.update_filter' => {
+        body   => { required => 1 },
+        method => "POST",
+        parts => { filter_id => { required => 1 } },
+        paths => [
+            [   { filter_id => 3 }, "_xpack",
+                "ml",          "filters",
+                "{filter_id}", "_update",
             ],
         ],
         qs => {
@@ -656,7 +1379,7 @@ sub api {
 
     'xpack.monitoring.bulk' => {
         body   => { required => 1 },
-        doc    => "appendix-api-bulk",
+        doc    => "es-monitoring",
         method => "POST",
         parts  => { type     => {} },
         paths  => [
@@ -672,6 +1395,109 @@ sub api {
             system_id          => "string",
         },
         serialize => "bulk",
+    },
+
+    'xpack.rollup.delete_job' => {
+        method => "DELETE",
+        parts  => { id => { required => 1 } },
+        paths  => [ [ { id => 3 }, "_xpack", "rollup", "job", "{id}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.rollup.get_jobs' => {
+        parts => { id => {} },
+        paths => [
+            [ { id => 3 }, "_xpack", "rollup", "job", "{id}" ],
+            [ {}, "_xpack", "rollup", "job" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.rollup.get_rollup_caps' => {
+        parts => { id => {} },
+        paths => [
+            [ { id => 3 }, "_xpack", "rollup", "data", "{id}" ],
+            [ {}, "_xpack", "rollup", "data" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.rollup.get_rollup_index_caps' => {
+        parts => { index => { required => 1 } },
+        paths =>
+            [ [ { index => 0 }, "{index}", "_xpack", "rollup", "data" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.rollup.put_job' => {
+        body   => { required => 1 },
+        method => "PUT",
+        parts => { id => { required => 1 } },
+        paths => [ [ { id => 3 }, "_xpack", "rollup", "job", "{id}" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.rollup.rollup_search' => {
+        body  => { required => 1 },
+        parts => { index    => { required => 1 }, type => {} },
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_rollup_search",
+            ],
+            [ { index => 0 }, "{index}", "_rollup_search" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            typed_keys  => "boolean",
+        },
+    },
+
+    'xpack.rollup.start_job' => {
+        method => "POST",
+        parts  => { id => { required => 1 } },
+        paths =>
+            [ [ { id => 3 }, "_xpack", "rollup", "job", "{id}", "_start" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.rollup.stop_job' => {
+        method => "POST",
+        parts  => { id => { required => 1 } },
+        paths =>
+            [ [ { id => 3 }, "_xpack", "rollup", "job", "{id}", "_stop" ] ],
+        qs => {
+            error_trace         => "boolean",
+            filter_path         => "list",
+            human               => "boolean",
+            timeout             => "time",
+            wait_for_completion => "boolean",
+        },
     },
 
     'xpack.security.authenticate' => {
@@ -724,7 +1550,7 @@ sub api {
     },
 
     'xpack.security.clear_cached_roles' => {
-        doc    => "",
+        doc    => "security-api-clear-role-cache",
         method => "POST",
         parts  => { name => { multi => 1, required => 1 } },
         paths  => [
@@ -740,8 +1566,27 @@ sub api {
         },
     },
 
-    'xpack.security.delete_role' => {
+    'xpack.security.delete_privileges' => {
         doc    => "",
+        method => "DELETE",
+        parts =>
+            { application => { required => 1 }, name => { required => 1 } },
+        paths => [
+            [   { application => 3, name => 4 }, "_xpack",
+                "security",      "privilege",
+                "{application}", "{name}",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            refresh     => "enum",
+        },
+    },
+
+    'xpack.security.delete_role' => {
+        doc    => "security-api-delete-role",
         method => "DELETE",
         parts  => { name => { required => 1 } },
         paths =>
@@ -755,7 +1600,7 @@ sub api {
     },
 
     'xpack.security.delete_role_mapping' => {
-        doc    => "",
+        doc    => "security-api-delete-role-mapping",
         method => "DELETE",
         parts  => { name => { required => 1 } },
         paths  => [
@@ -770,7 +1615,7 @@ sub api {
     },
 
     'xpack.security.delete_user' => {
-        doc    => "",
+        doc    => "security-api-delete-user",
         method => "DELETE",
         parts  => { username => { required => 1 } },
         paths  => [
@@ -785,9 +1630,9 @@ sub api {
     },
 
     'xpack.security.disable_user' => {
-        doc    => "",
+        doc    => "security-api-disable-user",
         method => "PUT",
-        parts  => { username => {} },
+        parts  => { username => { required => 1 } },
         paths  => [
             [   { username => 3 }, "_xpack",
                 "security",   "user",
@@ -803,9 +1648,9 @@ sub api {
     },
 
     'xpack.security.enable_user' => {
-        doc    => "",
+        doc    => "security-api-enable-user",
         method => "PUT",
-        parts  => { username => {} },
+        parts  => { username => { required => 1 } },
         paths  => [
             [   { username => 3 }, "_xpack", "security", "user",
                 "{username}", "_enable",
@@ -819,8 +1664,29 @@ sub api {
         },
     },
 
-    'xpack.security.get_role' => {
+    'xpack.security.get_privileges' => {
         doc   => "",
+        parts => { application => {}, name => {} },
+        paths => [
+            [   { application => 3, name => 4 }, "_xpack",
+                "security",      "privilege",
+                "{application}", "{name}",
+            ],
+            [   { application => 3 }, "_xpack",
+                "security", "privilege",
+                "{application}",
+            ],
+            [ {}, "_xpack", "security", "privilege" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.security.get_role' => {
+        doc   => "security-api-get-role",
         parts => { name => {} },
         paths => [
             [ { name => 3 }, "_xpack", "security", "role", "{name}" ],
@@ -834,7 +1700,7 @@ sub api {
     },
 
     'xpack.security.get_role_mapping' => {
-        doc   => "",
+        doc   => "security-api-get-role-mapping",
         parts => { name => {} },
         paths => [
             [ { name => 3 }, "_xpack", "security", "role_mapping", "{name}" ],
@@ -849,7 +1715,7 @@ sub api {
 
     'xpack.security.get_token' => {
         body   => { required => 1 },
-        doc    => "",
+        doc    => "security-api-get-token",
         method => "POST",
         parts  => {},
         paths => [ [ {}, "_xpack", "security", "oauth2", "token" ] ],
@@ -861,7 +1727,7 @@ sub api {
     },
 
     'xpack.security.get_user' => {
-        doc   => "",
+        doc   => "security-api-get-user",
         parts => { username => { multi => 1 } },
         paths => [
             [ { username => 3 }, "_xpack", "security", "user", "{username}" ],
@@ -874,9 +1740,38 @@ sub api {
         },
     },
 
+    'xpack.security.get_user_privileges' => {
+        doc   => "security-api-get-privileges",
+        parts => {},
+        paths => [ [ {}, "_xpack", "security", "user", "_privileges" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.security.has_privileges' => {
+        body  => { required => 1 },
+        doc   => "security-api-has-privileges",
+        parts => { user     => {} },
+        paths => [
+            [   { user => 3 }, "_xpack",
+                "security", "user",
+                "{user}",   "_has_privileges",
+            ],
+            [ {}, "_xpack", "security", "user", "_has_privileges" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'xpack.security.invalidate_token' => {
         body   => { required => 1 },
-        doc    => "",
+        doc    => "security-api-invalidate-token",
         method => "DELETE",
         parts  => {},
         paths => [ [ {}, "_xpack", "security", "oauth2", "token" ] ],
@@ -887,9 +1782,23 @@ sub api {
         },
     },
 
-    'xpack.security.put_role' => {
+    'xpack.security.put_privileges' => {
         body   => { required => 1 },
         doc    => "",
+        method => "PUT",
+        parts  => {},
+        paths => [ [ {}, "_xpack", "security", "privilege" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            refresh     => "enum",
+        },
+    },
+
+    'xpack.security.put_role' => {
+        body   => { required => 1 },
+        doc    => "security-api-put-role",
         method => "PUT",
         parts => { name => { required => 1 } },
         paths =>
@@ -904,7 +1813,7 @@ sub api {
 
     'xpack.security.put_role_mapping' => {
         body   => { required => 1 },
-        doc    => "",
+        doc    => "security-api-put-role-mapping",
         method => "PUT",
         parts => { name => { required => 1 } },
         paths => [
@@ -920,7 +1829,7 @@ sub api {
 
     'xpack.security.put_user' => {
         body   => { required => 1 },
-        doc    => "",
+        doc    => "security-api-put-user",
         method => "PUT",
         parts => { username => { required => 1 } },
         paths => [
@@ -931,6 +1840,57 @@ sub api {
             filter_path => "list",
             human       => "boolean",
             refresh     => "enum",
+        },
+    },
+
+    'xpack.sql.clear_cursor' => {
+        body   => { required => 1 },
+        doc    => "",
+        method => "POST",
+        parts  => {},
+        paths => [ [ {}, "_xpack", "sql", "close" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.sql.query' => {
+        body   => { required => 1 },
+        doc    => "",
+        method => "POST",
+        parts  => {},
+        paths => [ [ {}, "_xpack", "sql" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            format      => "string",
+            human       => "boolean",
+        },
+    },
+
+    'xpack.sql.translate' => {
+        body   => { required => 1 },
+        doc    => "",
+        method => "POST",
+        parts  => {},
+        paths => [ [ {}, "_xpack", "sql", "translate" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'xpack.ssl.certificates' => {
+        doc   => "security-api-ssl",
+        parts => {},
+        paths => [ [ {}, "_xpack", "ssl", "certificates" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
         },
     },
 
@@ -1047,17 +2007,20 @@ sub api {
     },
 
     'xpack.watcher.put_watch' => {
-        body   => { required => 1 },
+        body   => {},
         doc    => "watcher-api-put-watch",
         method => "PUT",
-        parts => { id => { required => 1 } },
-        paths => [ [ { id => 3 }, "_xpack", "watcher", "watch", "{id}" ] ],
-        qs => {
-            active         => "boolean",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            human          => "boolean",
-            master_timeout => "time",
+        parts  => { id => { required => 1 } },
+        paths  => [ [ { id => 3 }, "_xpack", "watcher", "watch", "{id}" ] ],
+        qs     => {
+            active          => "boolean",
+            error_trace     => "boolean",
+            filter_path     => "list",
+            human           => "boolean",
+            if_primary_term => "number",
+            if_seq_no       => "number",
+            master_timeout  => "time",
+            version         => "number",
         },
     },
 

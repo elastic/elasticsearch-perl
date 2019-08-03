@@ -3,12 +3,14 @@ package Search::Elasticsearch::Plugin::XPack::6_0;
 use Moo::Role;
 use namespace::clean;
 
-has 'graph'       => ( is => 'lazy', init_arg => undef );
-has 'license'     => ( is => 'lazy', init_arg => undef );
-has 'migration'   => ( is => 'lazy', init_arg => undef );
-has 'ml'          => ( is => 'lazy', init_arg => undef );
-has 'security'    => ( is => 'lazy', init_arg => undef );
-has 'watcher'     => ( is => 'lazy', init_arg => undef );
+has 'graph'     => ( is => 'lazy', init_arg => undef );
+has 'license'   => ( is => 'lazy', init_arg => undef );
+has 'migration' => ( is => 'lazy', init_arg => undef );
+has 'ml'        => ( is => 'lazy', init_arg => undef );
+has 'rollup'    => ( is => 'lazy', init_arg => undef );
+has 'security'  => ( is => 'lazy', init_arg => undef );
+has 'sql'       => ( is => 'lazy', init_arg => undef );
+has 'watcher'   => ( is => 'lazy', init_arg => undef );
 
 sub _build_graph {
     shift->_build_namespace(
@@ -29,9 +31,18 @@ sub _build_ml {
     shift->_build_namespace('+Search::Elasticsearch::Plugin::XPack::6_0::ML');
 }
 
+sub _build_rollup {
+    shift->_build_namespace(
+        '+Search::Elasticsearch::Plugin::XPack::6_0::Rollup');
+}
+
 sub _build_security {
     shift->_build_namespace(
         '+Search::Elasticsearch::Plugin::XPack::6_0::Security');
+}
+
+sub _build_sql {
+    shift->_build_namespace('+Search::Elasticsearch::Plugin::XPack::6_0::SQL');
 }
 
 sub _build_watcher {
@@ -56,6 +67,9 @@ sub _build_watcher {
     $es->xpack->license;
     $es->xpack->security;
     $es->xpack->watcher;
+    $es->xpack->rollup;
+    $es->xpack->sql;
+    $es->xpack->ml;
 
 =head2 DESCRIPTION
 
@@ -98,7 +112,15 @@ L<shield()/Search::Elasticsearch::Plugin::XPack::6_0::ML>
 
 =item *
 
+L<shield()/Search::Elasticsearch::Plugin::XPack::6_0::Rollup>
+
+=item *
+
 L<shield()/Search::Elasticsearch::Plugin::XPack::6_0::Security>
+
+=item *
+
+L<shield()/Search::Elasticsearch::Plugin::XPack::6_0::SQL>
 
 =item *
 

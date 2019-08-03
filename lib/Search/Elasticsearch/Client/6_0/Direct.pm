@@ -15,6 +15,8 @@ has 'indices'  => ( is => 'lazy', init_arg => undef );
 has 'ingest'   => ( is => 'lazy', init_arg => undef );
 has 'snapshot' => ( is => 'lazy', init_arg => undef );
 has 'cat'      => ( is => 'lazy', init_arg => undef );
+has 'ccr'      => ( is => 'lazy', init_arg => undef );
+has 'ilm'      => ( is => 'lazy', init_arg => undef );
 has 'tasks'    => ( is => 'lazy', init_arg => undef );
 has 'bulk_helper_class'   => ( is => 'rw' );
 has 'scroll_helper_class' => ( is => 'rw' );
@@ -62,6 +64,8 @@ sub _build_indices  { shift->_build_namespace('Indices') }
 sub _build_ingest   { shift->_build_namespace('Ingest') }
 sub _build_snapshot { shift->_build_namespace('Snapshot') }
 sub _build_cat      { shift->_build_namespace('Cat') }
+sub _build_ccr      { shift->_build_namespace('CCR') }
+sub _build_ilm      { shift->_build_namespace('ILM') }
 sub _build_tasks    { shift->_build_namespace('Tasks') }
 #===================================
 
@@ -157,6 +161,14 @@ Task management:
 
     say $e->cat->allocation;
     say $e->cat->health;
+
+Cross-cluster replication requests:
+
+    say $e->ccr->follow;
+
+Index lifecycle management requests:
+
+    say $e->ilm->put_lifecycle;
 
 =head1 DESCRIPTION
 
@@ -387,6 +399,21 @@ is used for accessing the task management API.
 Returns a L<Search::Elasticsearch::Client::6_0::Direct::Cat> object which can be used
 to retrieve simple to read text info for debugging and monitoring an
 Elasticsearch cluster.
+
+=head2 C<ccr()>
+
+    $ccr_client = $e->ccr;
+
+Returns a L<Search::Elasticsearch::Client::6_0::Direct::CCR> object which can be used
+to handle cross-cluster replication requests.
+
+
+=head2 C<ilm()>
+
+    $ilm_client = $e->ilm;
+
+Returns a L<Search::Elasticsearch::Client::6_0::Direct::ILM> object which can be used
+to handle index lifecycle management requests.
 
 =head1 DOCUMENT CRUD METHODS
 
@@ -1014,7 +1041,7 @@ Query string parameters:
     C<preference>,
     C<q>,
     C<routing>,
-    Cterminate_after>
+    C<terminate_after>
 
 See the L<count docs|http://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html>
 for more information.

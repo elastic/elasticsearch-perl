@@ -221,6 +221,51 @@ Query string parameters:
 See the L<split index docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-split-index.html>
 for more information.
 
+=head2 C<freeze()>
+
+    $response = $e->indices->freeze(
+        $index => $index    # required
+    );
+
+The C<freeze()> API is used to freeze an index, which puts it in a state which has almost no
+overhead on the cluster.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<error_trace>,
+    C<expand_wildcards>,
+    C<filter_path>,
+    C<human>,
+    C<ignore_unavailable>,
+    C<master_timeout>,
+    C<timeout>,
+    C<wait_for_active_shards>
+
+See the L<freeze index docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/freeze-index-api.html>
+for more information.
+
+=head2 C<unfreeze()>
+
+    $response = $e->indices->unfreeze(
+        $index => $index    # required
+    );
+
+The C<unfreeze()> API is used to return a frozen index to its normal state.
+
+Query string parameters:
+    C<allow_no_indices>,
+    C<error_trace>,
+    C<expand_wildcards>,
+    C<filter_path>,
+    C<human>,
+    C<ignore_unavailable>,
+    C<master_timeout>,
+    C<timeout>,
+    C<wait_for_active_shards>
+
+See the L<unfreeze index docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/freeze-index-api.html>
+for more information.
+
 =head2 C<clear_cache()>
 
     $response = $e->indices->clear_cache(

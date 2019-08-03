@@ -313,3 +313,148 @@ Query string parameters:
     C<error_trace>,
     C<human>
 
+=head1 API KEY METHODS
+
+=head2 C<create_api_key()>
+
+    $response = $es->xpack->security->create_api_key(
+        body    => {...}            # required
+    )
+
+The C<create_api_key()> API is used to create API keys which can be used for access instead
+of basic authentication.
+
+Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>,
+    C<refresh>
+
+See the L<Create API Key docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-create-api-key.html> for more.
+
+=head2 C<get_api_key()>
+
+    $response = $es->xpack->security->get_api_key(
+        id          => $id,         # optional
+        name        => $name,       # optional
+        realm_name  => $realm,      # optional
+        username    => $username    # optional
+    )
+
+The C<get_api_key()> API is used to get information about an API key.
+
+Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>,
+    C<id>,
+    C<name>,
+    C<realm_name>,
+    C<username>
+
+See the L<Get API Key docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-api-key.html> for more.
+
+=head2 C<invalidate_api_key()>
+
+    $response = $es->xpack->security->invalidate_api_key(
+        id          => $id,         # optional
+        name        => $name,       # optional
+        realm_name  => $realm,      # optional
+        username    => $username    # optional
+    )
+
+The C<invalidate_api_key()> API is used to invalidate an API key.
+
+Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>,
+    C<id>,
+    C<name>,
+    C<realm_name>,
+    C<username>
+
+See the L<Invalidate API Key docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-invalidate-api-key.html> for more.
+
+=head1 USER PRIVILEGE METHODS
+
+=head2 C<get_user_privileges()>
+
+    $response = $es->xpack->get_user_privileges();
+
+ The C<get_user_privileges()> method retrieves the privileges granted to the current user.
+
+ Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>
+
+=head2 C<has_privileges()>
+    $response = $es->xpack->has_privileges(
+        user    => $user,   # optional
+        body    => {...}    # required
+    );
+
+ The C<has_privileges()> method checks whether the current or specified user has the listed privileges.
+
+ Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>
+
+See the L<Has Privileges docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-has-privileges.html> for more.
+
+
+=head1 APPLICATION PRIVILEGE METHODS
+
+=head2 C<put_privileges()>
+
+    $response = $es->xpack->put_privileges(
+        application     => $application,    # required
+        name            => $name,           # required
+        body            => {...}            # required
+    );
+
+ The C<put_privileges()> method creates or updates the named privilege for a particular application.
+
+ Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>,
+    C<refresh>
+
+See the L<Create or Update Application Privileges docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-privileges.html> for more.
+
+=head2 C<get_privileges()>
+
+    $response = $es->xpack->get_privileges(
+        application     => $application,    # required
+        name            => $name,           # required
+    );
+
+ The C<get_privileges()> method retrieves the named privilege for a particular application.
+
+ Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>
+
+See the L<Get Application Privileges docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-privileges.html> for more.
+
+=head2 C<delete_privileges()>
+
+    $response = $es->xpack->delete_privileges(
+        application     => $application,    # required
+        name            => $name,           # required
+    );
+
+ The C<delete_privileges()> method deletes the named privilege for a particular application.
+
+ Query string parameters:
+    C<error_trace>,
+    C<filter_path>,
+    C<human>,
+    C<refresh>
+
+See the L<Delete Application Privileges docs|https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-delete-privilege.html> for more.
+
