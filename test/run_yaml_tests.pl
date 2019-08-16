@@ -34,7 +34,6 @@ $ENV{ES_CXN}   = $cxn;
 $ENV{TRACE}    = $trace;
 $ENV{ES} ||= "localhost:9200";
 $ENV{ES_PLUGINS} = join ",", @plugins;
-$ENV{ES_HOME} ||= "/usr/share/elasticsearch/";
 
 my $tap = $harness->new(
     {   exec      => [ $^X, 'test/yaml_tester.pl' ],
@@ -48,7 +47,7 @@ if (@tests) {
     @tests = grep { -d || /\.ya?ml$/ } @tests;
 }
 else {
-    @tests = grep {-d} glob("elasticsearch/rest-api-spec/test/*");
+    @tests = grep {-d} glob("elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/test/*");
 }
 
 # [$file,$name]
@@ -57,4 +56,3 @@ else {
 my $agg = $tap->runtests(@tests);
 
 exit $agg->has_errors;
-
