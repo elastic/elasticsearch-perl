@@ -21,22 +21,9 @@ matrix:
     - perl: 5.24
       env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
 
-    - perl: dev
-      env: CLIENT_VER="5_0" ES_VERSION="5.0.0"
-    - perl: 5.30
-      env: CLIENT_VER="5_0" ES_VERSION="5.0.0"
-    - perl: 5.28
-      env: CLIENT_VER="5_0" ES_VERSION="5.0.0"
-    - perl: 5.26
-      env: CLIENT_VER="5_0" ES_VERSION="5.0.0"
-    - perl: 5.24
-      env: CLIENT_VER="5_0" ES_VERSION="5.0.0"
-
   allow_failures:
     - perl: dev
       env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
-    - perl: dev
-      env: CLIENT_VER="5_0" ES_VERSION="5.0.0"
 
 sudo: false
 
