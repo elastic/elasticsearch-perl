@@ -5,7 +5,9 @@ services:
 
 env:
   global:
-    - ES=localhost:9200
+    - ES="localhost:9200"
+
+sudo: true
 
 matrix:
   fast_finish: true
@@ -20,12 +22,9 @@ matrix:
       env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
     - perl: 5.24
       env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
-
   allow_failures:
     - perl: dev
       env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
-
-sudo: false
 
 before_install:
   - ./travis/run_es_docker.sh
