@@ -7,7 +7,7 @@ env:
   global:
     - ES="localhost:9200"
 
-sudo: true
+sudo: false
 
 matrix:
   fast_finish: true

@@ -8,9 +8,9 @@ my $trace
     : $ENV{TRACE} eq '1' ? 'Stderr'
     :                      [ 'File', $ENV{TRACE} ];
 
-die 'No $ENV{ES_VERSION} specified' unless $ENV{ES_VERSION};
+die 'No $ENV{CLIENT_VER} specified' unless $ENV{CLIENT_VER};
 
-my $api      = "$ENV{ES_VERSION}::Direct";
+my $api      = "$ENV{CLIENT_VER}::Direct";
 my $body     = $ENV{ES_BODY} || 'GET';
 my $cxn      = $ENV{ES_CXN} || do "default_cxn.pl" || die( $@ || $! );
 my $cxn_pool = $ENV{ES_CXN_POOL} || 'Static';
