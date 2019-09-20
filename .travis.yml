@@ -1,5 +1,8 @@
 language: perl
 
+services:
+  - docker
+
 env:
   global:
     - ES=localhost:9200
@@ -28,6 +31,7 @@ matrix:
       env: CLIENT_VER="5_0" ES_VERSION="5.0.0"
     - perl: 5.24
       env: CLIENT_VER="5_0" ES_VERSION="5.0.0"
+
   allow_failures:
     - perl: dev
       env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
@@ -38,4 +42,10 @@ sudo: false
 
 before_install:
   - ./travis/run_es_docker.sh
-  - eval $(curl https://travis-perl.github.io/init) --auto
+  - ./travis/checkout_yaml_test.pl
+
+script:
+  - prove -l t/{1,2,3,4,5,6,9}*/*.t
+  - prove -l t/Client_$CLIENT_VER/*.t
+  - prove -l t/Client_${CLIENT_VER}_Async/*.t
+  - ./test/run_yaml_test.pl
