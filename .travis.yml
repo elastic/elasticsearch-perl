@@ -33,5 +33,4 @@ before_install:
 script:
   - prove -l t/{1,2,3,4,5,6,9}*/*.t
   - prove -l t/Client_$CLIENT_VER/*.t
-  - prove -l t/Client_${CLIENT_VER}_Async/*.t
   - ./test/run_yaml_test.pl
