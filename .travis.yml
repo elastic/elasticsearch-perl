@@ -27,10 +27,11 @@ matrix:
       env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
 
 before_install:
+  - cpanm LWP::Simple # optional dependency
   - ./travis/run_es_docker.sh
   - ./travis/checkout_yaml_test.pl
 
 script:
   - prove -l t/{1,2,3,4,5,6,9}*/*.t
   - prove -l t/Client_$CLIENT_VER/*.t
-  - perl ./test/run_yaml_test.pl
+  - ./test/run_yaml_tests.pl
