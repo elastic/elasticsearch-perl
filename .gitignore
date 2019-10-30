@@ -5,6 +5,7 @@ foo
 .project
 Search-Elasticsearch-*
 servers/*
+elasticsearch/*
 cover_db
 doc
 log
@@ -12,4 +13,4 @@ bench_cxn.pl
 *.xml
 shield/*
 .DS_Store
-
+.perl-version
