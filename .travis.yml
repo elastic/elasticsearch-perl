@@ -6,32 +6,36 @@ services:
 env:
   global:
     - ES="localhost:9200"
+    - CLIENT_VER="6_0"
+    - ES_VERSION="6.0.0"
+    - builddir=./dist
 
 sudo: false
 
 matrix:
   fast_finish: true
+  
   include:
     - perl: dev
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
     - perl: 5.30
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
     - perl: 5.28
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
     - perl: 5.26
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
     - perl: 5.24
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
+
   allow_failures:
     - perl: dev
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
 
 before_install:
-  - cpanm LWP::Simple # optional dependency
+  - cpanm Dist::Zilla --quiet --notest
+  - dzil authordeps --missing | cpanm --quiet --notest
+  - dzil listdeps --missing | cpanm --quiet --notest
+  - '(cd $builddir && dzil authordeps --missing | cpanm --quiet --notest)'
+  - '(cd $builddir && dzil listdeps --missing | cpanm --quiet --notest)'
+
+install:
   - ./travis/run_es_docker.sh
   - ./travis/checkout_yaml_test.pl
 
 script:
-  - prove -l t/{1,2,3,4,5,6,9}*/*.t
-  - prove -l t/Client_$CLIENT_VER/*.t
+  - '(cd $builddir && dzil test --all)'
   - ./test/run_yaml_tests.pl
