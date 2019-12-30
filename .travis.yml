@@ -30,11 +30,11 @@ before_install:
   - '(cd $builddir && dzil authordeps --missing | cpanm --quiet --notest)'
 
 install:
+  - '(dzil listdeps --missing | cpanm --quiet --notest)'
   - '(cd $builddir && dzil listdeps --missing | cpanm --quiet --notest)'
   - ./travis/run_es_docker.sh
   - ./travis/checkout_yaml_test.pl
 
 script:
   - '(cd $builddir && dzil test --all)'
-  - cpanm YAML
   - ./test/run_yaml_tests.pl
