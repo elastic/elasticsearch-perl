@@ -29,5 +29,5 @@ install:
 
 script:
   - '(cd $builddir && dzil test --all)'
-  -  dzil authordeps --missing | cpanm --quiet --notest
+  - cpanm YAML
   - ./test/run_yaml_tests.pl
