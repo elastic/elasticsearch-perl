@@ -27,11 +27,12 @@ matrix:
 
 before_install:
   - cpanm Dist::Zilla --quiet --notest
+  - dzil authordeps --missing | cpanm --quiet --notest
+  - dzil listdeps --missing | cpanm --quiet --notest
   - '(cd $builddir && dzil authordeps --missing | cpanm --quiet --notest)'
+  - '(cd $builddir && dzil listdeps --missing | cpanm --quiet --notest)'
 
 install:
-  - '(dzil listdeps --missing | cpanm --quiet --notest)'
-  - '(cd $builddir && dzil listdeps --missing | cpanm --quiet --notest)'
   - ./travis/run_es_docker.sh
   - ./travis/checkout_yaml_test.pl
 
