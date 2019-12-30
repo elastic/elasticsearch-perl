@@ -23,7 +23,7 @@ before_install:
   - '(cd $builddir && dzil authordeps | cpanm --quiet --notest)'
 
 install:
-  - '(cd $builddir && dzil installdeps | cpanm --quiet --notest)'
+  - '(cd $builddir && dzil listdeps | cpanm --quiet --notest)'
   - ./travis/run_es_docker.sh
   - ./travis/checkout_yaml_test.pl
 
