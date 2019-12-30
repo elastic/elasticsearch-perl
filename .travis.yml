@@ -6,32 +6,27 @@ services:
 env:
   global:
     - ES="localhost:9200"
+    - CLIENT_VER="6_0"
+    - ES_VERSION="6.0.0"
+    - builddir=./dist
 
 sudo: false
 
 matrix:
   fast_finish: true
+  
   include:
-    - perl: dev
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
-    - perl: 5.30
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
-    - perl: 5.28
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
     - perl: 5.26
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
-    - perl: 5.24
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
-  allow_failures:
-    - perl: dev
-      env: CLIENT_VER="6_0" ES_VERSION="6.0.0"
 
 before_install:
-  - cpanm Dist::Zilla
-  - cd ./dist && dzil --authordeps --missing | cpanm && dzil --listdeps --missing | cpanm
+  - cpanm Dist::Zilla --quiet --notest
+  - '(cd $builddir && dzil authordeps | cpanm --quiet --notest)'
+
+install:
+  - '(cd $builddir && dzil installdeps | cpanm --quiet --notest)'
   - ./travis/run_es_docker.sh
   - ./travis/checkout_yaml_test.pl
 
 script:
-  - cd ./dist-client-6_0 && dzil test --all
-  - cd ./dist-client-6_0-async && dzil test --all
+  - '(cd $builddir && dzil test --all)'
+  - ./test/run_yaml_tests.pl
