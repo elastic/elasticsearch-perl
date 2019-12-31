@@ -7,7 +7,7 @@ env:
   global:
     - ES="localhost:9200"
     - CLIENT_VER="6_0"
-    - ES_VERSION="6.0.0"
+    - ES_VERSION="6.8.6"
     - builddir=./dist
 
 sudo: false

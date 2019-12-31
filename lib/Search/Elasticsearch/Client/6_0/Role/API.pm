@@ -47,11 +47,11 @@ sub api {
     },
     'bulk.update' => {
         params => [
-            '_source',         '_source_includes',
+            '_source',          '_source_includes',
             '_source_excludes', 'detect_noop',
-            'doc',             'doc_as_upsert',
-            'fields',          'retry_on_conflict',
-            'scripted_upsert', 'script',
+            'doc',              'doc_as_upsert',
+            'fields',           'retry_on_conflict',
+            'scripted_upsert',  'script',
             'upsert',
         ]
     },
@@ -63,8 +63,8 @@ sub api {
         body   => { required => 1 },
         doc    => "docs-bulk",
         method => "POST",
-        parts => { index => {}, type => {} },
-        paths => [
+        parts  => { index => {}, type => {} },
+        paths  => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_bulk" ],
             [ { index => 0 }, "{index}", "_bulk" ],
             [ {}, "_bulk" ],
@@ -507,8 +507,8 @@ sub api {
     },
 
     'mget' => {
-        body => { required => 1 },
-        doc  => "docs-multi-get",
+        body  => { required => 1 },
+        doc   => "docs-multi-get",
         parts => { index => {}, type => {} },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_mget" ],
@@ -531,8 +531,8 @@ sub api {
     },
 
     'msearch' => {
-        body => { required => 1 },
-        doc  => "search-multi-search",
+        body  => { required => 1 },
+        doc   => "search-multi-search",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [ { index => 0, type => 1 }, "{index}", "{type}", "_msearch" ],
@@ -554,8 +554,8 @@ sub api {
     },
 
     'msearch_template' => {
-        body => { required => 1 },
-        doc  => "search-multi-search",
+        body  => { required => 1 },
+        doc   => "search-multi-search",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
@@ -624,10 +624,10 @@ sub api {
         body   => { required => 1 },
         doc    => "modules-scripting",
         method => "PUT",
-        parts => { context => {}, id => { required => 1 } },
-        paths => [
+        parts  => { context => {}, id => { required => 1 } },
+        paths  => [
             [ { context => 2, id => 1 }, "_scripts", "{id}", "{context}" ],
-            [ { id => 1 }, "_scripts", "{id}" ],
+            [ { id      => 1 }, "_scripts", "{id}" ],
         ],
         qs => {
             error_trace    => "boolean",
@@ -639,8 +639,8 @@ sub api {
     },
 
     'rank_eval' => {
-        body => { required => 1 },
-        doc  => "search-rank-eval",
+        body  => { required => 1 },
+        doc   => "search-rank-eval",
         parts => { index => { multi => 1 } },
         paths => [
             [ { index => 0 }, "{index}", "_rank_eval" ],
@@ -661,8 +661,8 @@ sub api {
         doc    => "docs-reindex",
         method => "POST",
         parts  => {},
-        paths => [ [ {}, "_reindex" ] ],
-        qs => {
+        paths  => [ [ {}, "_reindex" ] ],
+        qs     => {
             error_trace            => "boolean",
             filter_path            => "list",
             human                  => "boolean",
@@ -811,8 +811,8 @@ sub api {
     },
 
     'search_template' => {
-        body => { required => 1 },
-        doc  => "search-template",
+        body  => { required => 1 },
+        doc   => "search-template",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
@@ -1456,8 +1456,8 @@ sub api {
         doc    => "cluster-update-settings",
         method => "PUT",
         parts  => {},
-        paths => [ [ {}, "_cluster", "settings" ] ],
-        qs => {
+        paths  => [ [ {}, "_cluster", "settings" ] ],
+        qs     => {
             error_trace    => "boolean",
             filter_path    => "list",
             flat_settings  => "boolean",
@@ -1614,8 +1614,8 @@ sub api {
         doc    => "indices-delete-index",
         method => "DELETE",
         parts  => { index => { multi => 1, required => 1 } },
-        paths => [ [ { index => 0 }, "{index}" ] ],
-        qs => {
+        paths  => [ [ { index => 0 }, "{index}" ] ],
+        qs     => {
             allow_no_indices   => "boolean",
             error_trace        => "boolean",
             expand_wildcards   => "enum",
@@ -1663,8 +1663,8 @@ sub api {
         doc    => "indices-exists",
         method => "HEAD",
         parts  => { index => { multi => 1, required => 1 } },
-        paths => [ [ { index => 0 }, "{index}" ] ],
-        qs => {
+        paths  => [ [ { index => 0 }, "{index}" ] ],
+        qs     => {
             allow_no_indices   => "boolean",
             error_trace        => "boolean",
             expand_wildcards   => "enum",
@@ -1686,7 +1686,7 @@ sub api {
         },
         paths => [
             [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ],
-            [ { name => 1 }, "_alias", "{name}" ],
+            [ { name  => 1 }, "_alias", "{name}" ],
         ],
         qs => {
             allow_no_indices   => "boolean",
@@ -1796,7 +1796,7 @@ sub api {
         doc   => "indices-get-index",
         parts => { index => { multi => 1, required => 1 } },
         paths => [ [ { index => 0 }, "{index}" ] ],
-        qs => {
+        qs    => {
             allow_no_indices   => "boolean",
             error_trace        => "boolean",
             expand_wildcards   => "enum",
@@ -1817,7 +1817,7 @@ sub api {
         paths => [
             [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ],
             [ { index => 0 }, "{index}", "_alias" ],
-            [ { name  => 1 }, "_alias",  "{name}" ],
+            [ { name => 1 }, "_alias", "{name}" ],
             [ {}, "_alias" ],
         ],
         qs => {
@@ -1871,8 +1871,8 @@ sub api {
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ],
-            [ { index => 0 }, "{index}",  "_mapping" ],
-            [ { type  => 1 }, "_mapping", "{type}" ],
+            [ { index => 0 }, "{index}", "_mapping" ],
+            [ { type => 1 }, "_mapping", "{type}" ],
             [ {}, "_mapping" ],
         ],
         qs => {
@@ -1893,8 +1893,8 @@ sub api {
         parts => { index => { multi => 1 }, name => { multi => 1 } },
         paths => [
             [ { index => 0, name => 2 }, "{index}", "_settings", "{name}" ],
-            [ { index => 0 }, "{index}",   "_settings" ],
-            [ { name  => 1 }, "_settings", "{name}" ],
+            [ { index => 0 }, "{index}", "_settings" ],
+            [ { name => 1 }, "_settings", "{name}" ],
             [ {}, "_settings" ],
         ],
         qs => {
@@ -1983,11 +1983,11 @@ sub api {
         body   => { required => 1 },
         doc    => "indices-put-mapping",
         method => "PUT",
-        parts => { index => { multi => 1 }, type => {} },
-        paths => [
+        parts  => { index => { multi => 1 }, type => {} },
+        paths  => [
             [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ],
-            [ { index => 0 }, "{index}",  "_mapping" ],
-            [ { type  => 1 }, "_mapping", "{type}" ],
+            [ { index => 0 }, "{index}", "_mapping" ],
+            [ { type => 1 }, "_mapping", "{type}" ],
         ],
         qs => {
             allow_no_indices   => "boolean",
@@ -2007,8 +2007,8 @@ sub api {
         body   => { required => 1 },
         doc    => "indices-update-settings",
         method => "PUT",
-        parts => { index => { multi => 1 } },
-        paths => [
+        parts  => { index => { multi => 1 } },
+        paths  => [
             [ { index => 0 }, "{index}", "_settings" ],
             [ {}, "_settings" ]
         ],
@@ -2030,9 +2030,9 @@ sub api {
         body   => { required => 1 },
         doc    => "indices-templates",
         method => "PUT",
-        parts => { name => { required => 1 } },
-        paths => [ [ { name => 1 }, "_template", "{name}" ] ],
-        qs => {
+        parts  => { name => { required => 1 } },
+        paths  => [ [ { name => 1 }, "_template", "{name}" ] ],
+        qs     => {
             create            => "boolean",
             error_trace       => "boolean",
             filter_path       => "list",
@@ -2179,8 +2179,8 @@ sub api {
         parts => { index => { multi => 1 }, metric => { multi => 1 } },
         paths => [
             [ { index => 0, metric => 2 }, "{index}", "_stats", "{metric}" ],
-            [ { index  => 0 }, "{index}", "_stats" ],
-            [ { metric => 1 }, "_stats",  "{metric}" ],
+            [ { index => 0 }, "{index}", "_stats" ],
+            [ { metric => 1 }, "_stats", "{metric}" ],
             [ {}, "_stats" ],
         ],
         qs => {
@@ -2202,8 +2202,8 @@ sub api {
         doc    => "indices-aliases",
         method => "POST",
         parts  => {},
-        paths => [ [ {}, "_aliases" ] ],
-        qs => {
+        paths  => [ [ {}, "_aliases" ] ],
+        qs     => {
             error_trace    => "boolean",
             filter_path    => "list",
             human          => "boolean",
@@ -2305,9 +2305,9 @@ sub api {
         body   => { required => 1 },
         doc    => "put-pipeline-api",
         method => "PUT",
-        parts => { id => { required => 1 } },
-        paths => [ [ { id => 2 }, "_ingest", "pipeline", "{id}" ] ],
-        qs => {
+        parts  => { id => { required => 1 } },
+        paths  => [ [ { id => 2 }, "_ingest", "pipeline", "{id}" ] ],
+        qs     => {
             error_trace    => "boolean",
             filter_path    => "list",
             human          => "boolean",
@@ -2319,7 +2319,7 @@ sub api {
     'ingest.simulate' => {
         body  => { required => 1 },
         doc   => "simulate-pipeline-api",
-        parts => { id       => {} },
+        parts => { id => {} },
         paths => [
             [ { id => 2 }, "_ingest", "pipeline", "{id}", "_simulate" ],
             [ {}, "_ingest", "pipeline", "_simulate" ],
@@ -2474,9 +2474,9 @@ sub api {
         body   => { required => 1 },
         doc    => "modules-snapshots",
         method => "PUT",
-        parts => { repository => { required => 1 } },
-        paths => [ [ { repository => 1 }, "_snapshot", "{repository}" ] ],
-        qs => {
+        parts  => { repository => { required => 1 } },
+        paths  => [ [ { repository => 1 }, "_snapshot", "{repository}" ] ],
+        qs     => {
             error_trace    => "boolean",
             filter_path    => "list",
             human          => "boolean",

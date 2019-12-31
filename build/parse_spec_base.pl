@@ -7,6 +7,7 @@ use Data::Dump qw(pp);
 use Path::Class;
 use Perl::Tidy;
 use JSON::XS;
+use Data::Dumper;
 
 our ( %API, %Common, %seen, %seen_combo, %Forbidden );
 
@@ -61,11 +62,11 @@ sub process {
             $spec{serialize} = 'bulk';
         }
     }
-
+    print Dumper($defn);
     # method
     my $method = $spec{method} = $defn->{methods}[0];
     delete $spec{method} if $method eq 'GET';
-
+    
     # paths
     my $url = $defn->{url};
     $spec{paths} = process_paths( $name, $method, $url );
