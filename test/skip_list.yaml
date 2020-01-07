@@ -104,10 +104,10 @@
 1.4.4:
     - script/30_expressions.yaml
 
-
 6.8.6:
     - indices.create/10_basic.yml
     - indices.get_settings/30_defaults.yml
+    - nodes.stats/30_discovery.yml
     - range/10_basic.yml
     - search/110_field_collapsing.yml
     - search/190_index_prefix_search.yml
