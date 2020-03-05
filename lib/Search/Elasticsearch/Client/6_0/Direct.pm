@@ -18,6 +18,7 @@ has 'cat'      => ( is => 'lazy', init_arg => undef );
 has 'ccr'      => ( is => 'lazy', init_arg => undef );
 has 'ilm'      => ( is => 'lazy', init_arg => undef );
 has 'tasks'    => ( is => 'lazy', init_arg => undef );
+has 'xpack'    => ( is => 'lazy', init_arg => undef );
 has 'bulk_helper_class'   => ( is => 'rw' );
 has 'scroll_helper_class' => ( is => 'rw' );
 has '_bulk_class'         => ( is => 'lazy' );
@@ -67,6 +68,7 @@ sub _build_cat      { shift->_build_namespace('Cat') }
 sub _build_ccr      { shift->_build_namespace('CCR') }
 sub _build_ilm      { shift->_build_namespace('ILM') }
 sub _build_tasks    { shift->_build_namespace('Tasks') }
+sub _build_xpack    { shift->_build_namespace('XPack') }
 #===================================
 
 __PACKAGE__->_install_api('');

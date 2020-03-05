@@ -33,7 +33,7 @@ before_install:
   - '(cd $builddir && dzil listdeps --missing | cpanm --quiet --notest)'
 
 install:
-  - ./travis/run_es_docker.sh
+  - ./travis/run_es_oss.sh
   - ./travis/checkout_yaml_test.pl
 
 script:

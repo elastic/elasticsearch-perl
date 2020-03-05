@@ -113,3 +113,4 @@
     - search/190_index_prefix_search.yml
     - search/30_limits.yml
     - search.aggregation/230_composite.yml
+    - ssl/10_basic.yml

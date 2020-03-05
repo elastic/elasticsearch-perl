@@ -40,9 +40,9 @@ sub api {
         body   => { required => 1 },
         doc    => "ccr-put-follow",
         method => "PUT",
-        parts => { index => { required => 1 } },
-        paths => [ [ { index => 0 }, "{index}", "_ccr", "follow" ] ],
-        qs => {
+        parts  => { index => { required => 1 } },
+        paths  => [ [ { index => 0 }, "{index}", "_ccr", "follow" ] ],
+        qs     => {
             error_trace            => "boolean",
             filter_path            => "list",
             human                  => "boolean",
@@ -76,9 +76,9 @@ sub api {
         body   => { required => 1 },
         doc    => "",
         method => "POST",
-        parts => { index => { required => 1 } },
+        parts  => { index => { required => 1 } },
         paths => [ [ { index => 0 }, "{index}", "_ccr", "forget_follower" ] ],
-        qs => {
+        qs    => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -115,9 +115,9 @@ sub api {
         body   => { required => 1 },
         doc    => "ccr-put-auto-follow-pattern",
         method => "PUT",
-        parts => { name => { required => 1 } },
-        paths => [ [ { name => 2 }, "_ccr", "auto_follow", "{name}" ] ],
-        qs => {
+        parts  => { name => { required => 1 } },
+        paths  => [ [ { name => 2 }, "_ccr", "auto_follow", "{name}" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -323,8 +323,8 @@ sub api {
         doc    => "security-api-create-api-key",
         method => "PUT",
         parts  => {},
-        paths => [ [ {}, "_security", "api_key" ] ],
-        qs => {
+        paths  => [ [ {}, "_security", "api_key" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean",
@@ -352,8 +352,8 @@ sub api {
         doc    => "security-api-invalidate-api-key",
         method => "DELETE",
         parts  => {},
-        paths => [ [ {}, "_security", "api_key" ] ],
-        qs => {
+        paths  => [ [ {}, "_security", "api_key" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -709,8 +709,8 @@ sub api {
         doc    => "ml-find-file-structure",
         method => "POST",
         parts  => {},
-        paths => [ [ {}, "_xpack", "ml", "find_file_structure" ] ],
-        qs => {
+        paths  => [ [ {}, "_xpack", "ml", "find_file_structure" ] ],
+        qs     => {
             charset            => "string",
             column_names       => "list",
             delimiter          => "string",
@@ -1091,8 +1091,8 @@ sub api {
     'xpack.ml.post_calendar_events' => {
         body   => { required => 1 },
         method => "POST",
-        parts => { calendar_id => { required => 1 } },
-        paths => [
+        parts  => { calendar_id => { required => 1 } },
+        paths  => [
             [   { calendar_id => 3 }, "_xpack",
                 "ml",            "calendars",
                 "{calendar_id}", "events",
@@ -1109,8 +1109,8 @@ sub api {
         body   => { required => 1 },
         doc    => "ml-post-data",
         method => "POST",
-        parts => { job_id => { required => 1 } },
-        paths => [
+        parts  => { job_id => { required => 1 } },
+        paths  => [
             [   { job_id => 3 }, "_xpack",
                 "ml",       "anomaly_detectors",
                 "{job_id}", "_data",
@@ -1180,8 +1180,8 @@ sub api {
         body   => { required => 1 },
         doc    => "ml-put-datafeed",
         method => "PUT",
-        parts => { datafeed_id => { required => 1 } },
-        paths => [
+        parts  => { datafeed_id => { required => 1 } },
+        paths  => [
             [   { datafeed_id => 3 }, "_xpack",
                 "ml", "datafeeds",
                 "{datafeed_id}",
@@ -1197,8 +1197,8 @@ sub api {
     'xpack.ml.put_filter' => {
         body   => { required => 1 },
         method => "PUT",
-        parts => { filter_id => { required => 1 } },
-        paths => [
+        parts  => { filter_id => { required => 1 } },
+        paths  => [
             [ { filter_id => 3 }, "_xpack", "ml", "filters", "{filter_id}" ],
         ],
         qs => {
@@ -1212,8 +1212,8 @@ sub api {
         body   => { required => 1 },
         doc    => "ml-put-job",
         method => "PUT",
-        parts => { job_id => { required => 1 } },
-        paths => [
+        parts  => { job_id => { required => 1 } },
+        paths  => [
             [   { job_id => 3 }, "_xpack",
                 "ml", "anomaly_detectors",
                 "{job_id}"
@@ -1306,8 +1306,8 @@ sub api {
         body   => { required => 1 },
         doc    => "ml-update-datafeed",
         method => "POST",
-        parts => { datafeed_id => { required => 1 } },
-        paths => [
+        parts  => { datafeed_id => { required => 1 } },
+        paths  => [
             [   { datafeed_id => 3 }, "_xpack",
                 "ml",            "datafeeds",
                 "{datafeed_id}", "_update",
@@ -1323,8 +1323,8 @@ sub api {
     'xpack.ml.update_filter' => {
         body   => { required => 1 },
         method => "POST",
-        parts => { filter_id => { required => 1 } },
-        paths => [
+        parts  => { filter_id => { required => 1 } },
+        paths  => [
             [   { filter_id => 3 }, "_xpack",
                 "ml",          "filters",
                 "{filter_id}", "_update",
@@ -1341,8 +1341,8 @@ sub api {
         body   => { required => 1 },
         doc    => "ml-update-job",
         method => "POST",
-        parts => { job_id => { required => 1 } },
-        paths => [
+        parts  => { job_id => { required => 1 } },
+        paths  => [
             [   { job_id => 3 }, "_xpack",
                 "ml",       "anomaly_detectors",
                 "{job_id}", "_update",
@@ -1375,13 +1375,40 @@ sub api {
         },
     },
 
+    'xpack.ml.validate' => {
+        body   => { required => 1 },
+        method => "POST",
+        parts  => {},
+        paths => [ [ {}, "_xpack", "ml", "anomaly_detectors", "_validate" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
 
+    'xpack.ml.validate_detector' => {
+        body   => { required => 1 },
+        method => "POST",
+        parts  => {},
+        paths  => [
+            [   {},          "_xpack",
+                "ml",        "anomaly_detectors",
+                "_validate", "detector"
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
 
     'xpack.monitoring.bulk' => {
         body   => { required => 1 },
         doc    => "es-monitoring",
         method => "POST",
-        parts  => { type     => {} },
+        parts  => { type => {} },
         paths  => [
             [ { type => 2 }, "_xpack", "monitoring", "{type}", "_bulk" ],
             [ {}, "_xpack", "monitoring", "_bulk" ],
@@ -1448,9 +1475,9 @@ sub api {
     'xpack.rollup.put_job' => {
         body   => { required => 1 },
         method => "PUT",
-        parts => { id => { required => 1 } },
-        paths => [ [ { id => 3 }, "_xpack", "rollup", "job", "{id}" ] ],
-        qs => {
+        parts  => { id => { required => 1 } },
+        paths  => [ [ { id => 3 }, "_xpack", "rollup", "job", "{id}" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -1718,8 +1745,8 @@ sub api {
         doc    => "security-api-get-token",
         method => "POST",
         parts  => {},
-        paths => [ [ {}, "_xpack", "security", "oauth2", "token" ] ],
-        qs => {
+        paths  => [ [ {}, "_xpack", "security", "oauth2", "token" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -1754,7 +1781,7 @@ sub api {
     'xpack.security.has_privileges' => {
         body  => { required => 1 },
         doc   => "security-api-has-privileges",
-        parts => { user     => {} },
+        parts => { user => {} },
         paths => [
             [   { user => 3 }, "_xpack",
                 "security", "user",
@@ -1774,8 +1801,8 @@ sub api {
         doc    => "security-api-invalidate-token",
         method => "DELETE",
         parts  => {},
-        paths => [ [ {}, "_xpack", "security", "oauth2", "token" ] ],
-        qs => {
+        paths  => [ [ {}, "_xpack", "security", "oauth2", "token" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -1787,8 +1814,8 @@ sub api {
         doc    => "",
         method => "PUT",
         parts  => {},
-        paths => [ [ {}, "_xpack", "security", "privilege" ] ],
-        qs => {
+        paths  => [ [ {}, "_xpack", "security", "privilege" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean",
@@ -1800,7 +1827,7 @@ sub api {
         body   => { required => 1 },
         doc    => "security-api-put-role",
         method => "PUT",
-        parts => { name => { required => 1 } },
+        parts  => { name => { required => 1 } },
         paths =>
             [ [ { name => 3 }, "_xpack", "security", "role", "{name}" ] ],
         qs => {
@@ -1815,8 +1842,8 @@ sub api {
         body   => { required => 1 },
         doc    => "security-api-put-role-mapping",
         method => "PUT",
-        parts => { name => { required => 1 } },
-        paths => [
+        parts  => { name => { required => 1 } },
+        paths  => [
             [ { name => 3 }, "_xpack", "security", "role_mapping", "{name}" ],
         ],
         qs => {
@@ -1831,8 +1858,8 @@ sub api {
         body   => { required => 1 },
         doc    => "security-api-put-user",
         method => "PUT",
-        parts => { username => { required => 1 } },
-        paths => [
+        parts  => { username => { required => 1 } },
+        paths  => [
             [ { username => 3 }, "_xpack", "security", "user", "{username}" ],
         ],
         qs => {
@@ -1848,8 +1875,8 @@ sub api {
         doc    => "",
         method => "POST",
         parts  => {},
-        paths => [ [ {}, "_xpack", "sql", "close" ] ],
-        qs => {
+        paths  => [ [ {}, "_xpack", "sql", "close" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -1861,8 +1888,8 @@ sub api {
         doc    => "",
         method => "POST",
         parts  => {},
-        paths => [ [ {}, "_xpack", "sql" ] ],
-        qs => {
+        paths  => [ [ {}, "_xpack", "sql" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             format      => "string",
@@ -1875,8 +1902,8 @@ sub api {
         doc    => "",
         method => "POST",
         parts  => {},
-        paths => [ [ {}, "_xpack", "sql", "translate" ] ],
-        qs => {
+        paths  => [ [ {}, "_xpack", "sql", "translate" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"

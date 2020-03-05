@@ -11,6 +11,7 @@ has 'rollup'    => ( is => 'lazy', init_arg => undef );
 has 'security'  => ( is => 'lazy', init_arg => undef );
 has 'sql'       => ( is => 'lazy', init_arg => undef );
 has 'watcher'   => ( is => 'lazy', init_arg => undef );
+has 'xpack'     => ( is => 'lazy', init_arg => undef );
 
 sub _build_graph {
     shift->_build_namespace(
@@ -48,6 +49,10 @@ sub _build_sql {
 sub _build_watcher {
     shift->_build_namespace(
         '+Search::Elasticsearch::Plugin::XPack::6_0::Watcher');
+}
+
+sub _build_xpack {
+    return shift;
 }
 
 1;

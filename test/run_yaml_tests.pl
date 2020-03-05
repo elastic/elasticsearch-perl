@@ -45,9 +45,12 @@ my $tap = $harness->new(
 my @tests = @ARGV;
 if (@tests) {
     @tests = grep { -d || /\.ya?ml$/ } @tests;
-}
-else {
-    @tests = grep {-d} glob("elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/test/*");
+} else {
+    if ($ENV{ES} =~ /https/) { # https is used by XPack tests
+        @tests = grep {-d} glob("elasticsearch/x-pack/plugin/src/test/resources/rest-api-spec/test/*");
+    } else {
+        @tests = grep {-d} glob("elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/test/*");
+    }
 }
 
 # [$file,$name]
