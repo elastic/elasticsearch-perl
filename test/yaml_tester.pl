@@ -127,7 +127,12 @@ sub test_dir {
     my $dir = shift;
     plan tests   => 1;
     subtest $dir => sub {
-        test_files(glob "$dir/*.yml");
+        my @files = glob "$dir/*.yml";
+        foreach my $sub (glob "$dir/*") {
+            next unless (-d "$sub");
+            push (@files, glob "$sub/*.yml");
+        }
+        test_files(@files);
     };
 }
 
@@ -145,7 +150,8 @@ sub test_files {
 
     for my $file (@files) {
         my ($name) = ( $file =~ m{([\w.]+/[\w.]+\.y.?ml)} );
-        if ( $skip_list->{$name} ) {
+        my ($folder) = ( $file =~ m{([\w]+)/[\w.]+\.y.?ml} );
+        if ( $skip_list->{$name} || $skip_list->{$folder . '/*'} ) {
             $es->logger->trace_comment("SKIPPING: $name in skip list");
         SKIP: { skip "$name in skip list", 1 }
             next;
@@ -376,47 +382,47 @@ sub reset_oss_es {
 #===================================
 sub reset_es {
 #===================================
-    $es->logger->trace_comment("RESETTING");
-    $es->logger->trace_comment( "Start: " . timestamp() );
+#     $es->logger->trace_comment("RESETTING");
+#     $es->logger->trace_comment( "Start: " . timestamp() );
 
-    # Delete all custom roles
-    eval {
-        my $response = $es->xpack->security->get_role();
-        while (($role, $value) = each (%$response)) {
-            if ( $value->{metadata}->{_reserved} == 0) {
-                $es->xpack->security->delete_role({ 'name' => $role });
-            }
-        }
-    };
+#     # Delete all custom roles
+#     eval {
+#         my $response = $es->xpack->security->get_role();
+#         while (($role, $value) = each (%$response)) {
+#             if ( $value->{metadata}->{_reserved} == 0) {
+#                 $es->xpack->security->delete_role({ 'name' => $role });
+#             }
+#         }
+#     };
 
-    # Delete all custom users
-    eval {
-        my $response = $es->xpack->security->get_user();
-        while (($user, $value) = each (%$response)) {
-            if ( $value->{metadata}->{_reserved} == 0) {
-                $es->xpack->security->delete_user({ 'username' => $user });
-            }
-        }
-    };
+#     # Delete all custom users
+#     eval {
+#         my $response = $es->xpack->security->get_user();
+#         while (($user, $value) = each (%$response)) {
+#             if ( $value->{metadata}->{_reserved} == 0) {
+#                 $es->xpack->security->delete_user({ 'username' => $user });
+#             }
+#         }
+#     };
 
-        my $response = $es->xpack->security->get_privileges();
-        while (($app, $value) = each (%$response)) {
-            if ( $value->{metadata}->{_reserved} == 0) {
-                $es->xpack->security->delete_user({ 'username' => $user });
-            }
-        }
+#         my $response = $es->xpack->security->get_privileges();
+#         while (($app, $value) = each (%$response)) {
+#             if ( $value->{metadata}->{_reserved} == 0) {
+#                 $es->xpack->security->delete_user({ 'username' => $user });
+#             }
+#         }
 
 
 
-    # security.getPrivileges -> security.deletePrivileges
-    # ml.getDatafeeds -> ml.deleteDatafeed
-    # ml.getJobs -> ml.deleteJob
-    # rollup.getJobs -> rollup.stopJob -> rollup.deleteJob
-    # tasks.list -> tasks.cancel
-    # ilm.removePolicy({ index: '_all' })
-    # indices.refresh({ index: '_all' })
+#     # security.getPrivileges -> security.deletePrivileges
+#     # ml.getDatafeeds -> ml.deleteDatafeed
+#     # ml.getJobs -> ml.deleteJob
+#     # rollup.getJobs -> rollup.stopJob -> rollup.deleteJob
+#     # tasks.list -> tasks.cancel
+#     # ilm.removePolicy({ index: '_all' })
+#     # indices.refresh({ index: '_all' })
 
-    $es->logger->trace_comment( "End: " . timestamp() );
+#     $es->logger->trace_comment( "End: " . timestamp() );
 }
 
 
