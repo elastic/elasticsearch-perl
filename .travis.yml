@@ -1,26 +1,38 @@
 language: perl
 
+os: linux
+
 services:
   - docker
 
 env:
   global:
-    - ES="http://localhost:9200"
     - CLIENT_VER="6_0"
     - ES_VERSION="6.8.7"
     - builddir=./dist
 
-sudo: false
-
-matrix:
+jobs:
   fast_finish: true
   
   include:
     - perl: dev
+      env: ES="http://localhost:9200"
     - perl: 5.30
+      env: ES="http://localhost:9200"
+    - perl: 5.30
+      env: ES="https://elastic:changeme@localhost:9200"
     - perl: 5.28
+      env: ES="http://localhost:9200"
+    - perl: 5.28
+      env: ES="https://elastic:changeme@localhost:9200"
     - perl: 5.26
+      env: ES="http://localhost:9200"
+    - perl: 5.26
+      env: ES="https://elastic:changeme@localhost:9200"  
     - perl: 5.24
+      env: ES="http://localhost:9200"
+    - perl: 5.24  
+      env: ES="https://elastic:changeme@localhost:9200"
 
   allow_failures:
     - perl: dev
@@ -33,7 +45,7 @@ before_install:
   - '(cd $builddir && dzil listdeps --missing | cpanm --quiet --notest)'
 
 install:
-  - ./travis/run_es_oss.sh
+  - if [ $ES =~ /^https/ ]; then ./travis/run_es.sh; else ./travis/run_es_oss.sh; fi
   - ./travis/checkout_yaml_test.pl
 
 script:

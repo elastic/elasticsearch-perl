@@ -59,6 +59,12 @@ sub stringify { shift->uri . '' }
 #===================================
 
 #===================================
+sub get_user_agent {
+#===================================
+    return sprintf("elasticsearch-perl/%s- (PERL %s)", $Search::Elasticsearch::VERSION, $]);
+}
+
+#===================================
 sub BUILDARGS {
 #===================================
     my ( $class, $params ) = parse_params(@_);
@@ -113,6 +119,8 @@ sub BUILDARGS {
         $default_headers{'Accept-Encoding'} = "deflate";
     }
 
+    $default_headers{'User-Agent'} = $class->get_user_agent();
+
     $params->{scheme}   = $scheme;
     $params->{is_https} = $scheme eq 'https';
     $params->{host}     = $host;
@@ -124,7 +132,6 @@ sub BUILDARGS {
     $params->{default_headers} = \%default_headers;
 
     return $params;
-
 }
 
 #===================================
