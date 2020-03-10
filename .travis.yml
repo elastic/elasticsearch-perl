@@ -45,7 +45,7 @@ before_install:
   - '(cd $builddir && dzil listdeps --missing | cpanm --quiet --notest)'
 
 install:
-  - if [ $ES =~ /^https/ ]; then ./travis/run_es.sh; else ./travis/run_es_oss.sh; fi
+  - if [[ $ES = \https* ]]; then ./travis/run_es.sh; else ./travis/run_es_oss.sh; fi
   - ./travis/checkout_yaml_test.pl
 
 script:
