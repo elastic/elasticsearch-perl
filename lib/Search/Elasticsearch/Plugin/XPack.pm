@@ -2,27 +2,18 @@ package Search::Elasticsearch::Plugin::XPack;
 
 use Moo;
 
-our $VERSION = '6.00';
+our $VERSION = '6.80_01';
 use Search::Elasticsearch 6.00 ();
 
 #===================================
 sub _init_plugin {
 #===================================
-    my ( $class, $params ) = @_;
-
-    my $api_version = $params->{client}->api_version;
-
-    Moo::Role->apply_roles_to_object( $params->{client},
-        "Search::Elasticsearch::Plugin::XPack::${api_version}" );
+    # NOOP
 }
 
 1;
 
-# fix docs - remove watcher.info() remove plugins => ['Watcher'] and fix doc samples so they work
-
-__END__
-
-# ABSTRACT: Plugin providing XPack APIs for Search::Elasticsearch
+# ABSTRACT: NOOP for backward compatibility wih XPack as plugin for Search::Elasticsearch
 
 =head1 SYNOPSIS
 
@@ -30,36 +21,13 @@ __END__
 
     my $es = Search::Elasticsearch->new(
         nodes   => \@nodes,
-        plugins => ['XPack']
+        #plugins => ['XPack']  <-- NO NEED ANYMORE!
     );
 
 =head2 DESCRIPTION
 
-This class extends the L<Search::Elasticsearch> client to add support
-for the X-Pack commercial plugins.
+This is a NOOP module that is present only for backward compatibility.
 
-This plugin will detect which version of the Elasticsearch API you are using
-and load the corresponding XPack API.
+Starting from elasticsearch-perl 6.8 we moved the XPack endpoints into Direct client.
 
-For more details, see:
-
-=over
-
-=item *
-
-L<Search::Elasticsearch::Plugin::XPack::6_0>
-
-=item *
-
-L<Search::Elasticsearch::Plugin::XPack::5_0>
-
-=item *
-
-L<Search::Elasticsearch::Plugin::XPack::2_0>
-
-=item *
-
-L<Search::Elasticsearch::Plugin::XPack::1_0>
-
-=back
-
+You don't need anymore to specify XPack as plugin.

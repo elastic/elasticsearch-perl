@@ -56,6 +56,7 @@ on 'test' => sub {
   requires "Test::NoTabs" => "0";
   requires "Test::SharedFork" => "0";
   requires "YAML" => "0";
+  requires "YAML::XS" => "0";
   requires "base" => "2.18";
   requires "lib" => "0";
 };
