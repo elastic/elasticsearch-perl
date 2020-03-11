@@ -7,6 +7,7 @@ Revision history for Search::Elasticsearch
           to use a plugin for XPack
         * Added the XPack YAML tests
         * Usage of Travis CI for testing
+        * Added the User-Agent header with <client-repo-name>/<client-version> (<Lang version>)
 
 6.00    2017-11-14
         Released 6.00 with default API for 6_0.
