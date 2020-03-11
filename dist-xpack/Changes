@@ -1,5 +1,9 @@
 Revision history for Search::Elasticsearch::Plugin::XPack
 
+6.80_01 2020-03-11
+        Moved the XPack endpoints into Direct client
+        The XPack module has become NOOP for backward compatibility
+
 6.00    2017-11-14
         Added ML, Migration, and Security token APIs for 5_0 and 6_0
 
