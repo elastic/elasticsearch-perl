@@ -1,6 +1,6 @@
 package Search::Elasticsearch::Client::6_0::Async;
 
-our $VERSION='6.80_01';
+our $VERSION='6.80_1';
 use Search::Elasticsearch::Client::6_0 6.00 ();
 
 1;

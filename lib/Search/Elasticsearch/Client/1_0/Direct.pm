@@ -4,7 +4,7 @@ use Moo;
 with 'Search::Elasticsearch::Client::1_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 
-our $VERSION='6.80_01';
+our $VERSION='6.80_1';
 use Search::Elasticsearch 6.00 ();
 
 use Search::Elasticsearch::Util qw(parse_params is_compat);

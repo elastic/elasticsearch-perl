@@ -1,6 +1,6 @@
 Revision history for Search::Elasticsearch
 
-6.80_01 2020-03-11
+6.80_1  2020-03-11
         Updated API and XPack endpoints for Elasticsearch 6.8.7
 
         * Merged the XPack into Direct client, there is no need anymore
