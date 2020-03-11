@@ -1,5 +1,13 @@
 Revision history for Search::Elasticsearch
 
+6.80_01 2020-03-10
+        Updated API and XPack endpoints for Elasticsearch 6.8
+
+        * Merged the XPack into Direct client, there is no need anymore
+          to use a plugin for XPack
+        * Added the XPack YAML tests
+        * Usage of Travis CI for testing
+
 6.00    2017-11-14
         Released 6.00 with default API for 6_0.
         Legacy 5_0 API now released separately

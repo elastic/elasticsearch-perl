@@ -2,12 +2,12 @@
 
 use strict;
 use warnings;
-use LWP::Simple;
+use HTTP::Tiny;
 use JSON::PP;
 
-my $contents = get("http://" . $ENV{ES}) or die "The server $ENV{ES} is not running!";
+my $response = HTTP::Tiny->new->get($ENV{ES}) or die "The server $ENV{ES} is not running!";
 
-$contents = decode_json $contents or die "The JSON response is not valid!";
+my $contents = decode_json $response->{content} or die "The JSON response is not valid!";
 my $hash = $contents->{version}->{build_hash};
 
 `cd elasticsearch; git checkout $hash`;

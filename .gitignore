@@ -14,3 +14,6 @@ bench_cxn.pl
 shield/*
 .DS_Store
 .perl-version
+local/
+*.komodoproject
+.vscode

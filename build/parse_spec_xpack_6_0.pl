@@ -14,5 +14,5 @@ my @files = map { file($_) } (
         '../elasticsearch/x-pack/plugin/src/test/resources/rest-api-spec/api/*.json'
 );
 
-process_files( 'lib/Search/Elasticsearch/Plugin/XPack/6_0/Role/API.pm',
+process_files( '../lib/Search/Elasticsearch/Plugin/XPack/6_0/Role/API.pm',
     @files );

@@ -7,10 +7,19 @@ use Path::Class;
 use FindBin;
 
 do "$FindBin::RealBin/parse_spec_base.pl" || die $@;
-my @files
-    = map { file($_) }
+
+my @oss = map { file($_) } (
+    '../elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/api/_common.json',
     glob
-    "../elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/api/*.json";
+        '../elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/api/*.json'
+);
+
+my @xpack = map { file($_) } (
+    glob
+        '../elasticsearch/x-pack/plugin/src/test/resources/rest-api-spec/api/*.json'
+);
+
+my @files = (@oss, @xpack);
 
 forbid(
     'GET' => qw(
@@ -32,5 +41,5 @@ forbid(
         )
 );
 
-process_files( 'lib/Search/Elasticsearch/Client/6_0/Role/API.pm', @files );
+process_files( '../lib/Search/Elasticsearch/Client/6_0/Role/API.pm', @files );
 

@@ -104,5 +104,20 @@
 1.4.4:
     - script/30_expressions.yaml
 
-
-
+6.8.7:
+    - indices.create/10_basic.yml
+    - indices.get_settings/30_defaults.yml
+    - nodes.stats/30_discovery.yml
+    - range/10_basic.yml
+    - search/110_field_collapsing.yml
+    - search/190_index_prefix_search.yml
+    - search/30_limits.yml
+    - search.aggregation/230_composite.yml
+    - ssl/*
+    - ml/*
+    - monitoring/*
+    - license/*
+    - deprecation/*
+    - roles/20_get_missing.yml
+    - role_mapping/*
+    - xpack/*

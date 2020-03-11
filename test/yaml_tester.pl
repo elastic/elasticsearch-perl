@@ -2,7 +2,9 @@
 
 use strict;
 use warnings;
-use YAML qw(LoadFile);
+use version;
+use YAML::XS qw(LoadFile);
+#use YAML qw(LoadFile);    
 use Test::More;
 use Test::Deep;
 use Data::Dumper;
@@ -11,6 +13,8 @@ use Scalar::Util qw(looks_like_number);
 use Time::HiRes qw(gettimeofday);
 use JSON::PP();
 use lib qw(lib t/lib);
+
+local $YAML::XS::Boolean = "JSON::PP";
 
 my $client
     = $ENV{ES_ASYNC}
@@ -113,8 +117,7 @@ our %Errors = (
 my $test = shift @ARGV or die "No test specified";
 if ( -d $test ) {
     test_dir($test);
-}
-else {
+} else {
     test_files($test);
 }
 
@@ -124,7 +127,12 @@ sub test_dir {
     my $dir = shift;
     plan tests   => 1;
     subtest $dir => sub {
-        test_files( glob "$dir/*.y*ml" );
+        my @files = glob "$dir/*.yml";
+        foreach my $sub (glob "$dir/*") {
+            next unless (-d "$sub");
+            push (@files, glob "$sub/*.yml");
+        }
+        test_files(@files);
     };
 }
 
@@ -133,12 +141,17 @@ sub test_files {
 #===================================
     my @files = @_;
 
-    reset_es();
+    reset_oss_es();
+    if ($ENV{ES} =~ /https/) {
+        reset_es();
+    }
+
     plan tests => 0 + @files;
 
     for my $file (@files) {
         my ($name) = ( $file =~ m{([\w.]+/[\w.]+\.y.?ml)} );
-        if ( $skip_list->{$name} ) {
+        my ($folder) = ( $file =~ m{([\w]+)/[\w.]+\.y.?ml} );
+        if ( $skip_list->{$name} || $skip_list->{$folder . '/*'} ) {
             $es->logger->trace_comment("SKIPPING: $name in skip list");
         SKIP: { skip "$name in skip list", 1 }
             next;
@@ -180,7 +193,10 @@ sub test_files {
                     plan tests => 0 + @$tests;
                     run_tests( $title, $tests );
                 };
-                reset_es();
+                reset_oss_es();
+                if ($ENV{ES} =~ /https/) {
+                    reset_es();
+                }
             }
         };
     }
@@ -335,9 +351,9 @@ sub run_cmd {
 }
 
 #===================================
-sub reset_es {
+sub reset_oss_es {
 #===================================
-    $es->logger->trace_comment("RESETTING");
+    $es->logger->trace_comment("RESETTING OSS");
     $es->logger->trace_comment( "Start: " . timestamp() );
     $wrapper->( $es->indices->delete( index => '_all', ignore => 404 ) );
     eval { $wrapper->( $es->indices->delete_template( name => '*' ) ) };
@@ -362,6 +378,54 @@ sub reset_es {
     };
     $es->logger->trace_comment( "End: " . timestamp() );
 }
+
+#===================================
+sub reset_es {
+#===================================
+#     $es->logger->trace_comment("RESETTING");
+#     $es->logger->trace_comment( "Start: " . timestamp() );
+
+#     # Delete all custom roles
+#     eval {
+#         my $response = $es->xpack->security->get_role();
+#         while (($role, $value) = each (%$response)) {
+#             if ( $value->{metadata}->{_reserved} == 0) {
+#                 $es->xpack->security->delete_role({ 'name' => $role });
+#             }
+#         }
+#     };
+
+#     # Delete all custom users
+#     eval {
+#         my $response = $es->xpack->security->get_user();
+#         while (($user, $value) = each (%$response)) {
+#             if ( $value->{metadata}->{_reserved} == 0) {
+#                 $es->xpack->security->delete_user({ 'username' => $user });
+#             }
+#         }
+#     };
+
+#         my $response = $es->xpack->security->get_privileges();
+#         while (($app, $value) = each (%$response)) {
+#             if ( $value->{metadata}->{_reserved} == 0) {
+#                 $es->xpack->security->delete_user({ 'username' => $user });
+#             }
+#         }
+
+
+
+#     # security.getPrivileges -> security.deletePrivileges
+#     # ml.getDatafeeds -> ml.deleteDatafeed
+#     # ml.getJobs -> ml.deleteJob
+#     # rollup.getJobs -> rollup.stopJob -> rollup.deleteJob
+#     # tasks.list -> tasks.cancel
+#     # ilm.removePolicy({ index: '_all' })
+#     # indices.refresh({ index: '_all' })
+
+#     $es->logger->trace_comment( "End: " . timestamp() );
+}
+
+
 
 #===================================
 sub key_val {
@@ -452,19 +516,13 @@ sub skip_version {
     $max ||= 999;
 
     return
-        unless str_version($min) le str_version($current)
-        and str_version($max) ge str_version($current);
+        unless version->parse($min) le version->parse($current)
+        and version->parse($max) ge version->parse($current);
 
     return "Version $current - " . $skip->{reason};
 
 }
 
-#===================================
-sub str_version {
-#===================================
-    no warnings 'uninitialized';
-    return sprintf "%03d-%03d-%03d", ( split /[-.]/, shift() )[ 0 .. 2 ];
-}
 #===================================
 sub request_wrapper {
 #===================================

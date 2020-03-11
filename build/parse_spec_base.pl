@@ -61,11 +61,11 @@ sub process {
             $spec{serialize} = 'bulk';
         }
     }
-
+    
     # method
     my $method = $spec{method} = $defn->{methods}[0];
     delete $spec{method} if $method eq 'GET';
-
+    
     # paths
     my $url = $defn->{url};
     $spec{paths} = process_paths( $name, $method, $url );

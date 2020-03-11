@@ -2,6 +2,7 @@ use Test::More;
 use Test::Exception;
 use Test::Deep;
 use Search::Elasticsearch;
+use Search::Elasticsearch::Role::Cxn;
 use MIME::Base64;
 
 sub is_cxn(@);
@@ -10,6 +11,7 @@ my $username     = 'ThisIsAVeryLongUsernameAndThatIsOKYouSee';
 my $password     = 'CorrectHorseBatteryStapleCorrectHorseBatteryStaple';
 my $userinfo     = "$username:$password";
 my $userinfo_b64 = MIME::Base64::encode_base64( $userinfo, "" );
+my $useragent    = Search::Elasticsearch::Role::Cxn::get_user_agent();
 
 ### Scalar nodes ###
 
@@ -39,7 +41,7 @@ is_cxn "Userinfo", new_cxn( nodes => "http://$userinfo\@localhost/" ),
     {
     port            => '80',
     uri             => 'http://localhost:80',
-    default_headers => { Authorization => "Basic $userinfo_b64" },
+    default_headers => { 'Authorization' => "Basic $userinfo_b64", 'User-Agent' => $useragent },
     userinfo        => $userinfo
     };
 
@@ -126,7 +128,7 @@ is_cxn "Userinfo option", new_cxn( nodes => 'foo', userinfo => $userinfo ),
     host            => 'foo',
     port            => 80,
     uri             => 'http://foo:80',
-    default_headers => { Authorization => "Basic $userinfo_b64" },
+    default_headers => { 'Authorization' => "Basic $userinfo_b64", 'User-Agent' => $useragent },
     userinfo        => $userinfo
     };
 
@@ -139,13 +141,13 @@ is_cxn "Userinfo option with settings",
     host            => 'foo',
     port            => 80,
     uri             => 'http://foo:80',
-    default_headers => { Authorization => "Basic $userinfo_b64" },
+    default_headers => { 'Authorization' => "Basic $userinfo_b64", 'User-Agent' => $useragent },
     userinfo        => $userinfo
     };
 
 is_cxn "Deflate option",
     new_cxn( deflate => 1 ),
-    { default_headers => { 'Accept-Encoding' => 'deflate' } };
+    { default_headers => { 'Accept-Encoding' => 'deflate', 'User-Agent' => $useragent } };
 
 is_cxn "IPv4 with Port",
     new_cxn( nodes => '127.0.0.1', port => 456 ),
@@ -213,7 +215,7 @@ sub is_cxn (@) {
         port            => '9200',
         scheme          => 'http',
         uri             => 'http://localhost:9200',
-        default_headers => {},
+        default_headers => { 'User-Agent' => $useragent },
         userinfo        => '',
         %$params
     );

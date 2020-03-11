@@ -186,8 +186,8 @@ ok $b->update(
         version_type      => 'external',
         detect_noop       => 'true',
         _source           => 'true',
-        _source_include   => 'foo',
-        _source_exclude   => 'bar',
+        _source_includes  => ['foo'],
+        _source_excludes  => ['bar'],
         doc               => { foo => 'bar' },
         doc_as_upsert     => 1,
         fields            => ["*"],
@@ -206,8 +206,8 @@ ok $b->update(
         _version_type     => 'external',
         detect_noop       => 'true',
         _source           => 'true',
-        _source_include   => 'foo',
-        _source_exclude   => 'bar',
+        _source_includes  => ['foo'],
+        _source_excludes  => ['bar'],
         doc               => { foo => 'bar' },
         doc_as_upsert     => 1,
         fields            => ["*"],
@@ -221,13 +221,13 @@ ok $b->update(
 cmp_deeply $b->_buffer,
     [
     q({"update":{"_id":1,"_index":"foo","_type":"bar","parent":1,"routing":1,"timestamp":1380019061000,"ttl":"10m","version":1,"version_type":"external"}}),
-    q({"_source":"true","_source_exclude":"bar","_source_include":"foo","detect_noop":"true","doc":{"foo":"bar"},"doc_as_upsert":1,"fields":["*"],"retry_on_conflict":3,"script":"ctx._source+=1","scripted_upsert":"true"}),
+    q({"_source":"true","_source_excludes":["bar"],"_source_includes":["foo"],"detect_noop":"true","doc":{"foo":"bar"},"doc_as_upsert":1,"fields":["*"],"retry_on_conflict":3,"script":"ctx._source+=1","scripted_upsert":"true"}),
     q({"update":{"_id":1,"_index":"foo","_type":"bar","parent":1,"routing":1,"timestamp":1380019061000,"ttl":"10m","version":1,"version_type":"external"}}),
-    q({"_source":"true","_source_exclude":"bar","_source_include":"foo","detect_noop":"true","doc":{"foo":"bar"},"doc_as_upsert":1,"fields":["*"],"retry_on_conflict":3,"script":"ctx._source+=1","scripted_upsert":"true"})
+    q({"_source":"true","_source_excludes":["bar"],"_source_includes":["foo"],"detect_noop":"true","doc":{"foo":"bar"},"doc_as_upsert":1,"fields":["*"],"retry_on_conflict":3,"script":"ctx._source+=1","scripted_upsert":"true"})
     ],
     "Update actions in buffer";
 
-is $b->_buffer_size,  726, "Update actions buffer size";
+is $b->_buffer_size,  738, "Update actions buffer size";
 is $b->_buffer_count, 2,   "Update actions buffer count";
 
 $b->clear_buffer;
