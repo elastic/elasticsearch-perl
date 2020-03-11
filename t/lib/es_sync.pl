@@ -8,7 +8,14 @@ my $trace
     : $ENV{TRACE} eq '1' ? 'Stderr'
     :                      [ 'File', $ENV{TRACE} ];
 
-die 'No $ENV{CLIENT_VER} specified' unless $ENV{CLIENT_VER};
+unless ($ENV{CLIENT_VER}) {
+    plan skip_all => 'No $ENV{CLIENT_VER} specified';
+    exit;
+}
+unless ($ENV{ES}) {
+    plan skip_all => 'No Elasticsearch test node available';
+    exit;
+}
 
 my $api      = "$ENV{CLIENT_VER}::Direct";
 my $body     = $ENV{ES_BODY} || 'GET';
@@ -38,11 +45,6 @@ if ( $ENV{ES} ) {
         diag $@;
         undef $es;
     };
-}
-
-unless ($es) {
-    plan skip_all => 'No Elasticsearch test node available';
-    exit;
 }
 
 unless ( $ENV{ES_SKIP_PING} ) {
