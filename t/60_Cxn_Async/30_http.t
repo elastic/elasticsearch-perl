@@ -2,14 +2,11 @@ use Test::More;
 use Test::Exception;
 use Test::Deep;
 use Search::Elasticsearch::Async;
-use MIME::Base64;
 
 sub is_cxn(@);
 
 my $username     = 'ThisIsAVeryLongUsernameAndThatIsOKYouSee';
 my $password     = 'CorrectHorseBatteryStapleCorrectHorseBatteryStaple';
-my $userinfo     = "$username:$password";
-my $userinfo_b64 = MIME::Base64::encode_base64( $userinfo, "" );
 
 ### Scalar nodes ###
 
@@ -35,14 +32,6 @@ is_cxn "Path",
     new_cxn( nodes => 'foo/bar' ),
     { host => 'foo', port => '80', uri => 'http://foo:80/bar' };
 
-is_cxn "Userinfo", new_cxn( nodes => "http://$userinfo\@localhost/" ),
-    {
-    port            => '80',
-    uri             => 'http://localhost:80',
-    default_headers => { Authorization => "Basic $userinfo_b64" },
-    userinfo        => $userinfo
-    };
-
 is_cxn "IPv4",
     new_cxn( nodes => '127.0.0.1' ),
     { host => '127.0.0.1', port => '80', uri => 'http://127.0.0.1:80' };
@@ -64,30 +53,6 @@ is_cxn "Scheme:IPv4:Port", new_cxn( nodes => 'https://127.0.0.1:1000' ),
     host   => '127.0.0.1',
     port   => '1000',
     uri    => 'https://127.0.0.1:1000',
-    scheme => 'https'
-    };
-
-is_cxn "IPv6",
-    new_cxn( nodes => '::1' ),
-    { host => '::1', port => '80', uri => 'http://[::1]:80' };
-
-is_cxn "Scheme:IPv6", new_cxn( nodes => 'https://[::1]' ),
-    {
-    host   => '::1',
-    port   => '443',
-    uri    => 'https://[::1]:443',
-    scheme => 'https'
-    };
-
-is_cxn "IPv6:Port",
-    new_cxn( nodes => '[::1]:1000' ),
-    { host => '::1', port => '1000', uri => 'http://[::1]:1000' };
-
-is_cxn "Scheme:IPv6:Port", new_cxn( nodes => 'https://[::1]:1000' ),
-    {
-    host   => '::1',
-    port   => '1000',
-    uri    => 'https://[::1]:1000',
     scheme => 'https'
     };
 
@@ -121,28 +86,6 @@ is_cxn "Path option with settings",
     new_cxn( nodes => 'foo/baz/', path_prefix => '/bar/' ),
     { host => 'foo', port => 80, uri => 'http://foo:80/baz' };
 
-is_cxn "Userinfo option", new_cxn( nodes => 'foo', userinfo => $userinfo ),
-    {
-    host            => 'foo',
-    port            => 80,
-    uri             => 'http://foo:80',
-    default_headers => { Authorization => "Basic $userinfo_b64" },
-    userinfo        => $userinfo
-    };
-
-is_cxn "Userinfo option with settings",
-
-    # Note that userinfo as specified is explicitly different to that
-    # provided in the nodes string
-    new_cxn( nodes => "$userinfo\@foo", userinfo => 'foo:baz' ),
-    {
-    host            => 'foo',
-    port            => 80,
-    uri             => 'http://foo:80',
-    default_headers => { Authorization => "Basic $userinfo_b64" },
-    userinfo        => $userinfo
-    };
-
 is_cxn "Deflate option",
     new_cxn( deflate => 1 ),
     { default_headers => { 'Accept-Encoding' => 'deflate' } };
@@ -150,10 +93,6 @@ is_cxn "Deflate option",
 is_cxn "IPv4 with Port",
     new_cxn( nodes => '127.0.0.1', port => 456 ),
     { host => '127.0.0.1', port => '456', uri => 'http://127.0.0.1:456' };
-
-is_cxn "IPv6 with Port",
-    new_cxn( nodes => '::1', port => 456 ),
-    { host => '::1', port => '456', uri => 'http://[::1]:456' };
 
 ### Hash ###
 is_cxn "Hash host",
@@ -171,10 +110,6 @@ is_cxn "Hash path",
 is_cxn "Hash IPv4 host",
     new_cxn( nodes => { host => '127.0.0.1' } ),
     { host => '127.0.0.1', port => 80, uri => 'http://127.0.0.1:80' };
-
-is_cxn "Hash IPv6 host",
-    new_cxn( nodes => { host => '::1' } ),
-    { host => '::1', port => 80, uri => 'http://[::1]:80' };
 
 # Build URI
 is new_cxn()->build_uri( { path => '/' } ), 'http://localhost:9200/',
