@@ -28,13 +28,11 @@ sub perform_request {
         $headers{'Content-Encoding'} = $params->{encoding}
             if $params->{encoding};
     }
-
     my $request = HTTP::Request->new(
         $method => $uri,
         [ %headers, %{ $self->default_headers }, ],
         $params->{data}
     );
-
     my $ua = $self->handle;
     my $timeout = $params->{timeout} || $self->request_timeout;
     if ( $timeout ne $ua->timeout ) {
@@ -76,7 +74,7 @@ sub _build_handle {
         $args{ssl_opts}
             = $self->has_ssl_options
             ? $self->ssl_options
-            : { verify_hostname => 0 };
+            : { verify_hostname => 0, SSL_verify_mode => 0x00 };
     }
     return LWP::UserAgent->new( %args, %{ $self->handle_args } );
 }
