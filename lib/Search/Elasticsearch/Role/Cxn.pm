@@ -61,7 +61,7 @@ sub stringify { shift->uri . '' }
 #===================================
 sub get_user_agent {
 #===================================
-    return sprintf("elasticsearch-perl/%s- (PERL %s)", $Search::Elasticsearch::VERSION, $]);
+    return sprintf("elasticsearch-perl/%s (%s; perl %s)", $Search::Elasticsearch::VERSION, $^O, $]);
 }
 
 #===================================
