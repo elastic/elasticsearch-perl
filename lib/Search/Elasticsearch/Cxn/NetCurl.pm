@@ -4,7 +4,7 @@ use Moo;
 with 'Search::Elasticsearch::Role::Cxn', 'Search::Elasticsearch::Role::Is_Sync';
 
 use Search::Elasticsearch 6.00;
-our $VERSION = "6.80_1";
+our $VERSION = "6.80";
 
 use HTTP::Parser::XS qw(HEADERS_AS_HASHREF parse_http_response);
 use Try::Tiny;
