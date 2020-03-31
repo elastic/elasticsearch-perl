@@ -1,6 +1,7 @@
 # Elasticsearch Perl client
 
 [![Build Status](https://travis-ci.org/elastic/elasticsearch-perl.svg?branch=master)](https://travis-ci.org/elastic/elasticsearch-perl)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Felastic%2Felasticsearch-perl.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Felastic%2Felasticsearch-perl?ref=badge_shield)
 
 Search::Elasticsearch is the official Perl API for Elasticsearch. 
 The full documentation is available on https://metacpan.org/module/Search::Elasticsearch.
@@ -25,3 +26,6 @@ cpanm Search::Elasticsearch
 ## License
 This software is licensed under the [Apache 2 license](LICENSE.txt).
 
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Felastic%2Felasticsearch-perl.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Felastic%2Felasticsearch-perl?ref=badge_large)
