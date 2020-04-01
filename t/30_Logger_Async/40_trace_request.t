@@ -27,7 +27,7 @@ ok $l->trace_request(
 
 is $format, <<'REQUEST', 'No body - format';
 # Request to: https://foo.bar:444/some/path
-curl -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1'
+curl -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=true'
 REQUEST
 
 # Std body
@@ -47,7 +47,7 @@ ok $l->trace_request(
 
 is $format, <<'REQUEST', 'Body - format';
 # Request to: https://foo.bar:444/some/path
-curl -H "Content-type: application/json" -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
+curl -H "Content-type: application/json" -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=true' -d '
 {
    "foo" : "bar\n\u0027baz"
 }
@@ -71,7 +71,7 @@ ok $l->trace_request(
 
 is $format, <<'REQUEST', 'Bulk - format';
 # Request to: https://foo.bar:444/some/path
-curl -H "Content-type: application/json" -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
+curl -H "Content-type: application/json" -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=true' -d '
 {"foo":"bar\n\u0027baz"}
 {"foo":"bar\n\u0027baz"}
 '
@@ -93,7 +93,7 @@ ok $l->trace_request(
 
 is $format, <<'REQUEST', 'Body string - format';
 # Request to: https://foo.bar:444/some/path
-curl -H "Content-type: application/json" -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=1' -d '
+curl -H "Content-type: application/json" -XPOST 'http://localhost:9200/xyz?foo=bar&pretty=true' -d '
 The quick brown fox
 jumped over the lazy dog\u0027s basket'
 REQUEST

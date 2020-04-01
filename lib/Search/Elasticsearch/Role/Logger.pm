@@ -3,7 +3,6 @@ package Search::Elasticsearch::Role::Logger;
 use Moo::Role;
 
 use URI();
-use Try::Tiny;
 use Search::Elasticsearch::Util qw(new_error);
 use namespace::clean;
 

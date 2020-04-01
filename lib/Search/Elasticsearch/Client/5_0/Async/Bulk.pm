@@ -7,7 +7,6 @@ with 'Search::Elasticsearch::Client::5_0::Role::Bulk',
 use Search::Elasticsearch::Util qw(parse_params throw);
 use Scalar::Util qw(weaken blessed);
 use Promises qw(deferred);
-use Try::Tiny;
 use namespace::clean;
 
 has 'on_fatal' => ( is => 'lazy' );
@@ -36,14 +35,15 @@ sub add_action {
     my $weak_add;
     my $add = sub {
         while (@actions) {
-            my @json = try {
-                $self->_encode_action( splice( @actions, 0, 2 ) );
+            my @json;
+            unless (eval {
+                @json = $self->_encode_action( splice( @actions, 0, 2 ) );
+                1;
+            }) {
+                my $error = $@;
+                $self->on_fatal->($error);
+                $deferred->reject($error);
             }
-            catch {
-                $self->on_fatal->($_);
-                $deferred->reject($_);
-                ();
-            };
             return unless @json;
 
             push @$buffer, @json;

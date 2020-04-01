@@ -34,7 +34,6 @@ requires "Promises" => "0.93";
 requires "Scalar::Util" => "0";
 requires "Sub::Exporter" => "0";
 requires "Time::HiRes" => "0";
-requires "Try::Tiny" => "0";
 requires "URI" => "0";
 requires "namespace::clean" => "0";
 requires "overload" => "0";
