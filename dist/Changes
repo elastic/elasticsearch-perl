@@ -1,5 +1,10 @@
 Revision history for Search::Elasticsearch
 
+6.81    2020-06-26
+        * Fixed Async and NetCurl tests
+        * Added if_seq_no and if_primary_term in bulk params
+        * Added include_type_name in indices.exists API
+
 6.80    2020-03-25
         * Fixed SSL_verify_mode in LWP and skipped https tests for Hijk
         * Changed the User-Agent header with elasticsearch-perl/<client-version> (<os>; perl <Lang version>)

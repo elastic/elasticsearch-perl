@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch::Plugin::XPack
 
+6.81    2020-06-26
+        Bumped to version 6.81
+
 6.80    2020-03-25
         Bumped to version 6.80
 
