@@ -1934,6 +1934,7 @@ sub api {
             ignore_unavailable => "boolean",
             include_defaults   => "boolean",
             local              => "boolean",
+            include_type_name  => "boolean",
         },
     },
 
