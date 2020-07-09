@@ -4,8 +4,8 @@ use Moo;
 with 'Search::Elasticsearch::Client::1_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 
-our $VERSION='6.81';
-use Search::Elasticsearch 6.00 ();
+our $VERSION='7.30_1';
+use Search::Elasticsearch 7.00 ();
 
 use Search::Elasticsearch::Util qw(parse_params is_compat);
 use namespace::clean;
