@@ -24,7 +24,7 @@ test_scroll(
     ]
 );
 
-do "index_test_data.pl" or die( $@ || $! );
+do "index_test_data_7.pl" or die( $@ || $! );
 
 test_scroll(
     "Match all",

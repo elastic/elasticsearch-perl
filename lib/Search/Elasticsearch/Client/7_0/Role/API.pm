@@ -26,8 +26,6 @@ sub api {
         params => {
             '_index'          => '_index',
             'index'           => '_index',
-            '_type'           => '_type',
-            'type'            => '_type',
             '_id'             => '_id',
             'id'              => '_id',
             'pipeline'        => 'pipeline',
@@ -57,7 +55,7 @@ sub api {
             'upsert',
         ]
     },
-    'bulk.required' => { params => [ 'index', 'type' ] },
+    'bulk.required' => { params => [ 'index' ] },
 
 #=== AUTOGEN - START ===
 
@@ -658,7 +656,7 @@ sub api {
     'scroll' => {
         body  => {},
         doc   => "",
-        parts => { scroll_id => {} },
+        parts => {},
         paths => [ [ {}, "_search", "scroll" ] ],
         qs    => {
             error_trace            => "boolean",
@@ -666,6 +664,7 @@ sub api {
             human                  => "boolean",
             rest_total_hits_as_int => "boolean",
             scroll                 => "time",
+            scroll_id              => "string",
         },
     },
 
