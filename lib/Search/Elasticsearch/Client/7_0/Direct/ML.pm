@@ -1,19 +1,21 @@
-package Search::Elasticsearch::Client::7_0::Direct::XPack::ML;
+package Search::Elasticsearch::Client::7_0::Direct::ML;
 
 use Moo;
 with 'Search::Elasticsearch::Client::7_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('xpack.ml');
+__PACKAGE__->_install_api('ml');
 
 1;
+
+__END__
 
 # ABSTRACT: Plugin providing ML API for Search::Elasticsearch 7.x
 
 =head1 SYNOPSIS
 
-    my $response = $es->xpack->ml->start_datafeed(...)
+    my $response = $es->ml->start_datafeed(...)
 
 =head2 DESCRIPTION
 
@@ -28,7 +30,7 @@ L<https://www.elastic.co/guide/en/x-pack/7.0/xpack-ml.html>
 
 =head2 C<put_datafeed()>
 
-    $response = $es->xpack->ml->put_datafeed(
+    $response = $es->ml->put_datafeed(
         datafeed_id => $id      # required
         body        => {...}    # required
     )
@@ -60,7 +62,7 @@ Query string parameters:
 
 =head2 C<start_datafeed()>
 
-    $response = $es->xpack->ml->start_datafeed(
+    $response = $es->ml->start_datafeed(
         datafeed_id => $id      # required
     )
 
@@ -78,7 +80,7 @@ Query string parameters:
 
 =head2 C<stop_datafeed()>
 
-    $response = $es->xpack->ml->stop_datafeed(
+    $response = $es->ml->stop_datafeed(
         datafeed_id => $id      # required
     )
 
@@ -96,7 +98,7 @@ Query string parameters:
 
 =head2 C<get_datafeeds()>
 
-    $response = $es->xpack->ml->get_datafeeds(
+    $response = $es->ml->get_datafeeds(
         datafeed_id => $id      # optional
     )
 
@@ -112,7 +114,7 @@ Query string parameters:
 
 =head2 C<get_datafeed_stats()>
 
-    $response = $es->xpack->ml->get_datafeed_stats(
+    $response = $es->ml->get_datafeed_stats(
         datafeed_id => $id      # optional
     )
 
@@ -128,7 +130,7 @@ Query string parameters:
 
 =head2 C<preview_datafeed()>
 
-    $response = $es->xpack->ml->preview_datafeed(
+    $response = $es->ml->preview_datafeed(
         datafeed_id => $id      # required
     )
 
@@ -143,7 +145,7 @@ Query string parameters:
 
 =head2 C<update_datafeed()>
 
-    $response = $es->xpack->ml->update_datafeed(
+    $response = $es->ml->update_datafeed(
         datafeed_id => $id      # required
         body        => {...}    # required
     )
@@ -161,7 +163,7 @@ Query string parameters:
 
 =head2 C<put_job()>
 
-    $response = $es->xpack->ml->put_job(
+    $response = $es->ml->put_job(
         job_id => $id           # required
         body        => {...}    # required
     )
@@ -177,7 +179,7 @@ Query string parameters:
 
 =head2 C<delete_job()>
 
-    $response = $es->xpack->ml->delete_job(
+    $response = $es->ml->delete_job(
         job_id => $id           # required
     )
 
@@ -194,7 +196,7 @@ Query string parameters:
 
 =head2 C<open_job()>
 
-    $response = $es->xpack->ml->open_job(
+    $response = $es->ml->open_job(
         job_id => $id           # required
     )
 
@@ -209,7 +211,7 @@ Query string parameters:
 
 =head2 C<close_job()>
 
-    $response = $es->xpack->ml->close_job(
+    $response = $es->ml->close_job(
         job_id => $id           # required
     )
 
@@ -227,7 +229,7 @@ Query string parameters:
 
 =head2 C<get_jobs()>
 
-    $response = $es->xpack->ml->get_jobs(
+    $response = $es->ml->get_jobs(
         job_id => $id           # optional
     )
 
@@ -243,7 +245,7 @@ Query string parameters:
 
 =head2 C<get_job_stats()>
 
-    $response = $es->xpack->ml->get_jobs_stats(
+    $response = $es->ml->get_jobs_stats(
         job_id => $id           # optional
     )
 
@@ -260,7 +262,7 @@ Query string parameters:
 
 =head2 C<flush_job()>
 
-    $response = $es->xpack->ml->flush_job(
+    $response = $es->ml->flush_job(
         job_id => $id           # required
     )
 
@@ -280,7 +282,7 @@ Query string parameters:
 
 =head2 C<post_data()>
 
-    $response = $es->xpack->ml->post_data(
+    $response = $es->ml->post_data(
         job_id => $id           # required
         body   => [data]        # required
     )
@@ -298,7 +300,7 @@ Query string parameters:
 
 =head2 C<update_job()>
 
-    $response = $es->xpack->ml->update_job(
+    $response = $es->ml->update_job(
         job_id => $id           # required
         body        => {...}    # required
     )
@@ -314,7 +316,7 @@ Query string parameters:
 
 =head2 C<delete_expired_data>
 
-    $response = $es->xpack->ml->delete_expired_data(
+    $response = $es->ml->delete_expired_data(
     )
 
 The C<delete_expired_data()> method deletes expired machine learning data.
@@ -331,7 +333,7 @@ Query string parameters:
 
 =head2 C<put_calendar()>
 
-    $response = $es->xpack->ml->put_calendar(
+    $response = $es->ml->put_calendar(
         calendar_id => $id      # required
         body        => {...}    # optional
     )
@@ -347,7 +349,7 @@ for more information.
 
 =head2 C<delete_calendar()>
 
-    $response = $es->xpack->ml->delete_calendar(
+    $response = $es->ml->delete_calendar(
         calendar_id => $id      # required
     )
 
@@ -362,7 +364,7 @@ for more information.
 
 =head2 C<put_calendar_job()>
 
-    $response = $es->xpack->ml->put_calendar_job(
+    $response = $es->ml->put_calendar_job(
         calendar_id => $id,     # required
         job_id      => $id      # required
     )
@@ -378,7 +380,7 @@ for more information.
 
 =head2 C<delete_calendar_job()>
 
-    $response = $es->xpack->ml->delete_calendar_job(
+    $response = $es->ml->delete_calendar_job(
         calendar_id => $id,     # required
         job_id      => $id      # required
     )
@@ -394,7 +396,7 @@ for more information.
 
 =head2 C<put_calendar_event()>
 
-    $response = $es->xpack->ml->post_calendar_events(
+    $response = $es->ml->post_calendar_events(
         calendar_id => $id,     # required
         body        => {...}    # required
     )
@@ -411,7 +413,7 @@ for more information.
 
 =head2 C<delete_calendar_event()>
 
-    $response = $es->xpack->ml->delete_calendar_event(
+    $response = $es->ml->delete_calendar_event(
         calendar_id => $id,     # required
         event_id    => $id      # required
     )
@@ -427,7 +429,7 @@ for more information.
 
 =head2 C<get_calendars()>
 
-    $response = $es->xpack->ml->get_calendars(
+    $response = $es->ml->get_calendars(
         calendar_id => $id,     # optional
     )
 
@@ -444,7 +446,7 @@ for more information.
 
 =head2 C<get_calendar_events()>
 
-    $response = $es->xpack->ml->get_calendar_events(
+    $response = $es->ml->get_calendar_events(
         calendar_id => $id,     # required
     )
 
@@ -466,7 +468,7 @@ for more information.
 
 =head2 C<put_filter()>
 
-    $response = $es->xpack->ml->put_filter(
+    $response = $es->ml->put_filter(
         filter_id   => $id,     # required
         body        => {...}    # required
     )
@@ -482,7 +484,7 @@ for more information.
 
 =head2 C<update_filter()>
 
-    $response = $es->xpack->ml->update_filter(
+    $response = $es->ml->update_filter(
         filter_id   => $id,     # required
         body        => {...}    # required
     )
@@ -498,7 +500,7 @@ for more information.
 
 =head2 C<get_filters()>
 
-    $response = $es->xpack->ml->get_filters(
+    $response = $es->ml->get_filters(
         filter_id   => $id,     # optional
     )
 
@@ -515,7 +517,7 @@ for more information.
 
 =head2 C<delete_filter()>
 
-    $response = $es->xpack->ml->delete_filter(
+    $response = $es->ml->delete_filter(
         filter_id   => $id,     # required
     )
 
@@ -532,7 +534,7 @@ for more information.
 
 =head2 C<forecast()>
 
-    $response = $es->xpack->ml->forecast(
+    $response = $es->ml->forecast(
         job_id      => $id      # required
     )
 
@@ -549,7 +551,7 @@ Query string parameters:
 
 =head2 C<delete_forecast()>
 
-    $response = $es->xpack->ml->delete_forecast(
+    $response = $es->ml->delete_forecast(
         forecast_id => $id,     # required
         job_id      => $id      # required
     )
@@ -569,7 +571,7 @@ Query string parameters:
 
 =head2 C<delete_model_snapshot()>
 
-    $response = $es->xpack->ml->delete_model_snapshot(
+    $response = $es->ml->delete_model_snapshot(
         snapshot_id => $id      # required
     )
 
@@ -584,7 +586,7 @@ Query string parameters:
 
 =head2 C<get_model_snapshots()>
 
-    $response = $es->xpack->ml->get_model_snapshots(
+    $response = $es->ml->get_model_snapshots(
         job_id      => $job_id,         # required
         snapshot_id => $snapshot_id     # optional
     )
@@ -606,7 +608,7 @@ Query string parameters:
 
 =head2 C<revert_model_snapshot()>
 
-    $response = $es->xpack->ml->revert_model_snapshot(
+    $response = $es->ml->revert_model_snapshot(
         job_id      => $job_id,         # required
         snapshot_id => $snapshot_id     # required
     )
@@ -623,7 +625,7 @@ Query string parameters:
 
 =head2 C<update_model_snapshot()>
 
-    $response = $es->xpack->ml->update_model_snapshot(
+    $response = $es->ml->update_model_snapshot(
         job_id      => $job_id,         # required
         snapshot_id => $snapshot_id     # required
     )
@@ -641,7 +643,7 @@ Query string parameters:
 
 =head2 C<get_buckets()>
 
-    $response = $es->xpack->ml->get_buckets(
+    $response = $es->ml->get_buckets(
         job_id      => $job_id,         # required
         timestamp   => $timestamp       # optional
     )
@@ -666,7 +668,7 @@ Query string parameters:
 
 =head2 C<get_overall_buckets()>
 
-    $response = $es->xpack->ml->get_overall_buckets(
+    $response = $es->ml->get_overall_buckets(
         job_id      => $job_id,         # required
     )
 
@@ -688,7 +690,7 @@ Query string parameters:
 
 =head2 C<get_categories()>
 
-    $response = $es->xpack->ml->get_categories(
+    $response = $es->ml->get_categories(
         job_id      => $job_id,         # required
         category_id => $category_id     # optional
     )
@@ -707,7 +709,7 @@ Query string parameters:
 
 =head2 C<get_influencers()>
 
-    $response = $es->xpack->ml->get_influencers(
+    $response = $es->ml->get_influencers(
         job_id      => $job_id,         # required
     )
 
@@ -731,7 +733,7 @@ Query string parameters:
 
 =head2 C<get_records()>
 
-    $response = $es->xpack->ml->get_records(
+    $response = $es->ml->get_records(
         job_id      => $job_id,         # required
     )
 
@@ -758,7 +760,7 @@ Query string parameters:
 =head2 C<find_file_structure>
 
 
-    $response = $es->xpack->ml->find_file_structure(
+    $response = $es->ml->find_file_structure(
         body    => { ... },         # required
     )
 
@@ -792,7 +794,7 @@ Query string parameters:
 
 =head2 C<info>
 
-    $response = $es->xpack->ml->info();
+    $response = $es->ml->info();
 
 The C<info()> method returns defaults and limits used by machine learning.
 
@@ -807,7 +809,7 @@ Query string parameters:
 
 =head2 C<set_upgrade_mode>
 
-    $response = $es->xpack->ml->set_upgrade_mode();
+    $response = $es->ml->set_upgrade_mode();
 
 The C<set_upgrade_mode()> method sets a cluster wide C<upgrade_mode> setting that prepares
 machine learning indices for an upgrade.

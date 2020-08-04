@@ -93,6 +93,11 @@ sub process_paths {
 #===================================
     my ( $name, $method, $url ) = @_;
 
+    if ($url->{deprecated_paths}) {
+       foreach my $u (@{$url->{deprecated_paths}}) {
+           push (@{ $url->{paths} }, $u->{path});
+       }
+    }
     my @path_defns = map { process_path( $method, $_ ) } @{ $url->{paths} };
 
     my %sigs;

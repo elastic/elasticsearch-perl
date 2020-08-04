@@ -1,19 +1,21 @@
-package Search::Elasticsearch::Client::7_0::Direct::XPack::Security;
+package Search::Elasticsearch::Client::7_0::Direct::Security;
 
 use Moo;
 with 'Search::Elasticsearch::Client::7_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('xpack.security');
+__PACKAGE__->_install_api('security');
 
 1;
+
+__END__
 
 # ABSTRACT: Plugin providing Security API for Search::Elasticsearch 7.x
 
 =head1 SYNOPSIS
 
-    my $response = $es->xpack->security->authenticate();
+    my $response = $es->security->authenticate();
 
 =head2 DESCRIPTION
 
@@ -28,7 +30,7 @@ L<https://www.elastic.co/guide/en/x-pack/current/xpack-security.html>
 
 =head2 C<authenticate()>
 
-    $response = $es->xpack->security->authenticate()
+    $response = $es->security->authenticate()
 
 The C<authenticate()> method checks that the C<userinfo> is correct and returns
 a list of which roles are assigned to the user.
@@ -42,7 +44,7 @@ Query string parameters:
 
 =head2 C<clear_cached_realms()>
 
-    $response = $es->xpack->security->clear_cached_realms(
+    $response = $es->security->clear_cached_realms(
         realms => $realms       # required  (comma-separated string)
     );
 
@@ -61,7 +63,7 @@ for more information.
 
 =head2 C<put_user()>
 
-    $response = $es->xpack->security->put_user(
+    $response = $es->security->put_user(
         username => $username,     # required
         body     => {...}          # required
     );
@@ -77,7 +79,7 @@ Query string parameters:
 
 =head2 C<get_user()>
 
-    $response = $es->xpack->security->get_user(
+    $response = $es->security->get_user(
         username => $username | \@usernames     # optional
     );
 
@@ -92,7 +94,7 @@ Query string parameters:
 
 =head2 C<delete_user()>
 
-    $response = $es->xpack->security->delete_user(
+    $response = $es->security->delete_user(
         username => $username       # required
     );
 
@@ -107,7 +109,7 @@ Query string parameters:
 
 =head2 C<change_password()>
 
-    $response = $es->xpack->security->change_password(
+    $response = $es->security->change_password(
         username => $username       # optional
         body => {
             password => $password   # required
@@ -121,7 +123,7 @@ for more information.
 
 =head2 C<disable_user()>
 
-    $response = $es->xpack->security->disable_user(
+    $response = $es->security->disable_user(
         username => $username       # required
     );
 
@@ -136,7 +138,7 @@ Query string parameters:
 
 =head2 C<enable_user()>
 
-    $response = $es->xpack->security->enable_user(
+    $response = $es->security->enable_user(
         username => $username       # required
     );
 
@@ -153,7 +155,7 @@ Query string parameters:
 
 =head2 C<put_role()>
 
-    $response = $es->xpack->security->put_role(
+    $response = $es->security->put_role(
         name => $name,             # required
         body     => {...}          # required
     );
@@ -169,7 +171,7 @@ Query string parameters:
 
 =head2 C<get_role()>
 
-    $response = $es->xpack->security->get_role(
+    $response = $es->security->get_role(
         name => $name | \@names     # optional
     );
 
@@ -184,7 +186,7 @@ Query string parameters:
 
 =head2 C<delete_role()>
 
-    $response = $es->xpack->security->delete_role(
+    $response = $es->security->delete_role(
         name => $name       # required
     );
 
@@ -199,7 +201,7 @@ Query string parameters:
 
 =head2 C<clear_cached_roles()>
 
-    $response = $es->xpack->security->clear_cached_roles(
+    $response = $es->security->clear_cached_roles(
         names => $names       # required  (comma-separated string)
     );
 
@@ -217,7 +219,7 @@ Query string parameters:
 
 =head2 C<put_role_mapping()>
 
-    $response = $es->xpack->security->put_role_mapping(
+    $response = $es->security->put_role_mapping(
         name => $name,             # required
         body     => {...}          # required
     );
@@ -233,7 +235,7 @@ Query string parameters:
 
 =head2 C<get_role_mapping()>
 
-    $response = $es->xpack->security->get_role_mapping(
+    $response = $es->security->get_role_mapping(
         name => $name,             # optional
     );
 
@@ -248,7 +250,7 @@ Query string parameters:
 
 =head2 C<delete_role_mapping()>
 
-    $response = $es->xpack->security->delete_role_mapping(
+    $response = $es->security->delete_role_mapping(
         name => $name,             # required
     );
 
@@ -265,7 +267,7 @@ Query string parameters:
 
 =head2 C<get_token()>
 
-    $response = $es->xpack->security->get_token(
+    $response = $es->security->get_token(
         body     => {...}          # required
     );
 
@@ -281,7 +283,7 @@ Query string parameters:
 
 =head2 C<invalidate_token()>
 
-    $response = $es->xpack->security->invalidate_token(
+    $response = $es->security->invalidate_token(
         body     => {...}          # required
     );
 
@@ -299,7 +301,7 @@ Query string parameters:
 
 =head2 C<create_api_key()>
 
-    $response = $es->xpack->security->create_api_key(
+    $response = $es->security->create_api_key(
         body    => {...}            # required
     )
 
@@ -316,7 +318,7 @@ See the L<Create API Key docs|https://www.elastic.co/guide/en/elasticsearch/refe
 
 =head2 C<get_api_key()>
 
-    $response = $es->xpack->security->get_api_key(
+    $response = $es->security->get_api_key(
         id          => $id,         # optional
         name        => $name,       # optional
         realm_name  => $realm,      # optional
@@ -338,7 +340,7 @@ See the L<Get API Key docs|https://www.elastic.co/guide/en/elasticsearch/referen
 
 =head2 C<invalidate_api_key()>
 
-    $response = $es->xpack->security->invalidate_api_key(
+    $response = $es->security->invalidate_api_key(
         id          => $id,         # optional
         name        => $name,       # optional
         realm_name  => $realm,      # optional
@@ -362,7 +364,7 @@ See the L<Invalidate API Key docs|https://www.elastic.co/guide/en/elasticsearch/
 
 =head2 C<get_user_privileges()>
 
-    $response = $es->xpack->get_user_privileges();
+    $response = $es->get_user_privileges();
 
  The C<get_user_privileges()> method retrieves the privileges granted to the current user.
 
@@ -372,7 +374,7 @@ See the L<Invalidate API Key docs|https://www.elastic.co/guide/en/elasticsearch/
     C<human>
 
 =head2 C<has_privileges()>
-    $response = $es->xpack->has_privileges(
+    $response = $es->has_privileges(
         user    => $user,   # optional
         body    => {...}    # required
     );
@@ -391,7 +393,7 @@ See the L<Has Privileges docs|https://www.elastic.co/guide/en/elasticsearch/refe
 
 =head2 C<put_privileges()>
 
-    $response = $es->xpack->put_privileges(
+    $response = $es->put_privileges(
         application     => $application,    # required
         name            => $name,           # required
         body            => {...}            # required
@@ -409,7 +411,7 @@ See the L<Create or Update Application Privileges docs|https://www.elastic.co/gu
 
 =head2 C<get_privileges()>
 
-    $response = $es->xpack->get_privileges(
+    $response = $es->get_privileges(
         application     => $application,    # required
         name            => $name,           # required
     );
@@ -425,7 +427,7 @@ See the L<Get Application Privileges docs|https://www.elastic.co/guide/en/elasti
 
 =head2 C<delete_privileges()>
 
-    $response = $es->xpack->delete_privileges(
+    $response = $es->delete_privileges(
         application     => $application,    # required
         name            => $name,           # required
     );

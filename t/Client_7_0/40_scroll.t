@@ -68,28 +68,6 @@ test_scroll(
 );
 
 test_scroll(
-    "Scroll in qs",
-    {   scroll_in_qs => 1,
-        body         => {
-            query   => { term => { color => 'red' } },
-            suggest => {
-                mysuggest => { text => 'green', term => { field => 'color' } }
-            },
-            aggs => { switch => { terms => { field => 'switch' } } },
-        }
-    },
-    total     => 50,
-    max_score => num( 1.0, 0.5 ),
-    aggs      => bool(1),
-    suggest   => bool(1),
-    steps     => [
-        next        => [1],
-        next_50     => [49],
-        is_finished => 1,
-    ]
-);
-
-test_scroll(
     "Finish",
     {},
     total     => 100,

@@ -70,8 +70,7 @@ sub test_flush {
     my $params = shift;
     my $b      = $es->bulk_helper(
         %$params,
-        index => 'test',
-        type  => 'test',
+        index => 'test'
     );
 
     my @seq = @_;

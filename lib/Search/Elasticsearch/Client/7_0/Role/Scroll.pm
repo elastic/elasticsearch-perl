@@ -7,7 +7,6 @@ use Devel::GlobalDestruction;
 use namespace::clean;
 has 'es' => ( is => 'ro', required => 1 );
 has 'scroll'        => ( is => 'ro' );
-has 'scroll_in_qs'  => ( is => 'ro' );
 has 'total'         => ( is => 'rwp' );
 has 'max_score'     => ( is => 'rwp' );
 has 'facets'        => ( is => 'rwp' );
@@ -30,12 +29,7 @@ sub scroll_request {
         if $self->_pid != $$;
 
     my %args = ( scroll => $self->scroll );
-    if ( $self->scroll_in_qs ) {
-        $args{scroll_id} = $self->_scroll_id;
-    }
-    else {
-        $args{body} = { scroll_id => $self->_scroll_id };
-    }
+    $args{body} = { scroll_id => $self->_scroll_id };
     $self->es->scroll(%args);
 }
 

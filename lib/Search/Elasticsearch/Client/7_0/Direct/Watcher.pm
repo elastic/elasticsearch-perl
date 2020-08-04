@@ -1,19 +1,21 @@
-package Search::Elasticsearch::Client::7_0::Direct::XPack::Watcher;
+package Search::Elasticsearch::Client::7_0::Direct::Watcher;
 
 use Moo;
 with 'Search::Elasticsearch::Client::7_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('xpack.watcher');
+__PACKAGE__->_install_api('watcher');
 
 1;
+
+__END__
 
 # ABSTRACT: Plugin providing Watcher API for Search::Elasticsearch 7.x
 
 =head1 SYNOPSIS
 
-    my $response = $es->xpack->watcher->start();
+    my $response = $es->watcher->start();
 
 =head2 DESCRIPTION
 
@@ -28,7 +30,7 @@ L<https://www.elastic.co/guide/en/x-pack/current/xpack-alerting.html>
 
 =head2 C<put_watch()>
 
-    $response = $es->xpack->watcher->put_watch(
+    $response = $es->watcher->put_watch(
         id    => $watch_id,     # required
         body  => {...}
     );
@@ -50,7 +52,7 @@ Query string parameters:
 
 =head2 C<get_watch()>
 
-    $response = $es->xpack->watcher->get_watch(
+    $response = $es->watcher->get_watch(
         id    => $watch_id,     # required
     );
 
@@ -65,7 +67,7 @@ Query string parameters:
 
 =head2 C<delete_watch()>
 
-    $response = $es->xpack->watcher->delete_watch(
+    $response = $es->watcher->delete_watch(
         id    => $watch_id,     # required
     );
 
@@ -82,7 +84,7 @@ for more information.
 
 =head2 C<execute_watch()>
 
-    $response = $es->xpack->watcher->execute_watch(
+    $response = $es->watcher->execute_watch(
         id    => $watch_id,     # optional
         body  => {...}          # optional
     );
@@ -100,7 +102,7 @@ for more information.
 
 =head2 C<ack_watch()>
 
-    $response = $es->xpack->watcher->ack_watch(
+    $response = $es->watcher->ack_watch(
         watch_id => $watch_id,                  # required
         action_id => $action_id | \@action_ids  # optional
     );
@@ -118,7 +120,7 @@ for more information.
 
 =head2 C<activate_watch()>
 
-    $response = $es->xpack->watcher->activate_watch(
+    $response = $es->watcher->activate_watch(
         watch_id => $watch_id,                  # required
     );
 
@@ -134,7 +136,7 @@ for more information.
 
 =head2 C<deactivate_watch()>
 
-    $response = $es->xpack->watcher->deactivate_watch(
+    $response = $es->watcher->deactivate_watch(
         watch_id => $watch_id,                  # required
     );
 
@@ -150,7 +152,7 @@ for more information.
 
 =head2 C<stats()>
 
-    $response = $es->xpack->watcher->stats(
+    $response = $es->watcher->stats(
         metric => $metric       # optional
     );
 
@@ -165,7 +167,7 @@ Query string parameters:
 
 =head2 C<stop()>
 
-    $response = $es->xpack->watcher->stop();
+    $response = $es->watcher->stop();
 
 The C<stop()> method stops the watcher service if it is running.
 
@@ -178,7 +180,7 @@ Query string parameters:
 
 =head2 C<start()>
 
-    $response = $es->xpack->watcher->start();
+    $response = $es->watcher->start();
 
 The C<start()> method starts the watcher service if it is not already running.
 
@@ -191,7 +193,7 @@ Query string parameters:
 
 =head2 C<restart()>
 
-    $response = $es->xpack->watcher->restart();
+    $response = $es->watcher->restart();
 
 The C<restart()> method stops then starts the watcher service.
 

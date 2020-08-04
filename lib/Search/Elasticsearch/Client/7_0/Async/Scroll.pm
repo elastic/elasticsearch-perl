@@ -21,12 +21,8 @@ sub BUILDARGS {
 #===================================
     my ( $class, $search_params ) = parse_params(@_);
 
-    throw( 'Param',
-        'The (scroll_in_body) parameter has been replaced by (scroll_in_qs)' )
-        if exists $search_params->{scroll_in_body};
-
-    my %params;
-    for (qw(es on_start on_result on_results on_error scroll_in_qs)) {
+        my %params;
+    for (qw(es on_start on_result on_results on_error)) {
         my $val = delete $search_params->{$_};
         next unless defined $val;
         $params{$_} = $val;
@@ -192,10 +188,7 @@ sub finish {
         return $d->promise;
     }
 
-    my %args
-        = $self->scroll_in_qs
-        ? ( scroll_id => $scroll_id )
-        : ( body => { scroll_id => $scroll_id } );
+    my %args = ( body => { scroll_id => $scroll_id } );
 
     $self->es->clear_scroll(%args)->then(
         sub {
@@ -361,7 +354,6 @@ functionality provided by Elasticsearch.
     my $es = Search::Elasticsearch::Async->new(...);
     my $scroll = $es->scroll_helper(
         scroll             => '1m',            # optional
-        scroll_in_qs       => 0|1,             # optional
 
         on_result          => sub {...}        # required
       | on_results         => sub {...}        # required
@@ -376,10 +368,8 @@ The L<Search::Elasticsearch::Client::7_0::Direct/scroll_helper()> method loads
 L<Search::Elasticsearch::Client::7_0::Async::Scroll> class and calls L</new()>,
 passing in any arguments.
 
-You can specify a C<scroll> duration (which defaults to C<"1m">),
-C<scroll_in_qs> (which defaults to C<false>), and any
-of the listed callbacks. Any other parameters are
-passed directly to L<Search::Elasticsearch::Client::7_0::Direct/search()>.
+You can specify a C<scroll> duration (which defaults to C<"1m">).
+Any other parameters are passed directly to L<Search::Elasticsearch::Client::7_0::Direct/search()>.
 
 The C<scroll> duration tells Elasticearch how long it should keep the scroll
 alive.  B<Note>: this duration doesn't need to be long enough to process
@@ -389,9 +379,6 @@ a new batch of results is retrieved from the cluster.
 
 By default, the C<scroll_id> is passed as the C<body> to the
 L<scroll|Search::Elasticsearch::Client::7_0::Direct/scroll()> request.
-To send it in the query string instead, set C<scroll_in_qs> to a true value,
-but be aware: when querying very many indices, the scroll ID can become
-too long for intervening proxies.
 
 The C<scroll> request uses C<GET> by default.  To use C<POST> instead,
 set L<send_get_body_as|Search::Elasticsearch::Transport/send_get_body_as> to

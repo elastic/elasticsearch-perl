@@ -1,19 +1,21 @@
-package Search::Elasticsearch::Client::7_0::Direct::XPack::SSL;
+package Search::Elasticsearch::Client::7_0::Direct::SSL;
 
 use Moo;
 with 'Search::Elasticsearch::Client::7_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('xpack.ssl');
+__PACKAGE__->_install_api('ssl');
 
 1;
+
+__END__
 
 # ABSTRACT: Plugin providing SSL for Search::Elasticsearch 7.x
 
 =head1 SYNOPSIS
 
-    my $response = $es->xpack->ssl->certificates()
+    my $response = $es->ssl->certificates()
 
 =head2 DESCRIPTION
 
@@ -25,6 +27,6 @@ L<SSL APIs|https://www.elastic.co/guide/en/elasticsearch/reference/current/secur
 
 =head2 C<certificates()>
 
-    $response = $es->xpack->ssl->certificates()
+    $response = $es->ssl->certificates()
 
 The C<certificates()> method returns all the certificate information on a single node of Elasticsearch.

@@ -55,7 +55,7 @@ sub api {
             'upsert',
         ]
     },
-    'bulk.required' => { params => [ 'index' ] },
+    'bulk.required' => { params => ['index'] },
 
 #=== AUTOGEN - START ===
 
@@ -90,8 +90,11 @@ sub api {
         doc    => "",
         method => "DELETE",
         parts  => { scroll_id => { multi => 1 } },
-        paths  => [ [ {}, "_search", "scroll" ] ],
-        qs     => {
+        paths  => [
+            [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ],
+            [ {}, "_search", "scroll" ],
+        ],
+        qs => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -103,8 +106,11 @@ sub api {
         doc    => "search-count",
         method => "POST",
         parts  => { index => { multi => 1 }, type => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_count" ], [ {}, "_count" ] ],
+        paths  => [
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_count" ],
+            [ { index => 0 }, "{index}", "_count" ],
+            [ {}, "_count" ],
+        ],
         qs => {
             allow_no_indices   => "boolean",
             analyze_wildcard   => "boolean",
@@ -135,8 +141,12 @@ sub api {
             index => { required => 1 },
             type  => {}
         },
-        paths =>
-            [ [ { id => 2, index => 0 }, "{index}", "_create", "{id}" ] ],
+        paths => [
+            [   { id => 2, index => 0, type => 1 },
+                "{index}", "{type}", "{id}", "_create",
+            ],
+            [ { id => 2, index => 0 }, "{index}", "_create", "{id}" ],
+        ],
         qs => {
             error_trace            => "boolean",
             filter_path            => "list",
@@ -159,8 +169,13 @@ sub api {
             index => { required => 1 },
             type  => {}
         },
-        paths => [ [ { id => 2, index => 0 }, "{index}", "_doc", "{id}" ] ],
-        qs    => {
+        paths => [
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
+            [ { id => 2, index => 0 }, "{index}", "_doc", "{id}" ],
+        ],
+        qs => {
             error_trace            => "boolean",
             filter_path            => "list",
             human                  => "boolean",
@@ -183,8 +198,13 @@ sub api {
             index => { multi => 1, required => 1 },
             type  => { multi => 1 }
         },
-        paths => [ [ { index => 0 }, "{index}", "_delete_by_query" ] ],
-        qs    => {
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_delete_by_query",
+            ],
+            [ { index => 0 }, "{index}", "_delete_by_query" ],
+        ],
+        qs => {
             _source                => "list",
             _source_excludes       => "list",
             _source_includes       => "list",
@@ -263,8 +283,13 @@ sub api {
             index => { required => 1 },
             type  => {}
         },
-        paths => [ [ { id => 2, index => 0 }, "{index}", "_doc", "{id}" ] ],
-        qs    => {
+        paths => [
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
+            [ { id => 2, index => 0 }, "{index}", "_doc", "{id}" ],
+        ],
+        qs => {
             _source          => "list",
             _source_excludes => "list",
             _source_includes => "list",
@@ -289,8 +314,12 @@ sub api {
             index => { required => 1 },
             type  => {}
         },
-        paths =>
-            [ [ { id => 2, index => 0 }, "{index}", "_source", "{id}" ] ],
+        paths => [
+            [   { id => 2, index => 0, type => 1 },
+                "{index}", "{type}", "{id}", "_source",
+            ],
+            [ { id => 2, index => 0 }, "{index}", "_source", "{id}" ],
+        ],
         qs => {
             _source          => "list",
             _source_excludes => "list",
@@ -315,8 +344,13 @@ sub api {
             index => { required => 1 },
             type  => {}
         },
-        paths =>
-            [ [ { id => 2, index => 0 }, "{index}", "_explain", "{id}" ] ],
+        paths => [
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}",
+                "_explain",
+            ],
+            [ { id => 2, index => 0 }, "{index}", "_explain", "{id}" ],
+        ],
         qs => {
             _source          => "list",
             _source_excludes => "list",
@@ -362,8 +396,13 @@ sub api {
             index => { required => 1 },
             type  => {}
         },
-        paths => [ [ { id => 2, index => 0 }, "{index}", "_doc", "{id}" ] ],
-        qs    => {
+        paths => [
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
+            [ { id => 2, index => 0 }, "{index}", "_doc", "{id}" ],
+        ],
+        qs => {
             _source          => "list",
             _source_excludes => "list",
             _source_includes => "list",
@@ -399,8 +438,12 @@ sub api {
             index => { required => 1 },
             type  => {}
         },
-        paths =>
-            [ [ { id => 2, index => 0 }, "{index}", "_source", "{id}" ] ],
+        paths => [
+            [   { id => 2, index => 0, type => 1 },
+                "{index}", "{type}", "{id}", "_source",
+            ],
+            [ { id => 2, index => 0 }, "{index}", "_source", "{id}" ],
+        ],
         qs => {
             _source          => "list",
             _source_excludes => "list",
@@ -423,7 +466,11 @@ sub api {
         method => "POST",
         parts  => { id => {}, index => { required => 1 }, type => {} },
         paths  => [
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}"
+            ],
             [ { id    => 2, index => 0 }, "{index}", "_doc", "{id}" ],
+            [ { index => 0, type  => 1 }, "{index}", "{type}" ],
             [ { index => 0 }, "{index}", "_doc" ],
         ],
         qs => {
@@ -458,8 +505,12 @@ sub api {
         body  => { required => 1 },
         doc   => "docs-multi-get",
         parts => { index => {}, type => {} },
-        paths => [ [ { index => 0 }, "{index}", "_mget" ], [ {}, "_mget" ] ],
-        qs    => {
+        paths => [
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_mget" ],
+            [ { index => 0 }, "{index}", "_mget" ],
+            [ {}, "_mget" ],
+        ],
+        qs => {
             _source          => "list",
             _source_excludes => "list",
             _source_includes => "list",
@@ -478,8 +529,11 @@ sub api {
         body  => { required => 1 },
         doc   => "search-multi-search",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_msearch" ], [ {}, "_msearch" ] ],
+        paths => [
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_msearch" ],
+            [ { index => 0 }, "{index}", "_msearch" ],
+            [ {}, "_msearch" ],
+        ],
         qs => {
             ccs_minimize_roundtrips       => "boolean",
             error_trace                   => "boolean",
@@ -500,6 +554,10 @@ sub api {
         doc   => "search-multi-search",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_msearch",
+                "template",
+            ],
             [ { index => 0 }, "{index}", "_msearch", "template" ],
             [ {}, "_msearch", "template" ],
         ],
@@ -521,6 +579,9 @@ sub api {
         doc   => "docs-multi-termvectors",
         parts => { index => {}, type => {} },
         paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_mtermvectors"
+            ],
             [ { index => 0 }, "{index}", "_mtermvectors" ],
             [ {}, "_mtermvectors" ],
         ],
@@ -656,15 +717,17 @@ sub api {
     'scroll' => {
         body  => {},
         doc   => "",
-        parts => {},
-        paths => [ [ {}, "_search", "scroll" ] ],
-        qs    => {
+        parts => { scroll_id => {} },
+        paths => [
+            [ { scroll_id => 2 }, "_search", "scroll", "{scroll_id}" ],
+            [ {}, "_search", "scroll" ],
+        ],
+        qs => {
             error_trace            => "boolean",
             filter_path            => "list",
             human                  => "boolean",
             rest_total_hits_as_int => "boolean",
             scroll                 => "time",
-            scroll_id              => "string",
         },
     },
 
@@ -672,8 +735,11 @@ sub api {
         body  => {},
         doc   => "search-search",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_search" ], [ {}, "_search" ] ],
+        paths => [
+            [ { index => 0, type => 1 }, "{index}", "{type}", "_search" ],
+            [ { index => 0 }, "{index}", "_search" ],
+            [ {}, "_search" ],
+        ],
         qs => {
             _source                       => "list",
             _source_excludes              => "list",
@@ -748,6 +814,10 @@ sub api {
         doc   => "search-template",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_search",
+                "template",
+            ],
             [ { index => 0 }, "{index}", "_search", "template" ],
             [ {}, "_search", "template" ],
         ],
@@ -776,7 +846,14 @@ sub api {
         doc   => "docs-termvectors",
         parts => { id => {}, index => { required => 1 }, type => {} },
         paths => [
-            [ { id    => 2, index => 0 }, "{index}", "_termvectors", "{id}" ],
+            [   { id => 2, index => 0, type => 1 }, "{index}",
+                "{type}", "{id}",
+                "_termvectors",
+            ],
+            [ { id => 2, index => 0 }, "{index}", "_termvectors", "{id}" ],
+            [   { index => 0, type => 1 }, "{index}", "{type}",
+                "_termvectors"
+            ],
             [ { index => 0 }, "{index}", "_termvectors" ],
         ],
         qs => {
@@ -806,8 +883,12 @@ sub api {
             index => { required => 1 },
             type  => {}
         },
-        paths =>
-            [ [ { id => 2, index => 0 }, "{index}", "_update", "{id}" ] ],
+        paths => [
+            [   { id => 2, index => 0, type => 1 },
+                "{index}", "{type}", "{id}", "_update",
+            ],
+            [ { id => 2, index => 0 }, "{index}", "_update", "{id}" ],
+        ],
         qs => {
             _source                => "list",
             _source_excludes       => "list",
@@ -834,8 +915,13 @@ sub api {
             index => { multi => 1, required => 1 },
             type  => { multi => 1 }
         },
-        paths => [ [ { index => 0 }, "{index}", "_update_by_query" ] ],
-        qs    => {
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_update_by_query",
+            ],
+            [ { index => 0 }, "{index}", "_update_by_query" ],
+        ],
+        qs => {
             _source                => "list",
             _source_excludes       => "list",
             _source_includes       => "list",
@@ -1712,8 +1798,14 @@ sub api {
         body  => {},
         doc   => "graph-explore-api",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
-        paths => [ [ { index => 0 }, "{index}", "_graph", "explore" ] ],
-        qs    => {
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_graph",
+                "explore",
+            ],
+            [ { index => 0 }, "{index}", "_graph", "explore" ],
+        ],
+        qs => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean",
@@ -2161,8 +2253,16 @@ sub api {
             type   => { multi => 1 },
         },
         paths => [
+            [   { fields => 4, index => 0, type => 2 }, "{index}",
+                "_mapping", "{type}",
+                "field",    "{fields}",
+            ],
             [   { fields => 3, index => 0 }, "{index}",
                 "_mapping", "field",
+                "{fields}",
+            ],
+            [   { fields => 3, type => 1 }, "_mapping",
+                "{type}", "field",
                 "{fields}",
             ],
             [ { fields => 2 }, "_mapping", "field", "{fields}" ],
@@ -2183,8 +2283,12 @@ sub api {
     'indices.get_mapping' => {
         doc   => "indices-get-mapping",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
-        paths =>
-            [ [ { index => 0 }, "{index}", "_mapping" ], [ {}, "_mapping" ] ],
+        paths => [
+            [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ],
+            [ { index => 0 }, "{index}", "_mapping" ],
+            [ { type => 1 }, "_mapping", "{type}" ],
+            [ {}, "_mapping" ],
+        ],
         qs => {
             allow_no_indices   => "boolean",
             error_trace        => "boolean",
@@ -2294,8 +2398,12 @@ sub api {
         doc    => "indices-put-mapping",
         method => "PUT",
         parts  => { index => { multi => 1 }, type => {} },
-        paths  => [ [ { index => 0 }, "{index}", "_mapping" ] ],
-        qs     => {
+        paths  => [
+            [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ],
+            [ { index => 0 }, "{index}", "_mapping" ],
+            [ { type => 1 }, "_mapping", "{type}" ],
+        ],
+        qs => {
             allow_no_indices   => "boolean",
             error_trace        => "boolean",
             expand_wildcards   => "enum",
@@ -2576,6 +2684,10 @@ sub api {
         doc   => "search-validate",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_validate",
+                "query",
+            ],
             [ { index => 0 }, "{index}", "_validate", "query" ],
             [ {}, "_validate", "query" ],
         ],
@@ -3718,8 +3830,11 @@ sub api {
         doc    => "es-monitoring",
         method => "POST",
         parts  => { type => {} },
-        paths  => [ [ {}, "_monitoring", "bulk" ] ],
-        qs     => {
+        paths  => [
+            [ { type => 1 }, "_monitoring", "{type}", "bulk" ],
+            [ {}, "_monitoring", "bulk" ],
+        ],
+        qs => {
             error_trace        => "boolean",
             filter_path        => "list",
             human              => "boolean",
@@ -3908,8 +4023,13 @@ sub api {
     'rollup.rollup_search' => {
         body  => { required => 1 },
         parts => { index    => { multi => 1, required => 1 }, type => {} },
-        paths => [ [ { index => 0 }, "{index}", "_rollup_search" ] ],
-        qs    => {
+        paths => [
+            [   { index => 0, type => 1 }, "{index}",
+                "{type}", "_rollup_search",
+            ],
+            [ { index => 0 }, "{index}", "_rollup_search" ],
+        ],
+        qs => {
             error_trace            => "boolean",
             filter_path            => "list",
             human                  => "boolean",

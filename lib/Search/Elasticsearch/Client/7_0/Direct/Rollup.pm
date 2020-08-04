@@ -1,19 +1,21 @@
-package Search::Elasticsearch::Client::7_0::Direct::XPack::Rollup;
+package Search::Elasticsearch::Client::7_0::Direct::Rollup;
 
 use Moo;
 with 'Search::Elasticsearch::Client::7_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('xpack.rollup');
+__PACKAGE__->_install_api('rollup');
 
 1;
+
+__END__
 
 # ABSTRACT: Plugin providing Rollups for Search::Elasticsearch 7.x
 
 =head1 SYNOPSIS
 
-    my $response = $es->xpack->rollup->search( body => {...} )
+    my $response = $es->rollup->search( body => {...} )
 
 =head2 DESCRIPTION
 
@@ -29,7 +31,7 @@ L<https://www.elastic.co/guide/en/elasticsearch/reference/current/xpack-rollup.h
 
 =head2 C<search()>
 
-    $response = $es->xpack->rollup->search(
+    $response = $es->rollup->search(
         index   => $index | \@indices,      # optional
         body    => {...}                    # optional
     )
@@ -50,7 +52,7 @@ for more information.
 
 =head2 C<put_job()>
 
-    $response = $es->xpack->rollup->put_job(
+    $response = $es->rollup->put_job(
         id      => $id,                     # required
         body    => {...}                    # optional
     )
@@ -68,7 +70,7 @@ for more information.
 
 =head2 C<delete_job()>
 
-    $response = $es->xpack->rollup->delete_job(
+    $response = $es->rollup->delete_job(
         id      => $id,                     # required
     )
 
@@ -84,7 +86,7 @@ for more information.
 
 =head2 C<get_jobs()>
 
-    $response = $es->xpack->rollup->get_jobs(
+    $response = $es->rollup->get_jobs(
         id      => $id,     # optional
     )
 
@@ -100,7 +102,7 @@ for more information.
 
 =head2 C<start_job()>
 
-    $response = $es->xpack->rollup->start_job(
+    $response = $es->rollup->start_job(
         id      => $id,     # required
     )
 
@@ -116,7 +118,7 @@ for more information.
 
 =head2 C<stop_job()>
 
-    $response = $es->xpack->rollup->stop_job(
+    $response = $es->rollup->stop_job(
         id      => $id,     # required
     )
 
@@ -134,7 +136,7 @@ for more information.
 
 =head2 C<get_rollup_caps()>
 
-    $response = $es->xpack->rollup->get_rollup_caps(
+    $response = $es->rollup->get_rollup_caps(
         id => $index    # optional
     )
 
@@ -150,7 +152,7 @@ for more information.
 
 =head2 C<get_rollup_index_caps()>
 
-    $response = $es->xpack->rollup->get_rollup_index_caps(
+    $response = $es->rollup->get_rollup_index_caps(
         id => $index    # optional
     )
 

@@ -1,19 +1,21 @@
-package Search::Elasticsearch::Client::7_0::Direct::XPack::License;
+package Search::Elasticsearch::Client::7_0::Direct::License;
 
 use Moo;
 with 'Search::Elasticsearch::Client::7_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('xpack.license');
+__PACKAGE__->_install_api('license');
 
 1;
+
+__END__
 
 # ABSTRACT: Plugin providing License API for Search::Elasticsearch 7.x
 
 =head1 SYNOPSIS
 
-    my $response = $es->xpack->license->get();
+    my $response = $es->license->get();
 
 =head2 DESCRIPTION
 
@@ -27,7 +29,7 @@ L<https://www.elastic.co/guide/en/x-pack/current/license-management.html>
 
 =head2 C<get()>
 
-    $response = $es->xpack->license->get()
+    $response = $es->license->get()
 
 The C<get()> method returns the currently installed license.
 
@@ -41,7 +43,7 @@ Query string parameters:
 
 =head2 C<post()>
 
-    $response = $es->xpack->license->post(
+    $response = $es->license->post(
         body     => {...}          # required
     );
 
@@ -58,7 +60,7 @@ Query string parameters:
 
 =head2 C<get_basic_status()>
 
-    $response = $es->xpack->license->get_basic_status()
+    $response = $es->license->get_basic_status()
 
 This API enables you to check the status of your basic license.
 
@@ -71,7 +73,7 @@ See the L<get-basic-status docs|https://www.elastic.co/guide/en/elasticsearch/re
 
 =head2 C<post_start_basic()>
 
-    $response = $es->xpack->license->post_start_basic()
+    $response = $es->license->post_start_basic()
 
 This API enables you to  initiate an indefinite basic license, which gives access to all the basic features.
 
@@ -86,7 +88,7 @@ See the L<post-start-basic docs|https://www.elastic.co/guide/en/elasticsearch/re
 
 =head2 C<get_trial_status()>
 
-    $response = $es->xpack->license->get_trial_status()
+    $response = $es->license->get_trial_status()
 
 This API enables you to check the status of your trial license.
 
@@ -99,7 +101,7 @@ See the L<get-trial-status docs|https://www.elastic.co/guide/en/elasticsearch/re
 
 =head2 C<post_start_trial()>
 
-    $response = $es->xpack->license->post_start_trial()
+    $response = $es->license->post_start_trial()
 
 This API enables you to upgrade from a basic license to a 30-day trial license, which gives
 access to the platinum features.

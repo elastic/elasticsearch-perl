@@ -21,7 +21,7 @@ test_scroll(
     max_seen   => 0,
 );
 
-do "index_test_data.pl" or die( $@ || $! );
+do "index_test_data_7.pl" or die( $@ || $! );
 
 test_scroll(
     "Match all - on_result",
@@ -44,27 +44,6 @@ test_scroll(
 test_scroll(
     "Query",
     {   body => {
-            query   => { term => { color => 'red' } },
-            suggest => {
-                mysuggest => { text => 'green', term => { field => 'color' } }
-            },
-            aggs => { switch => { terms => { field => 'switch' } } },
-        },
-        size       => 10,
-        on_results => \&on_results
-    },
-    total      => 50,
-    max_score  => num( 1.0, 0.5 ),
-    aggs       => bool(1),
-    suggest    => bool(1),
-    total_seen => 50,
-    max_seen   => 10
-);
-
-test_scroll(
-    "Scroll in qs",
-    {   scroll_in_qs => 1,
-        body         => {
             query   => { term => { color => 'red' } },
             suggest => {
                 mysuggest => { text => 'green', term => { field => 'color' } }
@@ -121,52 +100,52 @@ test_scroll(
     ok $s->is_finished, "Our scroll is finished";
 }
 
-{
-    # Test Scroll usage attempt in a different process.
-    my $count = 0;
-    my $s     = $es->scroll_helper(
-        size      => 5,
-        on_result => sub { $count++ },
-        on_error  => sub { die @_ }
-    );
+# {
+#     # Test Scroll usage attempt in a different process.
+#     my $count = 0;
+#     my $s     = $es->scroll_helper(
+#         size      => 5,
+#         on_result => sub { $count++ },
+#         on_error  => sub { die @_ }
+#     );
 
-    my $pid = fork();
-    unless ( defined($pid) ) { die "Cannot fork. Lack of resources?"; }
-    unless ($pid) {
+#     my $pid = fork();
+#     unless ( defined($pid) ) { die "Cannot fork. Lack of resources?"; }
+#     unless ($pid) {
 
-        eval { wait_for( $s->start ) };
-        my $err = $@;
-        exit( eval { $err->is('Illegal') && 123 } || 999 );
-    }
-    else {
-        # Wait for children
-        waitpid( $pid, 0 );
-        is $? >> 8, 123, "Child threw Illegal exception";
-    }
-}
+#         eval { wait_for( $s->start ) };
+#         my $err = $@;
+#         exit( eval { $err->is('Illegal') && 123 } || 999 );
+#     }
+#     else {
+#         # Wait for children
+#         waitpid( $pid, 0 );
+#         is $? >> 8, 123, "Child threw Illegal exception";
+#     }
+# }
 
-{
-    # Test valid Scroll usage after initial fork
-    my $pid = fork();
-    unless ( defined($pid) ) { die "Cannot fork. Lack of resources?"; }
-    unless ($pid) {
+# {
+#     # Test valid Scroll usage after initial fork
+#     my $pid = fork();
+#     unless ( defined($pid) ) { die "Cannot fork. Lack of resources?"; }
+#     unless ($pid) {
 
-        my $count = 0;
-        my $s     = $es->scroll_helper(
-            size      => 5,
-            on_result => sub { $count++ },
-            on_error  => sub { die @_ }
-        );
+#         my $count = 0;
+#         my $s     = $es->scroll_helper(
+#             size      => 5,
+#             on_result => sub { $count++ },
+#             on_error  => sub { die @_ }
+#         );
 
-        wait_for( $s->start );
-        exit 0;
-    }
-    else {
-        # Wait for children
-        waitpid( $pid, 0 );
-        is $? , 0, "Scroll completed successfully";
-    }
-}
+#         wait_for( $s->start );
+#         exit 0;
+#     }
+#     else {
+#         # Wait for children
+#         waitpid( $pid, 0 );
+#         is $? , 0, "Scroll completed successfully";
+#     }
+# }
 
 done_testing;
 

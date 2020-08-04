@@ -1,19 +1,21 @@
-package Search::Elasticsearch::Client::7_0::Direct::XPack::SQL;
+package Search::Elasticsearch::Client::7_0::Direct::SQL;
 
 use Moo;
 with 'Search::Elasticsearch::Client::7_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('xpack.sql');
+__PACKAGE__->_install_api('sql');
 
 1;
+
+__END__
 
 # ABSTRACT: Plugin providing SQL for Search::Elasticsearch 7.x
 
 =head1 SYNOPSIS
 
-    my $response = $es->xpack->sql->query( body => {...} )
+    my $response = $es->sql->query( body => {...} )
 
 =head2 DESCRIPTION
 
@@ -28,7 +30,7 @@ L<https://www.elastic.co/guide/en/elasticsearch/reference/current/xpack-sql.html
 
 =head2 C<query()>
 
-    $response = $es->xpack->sql->query(
+    $response = $es->sql->query(
         body    => {...} # required
     )
 
@@ -45,7 +47,7 @@ for more information.
 
 =head2 C<translate()>
 
-    $response = $es->xpack->sql->translate(
+    $response = $es->sql->translate(
         body    => {...} # required
     )
 
@@ -61,7 +63,7 @@ for more information.
 
 =head2 C<clear_cursor()>
 
-    $response = $es->xpack->sql->clear_cursor(
+    $response = $es->sql->clear_cursor(
         body    => {...} # required
     )
 

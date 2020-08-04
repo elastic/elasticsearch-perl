@@ -3,31 +3,7 @@ package Search::Elasticsearch::Client::7_0::Direct::XPack;
 use Moo;
 with 'Search::Elasticsearch::Client::7_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
-
 use namespace::clean;
-sub _namespace {__PACKAGE__}
-
-has 'graph'      => ( is => 'lazy', init_arg => undef );
-has 'license'    => ( is => 'lazy', init_arg => undef );
-has 'migration'  => ( is => 'lazy', init_arg => undef );
-has 'ml'         => ( is => 'lazy', init_arg => undef );
-has 'monitoring' => ( is => 'lazy', init_arg => undef );
-has 'rollup'     => ( is => 'lazy', init_arg => undef );
-has 'security'   => ( is => 'lazy', init_arg => undef );
-has 'sql'        => ( is => 'lazy', init_arg => undef );
-has 'ssl'        => ( is => 'lazy', init_arg => undef );
-has 'watcher'    => ( is => 'lazy', init_arg => undef );
-
-sub _build_graph      { shift->_build_namespace('Graph') }
-sub _build_license    { shift->_build_namespace('License') }
-sub _build_migration  { shift->_build_namespace('Migration') }
-sub _build_ml         { shift->_build_namespace('ML') }
-sub _build_monitoring { shift->_build_namespace('Monitoring') }
-sub _build_rollup     { shift->_build_namespace('Rollup') }
-sub _build_security   { shift->_build_namespace('Security') }
-sub _build_sql        { shift->_build_namespace('SQL') }
-sub _build_ssl        { shift->_build_namespace('SSL') }
-sub _build_watcher    { shift->_build_namespace('Watcher') }
 
 __PACKAGE__->_install_api('xpack');
 
@@ -39,73 +15,29 @@ __END__
 
 =head1 SYNOPSIS
 
-    use Search::Elasticsearch();
-
-    my $es = Search::Elasticsearch->new(
-        nodes   => \@nodes
-    );
-
-    $es->xpack->graph;
-    $es->xpack->license;
-    $es->xpack->security;
-    $es->xpack->watcher;
-    $es->xpack->rollup;
-    $es->xpack->sql;
-    $es->xpack->ml;
+    my $response = $es->xpack->info();
 
 =head2 DESCRIPTION
 
-This class extends the L<Search::Elasticsearch> client to add support
-for the X-Pack commercial plugins for Elasticsearch 7.x.
+This class extends the L<Search::Elasticsearch> client with a C<xpack>
+namespace.
 
-It extends the L<Search::Elasticsearch> client with a C<graph>, C<license>, C<migration>, C<ml>,
-C<security>, and C<watcher> namespace, to support the APIs for the X-Pack plugins:
-Graph, License, Shield, and Watcher.
+=head1 METHODS
 
-In other words, it can be used as follows:
+=head2 C<info()>
 
-    use Search::Elasticsearch();
-    my $es = Search::Elasticsearch->new(
-        nodes   => \@nodes
-    );
+    my $response = $es->xpack->info();
 
-    my $response = $es->xpack->watcher->start();
+Provides general information about the installed X-Pack features.
 
-For details about the supported methods in each namespace, see:
+See the L<info|https://www.elastic.co/guide/en/elasticsearch/reference/current/info-api.html>
+for more information.
 
-=over
+=head2 C<usage()>
 
-=item *
+    my $response = $es->xpack->usage();
 
-L<graph()/Search::Elasticsearch::Client::7_0::XPack::Graph>
+Provides usage information about the installed X-Pack features.
 
-=item *
-
-L<license()/Search::Elasticsearch::Client::7_0::XPack::License>
-
-=item *
-
-L<shield()/Search::Elasticsearch::Client::7_0::XPack::Migration>
-
-=item *
-
-L<shield()/Search::Elasticsearch::Client::7_0::XPack::ML>
-
-=item *
-
-L<shield()/Search::Elasticsearch::Client::7_0::XPack::Rollup>
-
-=item *
-
-L<shield()/Search::Elasticsearch::Client::7_0::XPack::Security>
-
-=item *
-
-L<shield()/Search::Elasticsearch::Client::7_0::XPack::SQL>
-
-=item *
-
-L<watcher()/Search::Elasticsearch::Client::7_0::XPack::Watcher>
-
-=back
-
+See the L<usage|https://www.elastic.co/guide/en/elasticsearch/reference/current/usage-api.html>
+for more information.

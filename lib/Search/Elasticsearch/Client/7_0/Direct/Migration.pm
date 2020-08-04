@@ -1,19 +1,21 @@
-package Search::Elasticsearch::Client::7_0::Direct::XPack::Migration;
+package Search::Elasticsearch::Client::7_0::Direct::Migration;
 
 use Moo;
 with 'Search::Elasticsearch::Client::7_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('xpack.migration');
+__PACKAGE__->_install_api('migration');
 
 1;
+
+__END__
 
 # ABSTRACT: Plugin providing Migration API for Search::Elasticsearch 7.x
 
 =head1 SYNOPSIS
 
-    my $response = $es->xpack->migration->deprecations();
+    my $response = $es->migration->deprecations();
 
 =head2 DESCRIPTION
 
@@ -28,7 +30,7 @@ L<https://www.elastic.co/guide/en/elasticsearch/reference/current/migration-api.
 
 =head2 C<deprecations()>
 
-    $response = $es->xpack->migration->deprecations(
+    $response = $es->migration->deprecations(
         index => $index      # optional
     )
 
@@ -45,7 +47,7 @@ Query string parameters:
 
 =head2 C<get_assistance()>
 
-    $response = $es->xpack->migration->get_assistance(
+    $response = $es->migration->get_assistance(
         index => $index | \@indices      # optional
     )
 
@@ -64,7 +66,7 @@ Query string parameters:
 
 =head2 C<upgrade()>
 
-    $response = $es->xpack->migration->upgrade(
+    $response = $es->migration->upgrade(
         index => $index       # required
     )
 

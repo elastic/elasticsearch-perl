@@ -1,19 +1,21 @@
-package Search::Elasticsearch::Client::7_0::Direct::XPack::Graph;
+package Search::Elasticsearch::Client::7_0::Direct::Graph;
 
 use Moo;
 with 'Search::Elasticsearch::Client::7_0::Role::API';
 with 'Search::Elasticsearch::Role::Client::Direct';
 use namespace::clean;
 
-__PACKAGE__->_install_api('xpack.graph');
+__PACKAGE__->_install_api('graph');
 
 1;
+
+__END__
 
 # ABSTRACT: Plugin providing Graph API for Search::Elasticsearch 7.x
 
 =head1 SYNOPSIS
 
-    my $response = $es->xpack->graph->explore(...);
+    my $response = $es->graph->explore(...);
 
 =head2 DESCRIPTION
 
@@ -28,7 +30,7 @@ L<https://www.elastic.co/guide/en/graph/current/index.html>
 
 =head2 C<explore()>
 
-    $response = $es->xpack->graph->explore(
+    $response = $es->graph->explore(
         index => $index | \@indices,        # optional
         type  => $type  | \@types,          # optional
         body  => {...}
