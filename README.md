@@ -23,5 +23,6 @@ cpanm Search::Elasticsearch
 ```
 
 ## License
-This software is licensed under the [Apache 2 license](LICENSE.txt).
+
+This software is licensed under the [Apache 2 license](LICENSE).
 
