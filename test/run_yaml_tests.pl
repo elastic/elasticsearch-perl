@@ -36,7 +36,6 @@ if ($junit) {
 $ENV{ES_ASYNC} = $async;
 $ENV{ES_CXN}   = $cxn;
 $ENV{TRACE}    = $trace;
-$ENV{ES} ||= "localhost:9200";
 $ENV{ES_PLUGINS} = join ",", @plugins;
 
 my $tap = $harness->new(
@@ -50,10 +49,12 @@ my @tests = @ARGV;
 if (@tests) {
     @tests = grep { -d || /\.ya?ml$/ } @tests;
 } else {
-    if ($ENV{ES} =~ /https/) { # https is used by XPack tests
-        @tests = grep {-d} glob("elasticsearch/x-pack/plugin/src/test/resources/rest-api-spec/test/*");
-    } else {
+    if ($ENV{TEST_SUITE} eq "oss") { 
         @tests = grep {-d} glob("elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/test/*");
+        $ENV{ES} = "http://localhost:9200"
+    } else {
+        @tests = grep {-d} glob("elasticsearch/x-pack/plugin/src/test/resources/rest-api-spec/test/*");
+        $ENV{ES} = "https://elastic:changeme@localhost:9200"
     }
 }
 

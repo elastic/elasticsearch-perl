@@ -8,34 +8,25 @@ services:
 env:
   global:
     - CLIENT_VER="7_0"
-    - ES_VERSION="7.3.2"
+    - STACK_VERSION="7.3.2"
     - builddir=./dist
 
 jobs:
   fast_finish: true
   
   include:
-    - perl: dev
-      env: ES="http://localhost:9200"
+    - perl: 5.32
+      env: TEST_SUITE="oss"
+    - perl: 5.32
+      env: TEST_SUITE="xpack"
     - perl: 5.30
-      env: ES="http://localhost:9200"
+      env: TEST_SUITE="oss"
     - perl: 5.30
-      env: ES="https://elastic:changeme@localhost:9200"
+      env: TEST_SUITE="xpack"
     - perl: 5.28
-      env: ES="http://localhost:9200"
+      env: TEST_SUITE="oss"
     - perl: 5.28
-      env: ES="https://elastic:changeme@localhost:9200"
-    - perl: 5.26
-      env: ES="http://localhost:9200"
-    - perl: 5.26
-      env: ES="https://elastic:changeme@localhost:9200"  
-    - perl: 5.24
-      env: ES="http://localhost:9200"
-    - perl: 5.24  
-      env: ES="https://elastic:changeme@localhost:9200"
-
-  allow_failures:
-    - perl: dev
+      env: TEST_SUITE="xpack"
 
 before_install:
   - cpanm Dist::Zilla --quiet --notest
@@ -45,7 +36,7 @@ before_install:
   - '(cd $builddir && dzil listdeps --missing | cpanm --quiet --notest)'
 
 install:
-  - if [[ $ES = \https* ]]; then ./travis/run_es.sh; else ./travis/run_es_oss.sh; fi
+  - ./travis/run_es.sh
   - ./travis/checkout_yaml_test.pl
 
 script:
