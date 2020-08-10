@@ -6,9 +6,9 @@ use HTTP::Tiny;
 use JSON::PP;
 
 if ($ENV{TEST_SUITE} eq "oss") { 
-    $ENV{ES} = 'http://localhost:9200';
+    $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'http://localhost:9200';
 } else {
-    $ENV{ES} = 'https://elastic:changeme@localhost:9200';
+    $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'https://elastic:changeme@localhost:9200';
 }
 
 my $response = HTTP::Tiny->new->get($ENV{ES}) or die "The server $ENV{ES} is not running!";
