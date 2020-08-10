@@ -1,3 +1,7 @@
+# Licensed to Elasticsearch B.V under one or more agreements.
+# Elasticsearch B.V licenses this file to you under the Apache 2.0 License.
+# See the LICENSE file in the project root for more information
+
 package Search::Elasticsearch::Client::6_0::Role::API;
 
 use Moo::Role;
@@ -24,25 +28,27 @@ sub api {
 
     'bulk.metadata' => {
         params => {
-            '_index'        => '_index',
-            'index'         => '_index',
-            '_type'         => '_type',
-            'type'          => '_type',
-            '_id'           => '_id',
-            'id'            => '_id',
-            'pipeline'      => 'pipeline',
-            'routing'       => 'routing',
-            '_routing'      => 'routing',
-            'parent'        => 'parent',
-            '_parent'       => 'parent',
-            'timestamp'     => 'timestamp',
-            '_timestamp'    => 'timestamp',
-            'ttl'           => 'ttl',
-            '_ttl'          => 'ttl',
-            'version'       => 'version',
-            '_version'      => 'version',
-            'version_type'  => 'version_type',
-            '_version_type' => 'version_type'
+            '_index'          => '_index',
+            'index'           => '_index',
+            '_type'           => '_type',
+            'type'            => '_type',
+            '_id'             => '_id',
+            'id'              => '_id',
+            'pipeline'        => 'pipeline',
+            'routing'         => 'routing',
+            '_routing'        => 'routing',
+            'parent'          => 'parent',
+            '_parent'         => 'parent',
+            'timestamp'       => 'timestamp',
+            '_timestamp'      => 'timestamp',
+            'ttl'             => 'ttl',
+            '_ttl'            => 'ttl',
+            'version'         => 'version',
+            '_version'        => 'version',
+            'version_type'    => 'version_type',
+            '_version_type'   => 'version_type',
+            'if_seq_no'       => 'if_seq_no',
+            'if_primary_term' => 'if_primary_term'
         }
     },
     'bulk.update' => {
@@ -1932,6 +1938,7 @@ sub api {
             ignore_unavailable => "boolean",
             include_defaults   => "boolean",
             local              => "boolean",
+            include_type_name  => "boolean",
         },
     },
 

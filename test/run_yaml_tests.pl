@@ -1,5 +1,9 @@
 #!/usr/bin/env perl
 
+# Licensed to Elasticsearch B.V under one or more agreements.
+# Elasticsearch B.V licenses this file to you under the Apache 2.0 License.
+# See the LICENSE file in the project root for more information
+
 use strict;
 use warnings;
 use lib qw(lib t/lib);
@@ -32,7 +36,6 @@ if ($junit) {
 $ENV{ES_ASYNC} = $async;
 $ENV{ES_CXN}   = $cxn;
 $ENV{TRACE}    = $trace;
-$ENV{ES} ||= "localhost:9200";
 $ENV{ES_PLUGINS} = join ",", @plugins;
 
 my $tap = $harness->new(
@@ -46,10 +49,12 @@ my @tests = @ARGV;
 if (@tests) {
     @tests = grep { -d || /\.ya?ml$/ } @tests;
 } else {
-    if ($ENV{ES} =~ /https/) { # https is used by XPack tests
-        @tests = grep {-d} glob("elasticsearch/x-pack/plugin/src/test/resources/rest-api-spec/test/*");
-    } else {
+    if ($ENV{TEST_SUITE} eq "oss") { 
         @tests = grep {-d} glob("elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/test/*");
+        $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'http://localhost:9200';
+    } else {
+        @tests = grep {-d} glob("elasticsearch/x-pack/plugin/src/test/resources/rest-api-spec/test/*");
+        $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'https://elastic:changeme@localhost:9200';
     }
 }
 

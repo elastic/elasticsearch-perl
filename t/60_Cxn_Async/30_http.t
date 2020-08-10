@@ -1,12 +1,18 @@
+# Licensed to Elasticsearch B.V under one or more agreements.
+# Elasticsearch B.V licenses this file to you under the Apache 2.0 License.
+# See the LICENSE file in the project root for more information
+
 use Test::More;
 use Test::Exception;
 use Test::Deep;
 use Search::Elasticsearch::Async;
+use Search::Elasticsearch::Role::Cxn;
 
 sub is_cxn(@);
 
 my $username     = 'ThisIsAVeryLongUsernameAndThatIsOKYouSee';
 my $password     = 'CorrectHorseBatteryStapleCorrectHorseBatteryStaple';
+my $useragent    = Search::Elasticsearch::Role::Cxn::get_user_agent();
 
 ### Scalar nodes ###
 
@@ -88,7 +94,7 @@ is_cxn "Path option with settings",
 
 is_cxn "Deflate option",
     new_cxn( deflate => 1 ),
-    { default_headers => { 'Accept-Encoding' => 'deflate' } };
+    { default_headers => { 'Accept-Encoding' => 'deflate', 'User-Agent' => $useragent } };
 
 is_cxn "IPv4 with Port",
     new_cxn( nodes => '127.0.0.1', port => 456 ),
@@ -148,7 +154,7 @@ sub is_cxn (@) {
         port            => '9200',
         scheme          => 'http',
         uri             => 'http://localhost:9200',
-        default_headers => {},
+        default_headers => { 'User-Agent' => $useragent },
         userinfo        => '',
         %$params
     );

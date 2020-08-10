@@ -1,0 +1,20 @@
+---
+
+STACK_VERSION:
+  - 8.0.0-SNAPSHOT
+  - 7.x-SNAPSHOT
+  - 7.3.2
+
+PERL_VERSION:
+  - 5.32
+  - 5.30
+  - 5.28
+
+TEST_SUITE:
+  - oss
+  - xpack
+
+CLIENT_VER:
+  - 7_0
+
+exclude: ~

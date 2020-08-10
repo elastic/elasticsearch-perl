@@ -1,4 +1,9 @@
+
 #!/usr/bin/env perl
+
+# Licensed to Elasticsearch B.V under one or more agreements.
+# Elasticsearch B.V licenses this file to you under the Apache 2.0 License.
+# See the LICENSE file in the project root for more information
 
 use strict;
 use warnings;
@@ -151,7 +156,7 @@ sub test_files {
     for my $file (@files) {
         my ($name) = ( $file =~ m{([\w.]+/[\w.]+\.y.?ml)} );
         my ($folder) = ( $file =~ m{([\w]+)/[\w.]+\.y.?ml} );
-        if ( $skip_list->{$name} || $skip_list->{$folder . '/*'} ) {
+        if ( $name && ($skip_list->{$name} || $skip_list->{$folder . '/*'}) ) {
             $es->logger->trace_comment("SKIPPING: $name in skip list");
         SKIP: { skip "$name in skip list", 1 }
             next;
@@ -171,6 +176,11 @@ sub test_files {
                     plan tests => 1;
                     return;
                 }
+            }
+
+            my $teardown;
+            if ( $teardown = $asts[0]{teardown} ) {
+                shift @asts;
             }
 
             plan tests => 0 + @asts;
@@ -193,6 +203,14 @@ sub test_files {
                     plan tests => 0 + @$tests;
                     run_tests( $title, $tests );
                 };
+
+                if ($teardown) {
+                    $es->logger->trace_comment("RUNNING TEARDOWN");
+                    for (@$teardown) {
+                        run_cmd( populate_vars( 'request', $_->{do}, {} ) );
+                    }
+                }
+
                 reset_oss_es();
                 if ($ENV{ES} =~ /https/) {
                     reset_es();
@@ -382,47 +400,53 @@ sub reset_oss_es {
 #===================================
 sub reset_es {
 #===================================
-#     $es->logger->trace_comment("RESETTING");
-#     $es->logger->trace_comment( "Start: " . timestamp() );
+    my $role;
+    my $value;
+    my $user;
+    my $app;
+    my $transform;
 
-#     # Delete all custom roles
-#     eval {
-#         my $response = $es->xpack->security->get_role();
-#         while (($role, $value) = each (%$response)) {
-#             if ( $value->{metadata}->{_reserved} == 0) {
-#                 $es->xpack->security->delete_role({ 'name' => $role });
-#             }
-#         }
-#     };
+    $es->logger->trace_comment("RESETTING");
+    $es->logger->trace_comment( "Start: " . timestamp() );
 
-#     # Delete all custom users
-#     eval {
-#         my $response = $es->xpack->security->get_user();
-#         while (($user, $value) = each (%$response)) {
-#             if ( $value->{metadata}->{_reserved} == 0) {
-#                 $es->xpack->security->delete_user({ 'username' => $user });
-#             }
-#         }
-#     };
+    # Delete all custom roles
+    eval {
+        my $response = $es->security->get_role();
+        while (($role, $value) = each (%$response)) {
+            if ( $value->{metadata}->{_reserved} == 0) {
+                $es->security->delete_role({ 'name' => $role });
+            }
+        }
+    };
 
-#         my $response = $es->xpack->security->get_privileges();
-#         while (($app, $value) = each (%$response)) {
-#             if ( $value->{metadata}->{_reserved} == 0) {
-#                 $es->xpack->security->delete_user({ 'username' => $user });
-#             }
-#         }
+    # Delete all custom users
+    eval {
+        my $response = $es->security->get_user();
+        while (($user, $value) = each (%$response)) {
+            if ( $value->{metadata}->{_reserved} == 0) {
+                $es->security->delete_user({ 'username' => $user });
+            }
+        }
+    };
 
+    eval {
+        my $response = $es->security->get_privileges();
+        while (($app, $value) = each (%$response)) {
+            if ( $value->{metadata}->{_reserved} == 0) {
+                $es->security->delete_user({ 'username' => $user });
+            }
+        }
+    };
 
+    # security.getPrivileges -> security.deletePrivileges
+    # ml.getDatafeeds -> ml.deleteDatafeed
+    # ml.getJobs -> ml.deleteJob
+    # rollup.getJobs -> rollup.stopJob -> rollup.deleteJob
+    # tasks.list -> tasks.cancel
+    # ilm.removePolicy({ index: '_all' })
+    # indices.refresh({ index: '_all' })
 
-#     # security.getPrivileges -> security.deletePrivileges
-#     # ml.getDatafeeds -> ml.deleteDatafeed
-#     # ml.getJobs -> ml.deleteJob
-#     # rollup.getJobs -> rollup.stopJob -> rollup.deleteJob
-#     # tasks.list -> tasks.cancel
-#     # ilm.removePolicy({ index: '_all' })
-#     # indices.refresh({ index: '_all' })
-
-#     $es->logger->trace_comment( "End: " . timestamp() );
+    $es->logger->trace_comment( "End: " . timestamp() );
 }
 
 
@@ -482,7 +506,9 @@ sub check_skip {
         || skip_version($skip)
         || return;
 
-    $es->logger->trace_comment("SKIPPING: $title : $reason");
+    if ($title && $reason) {
+        $es->logger->trace_comment("SKIPPING: $title : $reason");
+    }
 SKIP: { skip $reason, 1 }
     return 1;
 }
@@ -514,13 +540,11 @@ sub skip_version {
     my ( $min, $max ) = split( /\s*-\s*/, $version );
     $min ||= 0;
     $max ||= 999;
-
-    return
-        unless version->parse($min) le version->parse($current)
-        and version->parse($max) ge version->parse($current);
+    
+    return if version->parse($current) >= version->parse($min)
+        and version->parse($current) <= version->parse($max);
 
     return "Version $current - " . $skip->{reason};
-
 }
 
 #===================================

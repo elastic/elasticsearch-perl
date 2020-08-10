@@ -1,5 +1,9 @@
 #!/usr/bin/env perl
 
+# Licensed to Elasticsearch B.V under one or more agreements.
+# Elasticsearch B.V licenses this file to you under the Apache 2.0 License.
+# See the LICENSE file in the project root for more information
+
 use lib 'lib';
 use Search::Elasticsearch;
 use Capture::Tiny qw(capture_merged tee_merged);

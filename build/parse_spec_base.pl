@@ -1,5 +1,9 @@
 #!/usr/bin/env perl
 
+# Licensed to Elasticsearch B.V under one or more agreements.
+# Elasticsearch B.V licenses this file to you under the Apache 2.0 License.
+# See the LICENSE file in the project root for more information
+
 use strict;
 use warnings FATAL => 'all';
 use v5.12;
@@ -93,6 +97,11 @@ sub process_paths {
 #===================================
     my ( $name, $method, $url ) = @_;
 
+    if ($url->{deprecated_paths}) {
+       foreach my $u (@{$url->{deprecated_paths}}) {
+           push (@{ $url->{paths} }, $u->{path});
+       }
+    }
     my @path_defns = map { process_path( $method, $_ ) } @{ $url->{paths} };
 
     my %sigs;

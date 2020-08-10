@@ -121,3 +121,22 @@
     - roles/20_get_missing.yml
     - role_mapping/*
     - xpack/*
+
+7.3.2:
+    - cluster.health/10_basic.yml
+    - cat.indices/10_basic.yml
+    - license/*
+    - ml/calendar_crud.yml
+    - ml/data_frame_analytics_crud.yml
+    - ml/evaluate_data_frame.yml
+    - ml/forecast.yml
+    - ml/jobs_crud.yml
+    - role_mapping/20_get_missing.yml
+    - roles/20_get_missing.yml
+    - ssl/10_basic.yml
+    - watcher/ack_watch/*
+    - watcher/delete_watch/*
+    - watcher/activate_watch/*
+    - xpack/15_basic.yml
+    - bulk/10_basic.yml
+    - execute_watch/60_http_input.yml

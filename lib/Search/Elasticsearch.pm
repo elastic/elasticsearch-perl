@@ -1,3 +1,7 @@
+# Licensed to Elasticsearch B.V under one or more agreements.
+# Elasticsearch B.V licenses this file to you under the Apache 2.0 License.
+# See the LICENSE file in the project root for more information
+
 package Search::Elasticsearch;
 
 use Moo 2.001000 ();
@@ -5,10 +9,10 @@ use Moo 2.001000 ();
 use Search::Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
-our $VERSION = '6.80_1';
+our $VERSION = '7.30_1';
 
 my %Default_Plugins = (
-    client      => [ 'Search::Elasticsearch::Client',       '6_0::Direct' ],
+    client      => [ 'Search::Elasticsearch::Client',       '7_0::Direct' ],
     cxn_factory => [ 'Search::Elasticsearch::Cxn::Factory', '' ],
     cxn_pool    => [ 'Search::Elasticsearch::CxnPool',      'Static' ],
     logger      => [ 'Search::Elasticsearch::Logger',       'LogAny' ],

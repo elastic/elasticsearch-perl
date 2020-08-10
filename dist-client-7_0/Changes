@@ -1,0 +1,17 @@
+Revision history for Search::Elasticsearch::Client::7_0
+
+7.30_1  2020-08-05
+        Updated API for Elasticsearch 7.3
+
+6.81    2020-06-26
+        Bumped to version 6.81
+
+6.80    2020-03-25
+        Bumped to version 6.80
+        
+6.80_1  2020-03-11
+        Bumped to version 6.80
+        
+6.00    2017-11-12
+        First release of 7_0 API
+
