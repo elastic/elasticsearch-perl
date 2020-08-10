@@ -51,10 +51,10 @@ if (@tests) {
 } else {
     if ($ENV{TEST_SUITE} eq "oss") { 
         @tests = grep {-d} glob("elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/test/*");
-        $ENV{ES} = 'http://localhost:9200';
+        $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'http://localhost:9200';
     } else {
         @tests = grep {-d} glob("elasticsearch/x-pack/plugin/src/test/resources/rest-api-spec/test/*");
-        $ENV{ES} = 'https://elastic:changeme@localhost:9200';
+        $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'https://elastic:changeme@localhost:9200';
     }
 }
 
