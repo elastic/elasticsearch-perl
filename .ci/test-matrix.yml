@@ -5,7 +5,7 @@ STACK_VERSION:
 
 PERL_VERSION:
   - 5.32
-  - 5.30
+  - "5.30"
   - 5.28
 
 TEST_SUITE:
