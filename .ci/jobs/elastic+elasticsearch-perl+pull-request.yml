@@ -3,7 +3,6 @@
     name: elastic+elasticsearch-perl+pull-request
     display-name: 'elastic / elasticsearch-perl # pull-request'
     description: Testing of elasticsearch-perl pull requests.
-    junit_results: "tests/*-junit.xml"
     scm:
     - git:
         branches:

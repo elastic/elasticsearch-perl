@@ -73,6 +73,3 @@
     publishers:
       - email:
           recipients: infra-root+build@elastic.co
-      - junit:
-          results: "build/output/*-junit.xml"
-          allow-empty-results: true
