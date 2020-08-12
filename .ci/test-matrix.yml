@@ -2,8 +2,6 @@
 
 STACK_VERSION:
   - 8.0.0-SNAPSHOT
-  - 7.x-SNAPSHOT
-  - 7.3.2
 
 PERL_VERSION:
   - 5.32
