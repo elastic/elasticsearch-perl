@@ -19,6 +19,12 @@ my @dir_to_search = (
 );
 
 my $header = <<EOL;
+# Licensed to Elasticsearch B.V under one or more agreements.
+# Elasticsearch B.V licenses this file to you under the Apache 2.0 License.
+# See the LICENSE file in the project root for more information
+EOL
+
+my $long_header = <<EOL;
 # Licensed to Elasticsearch B.V. under one or more contributor
 # license agreements. See the NOTICE file distributed with
 # this work for additional information regarding copyright
@@ -43,22 +49,19 @@ my @suffix = ('.pm', '.pl', '.t');
 my %hash = map {$_ => 1} @suffix;
 
 say "SEARCH for PERL files...";
-find(\&add_header, @dir_to_search);
+find(\&replace_header, @dir_to_search);
 say "END";
 
-sub add_header { 
+sub replace_header { 
     my ($filename, $dirs, $suffix) = fileparse($File::Find::name, @suffix);
 
     return if !$hash{$suffix};
-    
+    return if ($filename . $suffix eq $0);    
+
     my $file_content = read_file($File::Find::name);
-    if (index($file_content, $header) == -1) {
-        printf("\tAdding header to %s\n", $File::Find::name);
-        if (index($file_content, $shebang) == -1) {
-            $file_content = $header . "\n" . $file_content;
-        } else {
-            $file_content =~ s/$shebang/$shebang\n\n$header/;
-        }
+    if (index($file_content, $header) > -1) {
+        printf("\tReplace header to %s\n", $File::Find::name);
+        $file_content =~ s/$header/$long_header/;
         write_file($File::Find::name, $file_content);
     }
 }
