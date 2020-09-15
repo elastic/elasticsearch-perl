@@ -24,9 +24,6 @@ run 'YAML: HTTPTiny'    ./test/run_yaml_tests.pl --junit
 export JUNIT_OUTPUT_FILE=yaml_netcurl.xml
 run 'YAML: NetCurl'     ./test/run_yaml_tests.pl  --junit --cxn NetCurl
 
-export JUNIT_OUTPUT_FILE=yaml_hijk.xml
-run 'YAML: Hijk'        ./test/run_yaml_tests.pl  --junit --cxn Hijk
-
 export JUNIT_OUTPUT_FILE=yaml_aehttp.xml
 run 'YAML: AEHTTP'      ./test/run_yaml_tests.pl  --junit --async --cxn AEHTTP
 

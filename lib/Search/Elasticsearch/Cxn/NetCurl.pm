@@ -331,8 +331,6 @@ From L<Search::Elasticsearch::Role::Cxn>
 
 =item * L<Search::Elasticsearch::Role::Cxn>
 
-=item * L<Search::Elasticsearch::Cxn::Hijk>
-
 =item * L<Search::Elasticsearch::Cxn::LWP>
 
 =item * L<Search::Elasticsearch::Cxn::HTTPTiny>

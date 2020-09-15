@@ -150,10 +150,10 @@ on L<elastic.co|http://www.elastic.co>.
 
 =head1 PREVIOUS VERSIONS OF ELASTICSEARCH
 
-This version of the client supports the Elasticsearch 5.0 branch,
+This version of the client supports the Elasticsearch 7.0 branch,
 which is not backwards compatible with earlier branches.
 
-If you need to talk to a version of Elasticsearch before 5.0.0, please
+If you need to talk to a version of Elasticsearch before 7.0.0, please
 install one of the following packages:
 
 =over
@@ -221,8 +221,8 @@ Good defaults
 =item *
 
 Helper utilities for more complex operations, such as
-L<bulk indexing|Search::Elasticsearch::Client::6_0::Bulk>, and
-L<scrolled searches|Search::Elasticsearch::Client::6_0::Scroll>
+L<bulk indexing|Search::Elasticsearch::Client::7_0::Bulk>, and
+L<scrolled searches|Search::Elasticsearch::Client::7_0::Scroll>
 
 =item *
 
@@ -421,11 +421,11 @@ methods that can be called to execute requests, such as
 C<search()>, C<index()> or C<delete()>. The client parses the user's
 requests and passes them to the L</transport> class to be executed.
 
-The default version of the client is C<6_0::Direct>, which can
+The default version of the client is C<7_0::Direct>, which can
 be explicitly specified as follows:
 
     $e = Search::Elasticsearch->new(
-        client => '6_0::Direct'
+        client => '7_0::Direct'
     );
 
 =head2 C<transport>
@@ -448,8 +448,6 @@ See:
 =over
 
 =item * L<Search::Elasticsearch::Cxn::HTTPTiny> (default)
-
-=item * L<Search::Elasticsearch::Cxn::Hijk>
 
 =item * L<Search::Elasticsearch::Cxn::LWP>
 
@@ -569,4 +567,4 @@ DATA YOU WANT TO KEEP!>
 You can change the Cxn class which is used by setting the C<ES_CXN>
 environment variable:
 
-    ES_CXN=Hijk ES=localhost:9200 make test
+    ES_CXN=NetCurl ES=localhost:9200 make test
