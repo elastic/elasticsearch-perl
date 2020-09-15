@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch
 
+7.30    2020-09-15
+        Stable release for Elasticsearch 7.3
+
 7.30_1  2020-08-05
         Updated API for Elasticsearch 7.3
         
