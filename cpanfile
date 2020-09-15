@@ -9,7 +9,6 @@ requires "HTTP::Headers" => "0";
 requires "HTTP::Parser::XS" => "0";
 requires "HTTP::Request" => "0";
 requires "HTTP::Tiny" => "0.076";
-requires "Hijk" => "0.27";
 requires "IO::Compress::Deflate" => "0";
 requires "IO::Compress::Gzip" => "0";
 requires "IO::Select" => "0";
