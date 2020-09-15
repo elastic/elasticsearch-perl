@@ -20,7 +20,7 @@ package Search::Elasticsearch::Cxn::HTTPTiny;
 use Moo;
 with 'Search::Elasticsearch::Role::Cxn', 'Search::Elasticsearch::Role::Is_Sync';
 
-use HTTP::Tiny 0.043 ();
+use HTTP::Tiny 0.076 ();
 use namespace::clean;
 
 my $Cxn_Error = qr/ Connection.(?:timed.out|re(?:set|fused))
@@ -253,8 +253,6 @@ From L<Search::Elasticsearch::Role::Cxn>
 =over
 
 =item * L<Search::Elasticsearch::Role::Cxn>
-
-=item * L<Search::Elasticsearch::Cxn::Hijk>
 
 =item * L<Search::Elasticsearch::Cxn::LWP>
 

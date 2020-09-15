@@ -266,8 +266,6 @@ From L<Search::Elasticsearch::Role::Cxn>
 
 =item * L<Search::Elasticsearch::Cxn::HTTPTiny>
 
-=item * L<Search::Elasticsearch::Cxn::Hijk>
-
 =item * L<Search::Elasticsearch::Cxn::NetCurl>
 
 =back
