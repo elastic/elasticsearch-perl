@@ -1,0 +1,9 @@
+[[installation]]
+== Installation
+
+You can install the Perl Client by using the following command:
+
+[source,sh]
+------------------------------------
+cpanm Search::Elasticsearch
+------------------------------------
