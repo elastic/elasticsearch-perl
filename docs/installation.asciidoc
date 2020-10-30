@@ -1,0 +1,18 @@
+[[installation]]
+== Installation
+
+You can install the latest stable release of the Perl Client by using the 
+following command:
+
+[source,sh]
+------------------------------------
+cpanm Search::Elasticsearch
+------------------------------------
+
+To install a specific version, download the specific version artifact. For 
+example, to download elasticsearch-perl 6.81, use the following command:
+
+[source,sh]
+------------------------------------
+cpanm EZIMUEL/Search-Elasticsearch-6.81.tar.gz
+------------------------------------
