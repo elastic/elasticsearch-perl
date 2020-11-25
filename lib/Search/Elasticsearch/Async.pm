@@ -17,7 +17,7 @@
 
 package Search::Elasticsearch::Async;
 
-our $VERSION = '7.30';
+our $VERSION = '7.100_1';
 use Search::Elasticsearch 7.00;
 use Promises 0.93 ();
 use parent 'Search::Elasticsearch';
