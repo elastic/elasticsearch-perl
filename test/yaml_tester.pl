@@ -23,6 +23,7 @@ use warnings;
 use version;
 use YAML::XS qw(LoadFile);
 #use YAML qw(LoadFile);    
+use Try::Tiny;
 use Test::More;
 use Test::Deep;
 use Data::Dumper;
@@ -109,11 +110,9 @@ our %Test_Types = (
         my ( $got, $expect, $name ) = @_;
         if ( defined $expect and $expect =~ s{^\s*/(.+)/\s*$}{$1}s ) {
             like $got, qr/$expect/x, $name;
-        }
-        elsif ( looks_like_number($got) and looks_like_number($expect) ) {
+        } elsif ( looks_like_number($got) and looks_like_number($expect) ) {
             cmp_deeply( $got + 0, num( $expect, 0.0001 ), $name );
-        }
-        else {
+        } else {
             cmp_deeply(@_);
         }
     },
@@ -159,10 +158,7 @@ sub test_files {
 #===================================
     my @files = @_;
 
-    reset_oss_es();
-    if ($ENV{ES} =~ /https/) {
-        reset_es();
-    }
+    wipe_cluster();
 
     plan tests => 0 + @files;
 
@@ -224,10 +220,7 @@ sub test_files {
                     }
                 }
 
-                reset_oss_es();
-                if ($ENV{ES} =~ /https/) {
-                    reset_es();
-                }
+                wipe_cluster();
             }
         };
     }
@@ -432,7 +425,7 @@ sub reset_es {
         }
     };
 
-    # Delete all custom users
+    # # Delete all custom users
     eval {
         my $response = $es->security->get_user();
         while (($user, $value) = each (%$response)) {
@@ -462,7 +455,269 @@ sub reset_es {
     $es->logger->trace_comment( "End: " . timestamp() );
 }
 
+#===================================
+sub wipe_cluster {
+#===================================
 
+    if (is_xpack()) {
+        wipe_rollup_jobs();
+        wait_for_pending_rollup_tasks();
+        delete_all_slm_policies();  
+    }
+
+    wipe_snapshots();
+
+    if (is_xpack()) {
+        wipe_data_streams();
+    }
+        
+    wipe_all_indices();
+
+    if (is_xpack()) {
+        wipe_template_for_xpack();
+    } else {
+        # Delete templates
+        $es->indices->delete_template(
+            name => '*'
+        );
+        # Delete index template
+        $es->indices->delete_index_template(
+            name => '*'
+        );
+        # Delete component template
+        $es->cluster->delete_component_template(
+            name => '*'
+        );
+    }
+
+    wipe_cluster_settings();
+
+    if (is_xpack()) {
+        delete_all_ilm_policies();
+        delete_all_auto_follow_patterns();
+        delete_all_tasks();
+    }
+}
+
+#===================================
+sub is_xpack {
+#===================================
+    return $ENV{TEST_SUITE} eq "xpack";
+}
+
+#===================================
+sub wipe_rollup_jobs {
+#===================================
+    # Stop and delete all rollup
+    my $rollups = $es->rollup->get_jobs( id => '_all' );
+    foreach my $job (@{$rollups->{jobs}}) {
+        $es->rollup->stop_job(
+            id => $job->{config}{id},
+            wait_for_completion => 0 | 1,
+            ignore => 404
+        );
+        $es->rollup->delete_job(
+            id => $job->{config}{id},
+            ignore => 404
+        );
+    }
+}
+
+#===================================
+sub wait_for_pending_rollup_tasks {
+#===================================
+    wait_for_pending_tasks('xpack/rollup/job');
+}
+
+#===================================
+sub wait_for_pending_tasks {
+#===================================
+    my ($filter, $timeout) = @_;
+    
+    my $start = time;
+    $timeout ||= 30;
+    my $count = 0;
+    do {
+        my $result = $es->cat->tasks( detailed => 0 | 1 );
+        my @tasks = split("\n", $result);
+        $count = 0;
+        foreach my $task (@tasks) {
+            if ($task eq "") {
+                continue;
+            }
+            if (index($task, $filter) != -1) {
+                $count++;
+            }
+        }
+    } while ($count > 0 and time < ($start + $timeout));
+}
+
+#===================================
+sub delete_all_slm_policies {
+#===================================
+    my $policies = $es->slm->get_lifecycle();
+    while ( my ($name, $value) = each %{$policies} ) {
+        $es->slm->delete_lifecycle(
+            policy_id => $name
+        );
+    }
+}
+
+#===================================
+sub wipe_snapshots {
+#===================================
+    my $repos = $es->snapshot->get_repository();
+
+    while ( my ($name, $value) = each %{$repos} ) {
+        if ($value->{type} eq 'fs') {
+            $es->snapshot->delete(
+                repository => $name,
+                snapshot => '*',
+                ignore => 404
+            );
+        }         
+        $es->snapshot->delete_repository(
+            repository => $name,
+            ignore => 404
+        );
+    }
+}
+
+#===================================
+sub wipe_data_streams {
+#===================================
+    $es->indices->delete_data_stream(
+        name => '*'
+    );
+}
+
+#===================================
+sub wipe_all_indices {
+#===================================
+    $es->indices->delete(
+        index => '*,-.ds-ilm-history-*',
+        expand_wildcards => 'all',
+        ignore => 404
+    );
+}
+
+#===================================
+sub wipe_template_for_xpack {
+#===================================
+     my $result = $es->cat->templates(
+        h => 'name'
+    );
+    my @templates = split("\n", $result);
+    foreach my $template (@templates) {
+        if (($template eq "") or is_xpack_template($template)) {
+            next;
+        }
+        try {
+            $es->indices->delete_template(
+                name => $template
+            );
+        } catch {
+            if ($_->isa('Search::Elasticsearch::Error::Missing')) {
+                my $msg = sprintf("index_template [%s] missing", $template);
+                if (index($_->{msg}, $msg) != -1) {
+                    $es->indices->delete_index_template(
+                        name => $template
+                    );
+                }
+            }
+        };
+    }
+    # Delete component template
+    $result = $es->cluster->get_component_template();
+    foreach my $component (@{$result->{component_templates}}) {
+        if (is_xpack_template($component->{name})) {
+            next;
+        }
+        $es->cluster->delete_component_template(
+            name => $component->{name}
+        );
+    }
+}
+
+#===================================
+sub is_xpack_template {
+#===================================
+    my $name = shift;
+
+    return unless defined $name;
+
+    if (index($name, '.monitoring-') != -1) {
+        return 1;
+    }
+    if (index($name, '.watch') != -1 or index($name, '.triggered_watches') != -1) {
+        return 1;
+    }
+    if (index($name, '.data-frame-') != -1) {
+        return 1;
+    }
+    if (index($name, '.ml-') != -1) {
+        return 1;
+    }
+    if (index($name, '.transform-') != -1) {
+        return 1;
+    }
+    if ($name eq ".watches" or
+        $name eq "logstash-index-template" or
+        $name eq ".logstash-management" or
+        $name eq "security_audit_log" or
+        $name eq ".slm-history" or
+        $name eq ".async-search" or
+        $name eq "saml-service-provider" or
+        $name eq "ilm-history" or
+        $name eq "logs" or
+        $name eq "logs-settings" or
+        $name eq "logs-mappings" or
+        $name eq "metrics" or
+        $name eq "metrics-settings" or
+        $name eq "metrics-mappings" or
+        $name eq "synthetics" or
+        $name eq "synthetics-settings" or
+        $name eq "synthetics-mappings" or
+        $name eq ".snapshot-blob-cache" or
+        $name eq ".deprecation-indexing-template") {
+        return 1;
+    }
+    return;
+}
+
+#===================================
+sub wipe_cluster_settings {
+#===================================
+    my $settings = $es->cluster->get_settings();
+    my %newSettings;
+    while ( my ($name, $value) = each %{$settings} ) {
+        if (($value eq "") and (ref($value) eq 'ARRAY')) {
+            while ( my ($key, $data) = each %{$value}) {
+                $newSettings{$name}{$key . '.*'} = undef;
+            }
+        }
+    }
+    if (%newSettings) {
+        $es->cluster->put_settings(
+            body => %newSettings
+        );
+    }
+}
+
+#===================================
+sub delete_all_ilm_policies {
+#===================================
+}
+
+#===================================
+sub delete_all_auto_follow_patterns {
+#===================================
+}
+
+#===================================
+sub delete_all_tasks {
+#===================================
+}
 
 #===================================
 sub key_val {
@@ -554,8 +809,9 @@ sub skip_version {
     $min ||= 0;
     $max ||= 999;
     
-    return if version->parse($current) >= version->parse($min)
-        and version->parse($current) <= version->parse($max);
+    return
+        unless version->parse($min) le version->parse($current)
+        and version->parse($max) ge version->parse($current);
 
     return "Version $current - " . $skip->{reason};
 }

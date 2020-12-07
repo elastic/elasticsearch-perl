@@ -140,3 +140,29 @@
     - xpack/15_basic.yml
     - bulk/10_basic.yml
     - execute_watch/60_http_input.yml
+
+7.10.0:
+    - field_caps/30_filter.yml
+    - search/60_query_string.yml
+    - search/220_total_hits_object.yml
+    - search/250_distance_feature.yml
+    - search/320_disallow_queries.yml
+    - search.aggregation/70_adjacency_matrix.yml
+    - search.highlight/20_fvh.yml
+    - search.highlight/40_keyword_ignore.yml
+    - search.inner_hits/10_basic.yml
+    - analytics/top_metrics.yml
+    - license/20_put_license.yml
+    - license/30_enterprise_license.yml
+    - ml/calendar_crud.yml
+    - ml/data_frame_analytics_crud.yml
+    - ml/evaluate_data_frame.yml
+    - ml/explain_data_frame_analytics.yml
+    - ml/forecast.yml
+    - ml/jobs_crud.yml
+    - searchable_snapshots/10_usage.yml
+    - ssl/10_basic.yml
+    - transform/transforms_stats_continuous.yml
+    - unsigned_long/10_basic.yml
+    - unsigned_long/40_different_numeric.yml
+    - xpack/20_info.yml

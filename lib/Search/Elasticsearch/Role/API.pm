@@ -23,6 +23,7 @@ requires 'api';
 
 use Search::Elasticsearch::Util qw(throw);
 use namespace::clean;
+use Scalar::Util qw(looks_like_number);
 
 our %Handler = (
     string  => \&_string,
@@ -86,6 +87,11 @@ sub _qs_init {
     for my $spec ( keys %$API ) {
         my $qs = $API->{$spec}{qs};
         for my $param ( keys %$qs ) {
+            if ($qs->{$param} eq 'number|string' ) {
+                $qs->{$param} = looks_like_number($param)
+                    ? 'number'
+                    : 'string';
+            }
             my $handler = $Handler{ $qs->{$param} }
                 or throw( "Internal",
                       "Unknown type <"
