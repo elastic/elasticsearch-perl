@@ -1,7 +1,7 @@
 ---
 
 STACK_VERSION:
-  - 7.10-SNAPSHOT
+  - 7.10.0
 
 PERL_VERSION:
   - 5.32
