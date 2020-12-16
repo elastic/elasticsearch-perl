@@ -17,3 +17,7 @@ shield/*
 local/
 *.komodoproject
 .vscode
+.idea
+
+# clients make output
+.ci/output
