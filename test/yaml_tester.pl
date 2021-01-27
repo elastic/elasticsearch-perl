@@ -707,16 +707,56 @@ sub wipe_cluster_settings {
 #===================================
 sub delete_all_ilm_policies {
 #===================================
+    my $policies = $es->ilm->get_lifecycle();
+    my %preserve_ids = preserve_ilm_policy_ids();
+    while ( my ($policy, $value) = each %{$policies} ) {
+        $es->ilm->delete_lifecycle(
+            'policy' => $policy
+        ) if !exists $preserve_ids{$policy};
+    }
+}
+
+#===================================
+sub preserve_ilm_policy_ids {
+#===================================
+    return (
+        'ilm-history-ilm-policy' => 1,
+        'slm-history-ilm-policy' => 1,
+        'watch-history-ilm-policy' => 1, 
+        'ml-size-based-ilm-policy' => 1, 
+        'logs' => 1, 
+        'metrics' => 1
+    );
 }
 
 #===================================
 sub delete_all_auto_follow_patterns {
 #===================================
+    my $patterns = $es->ccr->get_auto_follow_pattern();
+    return unless ref($patterns->{patterns}) eq 'ARRAY';
+
+    foreach my $pattern (@{$patterns->{patterns}}) {
+        $es->ccr->delete_auto_follow_pattern(
+            name => $pattern->{name}
+        ) if defined $pattern->{name};
+    }
 }
 
 #===================================
 sub delete_all_tasks {
 #===================================
+    my $tasks = $es->tasks->list();
+    return unless $tasks->{nodes};
+
+    while ( my ($node, $value) = each %{$tasks->{nodes}} ) {
+        continue unless $value->{tasks};
+        while ( my ($id, $data) = each %{$value->{tasks}} ) {
+            $es->tasks->cancel(
+                task_id => $id,
+                wait_for_completion => 1 & 0
+            );
+        }
+    }
 }
 
 #===================================
@@ -802,6 +842,9 @@ sub skip_version {
     my $skip    = shift;
     my $version = $skip->{version} or return;
     my $current = $wrapper->( $es->info )->{version}{number};
+    # Remove the SNAPSHOT string in version
+    $current =~ s/-SNAPSHOT//;
+
     return "Version $current - skip all versions"
         if $version eq 'all';
 
