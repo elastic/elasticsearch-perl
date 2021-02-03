@@ -9,7 +9,7 @@ if [ -z $TEST_SUITE ]; then
     exit 1;
 fi;
 
-if [ "$TEST_SUITE" = "basic" ]; then
+if [ "$TEST_SUITE" = "free" ]; then
     docker pull docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     docker network create esnet-oss;
     docker run \
