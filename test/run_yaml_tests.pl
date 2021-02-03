@@ -62,7 +62,7 @@ my @tests = @ARGV;
 if (@tests) {
     @tests = grep { -d || /\.ya?ml$/ } @tests;
 } else {
-    if ($ENV{TEST_SUITE} eq "basic") { 
+    if ($ENV{TEST_SUITE} eq "free") { 
         @tests = grep {-d} glob("elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/test/*");
         $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'http://localhost:9200';
     } else {

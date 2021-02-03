@@ -9,7 +9,7 @@ PERL_VERSION:
   - 5.28
 
 TEST_SUITE:
-  - basic
+  - free
   - platinum
 
 CLIENT_VER:
