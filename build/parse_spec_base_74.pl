@@ -28,7 +28,7 @@ use Array::Utils qw(:all);
 
 our ( %API, %Common, %seen, %seen_combo, %Forbidden );
 
-our %Known_Types = map { $_ => 1 } qw(boolean enum date list number int float double string time number|string);
+our %Known_Types = map { $_ => 1 } qw(boolean enum date list number int float double string time number|string boolean|long);
 
 #===================================
 sub process_files {

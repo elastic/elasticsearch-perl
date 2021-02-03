@@ -41,25 +41,34 @@ sub api {
 
     'bulk.metadata' => {
         params => {
-            '_index'          => '_index',
-            'index'           => '_index',
-            '_id'             => '_id',
-            'id'              => '_id',
-            'pipeline'        => 'pipeline',
-            'routing'         => 'routing',
-            '_routing'        => 'routing',
-            'parent'          => 'parent',
-            '_parent'         => 'parent',
-            'timestamp'       => 'timestamp',
-            '_timestamp'      => 'timestamp',
-            'ttl'             => 'ttl',
-            '_ttl'            => 'ttl',
-            'version'         => 'version',
-            '_version'        => 'version',
-            'version_type'    => 'version_type',
-            '_version_type'   => 'version_type',
-            'if_seq_no'       => 'if_seq_no',
-            'if_primary_term' => 'if_primary_term'
+            '_index'                 => '_index',
+            'index'                  => '_index',
+            '_id'                    => '_id',
+            'id'                     => '_id',
+            'pipeline'               => 'pipeline',
+            'routing'                => 'routing',
+            '_routing'               => 'routing',
+            'parent'                 => 'parent',
+            '_parent'                => 'parent',
+            'timestamp'              => 'timestamp',
+            '_timestamp'             => 'timestamp',
+            'ttl'                    => 'ttl',
+            '_ttl'                   => 'ttl',
+            'version'                => 'version',
+            '_version'               => 'version',
+            'version_type'           => 'version_type',
+            '_version_type'          => 'version_type',
+            'if_seq_no'              => 'if_seq_no',
+            'if_primary_term'        => 'if_primary_term',
+            'lang'                   => 'lang',
+            'require_alias'          => 'require_alias',
+            'refresh'                => 'refresh',
+            'retry_on_conflict'      => 'retru_on_conflict',
+            'wait_for_active_shards' => 'wait_for_active_shards',
+            '_source'                => '_source',
+            '_source_excludes'       => '_source_excludes',
+            '_source_includes'       => '_source_includes',
+            'timeout'                => 'timeout'
         }
     },
     'bulk.update' => {
@@ -69,7 +78,8 @@ sub api {
             'doc',              'doc_as_upsert',
             'fields',           'retry_on_conflict',
             'scripted_upsert',  'script',
-            'upsert',
+            'upsert',           'lang',
+            'params'
         ]
     },
     'bulk.required' => { params => ['index'] },
@@ -1048,6 +1058,17 @@ sub api {
         },
     },
 
+    'async_search.status' => {
+        doc   => "async-search",
+        parts => { id => {} },
+        paths => [ [ { id => 2 }, "_async_search", "status", "{id}" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'async_search.submit' => {
         body   => {},
         doc    => "async-search",
@@ -1117,10 +1138,10 @@ sub api {
         },
     },
 
-    'autoscaling.get_autoscaling_decision' => {
-        doc   => "autoscaling-get-autoscaling-decision",
+    'autoscaling.get_autoscaling_capacity' => {
+        doc   => "autoscaling-get-autoscaling-capacity",
         parts => {},
-        paths => [ [ {}, "_autoscaling", "decision" ] ],
+        paths => [ [ {}, "_autoscaling", "capacity" ] ],
         qs    => {
             error_trace => "boolean",
             filter_path => "list",
@@ -1596,19 +1617,19 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "tasks" ] ],
         qs    => {
-            actions     => "list",
-            detailed    => "boolean",
-            error_trace => "boolean",
-            filter_path => "list",
-            format      => "string",
-            h           => "list",
-            help        => "boolean",
-            human       => "boolean",
-            node_id     => "list",
-            parent_task => "number",
-            s           => "list",
-            time        => "enum",
-            v           => "boolean",
+            actions        => "list",
+            detailed       => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            format         => "string",
+            h              => "list",
+            help           => "boolean",
+            human          => "boolean",
+            nodes          => "list",
+            parent_task_id => "string",
+            s              => "list",
+            time           => "enum",
+            v              => "boolean",
         },
     },
 
@@ -2153,12 +2174,13 @@ sub api {
             [ {}, "_data_frame", "transforms" ],
         ],
         qs => {
-            allow_no_match => "boolean",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            from           => "int",
-            human          => "boolean",
-            size           => "int",
+            allow_no_match    => "boolean",
+            error_trace       => "boolean",
+            exclude_generated => "boolean",
+            filter_path       => "list",
+            from              => "int",
+            human             => "boolean",
+            size              => "int",
         },
     },
 
@@ -2688,9 +2710,10 @@ sub api {
         parts  => { name => { multi => 1 } },
         paths  => [ [ { name => 1 }, "_data_stream", "{name}" ] ],
         qs     => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
+            error_trace      => "boolean",
+            expand_wildcards => "enum",
+            filter_path      => "list",
+            human            => "boolean",
         },
     },
 
@@ -2929,9 +2952,10 @@ sub api {
             [ {}, "_data_stream" ],
         ],
         qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
+            error_trace      => "boolean",
+            expand_wildcards => "enum",
+            filter_path      => "list",
+            human            => "boolean",
         },
     },
 
@@ -3063,6 +3087,18 @@ sub api {
         },
     },
 
+    'indices.migrate_to_data_stream' => {
+        doc    => "data-streams",
+        method => "POST",
+        parts  => { name => {} },
+        paths  => [ [ { name => 2 }, "_data_stream", "_migrate", "{name}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'indices.open' => {
         doc    => "indices-open-close",
         method => "POST",
@@ -3078,6 +3114,18 @@ sub api {
             master_timeout         => "time",
             timeout                => "time",
             wait_for_active_shards => "string",
+        },
+    },
+
+    'indices.promote_data_stream' => {
+        doc    => "data-streams",
+        method => "POST",
+        parts  => { name => {} },
+        paths  => [ [ { name => 2 }, "_data_stream", "_promote", "{name}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
         },
     },
 
@@ -4063,12 +4111,13 @@ sub api {
             [ {}, "_ml", "data_frame", "analytics" ],
         ],
         qs => {
-            allow_no_match => "boolean",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            from           => "int",
-            human          => "boolean",
-            size           => "int",
+            allow_no_match    => "boolean",
+            error_trace       => "boolean",
+            exclude_generated => "boolean",
+            filter_path       => "list",
+            from              => "int",
+            human             => "boolean",
+            size              => "int",
         },
     },
 
@@ -4122,6 +4171,7 @@ sub api {
             allow_no_datafeeds => "boolean",
             allow_no_match     => "boolean",
             error_trace        => "boolean",
+            exclude_generated  => "boolean",
             filter_path        => "list",
             human              => "boolean",
         },
@@ -4195,11 +4245,12 @@ sub api {
             [ {}, "_ml", "anomaly_detectors" ],
         ],
         qs => {
-            allow_no_jobs  => "boolean",
-            allow_no_match => "boolean",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            human          => "boolean",
+            allow_no_jobs     => "boolean",
+            allow_no_match    => "boolean",
+            error_trace       => "boolean",
+            exclude_generated => "boolean",
+            filter_path       => "list",
+            human             => "boolean",
         },
     },
 
@@ -4291,8 +4342,8 @@ sub api {
             allow_no_match           => "boolean",
             decompress_definition    => "boolean",
             error_trace              => "boolean",
+            exclude_generated        => "boolean",
             filter_path              => "list",
-            for_export               => "boolean",
             from                     => "int",
             human                    => "boolean",
             include                  => "string",
@@ -4716,6 +4767,26 @@ sub api {
         },
     },
 
+    'ml.upgrade_job_snapshot' => {
+        doc    => "ml-upgrade-job-model-snapshot",
+        method => "POST",
+        parts  => { job_id => {}, snapshot_id => {} },
+        paths  => [
+            [   { job_id => 2, snapshot_id => 4 }, "_ml",
+                "anomaly_detectors",               "{job_id}",
+                "model_snapshots",                 "{snapshot_id}",
+                "_upgrade",
+            ],
+        ],
+        qs => {
+            error_trace         => "boolean",
+            filter_path         => "list",
+            human               => "boolean",
+            timeout             => "time",
+            wait_for_completion => "boolean",
+        },
+    },
+
     'ml.validate' => {
         body   => { required => 1 },
         doc    => "ml-jobs",
@@ -4938,6 +5009,24 @@ sub api {
         parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_rollup", "job", "{id}" ] ],
         qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'rollup.rollup' => {
+        body   => { required => 1 },
+        doc    => "rollup-api",
+        method => "POST",
+        parts  =>
+            { index => { required => 1 }, rollup_index => { required => 1 } },
+        paths => [
+            [   { index => 0, rollup_index => 2 }, "{index}",
+                "_rollup",                         "{rollup_index}",
+            ],
+        ],
+        qs => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -5915,12 +6004,13 @@ sub api {
             [ {}, "_transform" ],
         ],
         qs => {
-            allow_no_match => "boolean",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            from           => "int",
-            human          => "boolean",
-            size           => "int",
+            allow_no_match    => "boolean",
+            error_trace       => "boolean",
+            exclude_generated => "boolean",
+            filter_path       => "list",
+            from              => "int",
+            human             => "boolean",
+            size              => "int",
         },
     },
 
@@ -6135,6 +6225,18 @@ sub api {
         },
     },
 
+    'watcher.query_watches' => {
+        body  => {},
+        doc   => "watcher-api-query-watches",
+        parts => {},
+        paths => [ [ {}, "_watcher", "_query", "watches" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'watcher.start' => {
         doc    => "watcher-api-start",
         method => "POST",
@@ -6219,32 +6321,32 @@ is the definition for the L<Search::Elasticsearch::Client::7_0::Direct/index()> 
         body   => { required => 1 },
         doc    => "docs-index_",
         method => "POST",
-        parts  => {
-            id    => {},
-            index => { required => 1 },
-            type  => { required => 1 }
-        },
-        paths => [
+        parts  => { id => {}, index => {}, type => {} },
+        paths  => [
             [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}"
+                "{type}",                           "{id}"
             ],
-            [ { index => 0, type => 1 }, "{index}", "{type}" ],
+            [ { id    => 2, index => 0 }, "{index}", "_doc", "{id}" ],
+            [ { index => 0, type  => 1 }, "{index}", "{type}" ],
+            [ { index => 0 }, "{index}", "_doc" ],
         ],
         qs => {
+            error_trace            => "boolean",
             filter_path            => "list",
+            human                  => "boolean",
+            if_primary_term        => "number",
+            if_seq_no              => "number",
             op_type                => "enum",
-            parent                 => "string",
             pipeline               => "string",
             refresh                => "enum",
+            require_alias          => "boolean",
             routing                => "string",
             timeout                => "time",
-            timestamp              => "time",
-            ttl                    => "time",
             version                => "number",
             version_type           => "enum",
             wait_for_active_shards => "string",
         },
-    },
+    }
 
 These definitions can be used by different L<Search::Elasticsearch::Role::Client>
 implementations to provide distinct user interfaces.

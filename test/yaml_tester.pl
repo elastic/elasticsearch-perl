@@ -462,9 +462,6 @@ sub reset_es {
     $es->logger->trace_comment( "End: " . timestamp() );
 }
 
-<<<<<<< HEAD
-
-=======
 #===================================
 sub wipe_cluster {
 #===================================
@@ -768,7 +765,6 @@ sub delete_all_tasks {
         }
     }
 }
->>>>>>> 7788d25... Completed the cleanup phase for YAML testing
 
 #===================================
 sub key_val {
@@ -887,8 +883,7 @@ sub request_wrapper {
 sub load_skip_list {
 #===================================
     my $v = $wrapper->( $es->info )->{version};
-    my $version
-        = $v->{build_snapshot} ? $v->{number} . '_SNAPSHOT' : $v->{number};
+    my $version = $ENV{STACK_VERSION} // $v->{number}; 
     my $skip_list = LoadFile("test/skip_list.yaml")->{$version}
         or return {};
     return { map { $_ => 1 } @$skip_list }
