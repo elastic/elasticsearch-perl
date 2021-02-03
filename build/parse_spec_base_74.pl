@@ -1,0 +1,298 @@
+#!/usr/bin/env perl
+
+# Licensed to Elasticsearch B.V. under one or more contributor
+# license agreements. See the NOTICE file distributed with
+# this work for additional information regarding copyright
+# ownership. Elasticsearch B.V. licenses this file to you under
+# the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+use strict;
+use warnings FATAL => 'all';
+use v5.12;
+use Data::Dump qw(pp);
+use Path::Class;
+use Perl::Tidy;
+use JSON::XS;
+use Array::Utils qw(:all);
+
+our ( %API, %Common, %seen, %seen_combo, %Forbidden );
+
+our %Known_Types = map { $_ => 1 } qw(boolean enum date list number int float double string time number|string boolean|long);
+
+#===================================
+sub process_files {
+#===================================
+    my $module = shift();
+    my @files;
+
+    while ( my $file = shift() ) {
+        unless ( $file =~ /_common.json$/ ) {
+            push @files, $file;
+            next;
+        }
+
+        say $file;
+        my $data = decode_json( $file->slurp );
+        %Common = ( %Common, process_qs( $data->{params} ) );
+    }
+
+    delete @Common{ 'pretty', 'source' };
+
+    for my $file (@files) {
+        say $file;
+        my $data = decode_json( $file->slurp );
+        my ( $name, $defn ) = %$data;
+        die "File $file doesn't match name $name"
+            unless $file =~ m{/$name.json};
+
+        eval { $API{$name} = process( $name, $defn ) }
+            || die "$name: $@";
+
+    }
+    update_module($module);
+}
+
+#===================================
+sub process {
+#===================================
+    my ( $name, $defn ) = @_;
+    my %spec;
+   
+    # body
+    if ( my $body = $defn->{body} ) {
+        $spec{body}
+            = $body->{required}
+            ? { required => 1 }
+            : {};
+        if ( $body->{serialize} && $body->{serialize} eq 'bulk' ) {
+            $spec{serialize} = 'bulk';
+        }
+    }
+    
+    # url->paths is an array from ES 7.4
+    # choose the first HTTP method from intersection of all the paths 
+    my @methods = ();
+    foreach (@{$defn->{url}->{paths}}) {
+        if (scalar @methods == 0) {
+            @methods = @{$_->{methods}};
+        } else {
+            @methods = intersect(@methods, @{$_->{methods}});
+        }
+    }
+
+    # method
+    my $method = $spec{method} = $methods[0];
+    delete $spec{method} if $method eq 'GET';
+
+    my @urls = ();
+    my %parts = ();
+    # arrange $defn->{url} with the previous format with ES < 7.4
+    foreach (@{$defn->{url}->{paths}}) {
+        push @urls, $_->{path};
+        if ($_->{parts}) {
+            while(my ($key, $value) = each(%{$_->{parts}})) { 
+                $parts{$key} = $value
+            }
+        }
+    }
+
+    # paths
+    my %url;
+    $url{paths} = \@urls;
+    $url{parts} = \%parts;
+    
+    $spec{paths} = process_paths( $name, $method, \%url );
+
+    # parts
+    my $parts = $spec{parts} = process_parts( $url{parts} );
+
+    # filter path
+    my %qs = ( %Common, process_qs( $defn->{params} ) );
+    for ( keys %$parts ) {
+        delete $qs{$_};
+    }
+
+    $spec{qs} = \%qs;
+
+    # doc
+    if ( $defn->{documentation}->{url} ) {
+        $spec{doc} = $defn->{documentation}->{url} =~ m{/([^/]+)\.html$} ? $1 : '';
+    }
+    
+    return \%spec;
+}
+
+#===================================
+sub process_paths {
+#===================================
+    my ( $name, $method, $url ) = @_;
+
+    if ($url->{deprecated_paths}) {
+       foreach my $u (@{$url->{deprecated_paths}}) {
+           push (@{ $url->{paths} }, $u->{path});
+       }
+    }
+    my @path_defns = map { process_path( $method, $_ ) } @{ $url->{paths} };
+
+    my %sigs;
+    for (@path_defns) {
+        $_->{name} = $name;
+
+        # check for duplicate params
+        my $sig = $_->{sig};
+        if ( my $exists = $sigs{$sig} ) {
+            next if length( $exists->{path} ) <= length $_->{path};
+        }
+        $sigs{$sig} = $_;
+
+        # check for duplicate wildcards
+        warn "Duplicate paths: " . pp( [ $seen{ $_->{wildcard} }, $_ ] )
+            if $seen{ $_->{wildcard} };
+
+        $seen{ $_->{wildcard} } = $_;
+    }
+
+    # generate paths with _all
+    my @paths;
+    for my $path ( sort { $a->{max} <=> $b->{max} or $b->{sig} cmp $a->{sig} }
+        values %sigs )
+    {
+    }
+    continue {
+        push @paths, [ $path->{params}, @{ $path->{parts} } ];
+    }
+    return [ reverse @paths ];
+}
+
+#===================================
+sub process_parts {
+#===================================
+    my $parts = shift;
+    my %params;
+    for my $key ( keys %$parts ) {
+        my %defn;
+        $defn{multi}    = 1 if $parts->{$key}{type} eq 'list';
+        $defn{required} = 1 if $parts->{$key}{required};
+        $params{$key}   = \%defn;
+    }
+    return \%params;
+}
+
+#===================================
+sub replace_with_all {
+#===================================
+    my ( $method, $path, $param ) = @_;
+    substr( $path, index( $path, $param ), length($param) ) = '_all';
+    return process_path( $method, $path );
+}
+
+#===================================
+sub is_param { substr( $_[0], 0, 1 ) eq '{' }
+sub param_name { my $n = shift; $n =~ s/[{}]//g or return undef; $n; }
+#===================================
+
+#===================================
+sub process_path {
+#===================================
+    my ( $method, $path ) = @_;
+    return if $Forbidden{$method}{$path};
+    my @parts = grep {$_} split /\//, $path;
+
+    my $defn = {
+        path  => $path,
+        parts => \@parts,
+    };
+
+    my $count = 0;
+    for my $i ( 0 .. $#parts ) {
+        my $name = param_name( $parts[$i] ) or next;
+        $count++;
+        $defn->{params}{$name} = $i;
+    }
+    $defn->{max} = $count;
+    $defn->{wildcard}
+        = join "/",
+        "$method ",
+        map { is_param($_) ? '*' : $_ } @parts;
+
+    $defn->{sig} = join "-", sort keys %{ $defn->{params} };
+
+    return $defn;
+}
+
+#===================================
+sub process_qs {
+#===================================
+    my $params = shift || {};
+    my %qs;
+
+    for my $param ( keys %$params ) {
+        next if $Forbidden{QS}{$param};
+        my $def = $params->{$param};
+        my $type = $def->{type} || die "No type specified for param [$param]";
+        $type = 'time' if $type eq 'date';
+        die "Unknown type [$type] for param [$param]"
+            unless $Known_Types{$type};
+        $qs{$param} = $type;
+    }
+    return %qs;
+}
+
+#===================================
+sub forbid {
+#===================================
+    my $method = shift;
+    for (@_) {
+        $Forbidden{$method}{$_} = 1;
+    }
+}
+
+#===================================
+sub update_module {
+#===================================
+    my $module   = shift;
+    my $file     = file($module);
+    my $contents = $file->slurp;
+    my $out;
+    if ( $contents =~ /^(.+\n#=== AUTOGEN - START ===\n\n)/s ) {
+        $out = $1;
+    }
+    else {
+        die "Couldn't find AUTOGEN - START marker";
+    }
+
+    my @keys = grep { !/\./ } sort keys %API;
+    push @keys, grep {/\./} sort keys %API;
+
+    for my $name (@keys) {
+        $out .= "\n'$name' => " . pp( $API{$name} ) . ",\n";
+    }
+
+    if ( $contents =~ /(\n\n#=== AUTOGEN - END ===.+$)/s ) {
+        $out .= $1;
+    }
+    else {
+        die "Couldn't find AUTOGEN - END marker";
+    }
+
+    Perl::Tidy::perltidy(
+        source      => \$out,
+        destination => $module,
+        argv        => '-q --indent-columns=4 --maximum-line-length=80 '
+            . '-pbp -nst -sot -vt=2 -nsob -sbcp=#='
+    );
+
+}
+
+1;

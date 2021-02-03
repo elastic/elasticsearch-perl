@@ -9,8 +9,8 @@ if [ -z $TEST_SUITE ]; then
     exit 1;
 fi;
 
-if [ "$TEST_SUITE" = "oss" ]; then
-    docker pull docker.elastic.co/elasticsearch/elasticsearch-oss:${STACK_VERSION}
+if [ "$TEST_SUITE" = "basic" ]; then
+    docker pull docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     docker network create esnet-oss;
     docker run \
       --rm \

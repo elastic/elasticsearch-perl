@@ -9,8 +9,8 @@ PERL_VERSION:
   - 5.28
 
 TEST_SUITE:
-  - oss
-  - xpack
+  - basic
+  - platinum
 
 CLIENT_VER:
   - 7_0

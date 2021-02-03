@@ -1,5 +1,3 @@
-#!/usr/bin/env perl
-
 # Licensed to Elasticsearch B.V. under one or more contributor
 # license agreements. See the NOTICE file distributed with
 # this work for additional information regarding copyright
@@ -17,20 +15,31 @@
 # specific language governing permissions and limitations
 # under the License.
 
-use strict;
-use warnings;
-use HTTP::Tiny;
-use JSON::PP;
+package Search::Elasticsearch::Client::7_0::Direct::Enrich;
 
-if ($ENV{TEST_SUITE} eq "basic") { 
-    $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'http://localhost:9200';
-} else {
-    $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'https://elastic:changeme@localhost:9200';
-}
+use Moo;
+with 'Search::Elasticsearch::Client::7_0::Role::API';
+with 'Search::Elasticsearch::Role::Client::Direct';
+use namespace::clean;
 
-my $response = HTTP::Tiny->new->get($ENV{ES}) or die "The server $ENV{ES} is not running!";
+__PACKAGE__->_install_api('enrich');
 
-my $contents = decode_json $response->{content} or die "The JSON response is not valid!";
-my $hash = $contents->{version}->{build_hash};
+1;
 
-`cd elasticsearch; git checkout $hash`;
+__END__
+
+# ABSTRACT: Enrich feature of Search::Elasticsearch 7.x
+
+=head2 DESCRIPTION
+
+The full documentation for Enrich feature is available here:
+L<https://www.elastic.co/guide/en/elasticsearch/reference/current/enrich-apis.html>
+
+=head1 FOLLOW METHODS
+
+=head2 C<follow()>
+
+    my $response = $es->enrich->get_policy(
+        'name' => $name
+    );
+

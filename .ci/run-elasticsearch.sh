@@ -4,16 +4,17 @@
 # to form a cluster suitable for running the REST API tests.
 #
 # Export the STACK_VERSION variable, eg. '8.0.0-SNAPSHOT'.
-# Export the TEST_SUITE variable, eg. 'oss' or 'xpack' defaults to 'oss'.
+# Export the TEST_SUITE variable, eg. 'free' or 'platinum' defaults to 'free'.
 # Export the NUMBER_OF_NODES variable to start more than 1 node
 
-# Version 1.1.0
+# Version 1.2.0
 # - Initial version of the run-elasticsearch.sh script
 # - Deleting the volume should not dependent on the container still running
 # - Fixed `ES_JAVA_OPTS` config
 # - Moved to STACK_VERSION and TEST_VERSION
 # - Refactored into functions and imports
 # - Support NUMBER_OF_NODES
+# - Added 5 retries on docker pull for fixing transient network errors
 
 script_path=$(dirname $(realpath -s $0))
 source $script_path/functions/imports.sh
@@ -38,7 +39,7 @@ environment=($(cat <<-END
   --env repositories.url.allowed_urls=http://snapshot.test*
 END
 ))
-if [[ "$TEST_SUITE" == "xpack" ]]; then
+if [[ "$TEST_SUITE" == "platinum" ]]; then
   environment+=($(cat <<-END
     --env ELASTIC_PASSWORD=$elastic_password
     --env xpack.license.self_generated.type=trial
@@ -63,7 +64,7 @@ END
 fi
 
 cert_validation_flags=""
-if [[ "$TEST_SUITE" == "xpack" ]]; then
+if [[ "$TEST_SUITE" == "platinum" ]]; then
   cert_validation_flags="--insecure --cacert /usr/share/elasticsearch/config/certs/ca.crt --resolve ${es_node_name}:443:127.0.0.1"
 fi
 

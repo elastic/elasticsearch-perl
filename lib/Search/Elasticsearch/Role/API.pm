@@ -21,6 +21,7 @@ use Moo::Role;
 requires 'api_version';
 requires 'api';
 
+use Scalar::Util qw(looks_like_number);
 use Search::Elasticsearch::Util qw(throw);
 use namespace::clean;
 
@@ -35,6 +36,7 @@ our %Handler = (
     int     => \&_num,
     float   => \&_num,
     double  => \&_num,
+    "number|string" => \&_numOrString,
 );
 
 #===================================
@@ -76,6 +78,15 @@ sub _num {
 sub _string {
 #===================================
     return "$_[0]";
+}
+
+#===================================
+sub _numOrString {
+#===================================
+    if (looks_like_number($_[0])) {
+        return _num($_[0]);
+    }
+    return _string($_[0]);
 }
 
 #===================================

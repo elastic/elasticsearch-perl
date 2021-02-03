@@ -41,25 +41,34 @@ sub api {
 
     'bulk.metadata' => {
         params => {
-            '_index'          => '_index',
-            'index'           => '_index',
-            '_id'             => '_id',
-            'id'              => '_id',
-            'pipeline'        => 'pipeline',
-            'routing'         => 'routing',
-            '_routing'        => 'routing',
-            'parent'          => 'parent',
-            '_parent'         => 'parent',
-            'timestamp'       => 'timestamp',
-            '_timestamp'      => 'timestamp',
-            'ttl'             => 'ttl',
-            '_ttl'            => 'ttl',
-            'version'         => 'version',
-            '_version'        => 'version',
-            'version_type'    => 'version_type',
-            '_version_type'   => 'version_type',
-            'if_seq_no'       => 'if_seq_no',
-            'if_primary_term' => 'if_primary_term'
+            '_index'                 => '_index',
+            'index'                  => '_index',
+            '_id'                    => '_id',
+            'id'                     => '_id',
+            'pipeline'               => 'pipeline',
+            'routing'                => 'routing',
+            '_routing'               => 'routing',
+            'parent'                 => 'parent',
+            '_parent'                => 'parent',
+            'timestamp'              => 'timestamp',
+            '_timestamp'             => 'timestamp',
+            'ttl'                    => 'ttl',
+            '_ttl'                   => 'ttl',
+            'version'                => 'version',
+            '_version'               => 'version',
+            'version_type'           => 'version_type',
+            '_version_type'          => 'version_type',
+            'if_seq_no'              => 'if_seq_no',
+            'if_primary_term'        => 'if_primary_term',
+            'lang'                   => 'lang',
+            'require_alias'          => 'require_alias',
+            'refresh'                => 'refresh',
+            'retry_on_conflict'      => 'retru_on_conflict',
+            'wait_for_active_shards' => 'wait_for_active_shards',
+            '_source'                => '_source',
+            '_source_excludes'       => '_source_excludes',
+            '_source_includes'       => '_source_includes',
+            'timeout'                => 'timeout'
         }
     },
     'bulk.update' => {
@@ -69,7 +78,8 @@ sub api {
             'doc',              'doc_as_upsert',
             'fields',           'retry_on_conflict',
             'scripted_upsert',  'script',
-            'upsert',
+            'upsert',           'lang',
+            'params'
         ]
     },
     'bulk.required' => { params => ['index'] },
@@ -95,6 +105,7 @@ sub api {
             human                  => "boolean",
             pipeline               => "string",
             refresh                => "enum",
+            require_alias          => "boolean",
             routing                => "string",
             timeout                => "time",
             wait_for_active_shards => "string",
@@ -104,7 +115,7 @@ sub api {
 
     'clear_scroll' => {
         body   => {},
-        doc    => "",
+        doc    => "clear-scroll-api",
         method => "DELETE",
         parts  => { scroll_id => { multi => 1 } },
         paths  => [
@@ -112,6 +123,19 @@ sub api {
             [ {}, "_search", "scroll" ],
         ],
         qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'close_point_in_time' => {
+        body   => {},
+        doc    => "point-in-time-api",
+        method => "DELETE",
+        parts  => {},
+        paths  => [ [ {}, "_pit" ] ],
+        qs     => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -153,12 +177,8 @@ sub api {
         body   => { required => 1 },
         doc    => "docs-index_",
         method => "PUT",
-        parts  => {
-            id    => { required => 1 },
-            index => { required => 1 },
-            type  => {}
-        },
-        paths => [
+        parts  => { id => {}, index => {}, type => {} },
+        paths  => [
             [   { id => 2, index => 0, type => 1 },
                 "{index}", "{type}", "{id}", "_create",
             ],
@@ -181,14 +201,10 @@ sub api {
     'delete' => {
         doc    => "docs-delete",
         method => "DELETE",
-        parts  => {
-            id    => { required => 1 },
-            index => { required => 1 },
-            type  => {}
-        },
-        paths => [
+        parts  => { id => {}, index => {}, type => {} },
+        paths  => [
             [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}"
+                "{type}",                           "{id}"
             ],
             [ { id => 2, index => 0 }, "{index}", "_doc", "{id}" ],
         ],
@@ -217,7 +233,7 @@ sub api {
         },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
-                "{type}", "_delete_by_query",
+                "{type}",                  "_delete_by_query",
             ],
             [ { index => 0 }, "{index}", "_delete_by_query" ],
         ],
@@ -250,7 +266,7 @@ sub api {
             search_timeout         => "time",
             search_type            => "enum",
             size                   => "number",
-            slices                 => "number",
+            slices                 => "number|string",
             sort                   => "list",
             stats                  => "list",
             terminate_after        => "number",
@@ -264,10 +280,10 @@ sub api {
     'delete_by_query_rethrottle' => {
         doc    => "docs-delete-by-query",
         method => "POST",
-        parts  => { task_id => { required => 1 } },
+        parts  => { task_id => {} },
         paths  => [
             [   { task_id => 1 }, "_delete_by_query",
-                "{task_id}", "_rethrottle",
+                "{task_id}",      "_rethrottle",
             ],
         ],
         qs => {
@@ -281,7 +297,7 @@ sub api {
     'delete_script' => {
         doc    => "modules-scripting",
         method => "DELETE",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [ [ { id => 1 }, "_scripts", "{id}" ] ],
         qs     => {
             error_trace    => "boolean",
@@ -295,14 +311,10 @@ sub api {
     'exists' => {
         doc    => "docs-get",
         method => "HEAD",
-        parts  => {
-            id    => { required => 1 },
-            index => { required => 1 },
-            type  => {}
-        },
-        paths => [
+        parts  => { id => {}, index => {}, type => {} },
+        paths  => [
             [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}"
+                "{type}",                           "{id}"
             ],
             [ { id => 2, index => 0 }, "{index}", "_doc", "{id}" ],
         ],
@@ -326,12 +338,8 @@ sub api {
     'exists_source' => {
         doc    => "docs-get",
         method => "HEAD",
-        parts  => {
-            id    => { required => 1 },
-            index => { required => 1 },
-            type  => {}
-        },
-        paths => [
+        parts  => { id => {}, index => {}, type => {} },
+        paths  => [
             [   { id => 2, index => 0, type => 1 },
                 "{index}", "{type}", "{id}", "_source",
             ],
@@ -356,14 +364,10 @@ sub api {
     'explain' => {
         body  => {},
         doc   => "search-explain",
-        parts => {
-            id    => { required => 1 },
-            index => { required => 1 },
-            type  => {}
-        },
+        parts => { id => {}, index => {}, type => {} },
         paths => [
             [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}",
+                "{type}",                           "{id}",
                 "_explain",
             ],
             [ { id => 2, index => 0 }, "{index}", "_explain", "{id}" ],
@@ -388,6 +392,7 @@ sub api {
     },
 
     'field_caps' => {
+        body  => {},
         doc   => "search-field-caps",
         parts => { index => { multi => 1 } },
         paths => [
@@ -408,14 +413,10 @@ sub api {
 
     'get' => {
         doc   => "docs-get",
-        parts => {
-            id    => { required => 1 },
-            index => { required => 1 },
-            type  => {}
-        },
+        parts => { id => {}, index => {}, type => {} },
         paths => [
             [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}"
+                "{type}",                           "{id}"
             ],
             [ { id => 2, index => 0 }, "{index}", "_doc", "{id}" ],
         ],
@@ -438,7 +439,7 @@ sub api {
 
     'get_script' => {
         doc   => "modules-scripting",
-        parts => { id => { required => 1 } },
+        parts => { id => {} },
         paths => [ [ { id => 1 }, "_scripts", "{id}" ] ],
         qs    => {
             error_trace    => "boolean",
@@ -448,13 +449,31 @@ sub api {
         },
     },
 
+    'get_script_context' => {
+        doc   => "painless-contexts",
+        parts => {},
+        paths => [ [ {}, "_script_context" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'get_script_languages' => {
+        doc   => "modules-scripting",
+        parts => {},
+        paths => [ [ {}, "_script_language" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'get_source' => {
         doc   => "docs-get",
-        parts => {
-            id    => { required => 1 },
-            index => { required => 1 },
-            type  => {}
-        },
+        parts => { id => {}, index => {}, type => {} },
         paths => [
             [   { id => 2, index => 0, type => 1 },
                 "{index}", "{type}", "{id}", "_source",
@@ -481,10 +500,10 @@ sub api {
         body   => { required => 1 },
         doc    => "docs-index_",
         method => "POST",
-        parts  => { id => {}, index => { required => 1 }, type => {} },
+        parts  => { id => {}, index => {}, type => {} },
         paths  => [
             [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}"
+                "{type}",                           "{id}"
             ],
             [ { id    => 2, index => 0 }, "{index}", "_doc", "{id}" ],
             [ { index => 0, type  => 1 }, "{index}", "{type}" ],
@@ -499,6 +518,7 @@ sub api {
             op_type                => "enum",
             pipeline               => "string",
             refresh                => "enum",
+            require_alias          => "boolean",
             routing                => "string",
             timeout                => "time",
             version                => "number",
@@ -508,7 +528,7 @@ sub api {
     },
 
     'info' => {
-        doc   => "",
+        doc   => "index",
         parts => {},
         paths => [ [ {} ] ],
         qs    => {
@@ -572,7 +592,7 @@ sub api {
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
-                "{type}", "_msearch",
+                "{type}",                  "_msearch",
                 "template",
             ],
             [ { index => 0 }, "{index}", "_msearch", "template" ],
@@ -597,7 +617,7 @@ sub api {
         parts => { index => {}, type => {} },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
-                "{type}", "_mtermvectors"
+                "{type}",                  "_mtermvectors"
             ],
             [ { index => 0 }, "{index}", "_mtermvectors" ],
             [ {}, "_mtermvectors" ],
@@ -621,8 +641,25 @@ sub api {
         },
     },
 
+    'open_point_in_time' => {
+        doc    => "point-in-time-api",
+        method => "POST",
+        parts  => { index => { multi => 1 } },
+        paths  => [ [ { index => 0 }, "{index}", "_pit" ], [ {}, "_pit" ] ],
+        qs     => {
+            error_trace        => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            human              => "boolean",
+            ignore_unavailable => "boolean",
+            keep_alive         => "string",
+            preference         => "string",
+            routing            => "string",
+        },
+    },
+
     'ping' => {
-        doc    => "",
+        doc    => "index",
         method => "HEAD",
         parts  => {},
         paths  => [ [ {} ] ],
@@ -637,10 +674,10 @@ sub api {
         body   => { required => 1 },
         doc    => "modules-scripting",
         method => "PUT",
-        parts  => { context => {}, id => { required => 1 } },
+        parts  => { context => {}, id => {} },
         paths  => [
             [ { context => 2, id => 1 }, "_scripts", "{id}", "{context}" ],
-            [ { id      => 1 }, "_scripts", "{id}" ],
+            [ { id => 1 }, "_scripts", "{id}" ],
         ],
         qs => {
             error_trace    => "boolean",
@@ -666,6 +703,7 @@ sub api {
             filter_path        => "list",
             human              => "boolean",
             ignore_unavailable => "boolean",
+            search_type        => "enum",
         },
     },
 
@@ -683,7 +721,7 @@ sub api {
             refresh                => "boolean",
             requests_per_second    => "number",
             scroll                 => "time",
-            slices                 => "number",
+            slices                 => "number|string",
             timeout                => "time",
             wait_for_active_shards => "string",
             wait_for_completion    => "boolean",
@@ -693,8 +731,8 @@ sub api {
     'reindex_rethrottle' => {
         doc    => "docs-reindex",
         method => "POST",
-        parts  => { task_id => { required => 1 } },
-        paths =>
+        parts  => { task_id => {} },
+        paths  =>
             [ [ { task_id => 1 }, "_reindex", "{task_id}", "_rethrottle" ] ],
         qs => {
             error_trace         => "boolean",
@@ -706,7 +744,7 @@ sub api {
 
     'render_search_template' => {
         body  => {},
-        doc   => "search-template",
+        doc   => "",
         parts => { id => {} },
         paths => [
             [ { id => 2 }, "_render", "template", "{id}" ],
@@ -832,7 +870,7 @@ sub api {
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
-                "{type}", "_search",
+                "{type}",                  "_search",
                 "template",
             ],
             [ { index => 0 }, "{index}", "_search", "template" ],
@@ -864,7 +902,7 @@ sub api {
         parts => { id => {}, index => { required => 1 }, type => {} },
         paths => [
             [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}",
+                "{type}",                           "{id}",
                 "_termvectors",
             ],
             [ { id => 2, index => 0 }, "{index}", "_termvectors", "{id}" ],
@@ -895,12 +933,8 @@ sub api {
         body   => { required => 1 },
         doc    => "docs-update",
         method => "POST",
-        parts  => {
-            id    => { required => 1 },
-            index => { required => 1 },
-            type  => {}
-        },
-        paths => [
+        parts  => { id => {}, index => {}, type => {} },
+        paths  => [
             [   { id => 2, index => 0, type => 1 },
                 "{index}", "{type}", "{id}", "_update",
             ],
@@ -917,6 +951,7 @@ sub api {
             if_seq_no              => "number",
             lang                   => "string",
             refresh                => "enum",
+            require_alias          => "boolean",
             retry_on_conflict      => "number",
             routing                => "string",
             timeout                => "time",
@@ -934,7 +969,7 @@ sub api {
         },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
-                "{type}", "_update_by_query",
+                "{type}",                  "_update_by_query",
             ],
             [ { index => 0 }, "{index}", "_update_by_query" ],
         ],
@@ -968,7 +1003,7 @@ sub api {
             search_timeout         => "time",
             search_type            => "enum",
             size                   => "number",
-            slices                 => "number",
+            slices                 => "number|string",
             sort                   => "list",
             stats                  => "list",
             terminate_after        => "number",
@@ -983,10 +1018,10 @@ sub api {
     'update_by_query_rethrottle' => {
         doc    => "docs-update-by-query",
         method => "POST",
-        parts  => { task_id => { required => 1 } },
+        parts  => { task_id => {} },
         paths  => [
             [   { task_id => 1 }, "_update_by_query",
-                "{task_id}", "_rethrottle",
+                "{task_id}",      "_rethrottle",
             ],
         ],
         qs => {
@@ -994,6 +1029,147 @@ sub api {
             filter_path         => "list",
             human               => "boolean",
             requests_per_second => "number",
+        },
+    },
+
+    'async_search.delete' => {
+        doc    => "async-search",
+        method => "DELETE",
+        parts  => { id => {} },
+        paths  => [ [ { id => 1 }, "_async_search", "{id}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'async_search.get' => {
+        doc   => "async-search",
+        parts => { id => {} },
+        paths => [ [ { id => 1 }, "_async_search", "{id}" ] ],
+        qs    => {
+            error_trace                 => "boolean",
+            filter_path                 => "list",
+            human                       => "boolean",
+            keep_alive                  => "time",
+            typed_keys                  => "boolean",
+            wait_for_completion_timeout => "time",
+        },
+    },
+
+    'async_search.status' => {
+        doc   => "async-search",
+        parts => { id => {} },
+        paths => [ [ { id => 2 }, "_async_search", "status", "{id}" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'async_search.submit' => {
+        body   => {},
+        doc    => "async-search",
+        method => "POST",
+        parts  => { index => { multi => 1 } },
+        paths  => [
+            [ { index => 0 }, "{index}", "_async_search" ],
+            [ {}, "_async_search" ],
+        ],
+        qs => {
+            _source                       => "list",
+            _source_excludes              => "list",
+            _source_includes              => "list",
+            allow_no_indices              => "boolean",
+            allow_partial_search_results  => "boolean",
+            analyze_wildcard              => "boolean",
+            analyzer                      => "string",
+            batched_reduce_size           => "number",
+            default_operator              => "enum",
+            df                            => "string",
+            docvalue_fields               => "list",
+            error_trace                   => "boolean",
+            expand_wildcards              => "enum",
+            explain                       => "boolean",
+            filter_path                   => "list",
+            from                          => "number",
+            human                         => "boolean",
+            ignore_throttled              => "boolean",
+            ignore_unavailable            => "boolean",
+            keep_alive                    => "time",
+            keep_on_completion            => "boolean",
+            lenient                       => "boolean",
+            max_concurrent_shard_requests => "number",
+            preference                    => "string",
+            q                             => "string",
+            request_cache                 => "boolean",
+            routing                       => "list",
+            search_type                   => "enum",
+            seq_no_primary_term           => "boolean",
+            size                          => "number",
+            sort                          => "list",
+            stats                         => "list",
+            stored_fields                 => "list",
+            suggest_field                 => "string",
+            suggest_mode                  => "enum",
+            suggest_size                  => "number",
+            suggest_text                  => "string",
+            terminate_after               => "number",
+            timeout                       => "time",
+            track_scores                  => "boolean",
+            track_total_hits              => "boolean",
+            typed_keys                    => "boolean",
+            version                       => "boolean",
+            wait_for_completion_timeout   => "time",
+        },
+    },
+
+    'autoscaling.delete_autoscaling_policy' => {
+        doc    => "autoscaling-delete-autoscaling-policy",
+        method => "DELETE",
+        parts  => { name => {} },
+        paths  => [ [ { name => 2 }, "_autoscaling", "policy", "{name}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'autoscaling.get_autoscaling_capacity' => {
+        doc   => "autoscaling-get-autoscaling-capacity",
+        parts => {},
+        paths => [ [ {}, "_autoscaling", "capacity" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'autoscaling.get_autoscaling_policy' => {
+        doc   => "autoscaling-get-autoscaling-policy",
+        parts => { name => {} },
+        paths => [ [ { name => 2 }, "_autoscaling", "policy", "{name}" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'autoscaling.put_autoscaling_policy' => {
+        body   => { required => 1 },
+        doc    => "autoscaling-put-autoscaling-policy",
+        method => "PUT",
+        parts  => { name => {} },
+        paths  => [ [ { name => 2 }, "_autoscaling", "policy", "{name}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
         },
     },
 
@@ -1005,16 +1181,16 @@ sub api {
             [ {}, "_cat", "aliases" ],
         ],
         qs => {
-            error_trace    => "boolean",
-            filter_path    => "list",
-            format         => "string",
-            h              => "list",
-            help           => "boolean",
-            human          => "boolean",
-            local          => "boolean",
-            master_timeout => "time",
-            s              => "list",
-            v              => "boolean",
+            error_trace      => "boolean",
+            expand_wildcards => "enum",
+            filter_path      => "list",
+            format           => "string",
+            h                => "list",
+            help             => "boolean",
+            human            => "boolean",
+            local            => "boolean",
+            s                => "list",
+            v                => "boolean",
         },
     },
 
@@ -1048,16 +1224,14 @@ sub api {
             [ {}, "_cat", "count" ],
         ],
         qs => {
-            error_trace    => "boolean",
-            filter_path    => "list",
-            format         => "string",
-            h              => "list",
-            help           => "boolean",
-            human          => "boolean",
-            local          => "boolean",
-            master_timeout => "time",
-            s              => "list",
-            v              => "boolean",
+            error_trace => "boolean",
+            filter_path => "list",
+            format      => "string",
+            h           => "list",
+            help        => "boolean",
+            human       => "boolean",
+            s           => "list",
+            v           => "boolean",
         },
     },
 
@@ -1069,17 +1243,15 @@ sub api {
             [ {}, "_cat", "fielddata" ],
         ],
         qs => {
-            bytes          => "enum",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            format         => "string",
-            h              => "list",
-            help           => "boolean",
-            human          => "boolean",
-            local          => "boolean",
-            master_timeout => "time",
-            s              => "list",
-            v              => "boolean",
+            bytes       => "enum",
+            error_trace => "boolean",
+            filter_path => "list",
+            format      => "string",
+            h           => "list",
+            help        => "boolean",
+            human       => "boolean",
+            s           => "list",
+            v           => "boolean",
         },
     },
 
@@ -1088,17 +1260,16 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "health" ] ],
         qs    => {
-            error_trace    => "boolean",
-            filter_path    => "list",
-            format         => "string",
-            h              => "list",
-            help           => "boolean",
-            human          => "boolean",
-            local          => "boolean",
-            master_timeout => "time",
-            s              => "list",
-            ts             => "boolean",
-            v              => "boolean",
+            error_trace => "boolean",
+            filter_path => "list",
+            format      => "string",
+            h           => "list",
+            help        => "boolean",
+            human       => "boolean",
+            s           => "list",
+            time        => "enum",
+            ts          => "boolean",
+            v           => "boolean",
         },
     },
 
@@ -1125,6 +1296,7 @@ sub api {
         qs => {
             bytes                     => "enum",
             error_trace               => "boolean",
+            expand_wildcards          => "enum",
             filter_path               => "list",
             format                    => "string",
             h                         => "list",
@@ -1136,6 +1308,7 @@ sub api {
             master_timeout            => "time",
             pri                       => "boolean",
             s                         => "list",
+            time                      => "enum",
             v                         => "boolean",
         },
     },
@@ -1154,6 +1327,105 @@ sub api {
             local          => "boolean",
             master_timeout => "time",
             s              => "list",
+            v              => "boolean",
+        },
+    },
+
+    'cat.ml_data_frame_analytics' => {
+        doc   => "cat-dfanalytics",
+        parts => { id => {} },
+        paths => [
+            [ { id => 4 }, "_cat", "ml", "data_frame", "analytics", "{id}" ],
+            [ {}, "_cat", "ml", "data_frame", "analytics" ],
+        ],
+        qs => {
+            allow_no_match => "boolean",
+            bytes          => "enum",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            format         => "string",
+            h              => "list",
+            help           => "boolean",
+            human          => "boolean",
+            s              => "list",
+            time           => "enum",
+            v              => "boolean",
+        },
+    },
+
+    'cat.ml_datafeeds' => {
+        doc   => "cat-datafeeds",
+        parts => { datafeed_id => {} },
+        paths => [
+            [   { datafeed_id => 3 }, "_cat",
+                "ml",                 "datafeeds",
+                "{datafeed_id}"
+            ],
+            [ {}, "_cat", "ml", "datafeeds" ],
+        ],
+        qs => {
+            allow_no_datafeeds => "boolean",
+            allow_no_match     => "boolean",
+            error_trace        => "boolean",
+            filter_path        => "list",
+            format             => "string",
+            h                  => "list",
+            help               => "boolean",
+            human              => "boolean",
+            s                  => "list",
+            time               => "enum",
+            v                  => "boolean",
+        },
+    },
+
+    'cat.ml_jobs' => {
+        doc   => "cat-anomaly-detectors",
+        parts => { job_id => {} },
+        paths => [
+            [   { job_id => 3 }, "_cat", "ml", "anomaly_detectors",
+                "{job_id}"
+            ],
+            [ {}, "_cat", "ml", "anomaly_detectors" ],
+        ],
+        qs => {
+            allow_no_jobs  => "boolean",
+            allow_no_match => "boolean",
+            bytes          => "enum",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            format         => "string",
+            h              => "list",
+            help           => "boolean",
+            human          => "boolean",
+            s              => "list",
+            time           => "enum",
+            v              => "boolean",
+        },
+    },
+
+    'cat.ml_trained_models' => {
+        doc   => "cat-trained-model",
+        parts => { model_id => {} },
+        paths => [
+            [   { model_id => 3 }, "_cat",
+                "ml",              "trained_models",
+                "{model_id}"
+            ],
+            [ {}, "_cat", "ml", "trained_models" ],
+        ],
+        qs => {
+            allow_no_match => "boolean",
+            bytes          => "enum",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            format         => "string",
+            from           => "int",
+            h              => "list",
+            help           => "boolean",
+            human          => "boolean",
+            s              => "list",
+            size           => "int",
+            time           => "enum",
             v              => "boolean",
         },
     },
@@ -1181,6 +1453,7 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "nodes" ] ],
         qs    => {
+            bytes          => "enum",
             error_trace    => "boolean",
             filter_path    => "list",
             format         => "string",
@@ -1191,6 +1464,7 @@ sub api {
             local          => "boolean",
             master_timeout => "time",
             s              => "list",
+            time           => "enum",
             v              => "boolean",
         },
     },
@@ -1209,6 +1483,7 @@ sub api {
             local          => "boolean",
             master_timeout => "time",
             s              => "list",
+            time           => "enum",
             v              => "boolean",
         },
     },
@@ -1239,16 +1514,18 @@ sub api {
             [ {}, "_cat", "recovery" ],
         ],
         qs => {
-            bytes          => "enum",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            format         => "string",
-            h              => "list",
-            help           => "boolean",
-            human          => "boolean",
-            master_timeout => "time",
-            s              => "list",
-            v              => "boolean",
+            active_only => "boolean",
+            bytes       => "enum",
+            detailed    => "boolean",
+            error_trace => "boolean",
+            filter_path => "list",
+            format      => "string",
+            h           => "list",
+            help        => "boolean",
+            human       => "boolean",
+            s           => "list",
+            time        => "enum",
+            v           => "boolean",
         },
     },
 
@@ -1308,6 +1585,7 @@ sub api {
             local          => "boolean",
             master_timeout => "time",
             s              => "list",
+            time           => "enum",
             v              => "boolean",
         },
     },
@@ -1329,6 +1607,7 @@ sub api {
             ignore_unavailable => "boolean",
             master_timeout     => "time",
             s                  => "list",
+            time               => "enum",
             v                  => "boolean",
         },
     },
@@ -1338,18 +1617,19 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "tasks" ] ],
         qs    => {
-            actions     => "list",
-            detailed    => "boolean",
-            error_trace => "boolean",
-            filter_path => "list",
-            format      => "string",
-            h           => "list",
-            help        => "boolean",
-            human       => "boolean",
-            node_id     => "list",
-            parent_task => "number",
-            s           => "list",
-            v           => "boolean",
+            actions        => "list",
+            detailed       => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            format         => "string",
+            h              => "list",
+            help           => "boolean",
+            human          => "boolean",
+            nodes          => "list",
+            parent_task_id => "string",
+            s              => "list",
+            time           => "enum",
+            v              => "boolean",
         },
     },
 
@@ -1379,7 +1659,7 @@ sub api {
         parts => { thread_pool_patterns => { multi => 1 } },
         paths => [
             [   { thread_pool_patterns => 2 }, "_cat",
-                "thread_pool", "{thread_pool_patterns}",
+                "thread_pool",                 "{thread_pool_patterns}",
             ],
             [ {}, "_cat", "thread_pool" ],
         ],
@@ -1398,10 +1678,33 @@ sub api {
         },
     },
 
+    'cat.transforms' => {
+        doc   => "cat-transforms",
+        parts => { transform_id => {} },
+        paths => [
+            [ { transform_id => 2 }, "_cat", "transforms", "{transform_id}" ],
+            [ {}, "_cat", "transforms" ],
+        ],
+        qs => {
+            allow_no_match => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            format         => "string",
+            from           => "int",
+            h              => "list",
+            help           => "boolean",
+            human          => "boolean",
+            s              => "list",
+            size           => "int",
+            time           => "enum",
+            v              => "boolean",
+        },
+    },
+
     'ccr.delete_auto_follow_pattern' => {
         doc    => "ccr-delete-auto-follow-pattern",
         method => "DELETE",
-        parts  => { name => { required => 1 } },
+        parts  => { name => {} },
         paths  => [ [ { name => 2 }, "_ccr", "auto_follow", "{name}" ] ],
         qs     => {
             error_trace => "boolean",
@@ -1414,7 +1717,7 @@ sub api {
         body   => { required => 1 },
         doc    => "ccr-put-follow",
         method => "PUT",
-        parts  => { index => { required => 1 } },
+        parts  => { index => {} },
         paths  => [ [ { index => 0 }, "{index}", "_ccr", "follow" ] ],
         qs     => {
             error_trace            => "boolean",
@@ -1437,7 +1740,7 @@ sub api {
 
     'ccr.follow_stats' => {
         doc   => "ccr-get-follow-stats",
-        parts => { index => { multi => 1, required => 1 } },
+        parts => { index => { multi => 1 } },
         paths => [ [ { index => 0 }, "{index}", "_ccr", "stats" ] ],
         qs    => {
             error_trace => "boolean",
@@ -1448,9 +1751,9 @@ sub api {
 
     'ccr.forget_follower' => {
         body   => { required => 1 },
-        doc    => "",
+        doc    => "ccr-post-forget-follower",
         method => "POST",
-        parts  => { index => { required => 1 } },
+        parts  => { index => {} },
         paths => [ [ { index => 0 }, "{index}", "_ccr", "forget_follower" ] ],
         qs    => {
             error_trace => "boolean",
@@ -1473,10 +1776,23 @@ sub api {
         },
     },
 
+    'ccr.pause_auto_follow_pattern' => {
+        doc    => "ccr-pause-auto-follow-pattern",
+        method => "POST",
+        parts  => { name => {} },
+        paths  =>
+            [ [ { name => 2 }, "_ccr", "auto_follow", "{name}", "pause" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'ccr.pause_follow' => {
         doc    => "ccr-post-pause-follow",
         method => "POST",
-        parts  => { index => { required => 1 } },
+        parts  => { index => {} },
         paths  => [ [ { index => 0 }, "{index}", "_ccr", "pause_follow" ] ],
         qs     => {
             error_trace => "boolean",
@@ -1489,9 +1805,22 @@ sub api {
         body   => { required => 1 },
         doc    => "ccr-put-auto-follow-pattern",
         method => "PUT",
-        parts  => { name => { required => 1 } },
+        parts  => { name => {} },
         paths  => [ [ { name => 2 }, "_ccr", "auto_follow", "{name}" ] ],
         qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ccr.resume_auto_follow_pattern' => {
+        doc    => "ccr-resume-auto-follow-pattern",
+        method => "POST",
+        parts  => { name => {} },
+        paths  =>
+            [ [ { name => 2 }, "_ccr", "auto_follow", "{name}", "resume" ] ],
+        qs => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -1502,7 +1831,7 @@ sub api {
         body   => {},
         doc    => "ccr-post-resume-follow",
         method => "POST",
-        parts  => { index => { required => 1 } },
+        parts  => { index => {} },
         paths  => [ [ { index => 0 }, "{index}", "_ccr", "resume_follow" ] ],
         qs     => {
             error_trace => "boolean",
@@ -1523,9 +1852,9 @@ sub api {
     },
 
     'ccr.unfollow' => {
-        doc    => "",
+        doc    => "ccr-post-unfollow",
         method => "POST",
-        parts  => { index => { required => 1 } },
+        parts  => { index => {} },
         paths  => [ [ { index => 0 }, "{index}", "_ccr", "unfollow" ] ],
         qs     => {
             error_trace => "boolean",
@@ -1545,6 +1874,63 @@ sub api {
             human                 => "boolean",
             include_disk_info     => "boolean",
             include_yes_decisions => "boolean",
+        },
+    },
+
+    'cluster.delete_component_template' => {
+        doc    => "indices-component-template",
+        method => "DELETE",
+        parts  => { name => {} },
+        paths  => [ [ { name => 1 }, "_component_template", "{name}" ] ],
+        qs     => {
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            master_timeout => "time",
+            timeout        => "time",
+        },
+    },
+
+    'cluster.delete_voting_config_exclusions' => {
+        doc    => "voting-config-exclusions",
+        method => "DELETE",
+        parts  => {},
+        paths  => [ [ {}, "_cluster", "voting_config_exclusions" ] ],
+        qs     => {
+            error_trace      => "boolean",
+            filter_path      => "list",
+            human            => "boolean",
+            wait_for_removal => "boolean",
+        },
+    },
+
+    'cluster.exists_component_template' => {
+        doc    => "indices-component-template",
+        method => "HEAD",
+        parts  => { name => {} },
+        paths  => [ [ { name => 1 }, "_component_template", "{name}" ] ],
+        qs     => {
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+        },
+    },
+
+    'cluster.get_component_template' => {
+        doc   => "indices-component-template",
+        parts => { name => { multi => 1 } },
+        paths => [
+            [ { name => 1 }, "_component_template", "{name}" ],
+            [ {}, "_component_template" ],
+        ],
+        qs => {
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
         },
     },
 
@@ -1601,6 +1987,37 @@ sub api {
         },
     },
 
+    'cluster.post_voting_config_exclusions' => {
+        doc    => "voting-config-exclusions",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_cluster", "voting_config_exclusions" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            node_ids    => "string",
+            node_names  => "string",
+            timeout     => "time",
+        },
+    },
+
+    'cluster.put_component_template' => {
+        body   => { required => 1 },
+        doc    => "indices-component-template",
+        method => "PUT",
+        parts  => { name => {} },
+        paths  => [ [ { name => 1 }, "_component_template", "{name}" ] ],
+        qs     => {
+            create         => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            master_timeout => "time",
+            timeout        => "time",
+        },
+    },
+
     'cluster.put_settings' => {
         body   => { required => 1 },
         doc    => "cluster-update-settings",
@@ -1652,7 +2069,7 @@ sub api {
         parts => { index => { multi => 1 }, metric => { multi => 1 } },
         paths => [
             [   { index => 3, metric => 2 }, "_cluster",
-                "state", "{metric}",
+                "state",                     "{metric}",
                 "{index}",
             ],
             [ { metric => 2 }, "_cluster", "state", "{metric}" ],
@@ -1689,47 +2106,90 @@ sub api {
         },
     },
 
-    'data_frame.delete_data_frame_transform' => {
-        doc    => "delete-data-frame-transform",
+    'dangling_indices.delete_dangling_index' => {
+        doc    => "modules-gateway-dangling-indices",
         method => "DELETE",
-        parts  => { transform_id => { required => 1 } },
-        paths  => [
-            [   { transform_id => 2 }, "_data_frame",
-                "transforms", "{transform_id}",
-            ],
-        ],
-        qs => {
+        parts  => { index_uuid => {} },
+        paths  => [ [ { index_uuid => 1 }, "_dangling", "{index_uuid}" ] ],
+        qs     => {
+            accept_data_loss => "boolean",
+            error_trace      => "boolean",
+            filter_path      => "list",
+            human            => "boolean",
+            master_timeout   => "time",
+            timeout          => "time",
+        },
+    },
+
+    'dangling_indices.import_dangling_index' => {
+        doc    => "modules-gateway-dangling-indices",
+        method => "POST",
+        parts  => { index_uuid => {} },
+        paths  => [ [ { index_uuid => 1 }, "_dangling", "{index_uuid}" ] ],
+        qs     => {
+            accept_data_loss => "boolean",
+            error_trace      => "boolean",
+            filter_path      => "list",
+            human            => "boolean",
+            master_timeout   => "time",
+            timeout          => "time",
+        },
+    },
+
+    'dangling_indices.list_dangling_indices' => {
+        doc   => "modules-gateway-dangling-indices",
+        parts => {},
+        paths => [ [ {}, "_dangling" ] ],
+        qs    => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
         },
     },
 
-    'data_frame.get_data_frame_transform' => {
-        doc   => "get-data-frame-transform",
+    'data_frame_transform_deprecated.delete_transform' => {
+        doc    => "delete-transform",
+        method => "DELETE",
+        parts  => { transform_id => {} },
+        paths  => [
+            [   { transform_id => 2 }, "_data_frame",
+                "transforms",          "{transform_id}",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            force       => "boolean",
+            human       => "boolean",
+        },
+    },
+
+    'data_frame_transform_deprecated.get_transform' => {
+        doc   => "get-transform",
         parts => { transform_id => {} },
         paths => [
             [   { transform_id => 2 }, "_data_frame",
-                "transforms", "{transform_id}",
+                "transforms",          "{transform_id}",
             ],
             [ {}, "_data_frame", "transforms" ],
         ],
         qs => {
-            allow_no_match => "boolean",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            from           => "int",
-            human          => "boolean",
-            size           => "int",
+            allow_no_match    => "boolean",
+            error_trace       => "boolean",
+            exclude_generated => "boolean",
+            filter_path       => "list",
+            from              => "int",
+            human             => "boolean",
+            size              => "int",
         },
     },
 
-    'data_frame.get_data_frame_transform_stats' => {
-        doc   => "get-data-frame-transform-stats",
+    'data_frame_transform_deprecated.get_transform_stats' => {
+        doc   => "get-transform-stats",
         parts => { transform_id => {} },
         paths => [
             [   { transform_id => 2 }, "_data_frame",
-                "transforms", "{transform_id}",
+                "transforms",          "{transform_id}",
                 "_stats",
             ],
         ],
@@ -1743,9 +2203,9 @@ sub api {
         },
     },
 
-    'data_frame.preview_data_frame_transform' => {
+    'data_frame_transform_deprecated.preview_transform' => {
         body   => { required => 1 },
-        doc    => "preview-data-frame-transform",
+        doc    => "preview-transform",
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_data_frame", "transforms", "_preview" ] ],
@@ -1756,30 +2216,31 @@ sub api {
         },
     },
 
-    'data_frame.put_data_frame_transform' => {
+    'data_frame_transform_deprecated.put_transform' => {
         body   => { required => 1 },
-        doc    => "put-data-frame-transform",
+        doc    => "put-transform",
         method => "PUT",
-        parts  => { transform_id => { required => 1 } },
+        parts  => { transform_id => {} },
         paths  => [
             [   { transform_id => 2 }, "_data_frame",
-                "transforms", "{transform_id}",
+                "transforms",          "{transform_id}",
             ],
         ],
         qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
+            defer_validation => "boolean",
+            error_trace      => "boolean",
+            filter_path      => "list",
+            human            => "boolean",
         },
     },
 
-    'data_frame.start_data_frame_transform' => {
-        doc    => "start-data-frame-transform",
+    'data_frame_transform_deprecated.start_transform' => {
+        doc    => "start-transform",
         method => "POST",
-        parts  => { transform_id => { required => 1 } },
+        parts  => { transform_id => {} },
         paths  => [
             [   { transform_id => 2 }, "_data_frame",
-                "transforms", "{transform_id}",
+                "transforms",          "{transform_id}",
                 "_start",
             ],
         ],
@@ -1791,13 +2252,13 @@ sub api {
         },
     },
 
-    'data_frame.stop_data_frame_transform' => {
-        doc    => "stop-data-frame-transform",
+    'data_frame_transform_deprecated.stop_transform' => {
+        doc    => "stop-transform",
         method => "POST",
-        parts  => { transform_id => { required => 1 } },
+        parts  => { transform_id => {} },
         paths  => [
             [   { transform_id => 2 }, "_data_frame",
-                "transforms", "{transform_id}",
+                "transforms",          "{transform_id}",
                 "_stop",
             ],
         ],
@@ -1811,13 +2272,136 @@ sub api {
         },
     },
 
+    'data_frame_transform_deprecated.update_transform' => {
+        body   => { required => 1 },
+        doc    => "update-transform",
+        method => "POST",
+        parts  => { transform_id => { required => 1 } },
+        paths  => [
+            [   { transform_id => 2 }, "_data_frame",
+                "transforms",          "{transform_id}",
+                "_update",
+            ],
+        ],
+        qs => {
+            defer_validation => "boolean",
+            error_trace      => "boolean",
+            filter_path      => "list",
+            human            => "boolean",
+        },
+    },
+
+    'enrich.delete_policy' => {
+        doc    => "delete-enrich-policy-api",
+        method => "DELETE",
+        parts  => { name => {} },
+        paths  => [ [ { name => 2 }, "_enrich", "policy", "{name}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'enrich.execute_policy' => {
+        doc    => "execute-enrich-policy-api",
+        method => "PUT",
+        parts  => { name => {} },
+        paths  =>
+            [ [ { name => 2 }, "_enrich", "policy", "{name}", "_execute" ] ],
+        qs => {
+            error_trace         => "boolean",
+            filter_path         => "list",
+            human               => "boolean",
+            wait_for_completion => "boolean",
+        },
+    },
+
+    'enrich.get_policy' => {
+        doc   => "get-enrich-policy-api",
+        parts => { name => { multi => 1 } },
+        paths => [
+            [ { name => 2 }, "_enrich", "policy", "{name}" ],
+            [ {}, "_enrich", "policy" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'enrich.put_policy' => {
+        body   => { required => 1 },
+        doc    => "put-enrich-policy-api",
+        method => "PUT",
+        parts  => { name => {} },
+        paths  => [ [ { name => 2 }, "_enrich", "policy", "{name}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'enrich.stats' => {
+        doc   => "enrich-stats-api",
+        parts => {},
+        paths => [ [ {}, "_enrich", "_stats" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'eql.delete' => {
+        doc    => "eql-search-api",
+        method => "DELETE",
+        parts  => { id => {} },
+        paths  => [ [ { id => 2 }, "_eql", "search", "{id}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'eql.get' => {
+        doc   => "eql-search-api",
+        parts => { id => {} },
+        paths => [ [ { id => 2 }, "_eql", "search", "{id}" ] ],
+        qs    => {
+            error_trace                 => "boolean",
+            filter_path                 => "list",
+            human                       => "boolean",
+            keep_alive                  => "time",
+            wait_for_completion_timeout => "time",
+        },
+    },
+
+    'eql.search' => {
+        body  => { required => 1 },
+        doc   => "eql-search-api",
+        parts => { index => {} },
+        paths => [ [ { index => 0 }, "{index}", "_eql", "search" ] ],
+        qs    => {
+            error_trace                 => "boolean",
+            filter_path                 => "list",
+            human                       => "boolean",
+            keep_alive                  => "time",
+            keep_on_completion          => "boolean",
+            wait_for_completion_timeout => "time",
+        },
+    },
+
     'graph.explore' => {
         body  => {},
         doc   => "graph-explore-api",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
-                "{type}", "_graph",
+                "{type}",                  "_graph",
                 "explore",
             ],
             [ { index => 0 }, "{index}", "_graph", "explore" ],
@@ -1848,9 +2432,11 @@ sub api {
         parts => { index => {} },
         paths => [ [ { index => 0 }, "{index}", "_ilm", "explain" ] ],
         qs    => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
+            error_trace  => "boolean",
+            filter_path  => "list",
+            human        => "boolean",
+            only_errors  => "boolean",
+            only_managed => "boolean",
         },
     },
 
@@ -1953,6 +2539,25 @@ sub api {
         },
     },
 
+    'indices.add_block' => {
+        doc    => "index-modules-blocks",
+        method => "PUT",
+        parts  => { block => {}, index => { multi => 1 } },
+        paths  => [
+            [ { block => 2, index => 0 }, "{index}", "_block", "{block}" ]
+        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            error_trace        => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            human              => "boolean",
+            ignore_unavailable => "boolean",
+            master_timeout     => "time",
+            timeout            => "time",
+        },
+    },
+
     'indices.analyze' => {
         body  => {},
         doc   => "indices-analyze",
@@ -1988,10 +2593,28 @@ sub api {
         },
     },
 
+    'indices.clone' => {
+        body   => {},
+        doc    => "indices-clone-index",
+        method => "PUT",
+        parts  => { index => {}, target => {} },
+        paths  => [
+            [ { index => 0, target => 2 }, "{index}", "_clone", "{target}" ],
+        ],
+        qs => {
+            error_trace            => "boolean",
+            filter_path            => "list",
+            human                  => "boolean",
+            master_timeout         => "time",
+            timeout                => "time",
+            wait_for_active_shards => "string",
+        },
+    },
+
     'indices.close' => {
         doc    => "indices-open-close",
         method => "POST",
-        parts  => { index => { multi => 1, required => 1 } },
+        parts  => { index => { multi => 1 } },
         paths  => [ [ { index => 0 }, "{index}", "_close" ] ],
         qs     => {
             allow_no_indices       => "boolean",
@@ -2010,7 +2633,7 @@ sub api {
         body   => {},
         doc    => "indices-create-index",
         method => "PUT",
-        parts  => { index => { required => 1 } },
+        parts  => { index => {} },
         paths  => [ [ { index => 0 }, "{index}" ] ],
         qs     => {
             error_trace            => "boolean",
@@ -2023,10 +2646,36 @@ sub api {
         },
     },
 
+    'indices.create_data_stream' => {
+        doc    => "data-streams",
+        method => "PUT",
+        parts  => { name => {} },
+        paths  => [ [ { name => 1 }, "_data_stream", "{name}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'indices.data_streams_stats' => {
+        doc   => "data-streams",
+        parts => { name => { multi => 1 } },
+        paths => [
+            [ { name => 1 }, "_data_stream", "{name}", "_stats" ],
+            [ {}, "_data_stream", "_stats" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'indices.delete' => {
         doc    => "indices-delete-index",
         method => "DELETE",
-        parts  => { index => { multi => 1, required => 1 } },
+        parts  => { index => { multi => 1 } },
         paths  => [ [ { index => 0 }, "{index}" ] ],
         qs     => {
             allow_no_indices   => "boolean",
@@ -2043,13 +2692,37 @@ sub api {
     'indices.delete_alias' => {
         doc    => "indices-aliases",
         method => "DELETE",
-        parts  => {
-            index => { multi => 1, required => 1 },
-            name  => { multi => 1, required => 1 },
-        },
-        paths =>
+        parts  => { index => { multi => 1 }, name => { multi => 1 } },
+        paths  =>
             [ [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ] ],
         qs => {
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            master_timeout => "time",
+            timeout        => "time",
+        },
+    },
+
+    'indices.delete_data_stream' => {
+        doc    => "data-streams",
+        method => "DELETE",
+        parts  => { name => { multi => 1 } },
+        paths  => [ [ { name => 1 }, "_data_stream", "{name}" ] ],
+        qs     => {
+            error_trace      => "boolean",
+            expand_wildcards => "enum",
+            filter_path      => "list",
+            human            => "boolean",
+        },
+    },
+
+    'indices.delete_index_template' => {
+        doc    => "indices-templates",
+        method => "DELETE",
+        parts  => { name => {} },
+        paths  => [ [ { name => 1 }, "_index_template", "{name}" ] ],
+        qs     => {
             error_trace    => "boolean",
             filter_path    => "list",
             human          => "boolean",
@@ -2061,7 +2734,7 @@ sub api {
     'indices.delete_template' => {
         doc    => "indices-templates",
         method => "DELETE",
-        parts  => { name => { required => 1 } },
+        parts  => { name => {} },
         paths  => [ [ { name => 1 }, "_template", "{name}" ] ],
         qs     => {
             error_trace    => "boolean",
@@ -2075,7 +2748,7 @@ sub api {
     'indices.exists' => {
         doc    => "indices-exists",
         method => "HEAD",
-        parts  => { index => { multi => 1, required => 1 } },
+        parts  => { index => { multi => 1 } },
         paths  => [ [ { index => 0 }, "{index}" ] ],
         qs     => {
             allow_no_indices   => "boolean",
@@ -2093,11 +2766,8 @@ sub api {
     'indices.exists_alias' => {
         doc    => "indices-aliases",
         method => "HEAD",
-        parts  => {
-            index => { multi => 1 },
-            name  => { multi => 1, required => 1 }
-        },
-        paths => [
+        parts  => { index => { multi => 1 }, name => { multi => 1 } },
+        paths  => [
             [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ],
             [ { name  => 1 }, "_alias", "{name}" ],
         ],
@@ -2112,10 +2782,25 @@ sub api {
         },
     },
 
+    'indices.exists_index_template' => {
+        doc    => "indices-templates",
+        method => "HEAD",
+        parts  => { name => {} },
+        paths  => [ [ { name => 1 }, "_index_template", "{name}" ] ],
+        qs     => {
+            error_trace    => "boolean",
+            filter_path    => "list",
+            flat_settings  => "boolean",
+            human          => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+        },
+    },
+
     'indices.exists_template' => {
         doc    => "indices-templates",
         method => "HEAD",
-        parts  => { name => { multi => 1, required => 1 } },
+        parts  => { name => { multi => 1 } },
         paths  => [ [ { name => 1 }, "_template", "{name}" ] ],
         qs     => {
             error_trace    => "boolean",
@@ -2130,11 +2815,8 @@ sub api {
     'indices.exists_type' => {
         doc    => "indices-types-exists",
         method => "HEAD",
-        parts  => {
-            index => { multi => 1, required => 1 },
-            type  => { multi => 1, required => 1 },
-        },
-        paths => [
+        parts  => { index => { multi => 1 }, type => { multi => 1 } },
+        paths  => [
             [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ]
         ],
         qs => {
@@ -2152,7 +2834,7 @@ sub api {
         doc    => "indices-flush",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths =>
+        paths  =>
             [ [ { index => 0 }, "{index}", "_flush" ], [ {}, "_flush" ] ],
         qs => {
             allow_no_indices   => "boolean",
@@ -2167,7 +2849,7 @@ sub api {
     },
 
     'indices.flush_synced' => {
-        doc    => "",
+        doc    => "indices-synced-flush-api",
         method => "POST",
         parts  => { index => { multi => 1 } },
         paths  => [
@@ -2206,9 +2888,9 @@ sub api {
     },
 
     'indices.freeze' => {
-        doc    => "frozen",
+        doc    => "freeze-index-api",
         method => "POST",
-        parts  => { index => { required => 1 } },
+        parts  => { index => {} },
         paths  => [ [ { index => 0 }, "{index}", "_freeze" ] ],
         qs     => {
             allow_no_indices       => "boolean",
@@ -2225,7 +2907,7 @@ sub api {
 
     'indices.get' => {
         doc   => "indices-get-index",
-        parts => { index => { multi => 1, required => 1 } },
+        parts => { index => { multi => 1 } },
         paths => [ [ { index => 0 }, "{index}" ] ],
         qs    => {
             allow_no_indices   => "boolean",
@@ -2248,7 +2930,7 @@ sub api {
         paths => [
             [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ],
             [ { index => 0 }, "{index}", "_alias" ],
-            [ { name => 1 }, "_alias", "{name}" ],
+            [ { name  => 1 }, "_alias",  "{name}" ],
             [ {}, "_alias" ],
         ],
         qs => {
@@ -2262,24 +2944,39 @@ sub api {
         },
     },
 
+    'indices.get_data_stream' => {
+        doc   => "data-streams",
+        parts => { name => { multi => 1 } },
+        paths => [
+            [ { name => 1 }, "_data_stream", "{name}" ],
+            [ {}, "_data_stream" ],
+        ],
+        qs => {
+            error_trace      => "boolean",
+            expand_wildcards => "enum",
+            filter_path      => "list",
+            human            => "boolean",
+        },
+    },
+
     'indices.get_field_mapping' => {
         doc   => "indices-get-field-mapping",
         parts => {
-            fields => { multi => 1, required => 1 },
+            fields => { multi => 1 },
             index  => { multi => 1 },
             type   => { multi => 1 },
         },
         paths => [
             [   { fields => 4, index => 0, type => 2 }, "{index}",
-                "_mapping", "{type}",
-                "field",    "{fields}",
+                "_mapping",                             "{type}",
+                "field",                                "{fields}",
             ],
             [   { fields => 3, index => 0 }, "{index}",
-                "_mapping", "field",
+                "_mapping",                  "field",
                 "{fields}",
             ],
             [   { fields => 3, type => 1 }, "_mapping",
-                "{type}", "field",
+                "{type}",                   "field",
                 "{fields}",
             ],
             [ { fields => 2 }, "_mapping", "field", "{fields}" ],
@@ -2297,13 +2994,30 @@ sub api {
         },
     },
 
+    'indices.get_index_template' => {
+        doc   => "indices-templates",
+        parts => { name => { multi => 1 } },
+        paths => [
+            [ { name => 1 }, "_index_template", "{name}" ],
+            [ {}, "_index_template" ],
+        ],
+        qs => {
+            error_trace    => "boolean",
+            filter_path    => "list",
+            flat_settings  => "boolean",
+            human          => "boolean",
+            local          => "boolean",
+            master_timeout => "time",
+        },
+    },
+
     'indices.get_mapping' => {
         doc   => "indices-get-mapping",
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ],
-            [ { index => 0 }, "{index}", "_mapping" ],
-            [ { type => 1 }, "_mapping", "{type}" ],
+            [ { index => 0 }, "{index}",  "_mapping" ],
+            [ { type  => 1 }, "_mapping", "{type}" ],
             [ {}, "_mapping" ],
         ],
         qs => {
@@ -2324,8 +3038,8 @@ sub api {
         parts => { index => { multi => 1 }, name => { multi => 1 } },
         paths => [
             [ { index => 0, name => 2 }, "{index}", "_settings", "{name}" ],
-            [ { index => 0 }, "{index}", "_settings" ],
-            [ { name => 1 }, "_settings", "{name}" ],
+            [ { index => 0 }, "{index}",   "_settings" ],
+            [ { name  => 1 }, "_settings", "{name}" ],
             [ {}, "_settings" ],
         ],
         qs => {
@@ -2373,10 +3087,22 @@ sub api {
         },
     },
 
+    'indices.migrate_to_data_stream' => {
+        doc    => "data-streams",
+        method => "POST",
+        parts  => { name => {} },
+        paths  => [ [ { name => 2 }, "_data_stream", "_migrate", "{name}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'indices.open' => {
         doc    => "indices-open-close",
         method => "POST",
-        parts  => { index => { multi => 1, required => 1 } },
+        parts  => { index => { multi => 1 } },
         paths  => [ [ { index => 0 }, "{index}", "_open" ] ],
         qs     => {
             allow_no_indices       => "boolean",
@@ -2391,15 +3117,24 @@ sub api {
         },
     },
 
+    'indices.promote_data_stream' => {
+        doc    => "data-streams",
+        method => "POST",
+        parts  => { name => {} },
+        paths  => [ [ { name => 2 }, "_data_stream", "_promote", "{name}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'indices.put_alias' => {
         body   => {},
         doc    => "indices-aliases",
         method => "PUT",
-        parts  => {
-            index => { multi    => 1, required => 1 },
-            name  => { required => 1 }
-        },
-        paths =>
+        parts  => { index => { multi => 1 }, name => {} },
+        paths  =>
             [ [ { index => 0, name => 2 }, "{index}", "_alias", "{name}" ] ],
         qs => {
             error_trace    => "boolean",
@@ -2410,6 +3145,22 @@ sub api {
         },
     },
 
+    'indices.put_index_template' => {
+        body   => { required => 1 },
+        doc    => "indices-templates",
+        method => "PUT",
+        parts  => { name => {} },
+        paths  => [ [ { name => 1 }, "_index_template", "{name}" ] ],
+        qs     => {
+            cause          => "string",
+            create         => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            master_timeout => "time",
+        },
+    },
+
     'indices.put_mapping' => {
         body   => { required => 1 },
         doc    => "indices-put-mapping",
@@ -2417,8 +3168,8 @@ sub api {
         parts  => { index => { multi => 1 }, type => {} },
         paths  => [
             [ { index => 0, type => 2 }, "{index}", "_mapping", "{type}" ],
-            [ { index => 0 }, "{index}", "_mapping" ],
-            [ { type => 1 }, "_mapping", "{type}" ],
+            [ { index => 0 }, "{index}",  "_mapping" ],
+            [ { type  => 1 }, "_mapping", "{type}" ],
         ],
         qs => {
             allow_no_indices   => "boolean",
@@ -2430,6 +3181,7 @@ sub api {
             include_type_name  => "boolean",
             master_timeout     => "time",
             timeout            => "time",
+            write_index_only   => "boolean",
         },
     },
 
@@ -2460,18 +3212,16 @@ sub api {
         body   => { required => 1 },
         doc    => "indices-templates",
         method => "PUT",
-        parts  => { name => { required => 1 } },
+        parts  => { name => {} },
         paths  => [ [ { name => 1 }, "_template", "{name}" ] ],
         qs     => {
             create            => "boolean",
             error_trace       => "boolean",
             filter_path       => "list",
-            flat_settings     => "boolean",
             human             => "boolean",
             include_type_name => "boolean",
             master_timeout    => "time",
             order             => "number",
-            timeout           => "time",
         },
     },
 
@@ -2495,7 +3245,7 @@ sub api {
         doc    => "indices-refresh",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths =>
+        paths  =>
             [ [ { index => 0 }, "{index}", "_refresh" ], [ {}, "_refresh" ] ],
         qs => {
             allow_no_indices   => "boolean",
@@ -2522,14 +3272,26 @@ sub api {
         },
     },
 
+    'indices.resolve_index' => {
+        doc   => "indices-resolve-index-api",
+        parts => { name => { multi => 1 } },
+        paths => [ [ { name => 2 }, "_resolve", "index", "{name}" ] ],
+        qs    => {
+            error_trace      => "boolean",
+            expand_wildcards => "enum",
+            filter_path      => "list",
+            human            => "boolean",
+        },
+    },
+
     'indices.rollover' => {
         body   => {},
         doc    => "indices-rollover-index",
         method => "POST",
-        parts  => { alias => { required => 1 }, new_index => {} },
+        parts  => { alias => {}, new_index => {} },
         paths  => [
             [   { alias => 0, new_index => 2 }, "{alias}",
-                "_rollover", "{new_index}",
+                "_rollover",                    "{new_index}",
             ],
             [ { alias => 0 }, "{alias}", "_rollover" ],
         ],
@@ -2585,7 +3347,7 @@ sub api {
         body   => {},
         doc    => "indices-shrink-index",
         method => "PUT",
-        parts  => { index => { required => 1 }, target => { required => 1 } },
+        parts  => { index => {}, target => {} },
         paths  => [
             [ { index => 0, target => 2 }, "{index}", "_shrink", "{target}" ],
         ],
@@ -2600,11 +3362,48 @@ sub api {
         },
     },
 
+    'indices.simulate_index_template' => {
+        body   => {},
+        doc    => "indices-templates",
+        method => "POST",
+        parts  => { name => {} },
+        paths  => [
+            [ { name => 2 }, "_index_template", "_simulate_index", "{name}" ],
+        ],
+        qs => {
+            cause          => "string",
+            create         => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            master_timeout => "time",
+        },
+    },
+
+    'indices.simulate_template' => {
+        body   => {},
+        doc    => "indices-templates",
+        method => "POST",
+        parts  => { name => {} },
+        paths  => [
+            [ { name => 2 }, "_index_template", "_simulate", "{name}" ],
+            [ {}, "_index_template", "_simulate" ],
+        ],
+        qs => {
+            cause          => "string",
+            create         => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            master_timeout => "time",
+        },
+    },
+
     'indices.split' => {
         body   => {},
         doc    => "indices-split-index",
         method => "PUT",
-        parts  => { index => { required => 1 }, target => { required => 1 } },
+        parts  => { index => {}, target => {} },
         paths  => [
             [ { index => 0, target => 2 }, "{index}", "_split", "{target}" ],
         ],
@@ -2623,9 +3422,9 @@ sub api {
         doc   => "indices-stats",
         parts => { index => { multi => 1 }, metric => { multi => 1 } },
         paths => [
-            [ { index => 0, metric => 2 }, "{index}", "_stats", "{metric}" ],
-            [ { index => 0 }, "{index}", "_stats" ],
-            [ { metric => 1 }, "_stats", "{metric}" ],
+            [ { index  => 0, metric => 2 }, "{index}", "_stats", "{metric}" ],
+            [ { index  => 0 }, "{index}", "_stats" ],
+            [ { metric => 1 }, "_stats",  "{metric}" ],
             [ {}, "_stats" ],
         ],
         qs => {
@@ -2646,9 +3445,9 @@ sub api {
     },
 
     'indices.unfreeze' => {
-        doc    => "frozen",
+        doc    => "unfreeze-index-api",
         method => "POST",
-        parts  => { index => { required => 1 } },
+        parts  => { index => {} },
         paths  => [ [ { index => 0 }, "{index}", "_unfreeze" ] ],
         qs     => {
             allow_no_indices       => "boolean",
@@ -2682,7 +3481,7 @@ sub api {
         doc    => "indices-upgrade",
         method => "POST",
         parts  => { index => { multi => 1 } },
-        paths =>
+        paths  =>
             [ [ { index => 0 }, "{index}", "_upgrade" ], [ {}, "_upgrade" ] ],
         qs => {
             allow_no_indices      => "boolean",
@@ -2702,7 +3501,7 @@ sub api {
         parts => { index => { multi => 1 }, type => { multi => 1 } },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
-                "{type}", "_validate",
+                "{type}",                  "_validate",
                 "query",
             ],
             [ { index => 0 }, "{index}", "_validate", "query" ],
@@ -2730,7 +3529,7 @@ sub api {
     'ingest.delete_pipeline' => {
         doc    => "delete-pipeline-api",
         method => "DELETE",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_ingest", "pipeline", "{id}" ] ],
         qs     => {
             error_trace    => "boolean",
@@ -2771,7 +3570,7 @@ sub api {
         body   => { required => 1 },
         doc    => "put-pipeline-api",
         method => "PUT",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_ingest", "pipeline", "{id}" ] ],
         qs     => {
             error_trace    => "boolean",
@@ -2815,10 +3614,11 @@ sub api {
         parts => {},
         paths => [ [ {}, "_license" ] ],
         qs    => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean",
-            local       => "boolean",
+            accept_enterprise => "boolean",
+            error_trace       => "boolean",
+            filter_path       => "list",
+            human             => "boolean",
+            local             => "boolean",
         },
     },
 
@@ -2903,27 +3703,29 @@ sub api {
         body   => {},
         doc    => "ml-close-job",
         method => "POST",
-        parts  => { job_id => { required => 1 } },
+        parts  => { job_id => {} },
         paths  => [
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "_close",
             ],
         ],
         qs => {
-            allow_no_jobs => "boolean",
-            error_trace   => "boolean",
-            filter_path   => "list",
-            force         => "boolean",
-            human         => "boolean",
-            timeout       => "time",
+            allow_no_jobs  => "boolean",
+            allow_no_match => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            force          => "boolean",
+            human          => "boolean",
+            timeout        => "time",
         },
     },
 
     'ml.delete_calendar' => {
+        doc    => "ml-delete-calendar",
         method => "DELETE",
-        parts  => { calendar_id => { required => 1 } },
-        paths =>
+        parts  => { calendar_id => {} },
+        paths  =>
             [ [ { calendar_id => 2 }, "_ml", "calendars", "{calendar_id}" ] ],
         qs => {
             error_trace => "boolean",
@@ -2933,15 +3735,13 @@ sub api {
     },
 
     'ml.delete_calendar_event' => {
+        doc    => "ml-delete-calendar-event",
         method => "DELETE",
-        parts  => {
-            calendar_id => { required => 1 },
-            event_id    => { required => 1 }
-        },
-        paths => [
+        parts  => { calendar_id => {}, event_id => {} },
+        paths  => [
             [   { calendar_id => 2, event_id => 4 }, "_ml",
-                "calendars", "{calendar_id}",
-                "events",    "{event_id}",
+                "calendars",                         "{calendar_id}",
+                "events",                            "{event_id}",
             ],
         ],
         qs => {
@@ -2952,10 +3752,10 @@ sub api {
     },
 
     'ml.delete_calendar_job' => {
+        doc    => "ml-delete-calendar-job",
         method => "DELETE",
-        parts =>
-            { calendar_id => { required => 1 }, job_id => { required => 1 } },
-        paths => [
+        parts  => { calendar_id => {}, job_id => {} },
+        paths  => [
             [   { calendar_id => 2, job_id => 4 },
                 "_ml", "calendars", "{calendar_id}", "jobs", "{job_id}",
             ],
@@ -2970,21 +3770,23 @@ sub api {
     'ml.delete_data_frame_analytics' => {
         doc    => "delete-dfanalytics",
         method => "DELETE",
-        parts  => { id => { required => 1 } },
-        paths =>
+        parts  => { id => {} },
+        paths  =>
             [ [ { id => 3 }, "_ml", "data_frame", "analytics", "{id}" ] ],
         qs => {
             error_trace => "boolean",
             filter_path => "list",
-            human       => "boolean"
+            force       => "boolean",
+            human       => "boolean",
+            timeout     => "time",
         },
     },
 
     'ml.delete_datafeed' => {
         doc    => "ml-delete-datafeed",
         method => "DELETE",
-        parts  => { datafeed_id => { required => 1 } },
-        paths =>
+        parts  => { datafeed_id => {} },
+        paths  =>
             [ [ { datafeed_id => 2 }, "_ml", "datafeeds", "{datafeed_id}" ] ],
         qs => {
             error_trace => "boolean",
@@ -2995,19 +3797,27 @@ sub api {
     },
 
     'ml.delete_expired_data' => {
+        body   => {},
+        doc    => "ml-delete-expired-data",
         method => "DELETE",
-        parts  => {},
-        paths  => [ [ {}, "_ml", "_delete_expired_data" ] ],
-        qs     => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
+        parts  => { job_id => {} },
+        paths  => [
+            [ { job_id => 2 }, "_ml", "_delete_expired_data", "{job_id}" ],
+            [ {}, "_ml", "_delete_expired_data" ],
+        ],
+        qs => {
+            error_trace         => "boolean",
+            filter_path         => "list",
+            human               => "boolean",
+            requests_per_second => "number",
+            timeout             => "time",
         },
     },
 
     'ml.delete_filter' => {
+        doc    => "ml-delete-filter",
         method => "DELETE",
-        parts  => { filter_id => { required => 1 } },
+        parts  => { filter_id => {} },
         paths  => [ [ { filter_id => 2 }, "_ml", "filters", "{filter_id}" ] ],
         qs     => {
             error_trace => "boolean",
@@ -3019,13 +3829,13 @@ sub api {
     'ml.delete_forecast' => {
         doc    => "ml-delete-forecast",
         method => "DELETE",
-        parts  => { forecast_id => {}, job_id => { required => 1 } },
+        parts  => { forecast_id => {}, job_id => {} },
         paths  => [
             [   { forecast_id => 4, job_id => 2 }, "_ml",
-                "anomaly_detectors", "{job_id}",
-                "_forecast",         "{forecast_id}",
+                "anomaly_detectors",               "{job_id}",
+                "_forecast",                       "{forecast_id}",
             ],
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "_forecast",
             ],
@@ -3042,8 +3852,8 @@ sub api {
     'ml.delete_job' => {
         doc    => "ml-delete-job",
         method => "DELETE",
-        parts  => { job_id => { required => 1 } },
-        paths =>
+        parts  => { job_id => {} },
+        paths  =>
             [ [ { job_id => 2 }, "_ml", "anomaly_detectors", "{job_id}" ] ],
         qs => {
             error_trace         => "boolean",
@@ -3057,14 +3867,40 @@ sub api {
     'ml.delete_model_snapshot' => {
         doc    => "ml-delete-snapshot",
         method => "DELETE",
-        parts =>
-            { job_id => { required => 1 }, snapshot_id => { required => 1 } },
-        paths => [
+        parts  => { job_id => {}, snapshot_id => {} },
+        paths  => [
             [   { job_id => 2, snapshot_id => 4 }, "_ml",
-                "anomaly_detectors", "{job_id}",
-                "model_snapshots",   "{snapshot_id}",
+                "anomaly_detectors",               "{job_id}",
+                "model_snapshots",                 "{snapshot_id}",
             ],
         ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ml.delete_trained_model' => {
+        doc    => "delete-trained-models",
+        method => "DELETE",
+        parts  => { model_id => {} },
+        paths  =>
+            [ [ { model_id => 2 }, "_ml", "trained_models", "{model_id}" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ml.estimate_model_memory' => {
+        body   => { required => 1 },
+        doc    => "ml-apis",
+        method => "POST",
+        parts  => {},
+        paths  =>
+            [ [ {}, "_ml", "anomaly_detectors", "_estimate_model_memory" ] ],
         qs => {
             error_trace => "boolean",
             filter_path => "list",
@@ -3079,6 +3915,23 @@ sub api {
         parts  => {},
         paths  => [ [ {}, "_ml", "data_frame", "_evaluate" ] ],
         qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ml.explain_data_frame_analytics' => {
+        body  => {},
+        doc   => "explain-dfanalytics",
+        parts => { id => {} },
+        paths => [
+            [   { id => 3 }, "_ml", "data_frame", "analytics",
+                "{id}",      "_explain"
+            ],
+            [ {}, "_ml", "data_frame", "analytics", "_explain" ],
+        ],
+        qs => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -3117,9 +3970,9 @@ sub api {
         body   => {},
         doc    => "ml-flush-job",
         method => "POST",
-        parts  => { job_id => { required => 1 } },
+        parts  => { job_id => {} },
         paths  => [
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "_flush",
             ],
@@ -3137,34 +3990,36 @@ sub api {
     },
 
     'ml.forecast' => {
+        doc    => "ml-forecast",
         method => "POST",
-        parts  => { job_id => { required => 1 } },
+        parts  => { job_id => {} },
         paths  => [
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "_forecast",
             ],
         ],
         qs => {
-            duration    => "time",
-            error_trace => "boolean",
-            expires_in  => "time",
-            filter_path => "list",
-            human       => "boolean",
+            duration         => "time",
+            error_trace      => "boolean",
+            expires_in       => "time",
+            filter_path      => "list",
+            human            => "boolean",
+            max_model_memory => "string",
         },
     },
 
     'ml.get_buckets' => {
         body  => {},
         doc   => "ml-get-bucket",
-        parts => { job_id => { required => 1 }, timestamp => {} },
+        parts => { job_id => {}, timestamp => {} },
         paths => [
             [   { job_id => 2, timestamp => 5 }, "_ml",
-                "anomaly_detectors", "{job_id}",
-                "results",           "buckets",
+                "anomaly_detectors",             "{job_id}",
+                "results",                       "buckets",
                 "{timestamp}",
             ],
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "results",           "buckets",
             ],
@@ -3186,10 +4041,11 @@ sub api {
     },
 
     'ml.get_calendar_events' => {
-        parts => { calendar_id => { required => 1 } },
+        doc   => "ml-get-calendar-event",
+        parts => { calendar_id => {} },
         paths => [
             [   { calendar_id => 2 }, "_ml",
-                "calendars", "{calendar_id}",
+                "calendars",          "{calendar_id}",
                 "events",
             ],
         ],
@@ -3207,6 +4063,7 @@ sub api {
 
     'ml.get_calendars' => {
         body  => {},
+        doc   => "ml-get-calendar",
         parts => { calendar_id => {} },
         paths => [
             [ { calendar_id => 2 }, "_ml", "calendars", "{calendar_id}" ],
@@ -3224,24 +4081,25 @@ sub api {
     'ml.get_categories' => {
         body  => {},
         doc   => "ml-get-category",
-        parts => { category_id => {}, job_id => { required => 1 } },
+        parts => { category_id => {}, job_id => {} },
         paths => [
             [   { category_id => 5, job_id => 2 }, "_ml",
-                "anomaly_detectors", "{job_id}",
-                "results",           "categories",
+                "anomaly_detectors",               "{job_id}",
+                "results",                         "categories",
                 "{category_id}",
             ],
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "results",           "categories",
             ],
         ],
         qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            from        => "int",
-            human       => "boolean",
-            size        => "int",
+            error_trace           => "boolean",
+            filter_path           => "list",
+            from                  => "int",
+            human                 => "boolean",
+            partition_field_value => "string",
+            size                  => "int",
         },
     },
 
@@ -3253,12 +4111,13 @@ sub api {
             [ {}, "_ml", "data_frame", "analytics" ],
         ],
         qs => {
-            allow_no_match => "boolean",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            from           => "int",
-            human          => "boolean",
-            size           => "int",
+            allow_no_match    => "boolean",
+            error_trace       => "boolean",
+            exclude_generated => "boolean",
+            filter_path       => "list",
+            from              => "int",
+            human             => "boolean",
+            size              => "int",
         },
     },
 
@@ -3267,7 +4126,7 @@ sub api {
         parts => { id => {} },
         paths => [
             [   { id => 3 }, "_ml", "data_frame", "analytics",
-                "{id}", "_stats"
+                "{id}",      "_stats"
             ],
             [ {}, "_ml", "data_frame", "analytics", "_stats" ],
         ],
@@ -3278,6 +4137,7 @@ sub api {
             from           => "int",
             human          => "boolean",
             size           => "int",
+            verbose        => "boolean",
         },
     },
 
@@ -3286,13 +4146,14 @@ sub api {
         parts => { datafeed_id => {} },
         paths => [
             [   { datafeed_id => 2 }, "_ml",
-                "datafeeds", "{datafeed_id}",
+                "datafeeds",          "{datafeed_id}",
                 "_stats",
             ],
             [ {}, "_ml", "datafeeds", "_stats" ],
         ],
         qs => {
             allow_no_datafeeds => "boolean",
+            allow_no_match     => "boolean",
             error_trace        => "boolean",
             filter_path        => "list",
             human              => "boolean",
@@ -3308,13 +4169,16 @@ sub api {
         ],
         qs => {
             allow_no_datafeeds => "boolean",
+            allow_no_match     => "boolean",
             error_trace        => "boolean",
+            exclude_generated  => "boolean",
             filter_path        => "list",
             human              => "boolean",
         },
     },
 
     'ml.get_filters' => {
+        doc   => "ml-get-filter",
         parts => { filter_id => {} },
         paths => [
             [ { filter_id => 2 }, "_ml", "filters", "{filter_id}" ],
@@ -3332,9 +4196,9 @@ sub api {
     'ml.get_influencers' => {
         body  => {},
         doc   => "ml-get-influencer",
-        parts => { job_id => { required => 1 } },
+        parts => { job_id => {} },
         paths => [
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "results",           "influencers",
             ],
@@ -3358,17 +4222,18 @@ sub api {
         doc   => "ml-get-job-stats",
         parts => { job_id => {} },
         paths => [
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "_stats",
             ],
             [ {}, "_ml", "anomaly_detectors", "_stats" ],
         ],
         qs => {
-            allow_no_jobs => "boolean",
-            error_trace   => "boolean",
-            filter_path   => "list",
-            human         => "boolean",
+            allow_no_jobs  => "boolean",
+            allow_no_match => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
         },
     },
 
@@ -3380,23 +4245,25 @@ sub api {
             [ {}, "_ml", "anomaly_detectors" ],
         ],
         qs => {
-            allow_no_jobs => "boolean",
-            error_trace   => "boolean",
-            filter_path   => "list",
-            human         => "boolean",
+            allow_no_jobs     => "boolean",
+            allow_no_match    => "boolean",
+            error_trace       => "boolean",
+            exclude_generated => "boolean",
+            filter_path       => "list",
+            human             => "boolean",
         },
     },
 
     'ml.get_model_snapshots' => {
         body  => {},
         doc   => "ml-get-snapshot",
-        parts => { job_id => { required => 1 }, snapshot_id => {} },
+        parts => { job_id => {}, snapshot_id => {} },
         paths => [
             [   { job_id => 2, snapshot_id => 4 }, "_ml",
-                "anomaly_detectors", "{job_id}",
-                "model_snapshots",   "{snapshot_id}",
+                "anomaly_detectors",               "{job_id}",
+                "model_snapshots",                 "{snapshot_id}",
             ],
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "model_snapshots",
             ],
@@ -3417,15 +4284,16 @@ sub api {
     'ml.get_overall_buckets' => {
         body  => {},
         doc   => "ml-get-overall-buckets",
-        parts => { job_id => { required => 1 } },
+        parts => { job_id => {} },
         paths => [
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "results",           "overall_buckets",
             ],
         ],
         qs => {
             allow_no_jobs   => "boolean",
+            allow_no_match  => "boolean",
             bucket_span     => "string",
             end             => "string",
             error_trace     => "boolean",
@@ -3441,9 +4309,9 @@ sub api {
     'ml.get_records' => {
         body  => {},
         doc   => "ml-get-record",
-        parts => { job_id => { required => 1 } },
+        parts => { job_id => {} },
         paths => [
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "results",           "records",
             ],
@@ -3463,7 +4331,50 @@ sub api {
         },
     },
 
+    'ml.get_trained_models' => {
+        doc   => "get-trained-models",
+        parts => { model_id => {} },
+        paths => [
+            [ { model_id => 2 }, "_ml", "trained_models", "{model_id}" ],
+            [ {}, "_ml", "trained_models" ],
+        ],
+        qs => {
+            allow_no_match           => "boolean",
+            decompress_definition    => "boolean",
+            error_trace              => "boolean",
+            exclude_generated        => "boolean",
+            filter_path              => "list",
+            from                     => "int",
+            human                    => "boolean",
+            include                  => "string",
+            include_model_definition => "boolean",
+            size                     => "int",
+            tags                     => "list",
+        },
+    },
+
+    'ml.get_trained_models_stats' => {
+        doc   => "get-trained-models-stats",
+        parts => { model_id => {} },
+        paths => [
+            [   { model_id => 2 }, "_ml",
+                "trained_models",  "{model_id}",
+                "_stats",
+            ],
+            [ {}, "_ml", "trained_models", "_stats" ],
+        ],
+        qs => {
+            allow_no_match => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            from           => "int",
+            human          => "boolean",
+            size           => "int",
+        },
+    },
+
     'ml.info' => {
+        doc   => "get-ml-info",
         parts => {},
         paths => [ [ {}, "_ml", "info" ] ],
         qs    => {
@@ -3476,13 +4387,9 @@ sub api {
     'ml.open_job' => {
         doc    => "ml-open-job",
         method => "POST",
-        parts  => {
-            ignore_downtime => {},
-            job_id          => { required => 1 },
-            timeout         => {}
-        },
-        paths => [
-            [   { job_id => 2 }, "_ml",
+        parts  => { job_id => {} },
+        paths  => [
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "_open"
             ],
@@ -3496,11 +4403,12 @@ sub api {
 
     'ml.post_calendar_events' => {
         body   => { required => 1 },
+        doc    => "ml-post-calendar-event",
         method => "POST",
-        parts  => { calendar_id => { required => 1 } },
+        parts  => { calendar_id => {} },
         paths  => [
             [   { calendar_id => 2 }, "_ml",
-                "calendars", "{calendar_id}",
+                "calendars",          "{calendar_id}",
                 "events",
             ],
         ],
@@ -3515,9 +4423,9 @@ sub api {
         body   => { required => 1 },
         doc    => "ml-post-data",
         method => "POST",
-        parts  => { job_id => { required => 1 } },
+        parts  => { job_id => {} },
         paths  => [
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "_data"
             ],
@@ -3534,10 +4442,10 @@ sub api {
 
     'ml.preview_datafeed' => {
         doc   => "ml-preview-datafeed",
-        parts => { datafeed_id => { required => 1 } },
+        parts => { datafeed_id => {} },
         paths => [
             [   { datafeed_id => 2 }, "_ml",
-                "datafeeds", "{datafeed_id}",
+                "datafeeds",          "{datafeed_id}",
                 "_preview",
             ],
         ],
@@ -3550,9 +4458,10 @@ sub api {
 
     'ml.put_calendar' => {
         body   => {},
+        doc    => "ml-put-calendar",
         method => "PUT",
-        parts  => { calendar_id => { required => 1 } },
-        paths =>
+        parts  => { calendar_id => {} },
+        paths  =>
             [ [ { calendar_id => 2 }, "_ml", "calendars", "{calendar_id}" ] ],
         qs => {
             error_trace => "boolean",
@@ -3562,10 +4471,10 @@ sub api {
     },
 
     'ml.put_calendar_job' => {
+        doc    => "ml-put-calendar-job",
         method => "PUT",
-        parts =>
-            { calendar_id => { required => 1 }, job_id => { required => 1 } },
-        paths => [
+        parts  => { calendar_id => {}, job_id => {} },
+        paths  => [
             [   { calendar_id => 2, job_id => 4 },
                 "_ml", "calendars", "{calendar_id}", "jobs", "{job_id}",
             ],
@@ -3581,8 +4490,8 @@ sub api {
         body   => { required => 1 },
         doc    => "put-dfanalytics",
         method => "PUT",
-        parts  => { id => { required => 1 } },
-        paths =>
+        parts  => { id => {} },
+        paths  =>
             [ [ { id => 3 }, "_ml", "data_frame", "analytics", "{id}" ] ],
         qs => {
             error_trace => "boolean",
@@ -3595,20 +4504,25 @@ sub api {
         body   => { required => 1 },
         doc    => "ml-put-datafeed",
         method => "PUT",
-        parts  => { datafeed_id => { required => 1 } },
-        paths =>
+        parts  => { datafeed_id => {} },
+        paths  =>
             [ [ { datafeed_id => 2 }, "_ml", "datafeeds", "{datafeed_id}" ] ],
         qs => {
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean"
+            allow_no_indices   => "boolean",
+            error_trace        => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            human              => "boolean",
+            ignore_throttled   => "boolean",
+            ignore_unavailable => "boolean",
         },
     },
 
     'ml.put_filter' => {
         body   => { required => 1 },
+        doc    => "ml-put-filter",
         method => "PUT",
-        parts  => { filter_id => { required => 1 } },
+        parts  => { filter_id => {} },
         paths  => [ [ { filter_id => 2 }, "_ml", "filters", "{filter_id}" ] ],
         qs     => {
             error_trace => "boolean",
@@ -3621,9 +4535,23 @@ sub api {
         body   => { required => 1 },
         doc    => "ml-put-job",
         method => "PUT",
-        parts  => { job_id => { required => 1 } },
-        paths =>
+        parts  => { job_id => {} },
+        paths  =>
             [ [ { job_id => 2 }, "_ml", "anomaly_detectors", "{job_id}" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'ml.put_trained_model' => {
+        body   => { required => 1 },
+        doc    => "put-trained-models",
+        method => "PUT",
+        parts  => { model_id => {} },
+        paths  =>
+            [ [ { model_id => 2 }, "_ml", "trained_models", "{model_id}" ] ],
         qs => {
             error_trace => "boolean",
             filter_path => "list",
@@ -3635,12 +4563,11 @@ sub api {
         body   => {},
         doc    => "ml-revert-snapshot",
         method => "POST",
-        parts =>
-            { job_id => { required => 1 }, snapshot_id => { required => 1 } },
-        paths => [
+        parts  => { job_id => {}, snapshot_id => {} },
+        paths  => [
             [   { job_id => 2, snapshot_id => 4 }, "_ml",
-                "anomaly_detectors", "{job_id}",
-                "model_snapshots",   "{snapshot_id}",
+                "anomaly_detectors",               "{job_id}",
+                "model_snapshots",                 "{snapshot_id}",
                 "_revert",
             ],
         ],
@@ -3670,10 +4597,10 @@ sub api {
         body   => {},
         doc    => "start-dfanalytics",
         method => "POST",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [
             [   { id => 3 }, "_ml", "data_frame", "analytics",
-                "{id}", "_start"
+                "{id}",      "_start"
             ],
         ],
         qs => {
@@ -3688,10 +4615,10 @@ sub api {
         body   => {},
         doc    => "ml-start-datafeed",
         method => "POST",
-        parts  => { datafeed_id => { required => 1 } },
+        parts  => { datafeed_id => {} },
         paths  => [
             [   { datafeed_id => 2 }, "_ml",
-                "datafeeds", "{datafeed_id}",
+                "datafeeds",          "{datafeed_id}",
                 "_start",
             ],
         ],
@@ -3709,7 +4636,7 @@ sub api {
         body   => {},
         doc    => "stop-dfanalytics",
         method => "POST",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [
             [   { id => 3 }, "_ml", "data_frame", "analytics", "{id}",
                 "_stop"
@@ -3726,17 +4653,19 @@ sub api {
     },
 
     'ml.stop_datafeed' => {
+        body   => {},
         doc    => "ml-stop-datafeed",
         method => "POST",
-        parts  => { datafeed_id => { required => 1 } },
+        parts  => { datafeed_id => {} },
         paths  => [
             [   { datafeed_id => 2 }, "_ml",
-                "datafeeds", "{datafeed_id}",
+                "datafeeds",          "{datafeed_id}",
                 "_stop",
             ],
         ],
         qs => {
             allow_no_datafeeds => "boolean",
+            allow_no_match     => "boolean",
             error_trace        => "boolean",
             filter_path        => "list",
             force              => "boolean",
@@ -3745,15 +4674,14 @@ sub api {
         },
     },
 
-    'ml.update_datafeed' => {
+    'ml.update_data_frame_analytics' => {
         body   => { required => 1 },
-        doc    => "ml-update-datafeed",
+        doc    => "update-dfanalytics",
         method => "POST",
-        parts  => { datafeed_id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [
-            [   { datafeed_id => 2 }, "_ml",
-                "datafeeds", "{datafeed_id}",
-                "_update",
+            [   { id => 3 }, "_ml", "data_frame", "analytics",
+                "{id}",      "_update"
             ],
         ],
         qs => {
@@ -3763,10 +4691,33 @@ sub api {
         },
     },
 
+    'ml.update_datafeed' => {
+        body   => { required => 1 },
+        doc    => "ml-update-datafeed",
+        method => "POST",
+        parts  => { datafeed_id => {} },
+        paths  => [
+            [   { datafeed_id => 2 }, "_ml",
+                "datafeeds",          "{datafeed_id}",
+                "_update",
+            ],
+        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            error_trace        => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            human              => "boolean",
+            ignore_throttled   => "boolean",
+            ignore_unavailable => "boolean",
+        },
+    },
+
     'ml.update_filter' => {
         body   => { required => 1 },
+        doc    => "ml-update-filter",
         method => "POST",
-        parts  => { filter_id => { required => 1 } },
+        parts  => { filter_id => {} },
         paths  => [
             [   { filter_id => 2 }, "_ml", "filters", "{filter_id}",
                 "_update"
@@ -3783,9 +4734,9 @@ sub api {
         body   => { required => 1 },
         doc    => "ml-update-job",
         method => "POST",
-        parts  => { job_id => { required => 1 } },
+        parts  => { job_id => {} },
         paths  => [
-            [   { job_id => 2 }, "_ml",
+            [   { job_id => 2 },     "_ml",
                 "anomaly_detectors", "{job_id}",
                 "_update",
             ],
@@ -3801,12 +4752,11 @@ sub api {
         body   => { required => 1 },
         doc    => "ml-update-snapshot",
         method => "POST",
-        parts =>
-            { job_id => { required => 1 }, snapshot_id => { required => 1 } },
-        paths => [
+        parts  => { job_id => {}, snapshot_id => {} },
+        paths  => [
             [   { job_id => 2, snapshot_id => 4 }, "_ml",
-                "anomaly_detectors", "{job_id}",
-                "model_snapshots",   "{snapshot_id}",
+                "anomaly_detectors",               "{job_id}",
+                "model_snapshots",                 "{snapshot_id}",
                 "_update",
             ],
         ],
@@ -3817,8 +4767,29 @@ sub api {
         },
     },
 
+    'ml.upgrade_job_snapshot' => {
+        doc    => "ml-upgrade-job-model-snapshot",
+        method => "POST",
+        parts  => { job_id => {}, snapshot_id => {} },
+        paths  => [
+            [   { job_id => 2, snapshot_id => 4 }, "_ml",
+                "anomaly_detectors",               "{job_id}",
+                "model_snapshots",                 "{snapshot_id}",
+                "_upgrade",
+            ],
+        ],
+        qs => {
+            error_trace         => "boolean",
+            filter_path         => "list",
+            human               => "boolean",
+            timeout             => "time",
+            wait_for_completion => "boolean",
+        },
+    },
+
     'ml.validate' => {
         body   => { required => 1 },
+        doc    => "ml-jobs",
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_ml", "anomaly_detectors", "_validate" ] ],
@@ -3831,9 +4802,10 @@ sub api {
 
     'ml.validate_detector' => {
         body   => { required => 1 },
+        doc    => "ml-jobs",
         method => "POST",
         parts  => {},
-        paths =>
+        paths  =>
             [ [ {}, "_ml", "anomaly_detectors", "_validate", "detector" ] ],
         qs => {
             error_trace => "boolean",
@@ -3844,7 +4816,7 @@ sub api {
 
     'monitoring.bulk' => {
         body   => { required => 1 },
-        doc    => "es-monitoring",
+        doc    => "monitor-elasticsearch-cluster",
         method => "POST",
         parts  => { type => {} },
         paths  => [
@@ -3887,7 +4859,7 @@ sub api {
         parts => { metric => { multi => 1 }, node_id => { multi => 1 } },
         paths => [
             [   { metric => 2, node_id => 1 }, "_nodes",
-                "{node_id}", "{metric}",
+                "{node_id}",                   "{metric}",
             ],
             [ { metric  => 1 }, "_nodes", "{metric}" ],
             [ { node_id => 1 }, "_nodes", "{node_id}" ],
@@ -3903,12 +4875,13 @@ sub api {
     },
 
     'nodes.reload_secure_settings' => {
+        body   => {},
         doc    => "",
         method => "POST",
         parts  => { node_id => { multi => 1 } },
         paths  => [
             [   { node_id => 1 }, "_nodes",
-                "{node_id}", "reload_secure_settings",
+                "{node_id}",      "reload_secure_settings",
             ],
             [ {}, "_nodes", "reload_secure_settings" ],
         ],
@@ -3932,11 +4905,11 @@ sub api {
                 "_nodes", "{node_id}", "stats", "{metric}", "{index_metric}",
             ],
             [   { index_metric => 3, metric => 2 }, "_nodes",
-                "stats", "{metric}",
+                "stats",                            "{metric}",
                 "{index_metric}",
             ],
             [   { metric => 3, node_id => 1 }, "_nodes",
-                "{node_id}", "stats",
+                "{node_id}",                   "stats",
                 "{metric}",
             ],
             [ { metric  => 2 }, "_nodes", "stats",     "{metric}" ],
@@ -3963,7 +4936,7 @@ sub api {
         parts => { metric => { multi => 1 }, node_id => { multi => 1 } },
         paths => [
             [   { metric => 3, node_id => 1 }, "_nodes",
-                "{node_id}", "usage",
+                "{node_id}",                   "usage",
                 "{metric}",
             ],
             [ { metric  => 2 }, "_nodes", "usage",     "{metric}" ],
@@ -3979,8 +4952,9 @@ sub api {
     },
 
     'rollup.delete_job' => {
+        doc    => "rollup-delete-job",
         method => "DELETE",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_rollup", "job", "{id}" ] ],
         qs     => {
             error_trace => "boolean",
@@ -3990,6 +4964,7 @@ sub api {
     },
 
     'rollup.get_jobs' => {
+        doc   => "rollup-get-job",
         parts => { id => {} },
         paths => [
             [ { id => 2 }, "_rollup", "job", "{id}" ],
@@ -4003,6 +4978,7 @@ sub api {
     },
 
     'rollup.get_rollup_caps' => {
+        doc   => "rollup-get-rollup-caps",
         parts => { id => {} },
         paths => [
             [ { id => 2 }, "_rollup", "data", "{id}" ],
@@ -4016,7 +4992,8 @@ sub api {
     },
 
     'rollup.get_rollup_index_caps' => {
-        parts => { index => { required => 1 } },
+        doc   => "rollup-get-rollup-index-caps",
+        parts => { index => {} },
         paths => [ [ { index => 0 }, "{index}", "_rollup", "data" ] ],
         qs    => {
             error_trace => "boolean",
@@ -4027,8 +5004,9 @@ sub api {
 
     'rollup.put_job' => {
         body   => { required => 1 },
+        doc    => "rollup-put-job",
         method => "PUT",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_rollup", "job", "{id}" ] ],
         qs     => {
             error_trace => "boolean",
@@ -4037,12 +5015,31 @@ sub api {
         },
     },
 
+    'rollup.rollup' => {
+        body   => { required => 1 },
+        doc    => "rollup-api",
+        method => "POST",
+        parts  =>
+            { index => { required => 1 }, rollup_index => { required => 1 } },
+        paths => [
+            [   { index => 0, rollup_index => 2 }, "{index}",
+                "_rollup",                         "{rollup_index}",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'rollup.rollup_search' => {
         body  => { required => 1 },
-        parts => { index    => { multi => 1, required => 1 }, type => {} },
+        doc   => "rollup-search",
+        parts => { index => { multi => 1 }, type => {} },
         paths => [
             [   { index => 0, type => 1 }, "{index}",
-                "{type}", "_rollup_search",
+                "{type}",                  "_rollup_search",
             ],
             [ { index => 0 }, "{index}", "_rollup_search" ],
         ],
@@ -4056,8 +5053,9 @@ sub api {
     },
 
     'rollup.start_job' => {
+        doc    => "rollup-start-job",
         method => "POST",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_rollup", "job", "{id}", "_start" ] ],
         qs     => {
             error_trace => "boolean",
@@ -4067,8 +5065,9 @@ sub api {
     },
 
     'rollup.stop_job' => {
+        doc    => "rollup-stop-job",
         method => "POST",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_rollup", "job", "{id}", "_stop" ] ],
         qs     => {
             error_trace         => "boolean",
@@ -4076,6 +5075,74 @@ sub api {
             human               => "boolean",
             timeout             => "time",
             wait_for_completion => "boolean",
+        },
+    },
+
+    'searchable_snapshots.clear_cache' => {
+        doc    => "searchable-snapshots-apis",
+        method => "POST",
+        parts  => { index => { multi => 1 } },
+        paths  => [
+            [   { index => 0 },          "{index}",
+                "_searchable_snapshots", "cache",
+                "clear",
+            ],
+            [ {}, "_searchable_snapshots", "cache", "clear" ],
+        ],
+        qs => {
+            allow_no_indices   => "boolean",
+            error_trace        => "boolean",
+            expand_wildcards   => "enum",
+            filter_path        => "list",
+            human              => "boolean",
+            ignore_unavailable => "boolean",
+        },
+    },
+
+    'searchable_snapshots.mount' => {
+        body   => { required => 1 },
+        doc    => "searchable-snapshots-api-mount-snapshot",
+        method => "POST",
+        parts  => { repository => {}, snapshot => {} },
+        paths  => [
+            [   { repository => 1, snapshot => 2 }, "_snapshot",
+                "{repository}",                     "{snapshot}",
+                "_mount",
+            ],
+        ],
+        qs => {
+            error_trace         => "boolean",
+            filter_path         => "list",
+            human               => "boolean",
+            master_timeout      => "time",
+            wait_for_completion => "boolean",
+        },
+    },
+
+    'searchable_snapshots.repository_stats' => {
+        doc   => "searchable-snapshots-apis",
+        parts => { repository => {} },
+        paths => [
+            [ { repository => 1 }, "_snapshot", "{repository}", "_stats" ]
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'searchable_snapshots.stats' => {
+        doc   => "searchable-snapshots-apis",
+        parts => { index => { multi => 1 } },
+        paths => [
+            [ { index => 0 }, "{index}", "_searchable_snapshots", "stats" ],
+            [ {}, "_searchable_snapshots", "stats" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
         },
     },
 
@@ -4097,7 +5164,7 @@ sub api {
         parts  => { username => {} },
         paths  => [
             [   { username => 2 }, "_security",
-                "user", "{username}",
+                "user",            "{username}",
                 "_password",
             ],
             [ {}, "_security", "user", "_password" ],
@@ -4110,10 +5177,41 @@ sub api {
         },
     },
 
+    'security.clear_api_key_cache' => {
+        doc    => "security-api-clear-api-key-cache",
+        method => "POST",
+        parts  => { ids => { multi => 1 } },
+        paths  => [
+            [ { ids => 2 }, "_security", "api_key", "{ids}", "_clear_cache" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'security.clear_cached_privileges' => {
+        doc    => "security-api-clear-privilege-cache",
+        method => "POST",
+        parts  => { application => { multi => 1 } },
+        paths  => [
+            [   { application => 2 }, "_security",
+                "privilege",          "{application}",
+                "_clear_cache",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'security.clear_cached_realms' => {
         doc    => "security-api-clear-cache",
         method => "POST",
-        parts  => { realms => { multi => 1, required => 1 } },
+        parts  => { realms => { multi => 1 } },
         paths  => [
             [   { realms => 2 }, "_security", "realm", "{realms}",
                 "_clear_cache",
@@ -4130,7 +5228,7 @@ sub api {
     'security.clear_cached_roles' => {
         doc    => "security-api-clear-role-cache",
         method => "POST",
-        parts  => { name => { multi => 1, required => 1 } },
+        parts  => { name => { multi => 1 } },
         paths  => [
             [ { name => 2 }, "_security", "role", "{name}", "_clear_cache" ],
         ],
@@ -4156,13 +5254,12 @@ sub api {
     },
 
     'security.delete_privileges' => {
-        doc    => "",
+        doc    => "security-api-delete-privilege",
         method => "DELETE",
-        parts =>
-            { application => { required => 1 }, name => { required => 1 } },
-        paths => [
+        parts  => { application => {}, name => {} },
+        paths  => [
             [   { application => 2, name => 3 }, "_security",
-                "privilege", "{application}",
+                "privilege",                     "{application}",
                 "{name}",
             ],
         ],
@@ -4177,7 +5274,7 @@ sub api {
     'security.delete_role' => {
         doc    => "security-api-delete-role",
         method => "DELETE",
-        parts  => { name => { required => 1 } },
+        parts  => { name => {} },
         paths  => [ [ { name => 2 }, "_security", "role", "{name}" ] ],
         qs     => {
             error_trace => "boolean",
@@ -4190,7 +5287,7 @@ sub api {
     'security.delete_role_mapping' => {
         doc    => "security-api-delete-role-mapping",
         method => "DELETE",
-        parts  => { name => { required => 1 } },
+        parts  => { name => {} },
         paths => [ [ { name => 2 }, "_security", "role_mapping", "{name}" ] ],
         qs    => {
             error_trace => "boolean",
@@ -4203,7 +5300,7 @@ sub api {
     'security.delete_user' => {
         doc    => "security-api-delete-user",
         method => "DELETE",
-        parts  => { username => { required => 1 } },
+        parts  => { username => {} },
         paths => [ [ { username => 2 }, "_security", "user", "{username}" ] ],
         qs    => {
             error_trace => "boolean",
@@ -4216,10 +5313,10 @@ sub api {
     'security.disable_user' => {
         doc    => "security-api-disable-user",
         method => "PUT",
-        parts  => { username => { required => 1 } },
+        parts  => { username => {} },
         paths  => [
             [   { username => 2 }, "_security",
-                "user", "{username}",
+                "user",            "{username}",
                 "_disable"
             ],
         ],
@@ -4234,10 +5331,10 @@ sub api {
     'security.enable_user' => {
         doc    => "security-api-enable-user",
         method => "PUT",
-        parts  => { username => { required => 1 } },
+        parts  => { username => {} },
         paths  => [
             [   { username => 2 }, "_security",
-                "user", "{username}",
+                "user",            "{username}",
                 "_enable"
             ],
         ],
@@ -4259,6 +5356,7 @@ sub api {
             human       => "boolean",
             id          => "string",
             name        => "string",
+            owner       => "boolean",
             realm_name  => "string",
             username    => "string",
         },
@@ -4280,11 +5378,11 @@ sub api {
         parts => { application => {}, name => {} },
         paths => [
             [   { application => 2, name => 3 }, "_security",
-                "privilege", "{application}",
+                "privilege",                     "{application}",
                 "{name}",
             ],
             [   { application => 2 }, "_security",
-                "privilege", "{application}"
+                "privilege",          "{application}"
             ],
             [ {}, "_security", "privilege" ],
         ],
@@ -4297,7 +5395,7 @@ sub api {
 
     'security.get_role' => {
         doc   => "security-api-get-role",
-        parts => { name => {} },
+        parts => { name => { multi => 1 } },
         paths => [
             [ { name => 2 }, "_security", "role", "{name}" ],
             [ {}, "_security", "role" ],
@@ -4311,7 +5409,7 @@ sub api {
 
     'security.get_role_mapping' => {
         doc   => "security-api-get-role-mapping",
-        parts => { name => {} },
+        parts => { name => { multi => 1 } },
         paths => [
             [ { name => 2 }, "_security", "role_mapping", "{name}" ],
             [ {}, "_security", "role_mapping" ],
@@ -4361,13 +5459,27 @@ sub api {
         },
     },
 
+    'security.grant_api_key' => {
+        body   => { required => 1 },
+        doc    => "security-api-grant-api-key",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_security", "api_key", "grant" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            refresh     => "enum",
+        },
+    },
+
     'security.has_privileges' => {
         body  => { required => 1 },
         doc   => "security-api-has-privileges",
         parts => { user => {} },
         paths => [
             [   { user => 2 }, "_security",
-                "user", "{user}",
+                "user",        "{user}",
                 "_has_privileges"
             ],
             [ {}, "_security", "user", "_has_privileges" ],
@@ -4407,7 +5519,7 @@ sub api {
 
     'security.put_privileges' => {
         body   => { required => 1 },
-        doc    => "",
+        doc    => "security-api-put-privileges",
         method => "PUT",
         parts  => {},
         paths  => [ [ {}, "_security", "privilege" ] ],
@@ -4423,7 +5535,7 @@ sub api {
         body   => { required => 1 },
         doc    => "security-api-put-role",
         method => "PUT",
-        parts  => { name => { required => 1 } },
+        parts  => { name => {} },
         paths  => [ [ { name => 2 }, "_security", "role", "{name}" ] ],
         qs     => {
             error_trace => "boolean",
@@ -4437,7 +5549,7 @@ sub api {
         body   => { required => 1 },
         doc    => "security-api-put-role-mapping",
         method => "PUT",
-        parts  => { name => { required => 1 } },
+        parts  => { name => {} },
         paths => [ [ { name => 2 }, "_security", "role_mapping", "{name}" ] ],
         qs    => {
             error_trace => "boolean",
@@ -4451,7 +5563,7 @@ sub api {
         body   => { required => 1 },
         doc    => "security-api-put-user",
         method => "PUT",
-        parts  => { username => { required => 1 } },
+        parts  => { username => {} },
         paths => [ [ { username => 2 }, "_security", "user", "{username}" ] ],
         qs    => {
             error_trace => "boolean",
@@ -4461,17 +5573,166 @@ sub api {
         },
     },
 
+    'slm.delete_lifecycle' => {
+        doc    => "slm-api-delete-policy",
+        method => "DELETE",
+        parts  => { policy_id => {} },
+        paths  => [ [ { policy_id => 2 }, "_slm", "policy", "{policy_id}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'slm.execute_lifecycle' => {
+        doc    => "slm-api-execute-lifecycle",
+        method => "PUT",
+        parts  => { policy_id => {} },
+        paths  => [
+            [   { policy_id => 2 }, "_slm",
+                "policy",           "{policy_id}",
+                "_execute"
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'slm.execute_retention' => {
+        doc    => "slm-api-execute-retention",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_slm", "_execute_retention" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'slm.get_lifecycle' => {
+        doc   => "slm-api-get-policy",
+        parts => { policy_id => { multi => 1 } },
+        paths => [
+            [ { policy_id => 2 }, "_slm", "policy", "{policy_id}" ],
+            [ {}, "_slm", "policy" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'slm.get_stats' => {
+        doc   => "slm-api-get-stats",
+        parts => {},
+        paths => [ [ {}, "_slm", "stats" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'slm.get_status' => {
+        doc   => "slm-api-get-status",
+        parts => {},
+        paths => [ [ {}, "_slm", "status" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'slm.put_lifecycle' => {
+        body   => {},
+        doc    => "slm-api-put-policy",
+        method => "PUT",
+        parts  => { policy_id => {} },
+        paths  => [ [ { policy_id => 2 }, "_slm", "policy", "{policy_id}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'slm.start' => {
+        doc    => "slm-api-start",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_slm", "start" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'slm.stop' => {
+        doc    => "slm-api-stop",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_slm", "stop" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'snapshot.cleanup_repository' => {
+        doc    => "clean-up-snapshot-repo-api",
+        method => "POST",
+        parts  => { repository => {} },
+        paths  => [
+            [ { repository => 1 }, "_snapshot", "{repository}", "_cleanup" ],
+        ],
+        qs => {
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            master_timeout => "time",
+            timeout        => "time",
+        },
+    },
+
+    'snapshot.clone' => {
+        body   => { required => 1 },
+        doc    => "modules-snapshots",
+        method => "PUT",
+        parts  => { repository => {}, snapshot => {}, target_snapshot => {} },
+        paths  => [
+            [   { repository => 1, snapshot => 2, target_snapshot => 4 },
+                "_snapshot",
+                "{repository}",
+                "{snapshot}",
+                "_clone",
+                "{target_snapshot}",
+            ],
+        ],
+        qs => {
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            master_timeout => "time",
+        },
+    },
+
     'snapshot.create' => {
         body   => {},
         doc    => "modules-snapshots",
         method => "PUT",
-        parts  => {
-            repository => { required => 1 },
-            snapshot   => { required => 1 }
-        },
-        paths => [
+        parts  => { repository => {}, snapshot => {} },
+        paths  => [
             [   { repository => 1, snapshot => 2 }, "_snapshot",
-                "{repository}", "{snapshot}",
+                "{repository}",                     "{snapshot}",
             ],
         ],
         qs => {
@@ -4487,7 +5748,7 @@ sub api {
         body   => { required => 1 },
         doc    => "modules-snapshots",
         method => "PUT",
-        parts  => { repository => { required => 1 } },
+        parts  => { repository => {} },
         paths  => [ [ { repository => 1 }, "_snapshot", "{repository}" ] ],
         qs     => {
             error_trace    => "boolean",
@@ -4502,13 +5763,10 @@ sub api {
     'snapshot.delete' => {
         doc    => "modules-snapshots",
         method => "DELETE",
-        parts  => {
-            repository => { required => 1 },
-            snapshot   => { required => 1 }
-        },
-        paths => [
+        parts  => { repository => {}, snapshot => {} },
+        paths  => [
             [   { repository => 1, snapshot => 2 }, "_snapshot",
-                "{repository}", "{snapshot}",
+                "{repository}",                     "{snapshot}",
             ],
         ],
         qs => {
@@ -4522,7 +5780,7 @@ sub api {
     'snapshot.delete_repository' => {
         doc    => "modules-snapshots",
         method => "DELETE",
-        parts  => { repository => { multi => 1, required => 1 } },
+        parts  => { repository => { multi => 1 } },
         paths  => [ [ { repository => 1 }, "_snapshot", "{repository}" ] ],
         qs     => {
             error_trace    => "boolean",
@@ -4535,13 +5793,10 @@ sub api {
 
     'snapshot.get' => {
         doc   => "modules-snapshots",
-        parts => {
-            repository => { required => 1 },
-            snapshot   => { multi    => 1, required => 1 },
-        },
+        parts => { repository => {}, snapshot => { multi => 1 } },
         paths => [
             [   { repository => 1, snapshot => 2 }, "_snapshot",
-                "{repository}", "{snapshot}",
+                "{repository}",                     "{snapshot}",
             ],
         ],
         qs => {
@@ -4574,13 +5829,10 @@ sub api {
         body   => {},
         doc    => "modules-snapshots",
         method => "POST",
-        parts  => {
-            repository => { required => 1 },
-            snapshot   => { required => 1 }
-        },
-        paths => [
+        parts  => { repository => {}, snapshot => {} },
+        paths  => [
             [   { repository => 1, snapshot => 2 }, "_snapshot",
-                "{repository}", "{snapshot}",
+                "{repository}",                     "{snapshot}",
                 "_restore",
             ],
         ],
@@ -4598,7 +5850,7 @@ sub api {
         parts => { repository => {}, snapshot => { multi => 1 } },
         paths => [
             [   { repository => 1, snapshot => 2 }, "_snapshot",
-                "{repository}", "{snapshot}",
+                "{repository}",                     "{snapshot}",
                 "_status",
             ],
             [ { repository => 1 }, "_snapshot", "{repository}", "_status" ],
@@ -4616,7 +5868,7 @@ sub api {
     'snapshot.verify_repository' => {
         doc    => "modules-snapshots",
         method => "POST",
-        parts  => { repository => { required => 1 } },
+        parts  => { repository => {} },
         paths  => [
             [ { repository => 1 }, "_snapshot", "{repository}", "_verify" ],
         ],
@@ -4631,7 +5883,7 @@ sub api {
 
     'sql.clear_cursor' => {
         body   => { required => 1 },
-        doc    => "",
+        doc    => "sql-pagination",
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_sql", "close" ] ],
@@ -4644,7 +5896,7 @@ sub api {
 
     'sql.query' => {
         body   => { required => 1 },
-        doc    => "",
+        doc    => "sql-rest-overview",
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_sql" ] ],
@@ -4658,7 +5910,7 @@ sub api {
 
     'sql.translate' => {
         body   => { required => 1 },
-        doc    => "",
+        doc    => "sql-translate",
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_sql", "translate" ] ],
@@ -4689,18 +5941,19 @@ sub api {
             [ {}, "_tasks", "_cancel" ],
         ],
         qs => {
-            actions        => "list",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            human          => "boolean",
-            nodes          => "list",
-            parent_task_id => "string",
+            actions             => "list",
+            error_trace         => "boolean",
+            filter_path         => "list",
+            human               => "boolean",
+            nodes               => "list",
+            parent_task_id      => "string",
+            wait_for_completion => "boolean",
         },
     },
 
     'tasks.get' => {
         doc   => "tasks",
-        parts => { task_id => { required => 1 } },
+        parts => { task_id => {} },
         paths => [ [ { task_id => 1 }, "_tasks", "{task_id}" ] ],
         qs    => {
             error_trace         => "boolean",
@@ -4729,15 +5982,148 @@ sub api {
         },
     },
 
+    'transform.delete_transform' => {
+        doc    => "delete-transform",
+        method => "DELETE",
+        parts  => { transform_id => {} },
+        paths  =>
+            [ [ { transform_id => 1 }, "_transform", "{transform_id}" ] ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            force       => "boolean",
+            human       => "boolean",
+        },
+    },
+
+    'transform.get_transform' => {
+        doc   => "get-transform",
+        parts => { transform_id => {} },
+        paths => [
+            [ { transform_id => 1 }, "_transform", "{transform_id}" ],
+            [ {}, "_transform" ],
+        ],
+        qs => {
+            allow_no_match    => "boolean",
+            error_trace       => "boolean",
+            exclude_generated => "boolean",
+            filter_path       => "list",
+            from              => "int",
+            human             => "boolean",
+            size              => "int",
+        },
+    },
+
+    'transform.get_transform_stats' => {
+        doc   => "get-transform-stats",
+        parts => { transform_id => {} },
+        paths => [
+            [   { transform_id => 1 }, "_transform",
+                "{transform_id}",      "_stats"
+            ],
+        ],
+        qs => {
+            allow_no_match => "boolean",
+            error_trace    => "boolean",
+            filter_path    => "list",
+            from           => "number",
+            human          => "boolean",
+            size           => "number",
+        },
+    },
+
+    'transform.preview_transform' => {
+        body   => { required => 1 },
+        doc    => "preview-transform",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_transform", "_preview" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'transform.put_transform' => {
+        body   => { required => 1 },
+        doc    => "put-transform",
+        method => "PUT",
+        parts  => { transform_id => {} },
+        paths  =>
+            [ [ { transform_id => 1 }, "_transform", "{transform_id}" ] ],
+        qs => {
+            defer_validation => "boolean",
+            error_trace      => "boolean",
+            filter_path      => "list",
+            human            => "boolean",
+        },
+    },
+
+    'transform.start_transform' => {
+        doc    => "start-transform",
+        method => "POST",
+        parts  => { transform_id => {} },
+        paths  => [
+            [   { transform_id => 1 }, "_transform",
+                "{transform_id}",      "_start"
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            timeout     => "time",
+        },
+    },
+
+    'transform.stop_transform' => {
+        doc    => "stop-transform",
+        method => "POST",
+        parts  => { transform_id => {} },
+        paths  => [
+            [   { transform_id => 1 }, "_transform", "{transform_id}",
+                "_stop"
+            ],
+        ],
+        qs => {
+            allow_no_match      => "boolean",
+            error_trace         => "boolean",
+            filter_path         => "list",
+            force               => "boolean",
+            human               => "boolean",
+            timeout             => "time",
+            wait_for_checkpoint => "boolean",
+            wait_for_completion => "boolean",
+        },
+    },
+
+    'transform.update_transform' => {
+        body   => { required => 1 },
+        doc    => "update-transform",
+        method => "POST",
+        parts  => { transform_id => { required => 1 } },
+        paths  => [
+            [   { transform_id => 1 }, "_transform",
+                "{transform_id}",      "_update",
+            ],
+        ],
+        qs => {
+            defer_validation => "boolean",
+            error_trace      => "boolean",
+            filter_path      => "list",
+            human            => "boolean",
+        },
+    },
+
     'watcher.ack_watch' => {
         doc    => "watcher-api-ack-watch",
         method => "PUT",
-        parts =>
-            { action_id => { multi => 1 }, watch_id => { required => 1 } },
-        paths => [
+        parts  => { action_id => { multi => 1 }, watch_id => {} },
+        paths  => [
             [   { action_id => 4, watch_id => 2 }, "_watcher",
-                "watch", "{watch_id}",
-                "_ack",  "{action_id}",
+                "watch",                           "{watch_id}",
+                "_ack",                            "{action_id}",
             ],
             [ { watch_id => 2 }, "_watcher", "watch", "{watch_id}", "_ack" ],
         ],
@@ -4751,10 +6137,10 @@ sub api {
     'watcher.activate_watch' => {
         doc    => "watcher-api-activate-watch",
         method => "PUT",
-        parts  => { watch_id => { required => 1 } },
+        parts  => { watch_id => {} },
         paths  => [
             [   { watch_id => 2 }, "_watcher",
-                "watch", "{watch_id}",
+                "watch",           "{watch_id}",
                 "_activate",
             ],
         ],
@@ -4768,10 +6154,10 @@ sub api {
     'watcher.deactivate_watch' => {
         doc    => "watcher-api-deactivate-watch",
         method => "PUT",
-        parts  => { watch_id => { required => 1 } },
+        parts  => { watch_id => {} },
         paths  => [
             [   { watch_id => 2 }, "_watcher",
-                "watch", "{watch_id}",
+                "watch",           "{watch_id}",
                 "_deactivate",
             ],
         ],
@@ -4785,7 +6171,7 @@ sub api {
     'watcher.delete_watch' => {
         doc    => "watcher-api-delete-watch",
         method => "DELETE",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
         qs     => {
             error_trace => "boolean",
@@ -4813,7 +6199,7 @@ sub api {
 
     'watcher.get_watch' => {
         doc   => "watcher-api-get-watch",
-        parts => { id => { required => 1 } },
+        parts => { id => {} },
         paths => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
         qs    => {
             error_trace => "boolean",
@@ -4826,7 +6212,7 @@ sub api {
         body   => {},
         doc    => "watcher-api-put-watch",
         method => "PUT",
-        parts  => { id => { required => 1 } },
+        parts  => { id => {} },
         paths  => [ [ { id => 2 }, "_watcher", "watch", "{id}" ] ],
         qs     => {
             active          => "boolean",
@@ -4836,6 +6222,18 @@ sub api {
             if_primary_term => "number",
             if_seq_no       => "number",
             version         => "number",
+        },
+    },
+
+    'watcher.query_watches' => {
+        body  => {},
+        doc   => "watcher-api-query-watches",
+        parts => {},
+        paths => [ [ {}, "_watcher", "_query", "watches" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
         },
     },
 
@@ -4883,15 +6281,16 @@ sub api {
         parts => {},
         paths => [ [ {}, "_xpack" ] ],
         qs    => {
-            categories  => "list",
-            error_trace => "boolean",
-            filter_path => "list",
-            human       => "boolean",
+            accept_enterprise => "boolean",
+            categories        => "list",
+            error_trace       => "boolean",
+            filter_path       => "list",
+            human             => "boolean",
         },
     },
 
     'xpack.usage' => {
-        doc   => "",
+        doc   => "usage-api",
         parts => {},
         paths => [ [ {}, "_xpack", "usage" ] ],
         qs    => {
@@ -4922,32 +6321,32 @@ is the definition for the L<Search::Elasticsearch::Client::7_0::Direct/index()> 
         body   => { required => 1 },
         doc    => "docs-index_",
         method => "POST",
-        parts  => {
-            id    => {},
-            index => { required => 1 },
-            type  => { required => 1 }
-        },
-        paths => [
+        parts  => { id => {}, index => {}, type => {} },
+        paths  => [
             [   { id => 2, index => 0, type => 1 }, "{index}",
-                "{type}", "{id}"
+                "{type}",                           "{id}"
             ],
-            [ { index => 0, type => 1 }, "{index}", "{type}" ],
+            [ { id    => 2, index => 0 }, "{index}", "_doc", "{id}" ],
+            [ { index => 0, type  => 1 }, "{index}", "{type}" ],
+            [ { index => 0 }, "{index}", "_doc" ],
         ],
         qs => {
+            error_trace            => "boolean",
             filter_path            => "list",
+            human                  => "boolean",
+            if_primary_term        => "number",
+            if_seq_no              => "number",
             op_type                => "enum",
-            parent                 => "string",
             pipeline               => "string",
             refresh                => "enum",
+            require_alias          => "boolean",
             routing                => "string",
             timeout                => "time",
-            timestamp              => "time",
-            ttl                    => "time",
             version                => "number",
             version_type           => "enum",
             wait_for_active_shards => "string",
         },
-    },
+    }
 
 These definitions can be used by different L<Search::Elasticsearch::Role::Client>
 implementations to provide distinct user interfaces.
