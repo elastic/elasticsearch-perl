@@ -5,7 +5,7 @@ use warnings;
 use HTTP::Tiny;
 use JSON::PP;
 
-if ($ENV{TEST_SUITE} eq "basic") { 
+if ($ENV{TEST_SUITE} eq "free") { 
     $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'http://localhost:9200';
 } else {
     $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'https://elastic:changeme@localhost:9200';

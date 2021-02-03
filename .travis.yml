@@ -16,13 +16,13 @@ jobs:
   
   include:
     - perl: 5.30
-      env: TEST_SUITE="oss"
+      env: TEST_SUITE="free"
     - perl: 5.30
-      env: TEST_SUITE="xpack"
+      env: TEST_SUITE="platinum"
     - perl: 5.28
-      env: TEST_SUITE="oss"
+      env: TEST_SUITE="free"
     - perl: 5.28
-      env: TEST_SUITE="xpack"
+      env: TEST_SUITE="platinum"
 
 before_install:
   - cpanm Dist::Zilla --quiet --notest
