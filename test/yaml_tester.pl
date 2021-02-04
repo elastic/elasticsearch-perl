@@ -509,7 +509,7 @@ sub wipe_cluster {
 #===================================
 sub is_xpack {
 #===================================
-    return $ENV{TEST_SUITE} eq "xpack";
+    return $ENV{TEST_SUITE} eq "platinum";
 }
 
 #===================================
