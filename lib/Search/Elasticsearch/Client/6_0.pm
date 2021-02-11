@@ -17,7 +17,7 @@
 
 package Search::Elasticsearch::Client::6_0;
 
-our $VERSION='7.110';
+our $VERSION='7.711';
 use Search::Elasticsearch 7.00 ();
 
 1;
