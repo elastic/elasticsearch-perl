@@ -17,7 +17,7 @@
 
 package Search::Elasticsearch::Client::7_0::Async;
 
-our $VERSION='7.110';
+our $VERSION='7.711001';
 use Search::Elasticsearch::Client::7_0 7.00 ();
 
 1;

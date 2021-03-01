@@ -1,5 +1,11 @@
 Revision history for Search::Elasticsearch::Async
 
+7.711001 2021-03-01
+         Fix release for Elasticsearch 7.11
+
+7.711   2021-02-11
+        Stable release for Elasticsearch 7.11
+
 7.30    2020-09-15
         Stable release for Elasticsearch 7.3
         
