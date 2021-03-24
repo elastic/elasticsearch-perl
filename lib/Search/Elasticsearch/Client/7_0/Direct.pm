@@ -22,11 +22,13 @@ has 'dangling_indices'     => ( is => 'lazy', init_arg => undef );
 has 'data_frame_transform_deprecated' => ( is => 'lazy', init_arg => undef );
 has 'enrich'               => ( is => 'lazy', init_arg => undef );
 has 'eql'                  => ( is => 'lazy', init_arg => undef );
+has 'features'             => ( is => 'lazy', init_arg => undef );
 has 'graph'                => ( is => 'lazy', init_arg => undef );
 has 'ilm'                  => ( is => 'lazy', init_arg => undef );
 has 'indices'              => ( is => 'lazy', init_arg => undef );
 has 'ingest'               => ( is => 'lazy', init_arg => undef );
 has 'license'              => ( is => 'lazy', init_arg => undef );
+has 'logstash'             => ( is => 'lazy', init_arg => undef );
 has 'migration'            => ( is => 'lazy', init_arg => undef );
 has 'ml'                   => ( is => 'lazy', init_arg => undef );
 has 'monitoring'           => ( is => 'lazy', init_arg => undef );
@@ -39,6 +41,7 @@ has 'slm'                  => ( is => 'lazy', init_arg => undef );
 has 'sql'                  => ( is => 'lazy', init_arg => undef );
 has 'ssl'                  => ( is => 'lazy', init_arg => undef );
 has 'tasks'                => ( is => 'lazy', init_arg => undef );
+has 'text_structure'       => ( is => 'lazy', init_arg => undef );
 has 'transform'            => ( is => 'lazy', init_arg => undef );
 has 'watcher'              => ( is => 'lazy', init_arg => undef );
 has 'xpack'                => ( is => 'lazy', init_arg => undef );
@@ -91,11 +94,13 @@ sub _build_dangling_indices     { shift->_build_namespace('DanglingIndices') }
 sub _build_data_frame_transform_deprecated { shift->_build_namespace('DataFrameTransformDeprecated') }
 sub _build_enrich               { shift->_build_namespace('Enrich') }
 sub _build_eql                  { shift->_build_namespace('Eql') }
+sub _build_features             { shift->_build_namespace('Features') }
 sub _build_graph                { shift->_build_namespace('Graph') }
 sub _build_ilm                  { shift->_build_namespace('ILM') }
 sub _build_indices              { shift->_build_namespace('Indices') }
 sub _build_ingest               { shift->_build_namespace('Ingest') }
 sub _build_license              { shift->_build_namespace('License') }
+sub _build_logstash             { shift->_build_namespace('Logstash') }
 sub _build_migration            { shift->_build_namespace('Migration') }
 sub _build_ml                   { shift->_build_namespace('ML') }
 sub _build_monitoring           { shift->_build_namespace('Monitoring') }
@@ -108,6 +113,7 @@ sub _build_slm                  { shift->_build_namespace('Slm') }
 sub _build_sql                  { shift->_build_namespace('SQL') }
 sub _build_ssl                  { shift->_build_namespace('SSL') }
 sub _build_tasks                { shift->_build_namespace('Tasks') }
+sub _build_text_structure       { shift->_build_namespace('TextStructure') }
 sub _build_transform            { shift->_build_namespace('Transform') }
 sub _build_watcher              { shift->_build_namespace('Watcher') }
 sub _build_xpack                { shift->_build_namespace('XPack') }

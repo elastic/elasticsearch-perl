@@ -818,6 +818,7 @@ sub api {
             ignore_unavailable            => "boolean",
             lenient                       => "boolean",
             max_concurrent_shard_requests => "number",
+            min_compatible_shard_node     => "string",
             pre_filter_shard_size         => "number",
             preference                    => "string",
             q                             => "string",
@@ -1493,16 +1494,17 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "plugins" ] ],
         qs    => {
-            error_trace    => "boolean",
-            filter_path    => "list",
-            format         => "string",
-            h              => "list",
-            help           => "boolean",
-            human          => "boolean",
-            local          => "boolean",
-            master_timeout => "time",
-            s              => "list",
-            v              => "boolean",
+            error_trace       => "boolean",
+            filter_path       => "list",
+            format            => "string",
+            h                 => "list",
+            help              => "boolean",
+            human             => "boolean",
+            include_bootstrap => "boolean",
+            local             => "boolean",
+            master_timeout    => "time",
+            s                 => "list",
+            v                 => "boolean",
         },
     },
 
@@ -2380,6 +2382,17 @@ sub api {
         },
     },
 
+    'eql.get_status' => {
+        doc   => "eql-search-api",
+        parts => { id => {} },
+        paths => [ [ { id => 3 }, "_eql", "search", "status", "{id}" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'eql.search' => {
         body  => { required => 1 },
         doc   => "eql-search-api",
@@ -2392,6 +2405,18 @@ sub api {
             keep_alive                  => "time",
             keep_on_completion          => "boolean",
             wait_for_completion_timeout => "time",
+        },
+    },
+
+    'features.get_features' => {
+        doc   => "modules-snapshots",
+        parts => {},
+        paths => [ [ {}, "_features" ] ],
+        qs    => {
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            master_timeout => "time",
         },
     },
 
@@ -3685,6 +3710,42 @@ sub api {
         },
     },
 
+    'logstash.delete_pipeline' => {
+        doc    => "logstash-api-delete-pipeline",
+        method => "DELETE",
+        parts  => { id => {} },
+        paths  => [ [ { id => 2 }, "_logstash", "pipeline", "{id}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'logstash.get_pipeline' => {
+        doc   => "logstash-api-get-pipeline",
+        parts => { id => {} },
+        paths => [ [ { id => 2 }, "_logstash", "pipeline", "{id}" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'logstash.put_pipeline' => {
+        body   => { required => 1 },
+        doc    => "logstash-api-put-pipeline",
+        method => "PUT",
+        parts  => { id => {} },
+        paths  => [ [ { id => 2 }, "_logstash", "pipeline", "{id}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'migration.deprecations' => {
         doc   => "migration-api-deprecation",
         parts => { index => {} },
@@ -3936,34 +3997,6 @@ sub api {
             filter_path => "list",
             human       => "boolean"
         },
-    },
-
-    'ml.find_file_structure' => {
-        body   => { required => 1 },
-        doc    => "ml-find-file-structure",
-        method => "POST",
-        parts  => {},
-        paths  => [ [ {}, "_ml", "find_file_structure" ] ],
-        qs     => {
-            charset               => "string",
-            column_names          => "list",
-            delimiter             => "string",
-            error_trace           => "boolean",
-            explain               => "boolean",
-            filter_path           => "list",
-            format                => "enum",
-            grok_pattern          => "string",
-            has_header_row        => "boolean",
-            human                 => "boolean",
-            line_merge_size_limit => "int",
-            lines_to_sample       => "int",
-            quote                 => "string",
-            should_trim_fields    => "boolean",
-            timeout               => "time",
-            timestamp_field       => "string",
-            timestamp_format      => "string",
-        },
-        serialize => "bulk",
     },
 
     'ml.flush_job' => {
@@ -5115,6 +5148,7 @@ sub api {
             filter_path         => "list",
             human               => "boolean",
             master_timeout      => "time",
+            storage             => "string",
             wait_for_completion => "boolean",
         },
     },
@@ -5142,7 +5176,8 @@ sub api {
         qs => {
             error_trace => "boolean",
             filter_path => "list",
-            human       => "boolean"
+            human       => "boolean",
+            level       => "enum",
         },
     },
 
@@ -5980,6 +6015,34 @@ sub api {
             timeout             => "time",
             wait_for_completion => "boolean",
         },
+    },
+
+    'text_structure.find_structure' => {
+        body   => { required => 1 },
+        doc    => "find-structure",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_text_structure", "find_structure" ] ],
+        qs     => {
+            charset               => "string",
+            column_names          => "list",
+            delimiter             => "string",
+            error_trace           => "boolean",
+            explain               => "boolean",
+            filter_path           => "list",
+            format                => "enum",
+            grok_pattern          => "string",
+            has_header_row        => "boolean",
+            human                 => "boolean",
+            line_merge_size_limit => "int",
+            lines_to_sample       => "int",
+            quote                 => "string",
+            should_trim_fields    => "boolean",
+            timeout               => "time",
+            timestamp_field       => "string",
+            timestamp_format      => "string",
+        },
+        serialize => "bulk",
     },
 
     'transform.delete_transform' => {
