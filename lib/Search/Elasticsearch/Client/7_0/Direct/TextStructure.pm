@@ -28,8 +28,6 @@ __END__
 
 # ABSTRACT: Plugin providing TextStructure for Search::Elasticsearch 7.x
 
-NOTE: this API is experimental and may be changed or removed completely in a future release 
-
 =head1 SYNOPSIS
 
     my $response = $es->text_structure->find_structure(
@@ -38,6 +36,8 @@ NOTE: this API is experimental and may be changed or removed completely in a fut
 
 =head2 DESCRIPTION
 
+NOTE: this API is experimental and may be changed or removed completely in a future release.
+
 This class extends the L<Search::Elasticsearch> client with a C<text_structure>
 namespace, to support the API for the Text Structure plugin for Elasticsearch.
 
@@ -45,3 +45,4 @@ namespace, to support the API for the Text Structure plugin for Elasticsearch.
 
 The full documentation for the Text Structure plugin is available here:
 L<https://www.elastic.co/guide/en/elasticsearch/reference/current/find-structure.html>
+
