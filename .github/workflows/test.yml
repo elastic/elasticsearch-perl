@@ -16,8 +16,8 @@ jobs:
         uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: ${{ matrix.perl }}
-          install-modules-with: cpanm
-          install-modules-args: --with-develop --with-configure
       - run: perl -V
-      - run: cpanm --installdeps .
+      - run: cpanm Dist::Zilla --quiet --notest
+      - run: dzil authordeps --missing | cpanm --quiet --notest
+      - run: dzil listdeps --missing | cpanm --quiet --notest
       - run: prove -l t/*/*.t
