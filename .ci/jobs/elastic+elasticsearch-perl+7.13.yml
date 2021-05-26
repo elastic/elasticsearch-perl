@@ -1,12 +1,12 @@
 ---
 - job:
-    name: elastic+elasticsearch-perl+7.12
-    display-name: 'elastic / elasticsearch-perl # 7.12'
-    description: Testing the elasticsearch-perl 7.12 branch.
+    name: elastic+elasticsearch-perl+7.13
+    display-name: 'elastic / elasticsearch-perl # 7.13'
+    description: Testing the elasticsearch-perl 7.13 branch.
     parameters:
     - string:
         name: branch_specifier
-        default: refs/heads/7.12
+        default: refs/heads/7.13
         description: the Git branch specifier to build (&lt;branchName&gt;, &lt;tagName&gt;,
           &lt;commitId&gt;, etc.)
     triggers:
