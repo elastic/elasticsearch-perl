@@ -1,0 +1,24 @@
+name: Perl unit test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-latest']
+        perl: [ '5.34', '5.32', '5.30', '5.28' ]
+        dist: [ 'dist', 'dist-async', 'dist-client-6_0', 'dist-client-6_0-async', 'dist-client-7_0', 'dist-client-7_0-async', 'dist-netcurl' ]
+    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+      - run: perl -V
+      - run: cpanm Dist::Zilla --quiet --notest
+      - run: cd ${{ matrix.dist }} && dzil authordeps --missing | cpanm --quiet --notest
+      - run: cd ${{ matrix.dist }} && dzil listdeps --missing | cpanm --quiet --notest
+      - run: cd ${{ matrix.dist }} && dzil test --all
