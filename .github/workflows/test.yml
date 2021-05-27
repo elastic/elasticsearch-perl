@@ -16,7 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Regular tests
-      - run: perl -V
-      - run: dzil authordeps --missing | cpanm --notest
-      - run: dzil listdeps --author --missing | cpanm --notest
-      - run: prove -l t/*/*.t
+        run: |
+          perl -V
+          dzil authordeps --missing | cpanm --notest
+          dzil listdeps --author --missing | cpanm --notest
+          prove -l t/*/*.t
