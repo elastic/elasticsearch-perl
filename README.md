@@ -1,6 +1,6 @@
 # Elasticsearch Perl client
 
-[![Build Status](https://travis-ci.org/elastic/elasticsearch-perl.svg?branch=master)](https://travis-ci.org/elastic/elasticsearch-perl)
+[![Build status](https://github.com/elastic/elasticsearch-perl/workflows/Perl%20module%20test/badge.svg)](https://github.com/elastic/elasticsearch-perl/actions)
 
 Search::Elasticsearch is the official Perl API for Elasticsearch. 
 The full documentation is available on https://metacpan.org/module/Search::Elasticsearch.
