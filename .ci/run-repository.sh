@@ -53,4 +53,5 @@ docker run \
   --ulimit nofile=65535:65535 \
   --name elasticsearch-perl \
   --rm \
-  elastic/elasticsearch-perl
+  elastic/elasticsearch-perl \
+  .ci/yaml-tests.sh

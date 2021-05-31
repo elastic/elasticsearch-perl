@@ -23,5 +23,3 @@ RUN cd dist && dzil listdeps --missing | cpanm --quiet --notest
 
 # Updating elasticsearch submodule
 RUN git submodule update --init --recursive
-
-CMD ["bash", ".ci/yaml-tests.sh"]
