@@ -12,6 +12,9 @@ RUN perl -v
 
 COPY . .
 
+# Install cpanm dependencies
+RUN cpanm --quiet --notest --installdeps . 
+
 # Install Dist::Zilla
 RUN cpanm Dist::Zilla --quiet --notest
 
