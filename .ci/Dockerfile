@@ -3,9 +3,9 @@ FROM perl:${PERL_VERSION}
 
 WORKDIR /usr/src/app
 
-# Install git
+# Install git, unzip
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git
+    apt-get install -y --no-install-recommends git unzip
 
 # Print PERL version
 RUN perl -v
@@ -20,8 +20,5 @@ RUN dzil authordeps --missing | cpanm --quiet --notest
 RUN dzil listdeps --missing | cpanm --quiet --notest
 RUN cd dist && dzil authordeps --missing | cpanm --quiet --notest
 RUN cd dist && dzil listdeps --missing | cpanm --quiet --notest
-
-# Updating elasticsearch submodule
-RUN git submodule update --init --recursive
 
 CMD ["bash", ".ci/yaml-tests.sh"]

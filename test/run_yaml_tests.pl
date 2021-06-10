@@ -20,7 +20,8 @@
 use strict;
 use warnings;
 use lib qw(lib t/lib);
-
+use File::Basename;
+use FindBin;
 use TAP::Harness;
 use Getopt::Long;
 
@@ -30,6 +31,17 @@ my $async   = 0;
 my $cxn     = '';
 my $junit   = 0;
 my @plugins;
+
+do "$FindBin::RealBin/../util/get_elasticsearch_info.pl" || die $@;
+my $contents = get_elasticsearch_info();
+my $hash = $contents->{version}->{build_hash};
+my $testPath = sprintf ("%s/../util/rest-spec/%s/rest-api-spec/test", dirname(__FILE__), $hash);
+
+unless (-e $testPath) {
+    printf "The rest-spec path %s does not exists!\n", $testPath;
+    printf "You need to execute util/checkout_yaml_test.pl first.\n";
+    exit 1;
+}
 
 GetOptions(
     'verbose'  => \$verbose,
@@ -62,13 +74,7 @@ my @tests = @ARGV;
 if (@tests) {
     @tests = grep { -d || /\.ya?ml$/ } @tests;
 } else {
-    if ($ENV{TEST_SUITE} eq "free") { 
-        @tests = grep {-d} glob("elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/test/*");
-        $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'http://localhost:9200';
-    } else {
-        @tests = grep {-d} glob("elasticsearch/x-pack/plugin/src/test/resources/rest-api-spec/test/*");
-        $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'https://elastic:changeme@localhost:9200';
-    }
+    @tests =  grep {-d} glob(sprintf("%s/%s/*", $testPath, $ENV{TEST_SUITE}));
 }
 
 # [$file,$name]

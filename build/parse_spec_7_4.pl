@@ -22,21 +22,28 @@ use warnings FATAL => 'all';
 use v5.12;
 use Path::Class;
 use FindBin;
+use File::Basename;
+use HTTP::Tiny;
+use JSON::XS;
 
 do "$FindBin::RealBin/parse_spec_base_74.pl" || die $@;
+do "$FindBin::RealBin/../util/get_elasticsearch_info.pl" || die $@;
 
-my @oss = map { file($_) } (
-    '../elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/api/_common.json',
-    glob
-        '../elasticsearch/rest-api-spec/src/main/resources/rest-api-spec/api/*.json'
+my $contents = get_elasticsearch_info();
+my $dirname = dirname(__FILE__) . "/..";
+my $hash = $contents->{version}->{build_hash};
+
+my $pathSpecs = sprintf("%s/util/rest-spec/%s/rest-api-spec/api", $dirname, $hash);
+
+unless (-e $pathSpecs) {
+    printf "ERROR: The API spec folder %s is not found", $pathSpecs;
+    exit 1;
+}
+my @files = map { file($_) } (
+    sprintf("%s/_common.json", $pathSpecs),
+    glob 
+        sprintf("%s/*.json", $pathSpecs)
 );
-
-my @xpack = map { file($_) } (
-    glob
-        '../elasticsearch/x-pack/plugin/src/test/resources/rest-api-spec/api/*.json'
-);
-
-my @files = (@oss, @xpack);
 
 forbid(
     'GET' => qw(
@@ -58,5 +65,8 @@ forbid(
         )
 );
 
-process_files( '../lib/Search/Elasticsearch/Client/7_0/Role/API.pm', @files );
+process_files( 
+    sprintf("%s/lib/Search/Elasticsearch/Client/7_0/Role/API.pm", $dirname),
+    @files
+);
 

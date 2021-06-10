@@ -17,20 +17,19 @@
 # specific language governing permissions and limitations
 # under the License.
 
-use strict;
-use warnings;
 use HTTP::Tiny;
 use JSON::PP;
 
-if ($ENV{TEST_SUITE} eq "free") { 
-    $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'http://localhost:9200';
-} else {
+#===================================
+sub get_elasticsearch_info {
+#===================================
     $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'https://elastic:changeme@localhost:9200';
+
+    my $response = HTTP::Tiny->new->get($ENV{ES}) or die "The server $ENV{ES} is not running!";
+    unless ($response->{success}) {
+        die "ERROR: The server $ENV{ES} is not running!\n";
+    }
+    return decode_json $response->{content} or die "The JSON response is not valid!";
 }
 
-my $response = HTTP::Tiny->new->get($ENV{ES}) or die "The server $ENV{ES} is not running!";
-
-my $contents = decode_json $response->{content} or die "The JSON response is not valid!";
-my $hash = $contents->{version}->{build_hash};
-
-`cd elasticsearch; git checkout $hash`;
+1;
