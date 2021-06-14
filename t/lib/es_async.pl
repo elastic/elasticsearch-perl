@@ -101,8 +101,8 @@ unless ($es) {
 unless ( $ENV{ES_SKIP_PING} ) {
     my $version = wait_for( $es->info )->{version}{number};
     my $api     = $es->api_version;
-    unless ( $api eq '0_90' && $version =~ /^0\.9/
-        || substr( $api, 0, 1 ) eq substr( $version, 0, 1 ) )
+    unless ( $version eq '8.0.0-SNAPSHOT' || ( $api eq '0_90' && $version =~ /^0\.9/
+        || substr( $api, 0, 1 ) eq substr( $version, 0, 1 ) ) )
     {
         plan skip_all =>
             "Tests are for API version $api but Elasticsearch is version $version\n";
