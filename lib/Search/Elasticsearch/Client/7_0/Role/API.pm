@@ -818,6 +818,7 @@ sub api {
             ignore_unavailable            => "boolean",
             lenient                       => "boolean",
             max_concurrent_shard_requests => "number",
+            min_compatible_shard_node     => "string",
             pre_filter_shard_size         => "number",
             preference                    => "string",
             q                             => "string",
@@ -1453,19 +1454,20 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "nodes" ] ],
         qs    => {
-            bytes          => "enum",
-            error_trace    => "boolean",
-            filter_path    => "list",
-            format         => "string",
-            full_id        => "boolean",
-            h              => "list",
-            help           => "boolean",
-            human          => "boolean",
-            local          => "boolean",
-            master_timeout => "time",
-            s              => "list",
-            time           => "enum",
-            v              => "boolean",
+            bytes                     => "enum",
+            error_trace               => "boolean",
+            filter_path               => "list",
+            format                    => "string",
+            full_id                   => "boolean",
+            h                         => "list",
+            help                      => "boolean",
+            human                     => "boolean",
+            include_unloaded_segments => "boolean",
+            local                     => "boolean",
+            master_timeout            => "time",
+            s                         => "list",
+            time                      => "enum",
+            v                         => "boolean",
         },
     },
 
@@ -1493,16 +1495,17 @@ sub api {
         parts => {},
         paths => [ [ {}, "_cat", "plugins" ] ],
         qs    => {
-            error_trace    => "boolean",
-            filter_path    => "list",
-            format         => "string",
-            h              => "list",
-            help           => "boolean",
-            human          => "boolean",
-            local          => "boolean",
-            master_timeout => "time",
-            s              => "list",
-            v              => "boolean",
+            error_trace       => "boolean",
+            filter_path       => "list",
+            format            => "string",
+            h                 => "list",
+            help              => "boolean",
+            human             => "boolean",
+            include_bootstrap => "boolean",
+            local             => "boolean",
+            master_timeout    => "time",
+            s                 => "list",
+            v                 => "boolean",
         },
     },
 
@@ -1935,7 +1938,7 @@ sub api {
     },
 
     'cluster.get_settings' => {
-        doc   => "cluster-update-settings",
+        doc   => "cluster-get-settings",
         parts => {},
         paths => [ [ {}, "_cluster", "settings" ] ],
         qs    => {
@@ -2380,6 +2383,17 @@ sub api {
         },
     },
 
+    'eql.get_status' => {
+        doc   => "eql-search-api",
+        parts => { id => {} },
+        paths => [ [ { id => 3 }, "_eql", "search", "status", "{id}" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'eql.search' => {
         body  => { required => 1 },
         doc   => "eql-search-api",
@@ -2392,6 +2406,45 @@ sub api {
             keep_alive                  => "time",
             keep_on_completion          => "boolean",
             wait_for_completion_timeout => "time",
+        },
+    },
+
+    'features.get_features' => {
+        doc   => "get-features-api",
+        parts => {},
+        paths => [ [ {}, "_features" ] ],
+        qs    => {
+            error_trace    => "boolean",
+            filter_path    => "list",
+            human          => "boolean",
+            master_timeout => "time",
+        },
+    },
+
+    'features.reset_features' => {
+        doc    => "modules-snapshots",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_features", "_reset" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'fleet.global_checkpoints' => {
+        parts => { index => {} },
+        paths =>
+            [ [ { index => 0 }, "{index}", "_fleet", "global_checkpoints" ] ],
+        qs => {
+            checkpoints      => "list",
+            error_trace      => "boolean",
+            filter_path      => "list",
+            human            => "boolean",
+            timeout          => "time",
+            wait_for_advance => "boolean",
+            wait_for_index   => "boolean",
         },
     },
 
@@ -3540,6 +3593,17 @@ sub api {
         },
     },
 
+    'ingest.geo_ip_stats' => {
+        doc   => "geoip-stats-api",
+        parts => {},
+        paths => [ [ {}, "_ingest", "geoip", "stats" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'ingest.get_pipeline' => {
         doc   => "get-pipeline-api",
         parts => { id => {} },
@@ -3552,6 +3616,7 @@ sub api {
             filter_path    => "list",
             human          => "boolean",
             master_timeout => "time",
+            summary        => "boolean",
         },
     },
 
@@ -3682,6 +3747,42 @@ sub api {
             filter_path => "list",
             human       => "boolean",
             type        => "string",
+        },
+    },
+
+    'logstash.delete_pipeline' => {
+        doc    => "logstash-api-delete-pipeline",
+        method => "DELETE",
+        parts  => { id => {} },
+        paths  => [ [ { id => 2 }, "_logstash", "pipeline", "{id}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'logstash.get_pipeline' => {
+        doc   => "logstash-api-get-pipeline",
+        parts => { id => {} },
+        paths => [ [ { id => 2 }, "_logstash", "pipeline", "{id}" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'logstash.put_pipeline' => {
+        body   => { required => 1 },
+        doc    => "logstash-api-put-pipeline",
+        method => "PUT",
+        parts  => { id => {} },
+        paths  => [ [ { id => 2 }, "_logstash", "pipeline", "{id}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
         },
     },
 
@@ -3894,6 +3995,23 @@ sub api {
         },
     },
 
+    'ml.delete_trained_model_alias' => {
+        doc    => "delete-trained-models-aliases",
+        method => "DELETE",
+        parts  => { model_alias => {}, model_id => {} },
+        paths  => [
+            [   { model_alias => 4, model_id => 2 }, "_ml",
+                "trained_models",                    "{model_id}",
+                "model_aliases",                     "{model_alias}",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'ml.estimate_model_memory' => {
         body   => { required => 1 },
         doc    => "ml-apis",
@@ -3940,7 +4058,7 @@ sub api {
 
     'ml.find_file_structure' => {
         body   => { required => 1 },
-        doc    => "ml-find-file-structure",
+        doc    => "find-structure",
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_ml", "find_file_structure" ] ],
@@ -4440,7 +4558,25 @@ sub api {
         serialize => "bulk",
     },
 
+    'ml.preview_data_frame_analytics' => {
+        body  => {},
+        doc   => "preview-dfanalytics",
+        parts => { id => {} },
+        paths => [
+            [   { id => 3 }, "_ml", "data_frame", "analytics",
+                "{id}",      "_preview"
+            ],
+            [ {}, "_ml", "data_frame", "analytics", "_preview" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'ml.preview_datafeed' => {
+        body  => {},
         doc   => "ml-preview-datafeed",
         parts => { datafeed_id => {} },
         paths => [
@@ -4448,6 +4584,7 @@ sub api {
                 "datafeeds",          "{datafeed_id}",
                 "_preview",
             ],
+            [ {}, "_ml", "datafeeds", "_preview" ],
         ],
         qs => {
             error_trace => "boolean",
@@ -4556,6 +4693,24 @@ sub api {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
+        },
+    },
+
+    'ml.put_trained_model_alias' => {
+        doc    => "put-trained-models-aliases",
+        method => "PUT",
+        parts  => { model_alias => {}, model_id => {} },
+        paths  => [
+            [   { model_alias => 4, model_id => 2 }, "_ml",
+                "trained_models",                    "{model_id}",
+                "model_aliases",                     "{model_alias}",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            reassign    => "boolean",
         },
     },
 
@@ -4925,6 +5080,7 @@ sub api {
             groups                     => "boolean",
             human                      => "boolean",
             include_segment_file_sizes => "boolean",
+            include_unloaded_segments  => "boolean",
             level                      => "enum",
             timeout                    => "time",
             types                      => "list",
@@ -5078,6 +5234,23 @@ sub api {
         },
     },
 
+    'searchable_snapshots.cache_stats' => {
+        doc   => "searchable-snapshots-apis",
+        parts => { node_id => { multi => 1 } },
+        paths => [
+            [   { node_id => 1 }, "_searchable_snapshots",
+                "{node_id}",      "cache",
+                "stats",
+            ],
+            [ {}, "_searchable_snapshots", "cache", "stats" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'searchable_snapshots.clear_cache' => {
         doc    => "searchable-snapshots-apis",
         method => "POST",
@@ -5115,6 +5288,7 @@ sub api {
             filter_path         => "list",
             human               => "boolean",
             master_timeout      => "time",
+            storage             => "string",
             wait_for_completion => "boolean",
         },
     },
@@ -5142,7 +5316,8 @@ sub api {
         qs => {
             error_trace => "boolean",
             filter_path => "list",
-            human       => "boolean"
+            human       => "boolean",
+            level       => "enum",
         },
     },
 
@@ -5239,6 +5414,25 @@ sub api {
         },
     },
 
+    'security.clear_cached_service_tokens' => {
+        doc    => "security-api-clear-service-token-caches",
+        method => "POST",
+        parts  => { name => { multi => 1 }, namespace => {}, service => {} },
+        paths  => [
+            [   { name => 6, namespace => 2, service => 3 }, "_security",
+                "service",                                   "{namespace}",
+                "{service}",                                 "credential",
+                "token",                                     "{name}",
+                "_clear_cache",
+            ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'security.create_api_key' => {
         body   => { required => 1 },
         doc    => "security-api-create-api-key",
@@ -5246,6 +5440,30 @@ sub api {
         parts  => {},
         paths  => [ [ {}, "_security", "api_key" ] ],
         qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            refresh     => "enum",
+        },
+    },
+
+    'security.create_service_token' => {
+        doc    => "security-api-create-service-token",
+        method => "POST",
+        parts  => { name => {}, namespace => {}, service => {} },
+        paths  => [
+            [   { name => 6, namespace => 2, service => 3 }, "_security",
+                "service",                                   "{namespace}",
+                "{service}",                                 "credential",
+                "token",                                     "{name}",
+            ],
+            [   { namespace => 2, service => 3 }, "_security",
+                "service",                        "{namespace}",
+                "{service}",                      "credential",
+                "token",
+            ],
+        ],
+        qs => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean",
@@ -5290,6 +5508,25 @@ sub api {
         parts  => { name => {} },
         paths => [ [ { name => 2 }, "_security", "role_mapping", "{name}" ] ],
         qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
+            refresh     => "enum",
+        },
+    },
+
+    'security.delete_service_token' => {
+        doc    => "security-api-delete-service-token",
+        method => "DELETE",
+        parts  => { name => {}, namespace => {}, service => {} },
+        paths  => [
+            [   { name => 6, namespace => 2, service => 3 }, "_security",
+                "service",                                   "{namespace}",
+                "{service}",                                 "credential",
+                "token",                                     "{name}",
+            ],
+        ],
+        qs => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean",
@@ -5413,6 +5650,40 @@ sub api {
         paths => [
             [ { name => 2 }, "_security", "role_mapping", "{name}" ],
             [ {}, "_security", "role_mapping" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'security.get_service_accounts' => {
+        doc   => "security-api-get-service-accounts",
+        parts => { namespace => {}, service => {} },
+        paths => [
+            [   { namespace => 2, service => 3 }, "_security",
+                "service",                        "{namespace}",
+                "{service}",
+            ],
+            [ { namespace => 2 }, "_security", "service", "{namespace}" ],
+            [ {}, "_security", "service" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'security.get_service_credentials' => {
+        doc   => "security-api-get-service-credentials",
+        parts => { namespace => {}, service => {} },
+        paths => [
+            [   { namespace => 2, service => 3 }, "_security",
+                "service",                        "{namespace}",
+                "{service}",                      "credential",
+            ],
         ],
         qs => {
             error_trace => "boolean",
@@ -5570,6 +5841,45 @@ sub api {
             filter_path => "list",
             human       => "boolean",
             refresh     => "enum",
+        },
+    },
+
+    'shutdown.delete_node' => {
+        doc    => "",
+        method => "DELETE",
+        parts  => { node_id => {} },
+        paths  => [ [ { node_id => 1 }, "_nodes", "{node_id}", "shutdown" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'shutdown.get_node' => {
+        doc   => "",
+        parts => { node_id => {} },
+        paths => [
+            [ { node_id => 1 }, "_nodes", "{node_id}", "shutdown" ],
+            [ {}, "_nodes", "shutdown" ],
+        ],
+        qs => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'shutdown.put_node' => {
+        body   => { required => 1 },
+        doc    => "",
+        method => "PUT",
+        parts  => { node_id => {} },
+        paths  => [ [ { node_id => 1 }, "_nodes", "{node_id}", "shutdown" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
         },
     },
 
@@ -5804,6 +6114,7 @@ sub api {
             filter_path        => "list",
             human              => "boolean",
             ignore_unavailable => "boolean",
+            index_details      => "boolean",
             master_timeout     => "time",
             verbose            => "boolean",
         },
@@ -5822,6 +6133,30 @@ sub api {
             human          => "boolean",
             local          => "boolean",
             master_timeout => "time",
+        },
+    },
+
+    'snapshot.repository_analyze' => {
+        doc    => "modules-snapshots",
+        method => "POST",
+        parts  => { repository => {} },
+        paths  => [
+            [ { repository => 1 }, "_snapshot", "{repository}", "_analyze" ],
+        ],
+        qs => {
+            blob_count              => "number",
+            concurrency             => "number",
+            detailed                => "boolean",
+            early_read_node_count   => "number",
+            error_trace             => "boolean",
+            filter_path             => "list",
+            human                   => "boolean",
+            max_blob_size           => "string",
+            max_total_data_size     => "string",
+            rare_action_probability => "number",
+            read_node_count         => "number",
+            seed                    => "number",
+            timeout                 => "time",
         },
     },
 
@@ -5980,6 +6315,34 @@ sub api {
             timeout             => "time",
             wait_for_completion => "boolean",
         },
+    },
+
+    'text_structure.find_structure' => {
+        body   => { required => 1 },
+        doc    => "find-structure",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_text_structure", "find_structure" ] ],
+        qs     => {
+            charset               => "string",
+            column_names          => "list",
+            delimiter             => "string",
+            error_trace           => "boolean",
+            explain               => "boolean",
+            filter_path           => "list",
+            format                => "enum",
+            grok_pattern          => "string",
+            has_header_row        => "boolean",
+            human                 => "boolean",
+            line_merge_size_limit => "int",
+            lines_to_sample       => "int",
+            quote                 => "string",
+            should_trim_fields    => "boolean",
+            timeout               => "time",
+            timestamp_field       => "string",
+            timestamp_format      => "string",
+        },
+        serialize => "bulk",
     },
 
     'transform.delete_transform' => {

@@ -22,6 +22,8 @@ has 'dangling_indices'     => ( is => 'lazy', init_arg => undef );
 has 'data_frame_transform_deprecated' => ( is => 'lazy', init_arg => undef );
 has 'enrich'               => ( is => 'lazy', init_arg => undef );
 has 'eql'                  => ( is => 'lazy', init_arg => undef );
+has 'features'             => ( is => 'lazy', init_arg => undef );
+has 'fleet'                => ( is => 'lazy', init_arg => undef );
 has 'graph'                => ( is => 'lazy', init_arg => undef );
 has 'ilm'                  => ( is => 'lazy', init_arg => undef );
 has 'indices'              => ( is => 'lazy', init_arg => undef );
@@ -91,6 +93,8 @@ sub _build_dangling_indices     { shift->_build_namespace('DanglingIndices') }
 sub _build_data_frame_transform_deprecated { shift->_build_namespace('DataFrameTransformDeprecated') }
 sub _build_enrich               { shift->_build_namespace('Enrich') }
 sub _build_eql                  { shift->_build_namespace('Eql') }
+sub _build_features             { shift->_build_namespace('Features') }
+sub _build_fleet                { shift->_build_namespace('Fleet') }
 sub _build_graph                { shift->_build_namespace('Graph') }
 sub _build_ilm                  { shift->_build_namespace('ILM') }
 sub _build_indices              { shift->_build_namespace('Indices') }
