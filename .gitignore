@@ -17,3 +17,6 @@ shield/*
 local/
 *.komodoproject
 .vscode
+
+# REST specification
+util/rest-spec
