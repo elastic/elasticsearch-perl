@@ -187,5 +187,6 @@
     - runtime_fields/60_boolean.yml
     - search/350_point_in_time.yml
     - ssl/10_basic.yml
-    - transform/transforms_stats_continuous.yml
     - transform/transforms_crud.yml
+    - transform/transforms_force_delete.yml
+    - transform/transforms_stats_continuous.yml
