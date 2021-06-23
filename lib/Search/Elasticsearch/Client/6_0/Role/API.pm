@@ -74,7 +74,7 @@ sub api {
             'upsert',
         ]
     },
-    'bulk.required' => { params => [ 'index', 'type' ] },
+    'bulk.required' => { params => [ 'index' ] },
 
 #=== AUTOGEN - START ===
 
