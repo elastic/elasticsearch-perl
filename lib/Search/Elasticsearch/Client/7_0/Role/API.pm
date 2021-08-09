@@ -744,7 +744,7 @@ sub api {
 
     'render_search_template' => {
         body  => {},
-        doc   => "",
+        doc   => "render-search-template-api",
         parts => { id => {} },
         paths => [
             [ { id => 2 }, "_render", "template", "{id}" ],
@@ -2527,6 +2527,20 @@ sub api {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
+        },
+    },
+
+    'ilm.migrate_to_data_tiers' => {
+        body   => {},
+        doc    => "ilm-migrate-to-data-tiers",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_ilm", "migrate_to_data_tiers" ] ],
+        qs     => {
+            dry_run     => "boolean",
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean",
         },
     },
 
@@ -4726,6 +4740,24 @@ sub api {
         },
     },
 
+    'ml.reset_job' => {
+        doc    => "ml-reset-job",
+        method => "POST",
+        parts  => { job_id => {} },
+        paths  => [
+            [   { job_id => 2 },     "_ml",
+                "anomaly_detectors", "{job_id}",
+                "_reset",
+            ],
+        ],
+        qs => {
+            error_trace         => "boolean",
+            filter_path         => "list",
+            human               => "boolean",
+            wait_for_completion => "boolean",
+        },
+    },
+
     'ml.revert_model_snapshot' => {
         body   => {},
         doc    => "ml-revert-snapshot",
@@ -5185,7 +5217,7 @@ sub api {
 
     'rollup.rollup' => {
         body   => { required => 1 },
-        doc    => "rollup-api",
+        doc    => "xpack-rollup",
         method => "POST",
         parts  =>
             { index => { required => 1 }, rollup_index => { required => 1 } },
@@ -5732,7 +5764,7 @@ sub api {
     },
 
     'security.get_user_privileges' => {
-        doc   => "security-api-get-privileges",
+        doc   => "security-api-get-user-privileges",
         parts => {},
         paths => [ [ {}, "_security", "user", "_privileges" ] ],
         qs    => {
@@ -5856,6 +5888,19 @@ sub api {
         },
     },
 
+    'security.saml_authenticate' => {
+        body   => { required => 1 },
+        doc    => "security-api-saml-authenticate",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_security", "saml", "authenticate" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'security.saml_complete_logout' => {
         body   => { required => 1 },
         doc    => "security-api-saml-complete-logout",
@@ -5863,6 +5908,61 @@ sub api {
         parts  => {},
         paths  => [ [ {}, "_security", "saml", "complete_logout" ] ],
         qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'security.saml_invalidate' => {
+        body   => { required => 1 },
+        doc    => "security-api-saml-invalidate",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_security", "saml", "invalidate" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'security.saml_logout' => {
+        body   => { required => 1 },
+        doc    => "security-api-saml-logout",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_security", "saml", "logout" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'security.saml_prepare_authentication' => {
+        body   => { required => 1 },
+        doc    => "security-api-saml-prepare-authentication",
+        method => "POST",
+        parts  => {},
+        paths  => [ [ {}, "_security", "saml", "prepare" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'security.saml_service_provider_metadata' => {
+        doc   => "security-api-saml-sp-metadata",
+        parts => { realm_name => {} },
+        paths => [
+            [   { realm_name => 3 }, "_security",
+                "saml",              "metadata",
+                "{realm_name}",
+            ],
+        ],
+        qs => {
             error_trace => "boolean",
             filter_path => "list",
             human       => "boolean"
@@ -6139,6 +6239,7 @@ sub api {
             filter_path        => "list",
             human              => "boolean",
             ignore_unavailable => "boolean",
+            include_repository => "boolean",
             index_details      => "boolean",
             master_timeout     => "time",
             verbose            => "boolean",
@@ -6244,7 +6345,7 @@ sub api {
 
     'sql.clear_cursor' => {
         body   => { required => 1 },
-        doc    => "sql-pagination",
+        doc    => "clear-sql-cursor-api",
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_sql", "close" ] ],
@@ -6255,9 +6356,47 @@ sub api {
         },
     },
 
+    'sql.delete_async' => {
+        doc    => "delete-async-sql-search-api",
+        method => "DELETE",
+        parts  => { id => {} },
+        paths  => [ [ { id => 3 }, "_sql", "async", "delete", "{id}" ] ],
+        qs     => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
+    'sql.get_async' => {
+        doc   => "get-async-sql-search-api",
+        parts => { id => {} },
+        paths => [ [ { id => 2 }, "_sql", "async", "{id}" ] ],
+        qs    => {
+            delimiter                   => "string",
+            error_trace                 => "boolean",
+            filter_path                 => "list",
+            format                      => "string",
+            human                       => "boolean",
+            keep_alive                  => "time",
+            wait_for_completion_timeout => "time",
+        },
+    },
+
+    'sql.get_async_status' => {
+        doc   => "get-async-sql-search-status-api",
+        parts => { id => {} },
+        paths => [ [ { id => 3 }, "_sql", "async", "status", "{id}" ] ],
+        qs    => {
+            error_trace => "boolean",
+            filter_path => "list",
+            human       => "boolean"
+        },
+    },
+
     'sql.query' => {
         body   => { required => 1 },
-        doc    => "sql-rest-overview",
+        doc    => "sql-search-api",
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_sql" ] ],
@@ -6271,7 +6410,7 @@ sub api {
 
     'sql.translate' => {
         body   => { required => 1 },
-        doc    => "sql-translate",
+        doc    => "sql-translate-api",
         method => "POST",
         parts  => {},
         paths  => [ [ {}, "_sql", "translate" ] ],
