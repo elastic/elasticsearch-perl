@@ -22,6 +22,12 @@ The full documentation is available on https://metacpan.org/module/Search::Elast
 cpanm Search::Elasticsearch
 ```
 
+## Compatibility
+
+Language clients are forward compatible; meaning that clients support communicating
+with greater minor versions of Elasticsearch. Elastic language clients are also backwards
+compatible with lesser supported minor Elasticsearch versions.
+
 ## License
 
 This software is licensed under the [Apache 2 license](LICENSE).
