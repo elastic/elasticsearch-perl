@@ -16,3 +16,12 @@ example, to download elasticsearch-perl 6.81, use the following command:
 ------------------------------------
 cpanm EZIMUEL/Search-Elasticsearch-6.81.tar.gz
 ------------------------------------
+
+[discrete]
+[[compatibility]]
+=== Compatibility
+
+Language clients are forward compatible; meaning that clients support communicating
+with greater or equal minor versions of Elasticsearch. Elasticsearch language
+clients are only backwards compatible with default distributions and without
+guarantees made.
