@@ -1,4 +1,4 @@
-= Elasticsearch.pm
+= Elasticsearch Perl Client
 
 :doctype:           book
 
