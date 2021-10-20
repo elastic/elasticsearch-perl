@@ -188,3 +188,26 @@
     - search/350_point_in_time.yml
     - ssl/10_basic.yml
     - transform/*
+
+7.15.1:
+    - cat.allocation/10_basic.yml
+    - cat.indices/10_basic.yml
+    - cat.segments/10_basic.yml
+    - cat.shards/10_basic.yml
+    - cluster.health/10_basic.yml
+    - cluster.health/20_request_timeout.yml
+    - indices.shard_stores/10_basic.yml
+    - indices.stats/10_index.yml
+    - indices.stats/15_types.yml
+    - snapshot.create/10_basic.yml
+    - license/20_put_license.yml
+    - license/30_enterprise_license.yml
+    - ml/calendar_crud.yml
+    - ml/data_frame_analytics_crud.yml
+    - ml/evaluate_data_frame.yml
+    - ml/explain_data_frame_analytics.yml
+    - ml/forecast.yml
+    - ml/jobs_crud.yml
+    - ssl/10_basic.yml
+    - transform/*
+    - xpack/20_info.yml
