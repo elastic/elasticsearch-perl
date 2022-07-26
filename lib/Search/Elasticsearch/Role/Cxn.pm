@@ -82,6 +82,13 @@ sub get_user_agent {
 }
 
 #===================================
+sub get_meta_header {
+#===================================
+    return sprintf("es=%s,pl=%s", $Search::Elasticsearch::VERSION, $^V);
+}
+
+
+#===================================
 sub BUILDARGS {
 #===================================
     my ( $class, $params ) = parse_params(@_);
@@ -137,6 +144,9 @@ sub BUILDARGS {
     }
 
     $default_headers{'User-Agent'} = $class->get_user_agent();
+
+    # Add Elastic meta header
+    $default_headers{'x-elastic-client-meta'} = $class->get_meta_header();
 
     $params->{scheme}   = $scheme;
     $params->{is_https} = $scheme eq 'https';
