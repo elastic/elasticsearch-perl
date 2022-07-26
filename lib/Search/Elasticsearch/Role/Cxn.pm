@@ -82,6 +82,13 @@ sub get_user_agent {
 }
 
 #===================================
+sub get_meta_header {
+#===================================
+    return sprintf("es=%s,pl=%s", $Search::Elasticsearch::VERSION, $^V);
+}
+
+
+#===================================
 sub BUILDARGS {
 #===================================
     my ( $class, $params ) = parse_params(@_);
