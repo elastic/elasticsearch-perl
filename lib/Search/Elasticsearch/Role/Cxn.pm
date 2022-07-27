@@ -148,6 +148,13 @@ sub BUILDARGS {
     # Add Elastic meta header
     $default_headers{'x-elastic-client-meta'} = $class->get_meta_header();
 
+    # Compatibility header
+    if (defined $ENV{ELASTIC_CLIENT_APIVERSIONING} &&
+        (lc($ENV{ELASTIC_CLIENT_APIVERSIONING}) eq 'true' || $ENV{ELASTIC_CLIENT_APIVERSIONING} eq '0')) {
+            $default_headers{'Accept'} = 'application/vnd.elasticsearch+json;compatible-with=7';
+            $default_headers{'Content-Type'} = 'application/vnd.elasticsearch+json; compatible-with=7';
+    }
+
     $params->{scheme}   = $scheme;
     $params->{is_https} = $scheme eq 'https';
     $params->{host}     = $host;
