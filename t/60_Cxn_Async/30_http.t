@@ -168,10 +168,7 @@ sub is_cxn (@) {
         port            => '9200',
         scheme          => 'http',
         uri             => 'http://localhost:9200',
-        default_headers => { 
-            'User-Agent' => $useragent,
-            'x-elastic-client-meta' => $metaheader
-        },
+        default_headers => { 'User-Agent' => $useragent, 'x-elastic-client-meta' => $metaheader },
         userinfo        => '',
         %$params
     );

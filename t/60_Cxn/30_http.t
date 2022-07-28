@@ -59,11 +59,7 @@ is_cxn "Userinfo", new_cxn( nodes => "http://$userinfo\@localhost/" ),
     {
     port            => '80',
     uri             => 'http://localhost:80',
-    default_headers => { 
-        'Authorization' => "Basic $userinfo_b64", 
-        'User-Agent' => $useragent,
-        'x-elastic-client-meta' => $metaheader
-    },
+    default_headers => { 'Authorization' => "Basic $userinfo_b64", 'User-Agent' => $useragent, 'x-elastic-client-meta' => $metaheader },
     userinfo        => $userinfo
     };
 
@@ -150,11 +146,7 @@ is_cxn "Userinfo option", new_cxn( nodes => 'foo', userinfo => $userinfo ),
     host            => 'foo',
     port            => 80,
     uri             => 'http://foo:80',
-    default_headers => { 
-        'Authorization' => "Basic $userinfo_b64", 
-        'User-Agent' => $useragent,
-        'x-elastic-client-meta' => $metaheader
-    },
+    default_headers => { 'Authorization' => "Basic $userinfo_b64", 'User-Agent' => $useragent, 'x-elastic-client-meta' => $metaheader },
     userinfo        => $userinfo
     };
 
@@ -167,11 +159,7 @@ is_cxn "Userinfo option with settings",
     host            => 'foo',
     port            => 80,
     uri             => 'http://foo:80',
-    default_headers => { 
-        'Authorization' => "Basic $userinfo_b64", 
-        'User-Agent' => $useragent,
-        'x-elastic-client-meta' => $metaheader
-    },
+    default_headers => { 'Authorization' => "Basic $userinfo_b64", 'User-Agent' => $useragent, 'x-elastic-client-meta' => $metaheader },
     userinfo        => $userinfo
     };
 
@@ -245,10 +233,7 @@ sub is_cxn (@) {
         port            => '9200',
         scheme          => 'http',
         uri             => 'http://localhost:9200',
-        default_headers => { 
-            'User-Agent' => $useragent, 
-            'x-elastic-client-meta' => $metaheader
-        },
+        default_headers => { 'User-Agent' => $useragent, 'x-elastic-client-meta' => $metaheader },
         userinfo        => '',
         %$params
     );
