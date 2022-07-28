@@ -29,6 +29,7 @@ my $password     = 'CorrectHorseBatteryStapleCorrectHorseBatteryStaple';
 my $userinfo     = "$username:$password";
 my $userinfo_b64 = MIME::Base64::encode_base64( $userinfo, "" );
 my $useragent    = Search::Elasticsearch::Role::Cxn::get_user_agent();
+my $metaheader   = Search::Elasticsearch::Role::Cxn::get_meta_header();
 
 ### Scalar nodes ###
 
@@ -232,7 +233,10 @@ sub is_cxn (@) {
         port            => '9200',
         scheme          => 'http',
         uri             => 'http://localhost:9200',
-        default_headers => { 'User-Agent' => $useragent },
+        default_headers => { 
+            'User-Agent' => $useragent, 
+            'x-elastic-client-meta' => $metaheader
+        },
         userinfo        => '',
         %$params
     );
