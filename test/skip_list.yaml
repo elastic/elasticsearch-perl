@@ -188,3 +188,15 @@
     - search/350_point_in_time.yml
     - ssl/10_basic.yml
     - transform/*
+
+7.17-SNAPSHOT:
+    - ml/data_frame_analytics_crud.yml
+    - ml/evaluate_data_frame.yml
+    - ml/forecast.yml
+    - ml/jobs_crud.yml
+    - spatial/20_geo_centroid.yml
+    - spatial/30_geotile_grid.yml
+    - spatial/40_geohash_grid.yml
+    - ssl/10_basic.yml
+    - transform/transforms_stats_continuous.yml
+    
