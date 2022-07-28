@@ -26,6 +26,7 @@ sub is_cxn(@);
 my $username     = 'ThisIsAVeryLongUsernameAndThatIsOKYouSee';
 my $password     = 'CorrectHorseBatteryStapleCorrectHorseBatteryStaple';
 my $useragent    = Search::Elasticsearch::Role::Cxn::get_user_agent();
+my $metaheader   = Search::Elasticsearch::Role::Cxn::get_meta_header();
 
 ### Scalar nodes ###
 
@@ -107,7 +108,7 @@ is_cxn "Path option with settings",
 
 is_cxn "Deflate option",
     new_cxn( deflate => 1 ),
-    { default_headers => { 'Accept-Encoding' => 'deflate', 'User-Agent' => $useragent } };
+    { default_headers => { 'Accept-Encoding' => 'deflate', 'User-Agent' => $useragent, 'x-elastic-client-meta' => $metaheader } };
 
 is_cxn "IPv4 with Port",
     new_cxn( nodes => '127.0.0.1', port => 456 ),
@@ -167,7 +168,10 @@ sub is_cxn (@) {
         port            => '9200',
         scheme          => 'http',
         uri             => 'http://localhost:9200',
-        default_headers => { 'User-Agent' => $useragent },
+        default_headers => { 
+            'User-Agent' => $useragent,
+            'x-elastic-client-meta' => $metaheader
+        },
         userinfo        => '',
         %$params
     );
