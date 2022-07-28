@@ -108,7 +108,7 @@ is_cxn "Path option with settings",
 
 is_cxn "Deflate option",
     new_cxn( deflate => 1 ),
-    { default_headers => { 'Accept-Encoding' => 'deflate', 'User-Agent' => $useragent } };
+    { default_headers => { 'Accept-Encoding' => 'deflate', 'User-Agent' => $useragent, 'x-elastic-client-meta' => $metaheader } };
 
 is_cxn "IPv4 with Port",
     new_cxn( nodes => '127.0.0.1', port => 456 ),
