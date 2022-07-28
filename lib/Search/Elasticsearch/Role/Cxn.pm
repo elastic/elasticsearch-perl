@@ -150,7 +150,7 @@ sub BUILDARGS {
 
     # Compatibility header
     if (defined $ENV{ELASTIC_CLIENT_APIVERSIONING} &&
-        (lc($ENV{ELASTIC_CLIENT_APIVERSIONING}) eq 'true' || $ENV{ELASTIC_CLIENT_APIVERSIONING} eq '0')) {
+        (lc($ENV{ELASTIC_CLIENT_APIVERSIONING}) eq 'true' || $ENV{ELASTIC_CLIENT_APIVERSIONING} eq '1')) {
             $default_headers{'Accept'} = 'application/vnd.elasticsearch+json;compatible-with=7';
             $default_headers{'Content-Type'} = 'application/vnd.elasticsearch+json; compatible-with=7';
     }
