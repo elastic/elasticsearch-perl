@@ -68,7 +68,8 @@ sub api {
             '_source'                => '_source',
             '_source_excludes'       => '_source_excludes',
             '_source_includes'       => '_source_includes',
-            'timeout'                => 'timeout'
+            'timeout'                => 'timeout',
+            'retry_on_conflict'      => 'retry_on_conflict',
         }
     },
     'bulk.update' => {
@@ -76,10 +77,9 @@ sub api {
             '_source',          '_source_includes',
             '_source_excludes', 'detect_noop',
             'doc',              'doc_as_upsert',
-            'fields',           'retry_on_conflict',
-            'scripted_upsert',  'script',
-            'upsert',           'lang',
-            'params'
+            'fields',           'scripted_upsert',
+            'script',           'upsert',
+            'lang',             'params'
         ]
     },
     'bulk.required' => { params => ['index'] },
