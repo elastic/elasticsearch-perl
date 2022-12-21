@@ -196,10 +196,10 @@ ok $b->add_action(
 
 cmp_deeply $b->_buffer,
     [
-    q({"update":{"_id":1,"_index":"foo","routing":1}}),
-    q({"_source":"true","_source_excludes":"bar","_source_includes":"foo","doc":{"foo":"bar"},"doc_as_upsert":1,"fields":["*"],"retry_on_conflict":3,"script":"ctx._source+=1","scripted_upsert":"true"}),
-    q({"update":{"_id":1,"_index":"foo","routing":1}}),
-    q({"_source":"true","_source_excludes":"bar","_source_includes":"foo","doc":{"foo":"bar"},"doc_as_upsert":1,"fields":["*"],"retry_on_conflict":3,"script":"ctx._source+=1","scripted_upsert":"true"})
+    q({"update":{"_id":1,"_index":"foo","retry_on_conflict":3,"routing":1}}),
+    q({"_source":"true","_source_excludes":"bar","_source_includes":"foo","doc":{"foo":"bar"},"doc_as_upsert":1,"fields":["*"],"script":"ctx._source+=1","scripted_upsert":"true"}),
+    q({"update":{"_id":1,"_index":"foo","retry_on_conflict":3,"routing":1}}),
+    q({"_source":"true","_source_excludes":"bar","_source_includes":"foo","doc":{"foo":"bar"},"doc_as_upsert":1,"fields":["*"],"script":"ctx._source+=1","scripted_upsert":"true"})
     ],
     "Update actions in buffer";
 
