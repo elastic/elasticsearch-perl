@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package Search::Elasticsearch::Client::7_0;
+package Search::Elasticsearch::Client::8_0;
 
 our $VERSION='8.00';
 use Search::Elasticsearch 8.00 ();
@@ -24,30 +24,34 @@ use Search::Elasticsearch 8.00 ();
 
 __END__
 
-# ABSTRACT: Thin client with full support for Elasticsearch 7.x APIs
+# ABSTRACT: Thin client with full support for Elasticsearch 8.x APIs
 
 =head1 DESCRIPTION
 
-The L<Search::Elasticsearch::Client::7_0> package provides a client
-compatible with Elasticsearch 7.x.  It should be used in conjunction
+The L<Search::Elasticsearch::Client::8_0> package provides a client
+compatible with Elasticsearch 8.x.  It should be used in conjunction
 with L<Search::Elasticsearch> as follows:
 
     $e = Search::Elasticsearch->new(
-        client => "7_0::Direct"
+        client => "8_0::Direct"
     );
 
-See L<Search::Elasticsearch::Client::7_0::Direct> for documentation
+See L<Search::Elasticsearch::Client::8_0::Direct> for documentation
 about how to use the client itself.
 
 =head1 PREVIOUS VERSIONS OF ELASTICSEARCH
 
-This version of the client supports the Elasticsearch 7.0 branch,
+This version of the client supports the Elasticsearch 8.0 branch,
 which is not backwards compatible with earlier branches.
 
-If you need to talk to a version of Elasticsearch before 7.0.0, please
+If you need to talk to a version of Elasticsearch before 8.0.0, please
 install one of the following packages:
 
 =over
+
+=item *
+
+L<Search::Elasticsearch::Client::7_0>
 
 =item *
 

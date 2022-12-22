@@ -15,28 +15,28 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package Search::Elasticsearch::Client::7_0;
+package Search::Elasticsearch::Client::8_0::Async;
 
 our $VERSION='8.00';
-use Search::Elasticsearch 8.00 ();
+use Search::Elasticsearch::Client::8_0 8.00 ();
 
 1;
 
 __END__
 
-# ABSTRACT: Thin client with full support for Elasticsearch 7.x APIs
+# ABSTRACT: Thin async client with full support for Elasticsearch 8.x APIs
 
 =head1 DESCRIPTION
 
-The L<Search::Elasticsearch::Client::7_0> package provides a client
-compatible with Elasticsearch 7.x.  It should be used in conjunction
-with L<Search::Elasticsearch> as follows:
+The L<Search::Elasticsearch::Client::8_0::Async> package provides a client
+compatible with Elasticsearch 8.x.  It should be used in conjunction
+with L<Search::Elasticsearch::Async> as follows:
 
-    $e = Search::Elasticsearch->new(
-        client => "7_0::Direct"
+    $e = Search::Elasticsearch::Async->new(
+        client => "8_0::Direct"
     );
 
-See L<Search::Elasticsearch::Client::7_0::Direct> for documentation
+See L<Search::Elasticsearch::Client::8_0::Direct> for documentation
 about how to use the client itself.
 
 =head1 PREVIOUS VERSIONS OF ELASTICSEARCH
@@ -51,22 +51,26 @@ install one of the following packages:
 
 =item *
 
-L<Search::Elasticsearch::Client::6_0>
+L<Search::Elasticsearch::Client::7_0::Async>
 
 =item *
 
-L<Search::Elasticsearch::Client::5_0>
+L<Search::Elasticsearch::Client::6_0::Async>
 
 =item *
 
-L<Search::Elasticsearch::Client::2_0>
+L<Search::Elasticsearch::Client::5_0::Async>
 
 =item *
 
-L<Search::Elasticsearch::Client::1_0>
+L<Search::Elasticsearch::Client::2_0::Async>
 
 =item *
 
-L<Search::Elasticsearch::Client::0_90>
+L<Search::Elasticsearch::Client::1_0::Async>
+
+=item *
+
+L<Search::Elasticsearch::Client::0_90::Async>
 
 =back

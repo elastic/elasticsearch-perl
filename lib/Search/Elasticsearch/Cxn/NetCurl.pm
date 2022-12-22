@@ -21,7 +21,7 @@ use Moo;
 with 'Search::Elasticsearch::Role::Cxn', 'Search::Elasticsearch::Role::Is_Sync';
 
 use Search::Elasticsearch 7.00;
-our $VERSION = "8.00_1";
+our $VERSION = "8.00";
 
 use HTTP::Parser::XS qw(HEADERS_AS_HASHREF parse_http_response);
 use Try::Tiny;
