@@ -171,3 +171,12 @@
     - ssl/10_basic.yml
     - transform/transforms_stats_continuous.yml
     
+8.5.3:
+    - search/150_rewrite_on_coordinator.yml
+    - search/220_total_hits_object.yml
+    - search.aggregation/500_cumulative_sum.yml
+    - search.aggregation/500_max_bucket.yml
+    - search.aggregation/500_min_bucket.yml
+    - search.aggregation/500_percentiles_bucket.yml
+    - search.aggregation/500_sum_bucket.yml
+    
