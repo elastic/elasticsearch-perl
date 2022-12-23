@@ -181,6 +181,10 @@
     - ml/evaluate_data_frame.yml
     - ml/explain_data_frame_analytics.yml
     - ml/forecast.yml
+    - ml/jobs_crud.yml
+    - ml/preview_datafeed.yml
+    - ml/start_data_frame_analytics.yml
+    - ml/stop_data_frame_analytics.yml
     - search/150_rewrite_on_coordinator.yml
     - search/220_total_hits_object.yml
     - search.aggregation/500_cumulative_sum.yml
