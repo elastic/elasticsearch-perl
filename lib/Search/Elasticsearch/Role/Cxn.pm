@@ -32,7 +32,6 @@ use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
 use Search::Elasticsearch::Util qw(to_list);
 use namespace::clean;
 use Net::IP;
-use Data::Dumper;
 
 requires qw(perform_request error_from_text handle);
 
@@ -348,7 +347,6 @@ sub process_response {
     # Product check
     if ( $code >= 200 and $code < 300 ) {
         my $product = $headers->{$PRODUCT_CHECK_HEADER} // '';
-        print Dumper($headers);
         if ($product ne $PRODUCT_CHECK_VALUE) {
             throw( "ProductCheck", "The client noticed that the server is not Elasticsearch and we do not support this unknown product" );
         }
