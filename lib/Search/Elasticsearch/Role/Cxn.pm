@@ -17,7 +17,7 @@
 
 package Search::Elasticsearch::Role::Cxn;
 
-our $PRODUCT_CHECK_HEADER = 'X-elastic-product';
+our $PRODUCT_CHECK_HEADER = 'x-elastic-product';
 our $PRODUCT_CHECK_VALUE = 'Elasticsearch';
 
 use Moo::Role;
@@ -348,6 +348,7 @@ sub process_response {
     # Product check
     if ( $code >= 200 and $code < 300 ) {
         my $product = $headers->{$PRODUCT_CHECK_HEADER} // '';
+        print Dumper($headers);
         if ($product ne $PRODUCT_CHECK_VALUE) {
             throw( "ProductCheck", "The client noticed that the server is not Elasticsearch and we do not support this unknown product" );
         }
