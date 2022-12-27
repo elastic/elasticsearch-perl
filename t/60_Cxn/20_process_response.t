@@ -29,7 +29,7 @@ my ( $code, $response );
 ### OK GET
 ( $code, $response )
     = $c->process_response( { method => 'GET', ignore => [] },
-    200, "OK", '{"ok":1}', { 'content-type' => 'application/json' } );
+    200, "OK", '{"ok":1}', { 'content-type' => 'application/json', 'X-Elastic-Product' => 'Elasticsearch' } );
 
 is $code, 200, "OK GET - code";
 cmp_deeply $response, { ok => 1 }, "OK GET - body";
@@ -37,7 +37,7 @@ cmp_deeply $response, { ok => 1 }, "OK GET - body";
 ### OK GET - Text body
 ( $code, $response )
     = $c->process_response( { method => 'GET', ignore => [] },
-    200, "OK", 'Foo', { 'content-type' => 'text/plain' } );
+    200, "OK", 'Foo', { 'content-type' => 'text/plain', 'X-Elastic-Product' => 'Elasticsearch' } );
 
 is $code,             200,   "OK GET Text body - code";
 cmp_deeply $response, 'Foo', "OK GET Text body - body";
@@ -45,14 +45,14 @@ cmp_deeply $response, 'Foo', "OK GET Text body - body";
 ### OK GET - Empty body
 ( $code, $response )
     = $c->process_response( { method => 'GET', ignore => [] },
-    200, "OK", '' );
+    200, "OK", '', { 'X-Elastic-Product' => 'Elasticsearch' } );
 
 is $code,             200, "OK GET Empty body - code";
 cmp_deeply $response, '',  "OK GET Empty body - body";
 
 ### OK HEAD
 ( $code, $response )
-    = $c->process_response( { method => 'HEAD', ignore => [] }, 200, "OK" );
+    = $c->process_response( { method => 'HEAD', ignore => [] }, 200, "OK", '', { 'X-Elastic-Product' => 'Elasticsearch' } );
 
 is $code,     200, "OK HEAD - code";
 is $response, 1,   "OK HEAD - body";
@@ -82,7 +82,7 @@ is $response, undef, "Missing GET - body";
 ### Missing HEAD
 ( $code, $response )
     = $c->process_response( { method => 'HEAD', ignore => [] },
-    404, "Missing" );
+    404, "Missing", '', { 'X-Elastic-Product' => 'Elasticsearch' });
 is $code,     404,   "Missing HEAD - code";
 is $response, undef, "Missing HEAD - body";
 
@@ -92,7 +92,7 @@ throws_ok {
         { method => 'GET', ignore => [] },
         400, "Request",
         '{"error":"error in body"}',
-        { 'content-type' => 'application/json' }
+        { 'content-type' => 'application/json', 'X-Elastic-Product' => 'Elasticsearch' }
     );
 }
 qr/\[400\] error in body/, "Request error";

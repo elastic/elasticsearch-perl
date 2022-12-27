@@ -118,7 +118,7 @@ sub perform_request {
                 $response->{code},       # code
                 $response->{error},      # msg
                 $response->{content},    # body
-                { 'content-type' => 'application/json' }
+                { 'content-type' => 'application/json', 'X-Elastic-Product' => 'Elasticsearch' }
             )
         );
         1;

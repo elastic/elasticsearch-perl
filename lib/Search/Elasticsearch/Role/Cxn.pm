@@ -340,10 +340,10 @@ sub _decompress_body {
 sub process_response {
 #===================================
     my ( $self, $params, $code, $msg, $body, $headers ) = @_;
-    
+
     # Product check
     if ( $code >= 200 and $code < 300 ) {
-        if (!defined $headers->{'X-Elastic-Product'} || $headers->{'X-Elastic-Product'} eq 'Elasticsearch') {
+        if (!defined $headers->{'X-Elastic-Product'} || $headers->{'X-Elastic-Product'} ne 'Elasticsearch') {
             throw( "ProductCheck", "The client noticed that the server is not Elasticsearch and we do not support this unknown product" );
         }
     }
