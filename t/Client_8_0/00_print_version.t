@@ -15,18 +15,26 @@
 # specific language governing permissions and limitations
 # under the License.
 
+use Test::More;
 use lib 't/lib';
+$ENV{ES_VERSION} = '8_0';
+my $es = do "es_sync.pl" or die( $@ || $! );
 
-$ENV{ES_VERSION} = '6_0';
-$ENV{ES_CXN} = 'NetCurl';
-use Net::Curl::Easy qw(
-    CURLOPT_CAINFO
-);
+eval {
+    my $v = $es->info->{version};
+    diag "";
+    diag "";
+    diag "Testing against Elasticsearch v" . $v->{number};
+    for ( sort keys %$v ) {
+        diag sprintf "%-20s: %s", $_, $v->{$_};
+    }
+    diag "";
+    diag "Client:   " . ref($es);
+    diag "Cxn:      " . $es->transport->cxn_pool->cxn_factory->cxn_class;
+    diag "GET Body: " . $es->transport->send_get_body_as;
+    diag "";
+    pass "ES Version";
+} or fail "ES Version";
 
-our $Throws_SSL = "SSL";
+done_testing;
 
-sub ssl_options {
-    return { CURLOPT_CAINFO() => $_[0] };
-}
-
-do "es_sync_auth.pl" or die( $@ || $! );

@@ -23,7 +23,7 @@ use lib 't/lib';
 use strict;
 use warnings;
 
-$ENV{ES_VERSION} = '6_0';
+$ENV{ES_VERSION} = '8_0';
 our $es = do "es_sync.pl" or die( $@ || $! );
 
 $es->indices->delete( index => '_all', ignore => 404 );
@@ -41,7 +41,7 @@ test_scroll(
     ]
 );
 
-do "index_test_data.pl" or die( $@ || $! );
+do "index_test_data_7.pl" or die( $@ || $! );
 
 test_scroll(
     "Match all",
@@ -75,28 +75,6 @@ test_scroll(
     },
     total     => 50,
     max_score => num( 1, 0.5 ),
-    aggs      => bool(1),
-    suggest   => bool(1),
-    steps     => [
-        next        => [1],
-        next_50     => [49],
-        is_finished => 1,
-    ]
-);
-
-test_scroll(
-    "Scroll in qs",
-    {   scroll_in_qs => 1,
-        body         => {
-            query   => { term => { color => 'red' } },
-            suggest => {
-                mysuggest => { text => 'green', term => { field => 'color' } }
-            },
-            aggs => { switch => { terms => { field => 'switch' } } },
-        }
-    },
-    total     => 50,
-    max_score => num( 1.0, 0.5 ),
     aggs      => bool(1),
     suggest   => bool(1),
     steps     => [

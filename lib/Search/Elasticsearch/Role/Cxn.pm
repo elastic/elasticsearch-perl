@@ -340,6 +340,14 @@ sub _decompress_body {
 sub process_response {
 #===================================
     my ( $self, $params, $code, $msg, $body, $headers ) = @_;
+    
+    # Product check
+    if ( $code >= 200 and $code < 300 ) {
+        unless ($headers->{'X-Elastic-Product'} eq 'Elasticsearch' ) {
+            throw( "ProductCheck", "The client noticed that the server is not Elasticsearch and we do not support this unknown product" );
+        }
+    }
+
     $self->_decompress_body( \$body, $headers );
 
     my ($mime_type) = split /\s*;\s*/, ( $headers->{'content-type'} || '' );
@@ -355,7 +363,6 @@ sub process_response {
     }
 
     # Request is successful
-
     if ( $code >= 200 and $code <= 209 ) {
         if ( defined $body and length $body ) {
             $body = $self->serializer->decode($body)

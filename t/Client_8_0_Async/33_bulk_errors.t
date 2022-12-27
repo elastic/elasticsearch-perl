@@ -18,78 +18,76 @@
 use Test::More;
 use Test::Deep;
 use Test::Exception;
+use AE;
 
 use strict;
 use warnings;
 use lib 't/lib';
 use Log::Any::Adapter;
 
-$ENV{ES_VERSION} = '6_0';
-my $es = do "es_sync.pl" or die( $@ || $! );
+$ENV{ES_VERSION} = '8_0';
+my $es = do "es_async.pl" or die( $@ || $! );
 my $TRUE = $es->transport->serializer->decode('{"true":true}')->{true};
 
-$es->indices->delete( index => '_all' );
+my $cv = AE::cv;
+
+wait_for( $es->indices->delete( index => '_all' ) );
 
 my @Std = (
     { id => 1, source => { count => 1 } },
     { id => 1, source => { count => 'foo' } },
-    { id => 1, version => 10, source => {} },
+    { id => 1, source => {} },
 );
 
-my ( $b, $success_count, $error_count, $custom_count, $conflict_count );
+my ( $b, $error, $success_count, $error_count, $custom_count, $conflict_count );
 
 ## Default error handling
-$b = bulk( { index => 'test', type => 'test' }, @Std );
-test_flush( "Default", 0, 2, 0, 0 );
+$b = bulk( { index => 'test'}, @Std );
+test_flush( "Default", 0, 1, 0, 0 );
 
 ## Custom error handling
 $b = bulk(
     {   index    => 'test',
-        type     => 'test',
         on_error => sub { $custom_count++ }
     },
     @Std
 );
-test_flush( "Custom error", 0, 0, 2, 0 );
+test_flush( "Custom error", 0, 0, 1, 0 );
 
 # Conflict errors
 $b = bulk(
     {   index       => 'test',
-        type        => 'test',
         on_conflict => sub { $conflict_count++ }
     },
     @Std
 );
-test_flush( "Conflict error", 0, 1, 0, 1 );
+test_flush( "Conflict error", 0, 1, 0, 0 );
 
 # Both error handling
 $b = bulk(
     {   index       => 'test',
-        type        => 'test',
         on_conflict => sub { $conflict_count++ },
         on_error    => sub { $custom_count++ }
     },
     @Std
 );
 
-test_flush( "Conflict and custom", 0, 0, 1, 1 );
+test_flush( "Conflict and custom", 0, 0, 1, 0 );
 
 # Conflict disable error
 $b = bulk(
     {   index       => 'test',
-        type        => 'test',
         on_conflict => sub { $conflict_count++ },
         on_error    => undef
     },
     @Std
 );
 
-test_flush( "Conflict, error undef", 0, 0, 0, 1 );
+test_flush( "Conflict, error undef", 0, 0, 0, 0 );
 
 # Disable both
 $b = bulk(
     {   index       => 'test',
-        type        => 'test',
         on_conflict => undef,
         on_error    => undef
     },
@@ -101,37 +99,33 @@ test_flush( "Both undef", 0, 0, 0, 0 );
 # Success
 $b = bulk(
     {   index      => 'test',
-        type       => 'test',
         on_success => sub { $success_count++ },
     },
     @Std
 );
 
-test_flush( "Success", 1, 2, 0, 0 );
+test_flush( "Success", 2, 1, 0, 0 );
 
 # cbs have correct params
 $b = bulk(
     {   index      => 'test',
-        type       => 'test',
         on_success => test_params(
             'on_success',
             {   _index        => 'test',
-                _type         => 'test',
+                _type         => '_doc',
                 _id           => 1,
                 _version      => 1,
-                status        => 201,
                 created       => $TRUE,
-                result        => 'created',
                 _shards       => { successful => 1, total => 2, failed => 0 },
                 _primary_term => 1,
-                _seq_no => 0
+                _seq_no       => 0,
             },
             0
         ),
         on_error => test_params(
             'on_error',
             {   _index => 'test',
-                _type  => 'test',
+                _type  => '_doc',
                 _id    => 1,
                 error  => any(
                     re('MapperParsingException'),
@@ -144,7 +138,7 @@ $b = bulk(
         on_conflict => test_params(
             'on_conflict',
             {   _index => 'test',
-                _type  => 'test',
+                _type  => '_doc',
                 _id    => 1,
                 error  => any(
                     re('version conflict'),
@@ -154,27 +148,36 @@ $b = bulk(
                 ),
                 status => 409,
             },
-            2,
-            1
+            2, 1
         ),
     },
     @Std
 );
-$b->flush;
+wait_for( $b->flush );
 
 done_testing;
 
-$es->indices->delete( index => 'test' );
+wait_for( $es->indices->delete( index => '_all' ) );
 
 #===================================
 sub bulk {
 #===================================
-    my $params = shift;
-    my $b      = $es->bulk_helper($params);
-    $es->indices->delete( index => 'test', ignore => 404 );
-    $es->indices->create( index => 'test' );
-    $es->cluster->health( wait_for_status => 'yellow' );
-    $b->index(@_);
+    my ( $params, @docs ) = @_;
+    my $b = $es->bulk_helper(
+        on_fatal => sub { $error = shift(); $error_count++ },
+        %$params,
+    );
+
+    $error = '';
+
+    wait_for(
+        $es->indices->delete( index => 'test', ignore => 404 )    #
+            ->then( sub { $es->indices->create( index => 'test' ) } )    #
+            ->then(
+            sub { $es->cluster->health( wait_for_status => 'yellow' ) }
+            )                                                            #
+            ->then( sub { $b->index(@docs) } )
+    );
     return $b;
 }
 
@@ -185,7 +188,7 @@ sub test_flush {
     $success_count = $custom_count = $error_count = $conflict_count = 0;
     {
         local $SIG{__WARN__} = sub { $error_count++ };
-        $b->flush;
+        wait_for( $b->flush );
     }
     is $success_count,  $success,  "$title - success";
     is $error_count,    $default,  "$title - default";
@@ -201,8 +204,9 @@ sub test_params {
 
     return sub {
         is $_[0], 'index', "$type - action";
-        cmp_deeply $_[1], subhashof($result), "$type - result";
+        cmp_deeply subhashof($result), $_[1], "$type - result";
         is $_[2], $j,       "$type - array index";
         is $_[3], $version, "$type - version";
     };
 }
+

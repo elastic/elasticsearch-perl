@@ -15,34 +15,18 @@
 # specific language governing permissions and limitations
 # under the License.
 
-use Test::More;
-use strict;
-use warnings;
-use AE;
+use IO::Socket::SSL;
 use lib 't/lib';
 
-$ENV{ES_VERSION} = '6_0';
-my $es = do "es_async.pl" or die( $@ || $! );
+$ENV{ES_VERSION} = '8_0';
+$ENV{ES_CXN} = 'HTTPTiny';
+our $Throws_SSL = "SSL";
 
-wait_for( $es->indices->delete( index => '_all' ) );
+sub ssl_options {
+    return {
+        SSL_verify_mode => SSL_VERIFY_PEER,
+        SSL_ca_file     => $_[0]
+    };
+}
 
-my $error;
-
-wait_for(
-    $es->index( index => 'test', type => 'test', id => 1, body => {} )->then(
-        sub {
-            $es->index(
-                index   => 'test',
-                type    => 'test',
-                id      => 1,
-                body    => {},
-                version => 2
-            );
-        }
-    )->catch( sub { $error = shift() } )
-);
-
-ok $error->is('Conflict'), 'Conflict Exception';
-is $error->{vars}{current_version}, 1, "Error has current version v1";
-
-done_testing;
+do "es_sync_auth.pl" or die( $@ || $! );

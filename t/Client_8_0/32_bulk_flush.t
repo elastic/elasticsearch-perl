@@ -21,7 +21,7 @@ use strict;
 use warnings;
 use lib 't/lib';
 
-$ENV{ES_VERSION} = '6_0';
+$ENV{ES_VERSION} = '8_0';
 my $es = do "es_sync.pl" or die( $@ || $! );
 
 $es->indices->delete( index => '_all' );
@@ -85,8 +85,7 @@ sub test_flush {
     my $params = shift;
     my $b      = $es->bulk_helper(
         %$params,
-        index => 'test',
-        type  => 'test'
+        index => 'test'
     );
 
     my @seq = @_;

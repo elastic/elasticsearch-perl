@@ -17,15 +17,15 @@
 
 use lib 't/lib';
 
-$ENV{ES_VERSION} = '6_0';
-$ENV{ES_CXN} = 'AEHTTP';
+$ENV{ES_VERSION} = '8_0';
+$ENV{ES_CXN} = 'LWP';
+our $Throws_SSL = "Cxn";
 
 sub ssl_options {
     return {
-        verify          => 1,
-        verify_peername => 'https',
-        ca_file         => $_[0]
+        verify_hostname => 1,
+        SSL_ca_file     => $_[0]
     };
 }
 
-do "es_async_auth.pl" or die( $@ || $! );
+do "es_sync_auth.pl" or die( $@ || $! );

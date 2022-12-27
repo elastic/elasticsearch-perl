@@ -15,9 +15,31 @@
 # specific language governing permissions and limitations
 # under the License.
 
+use Test::More;
+use Test::Deep;
+use Test::Exception;
+use strict;
+use warnings;
 use lib 't/lib';
 
-$ENV{ES_VERSION} = '6_0';
-$ENV{ES_CXN} = 'AEHTTP';
-do "es_async_fork.pl" or die( $@ || $! );
+my $es;
+$ENV{ES_VERSION} = '8_0';
+local $ENV{ES_CXN_POOL};
 
+$ENV{ES_CXN_POOL} = 'Static';
+$es = do "es_sync.pl" or die( $@ || $! );
+is $es->info->{tagline}, "You Know, for Search", 'CxnPool::Static';
+
+$ENV{ES_CXN_POOL} = 'Static::NoPing';
+$es = do "es_sync.pl" or die( $@ || $! );
+is $es->info->{tagline}, "You Know, for Search", 'CxnPool::Static::NoPing';
+
+unless ($ENV{ES} =~ /https/) {
+    $ENV{ES_CXN_POOL} = 'Sniff';
+    $es = do "es_sync.pl" or die( $@ || $! );
+    is $es->info->{tagline}, "You Know, for Search", 'CxnPool::Sniff';
+
+    my ($node) = values %{ $es->transport->cxn_pool->next_cxn->sniff };
+    ok $node->{http}{max_content_length_in_bytes}, 'Sniffs max_content length';
+}
+done_testing;

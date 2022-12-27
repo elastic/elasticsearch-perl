@@ -23,7 +23,7 @@ use lib 't/lib';
 use AE;
 use Promises qw(deferred);
 
-$ENV{ES_VERSION} = '6_0';
+$ENV{ES_VERSION} = '8_0';
 my $es = do "es_async.pl" or die( $@ || $! );
 
 wait_for( $es->indices->delete( index => '_all' ) );
@@ -87,8 +87,7 @@ sub test_flush {
     my $params = shift;
     my $b      = $es->bulk_helper(
         %$params,
-        index => 'test',
-        type  => 'test',
+        index => 'test'
     );
 
     my @seq = @_;
