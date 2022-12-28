@@ -2,8 +2,6 @@
 
 Search::Elasticsearch can be used to connect to https://www.elastic.co/cloud/[Elastic Cloud].
 
-[Elastic Cloud](https://www.elastic.co/cloud/) is the cloud solution offered by Elastic. 
-
 To connect the Perl client to Elastic Cloud you need the get the following data:
 
 * the Elasticsearch server address (i.e. public URL);
