@@ -108,4 +108,18 @@ throws_ok {
 }
 qr/Timeout/, "Timeout error";
 
+### Product check without x-elastic-product header throws error
+throws_ok {
+    $c->process_response( { method => 'GET', ignore => [] },
+        200, "OK" );
+}
+qr/ProductCheck/, "ProductCheck error";
+
+### Product check with x-elastic-product is OK
+( $code, $response )
+    = $c->process_response( { method => 'GET', ignore => [] },
+    200, "OK", '', { $PRODUCT_CHECK_HEADER => $PRODUCT_CHECK_VALUE } );
+
+is $code,             200, "OK Product check is present";
+
 done_testing;
