@@ -158,6 +158,22 @@ sub BUILDARGS {
             $default_headers{'Content-Type'} = 'application/vnd.elasticsearch+json; compatible-with=7';
     }
 
+    if (defined $params->{elastic_cloud_api_key} && defined $params->{token_api}) {
+        throw( 'Request',
+            "You cannot set elastic_cloud_api_key and token_api together" );
+    }
+
+    # Elastic cloud API key
+    if (defined $params->{elastic_cloud_api_key}) {
+        $default_headers{'Authorization'} = sprintf("ApiKey %s", $params->{elastic_cloud_api_key}); 
+    }
+
+    # Elasticsearch token API (https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-token.html)
+    if (defined $params->{token_api}) {
+        $default_headers{'Authorization'} = sprintf("Bearer %s", $params->{token_api}); 
+    }
+
+    # Elasticsearch 
     $params->{scheme}   = $scheme;
     $params->{is_https} = $scheme eq 'https';
     $params->{host}     = $host;
