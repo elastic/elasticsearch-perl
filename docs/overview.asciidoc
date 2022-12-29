@@ -25,9 +25,9 @@ This client provides:
 
 * Logging support via Log::Any.
 
-* Compatibility with the official clients for Python, Ruby, PHP and JavaScript.
-
 * Easy extensibility.
+
+* Easy connection to https://www.elastic.co/cloud/[Elastic Cloud].
 
 
 === Synopsis
@@ -83,19 +83,18 @@ my $results = $e->search(
 );
 ------------------------------------
 
-[[v0_90]]
-=== Elasticsearch 0.90.* and earlier
+[[v7_00]]
+=== Elasticsearch 7.00.* 
 
-The current version of the client supports the Elasticsearch 1.0 branch by
-default, which is not backwards compatible with the 0.90 branch.
+The current version of the client supports the Elasticsearch 8 and 7.
 
-If you need to talk to a version of Elasticsearch before 1.0.0,
-please use `Search::Elasticsearch::Client::0_90::Direct` as follows:
+If you need to talk to a version of Elasticsearch 7,
+please use `Search::Elasticsearch::Client::7_00::Direct` as follows:
 
 [source,perl]
 ------------------------------------
     $es = Search::Elasticsearch->new(
-        client => '0_90::Direct'
+        client => '7_00::Direct'
     );
 ------------------------------------
 

@@ -46,9 +46,13 @@ recommends "URI::Escape::XS" => "0";
 
 on 'test' => sub {
   requires "AE" => "0";
+  requires "Array::Utils" => "0";
   requires "EV" => "0";
   requires "IO::Socket::SSL" => "0";
+  requires "JSON::XS" => "0";
   requires "Log::Any::Adapter::Callback" => "0.09";
+  requires "Path::Class" => "0";
+  requires "Perl::Tidy" => "0";
   requires "TAP::Harness::JUnit" => "0";
   requires "Test::Deep" => "0";
   requires "Test::EOL" => "0";

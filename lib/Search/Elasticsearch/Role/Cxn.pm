@@ -17,6 +17,9 @@
 
 package Search::Elasticsearch::Role::Cxn;
 
+our $PRODUCT_CHECK_HEADER = 'x-elastic-product';
+our $PRODUCT_CHECK_VALUE = 'Elasticsearch';
+
 use Moo::Role;
 use Search::Elasticsearch::Util qw(parse_params throw to_list);
 use List::Util qw(min);
@@ -82,6 +85,13 @@ sub get_user_agent {
 }
 
 #===================================
+sub get_meta_header {
+#===================================
+    return sprintf("es=%s,pl=%s", $Search::Elasticsearch::VERSION, $^V);
+}
+
+
+#===================================
 sub BUILDARGS {
 #===================================
     my ( $class, $params ) = parse_params(@_);
@@ -138,6 +148,32 @@ sub BUILDARGS {
 
     $default_headers{'User-Agent'} = $class->get_user_agent();
 
+    # Add Elastic meta header
+    $default_headers{'x-elastic-client-meta'} = $class->get_meta_header();
+
+    # Compatibility header
+    if (defined $ENV{ELASTIC_CLIENT_APIVERSIONING} &&
+        (lc($ENV{ELASTIC_CLIENT_APIVERSIONING}) eq 'true' || $ENV{ELASTIC_CLIENT_APIVERSIONING} eq '1')) {
+            $default_headers{'Accept'} = 'application/vnd.elasticsearch+json;compatible-with=7';
+            $default_headers{'Content-Type'} = 'application/vnd.elasticsearch+json; compatible-with=7';
+    }
+
+    if (defined $params->{elastic_cloud_api_key} && defined $params->{token_api}) {
+        throw( 'Request',
+            "You cannot set elastic_cloud_api_key and token_api together" );
+    }
+
+    # Elastic cloud API key
+    if (defined $params->{elastic_cloud_api_key}) {
+        $default_headers{'Authorization'} = sprintf("ApiKey %s", $params->{elastic_cloud_api_key}); 
+    }
+
+    # Elasticsearch token API (https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-token.html)
+    if (defined $params->{token_api}) {
+        $default_headers{'Authorization'} = sprintf("Bearer %s", $params->{token_api}); 
+    }
+
+    # Elasticsearch 
     $params->{scheme}   = $scheme;
     $params->{is_https} = $scheme eq 'https';
     $params->{host}     = $host;
@@ -323,6 +359,15 @@ sub _decompress_body {
 sub process_response {
 #===================================
     my ( $self, $params, $code, $msg, $body, $headers ) = @_;
+
+    # Product check
+    if ( $code >= 200 and $code < 300 ) {
+        my $product = $headers->{$PRODUCT_CHECK_HEADER} // '';
+        if ($product ne $PRODUCT_CHECK_VALUE) {
+            throw( "ProductCheck", "The client noticed that the server is not Elasticsearch and we do not support this unknown product" );
+        }
+    }
+
     $self->_decompress_body( \$body, $headers );
 
     my ($mime_type) = split /\s*;\s*/, ( $headers->{'content-type'} || '' );
@@ -338,7 +383,6 @@ sub process_response {
     }
 
     # Request is successful
-
     if ( $code >= 200 and $code <= 209 ) {
         if ( defined $body and length $body ) {
             $body = $self->serializer->decode($body)

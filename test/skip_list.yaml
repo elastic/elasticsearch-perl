@@ -171,3 +171,40 @@
     - ssl/10_basic.yml
     - transform/transforms_stats_continuous.yml
     
+8.5.3:
+    - analytics/cumulative_cardinality.yml
+    - analytics/top_metrics.yml
+    - eql/10_basic.yml
+    - license/20_put_license.yml
+    - ml/calendar_crud.yml
+    - ml/data_frame_analytics_crud.yml
+    - ml/evaluate_data_frame.yml
+    - ml/explain_data_frame_analytics.yml
+    - ml/forecast.yml
+    - ml/jobs_crud.yml
+    - ml/preview_datafeed.yml
+    - ml/start_data_frame_analytics.yml
+    - ml/stop_data_frame_analytics.yml
+    - search/150_rewrite_on_coordinator.yml
+    - search/220_total_hits_object.yml
+    - search.aggregation/500_cumulative_sum.yml
+    - search.aggregation/500_max_bucket.yml
+    - search.aggregation/500_min_bucket.yml
+    - search.aggregation/500_percentiles_bucket.yml
+    - search.aggregation/500_sum_bucket.yml
+    - spatial/20_geo_centroid.yml
+    - spatial/30_geotile_grid.yml
+    - spatial/40_geohash_grid.yml
+    - spatial/60_geo_line.yml
+    - spatial/80_geohex_grid.yml
+    - sql/sql.yml
+    - ssl/10_basic.yml
+    - transform/transforms_crud.yml
+    - transform/transforms_start_stop.yml
+    - transform/transforms_stats.yml
+    - transform/transforms_stats_continuous.yml
+    - transform/transforms_update.yml
+    - transform/transforms_upgrade.yml
+    - tile/10_basic.yml
+    - xpack/20_info.yml
+    

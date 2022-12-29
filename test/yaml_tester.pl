@@ -126,6 +126,7 @@ our %Errors = (
     conflict        => 'Search::Elasticsearch::Error::Conflict',
     forbidden       => 'Search::Elasticsearch::Error::Forbidden',
     param           => 'Search::Elasticsearch::Error::Param',
+    product_check   => 'Search::Elasticsearch::Error::ProductCheck',
     bad_request     => 'Search::Elasticsearch::Error::Request',
     request         => 'Search::Elasticsearch::Error::Request',
     request_timeout => 'Search::Elasticsearch::Error::RequestTimeout',
