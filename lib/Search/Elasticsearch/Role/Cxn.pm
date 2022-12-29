@@ -165,15 +165,15 @@ sub BUILDARGS {
 
     # Elastic cloud API key
     if (defined $params->{elastic_cloud_api_key}) {
-        $default_headers{'Authorization'} = sprintf("ApiKey %s", $params->{elastic_cloud_api_key}); 
+        $default_headers{'Authorization'} = sprintf("ApiKey %s", $params->{elastic_cloud_api_key});
     }
 
     # Elasticsearch token API (https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-token.html)
     if (defined $params->{token_api}) {
-        $default_headers{'Authorization'} = sprintf("Bearer %s", $params->{token_api}); 
+        $default_headers{'Authorization'} = sprintf("Bearer %s", $params->{token_api});
     }
 
-    # Elasticsearch 
+    # Elasticsearch
     $params->{scheme}   = $scheme;
     $params->{is_https} = $scheme eq 'https';
     $params->{host}     = $host;

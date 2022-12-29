@@ -121,7 +121,7 @@ sub perform_request {
                 $response->{code},       # code
                 $response->{error},      # msg
                 $response->{content},    # body
-                { 
+                {
                     'content-type' => 'application/json',
                     $PRODUCT_CHECK_HEADER => $PRODUCT_CHECK_VALUE
                 }
