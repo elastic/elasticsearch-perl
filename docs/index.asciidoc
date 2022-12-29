@@ -9,3 +9,5 @@ include::installation.asciidoc[]
 include::overview.asciidoc[]
 
 include::elastic_cloud.asciidoc[]
+
+include::eol.asciidoc[]

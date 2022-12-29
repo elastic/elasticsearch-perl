@@ -1,0 +1,9 @@
+== End-of-Life
+
+We announce end-of-life for version 8 of https://github.com/elastic/elasticsearch-perl[elastic/elaticsearch-perl] software.
+This announcement marks the final milestone of the lifecycle management phase
+of the 8.x release family. 
+
+This means 8.x will be the last major version supported by https://www.elastic.co/[Elastic].
+Moreover, in 8.x we are going to update only the API endpoints providing also
+bug and security fixes.
