@@ -69,7 +69,6 @@ sub api {
             '_source_excludes'       => '_source_excludes',
             '_source_includes'       => '_source_includes',
             'timeout'                => 'timeout'
-            'retry_on_conflict' => 'retry_on_conflict'
         }
     },
     'bulk.update' => {
