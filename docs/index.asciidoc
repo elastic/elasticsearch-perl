@@ -4,6 +4,10 @@
 
 include::{asciidoc-dir}/../../shared/attributes.asciidoc[]
 
+include::installation.asciidoc[]
+
 include::overview.asciidoc[]
 
-include::installation.asciidoc[]
+include::elastic_cloud.asciidoc[]
+
+include::eol.asciidoc[]

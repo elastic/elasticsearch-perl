@@ -19,7 +19,10 @@ package MockAsyncCxn;
 
 use strict;
 use warnings;
+use Search::Elasticsearch::Role::Cxn qw(PRODUCT_CHECK_HEADER PRODUCT_CHECK_VALUE);
 
+our $PRODUCT_CHECK_VALUE = $Search::Elasticsearch::Role::Cxn::PRODUCT_CHECK_VALUE;
+our $PRODUCT_CHECK_HEADER = $Search::Elasticsearch::Role::Cxn::PRODUCT_CHECK_HEADER;
 our $VERSION = $Search::Elasticsearch::VERSION;
 
 use Promises qw(deferred);
@@ -118,7 +121,10 @@ sub perform_request {
                 $response->{code},       # code
                 $response->{error},      # msg
                 $response->{content},    # body
-                { 'content-type' => 'application/json' }
+                {
+                    'content-type' => 'application/json',
+                    $PRODUCT_CHECK_HEADER => $PRODUCT_CHECK_VALUE
+                }
             )
         );
         1;

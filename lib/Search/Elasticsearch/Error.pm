@@ -22,6 +22,7 @@ our $DEBUG = 0;
 @Search::Elasticsearch::Error::Internal::ISA     = __PACKAGE__;
 @Search::Elasticsearch::Error::Param::ISA        = __PACKAGE__;
 @Search::Elasticsearch::Error::NoNodes::ISA      = __PACKAGE__;
+@Search::Elasticsearch::Error::ProductCheck::ISA = __PACKAGE__;
 @Search::Elasticsearch::Error::Unauthorized::ISA = __PACKAGE__;
 @Search::Elasticsearch::Error::Forbidden::ISA    = __PACKAGE__;
 @Search::Elasticsearch::Error::Illegal::ISA      = __PACKAGE__;

@@ -22,10 +22,10 @@ use Moo 2.001000 ();
 use Search::Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
-our $VERSION = '8.00_01';
+our $VERSION = '8.00';
 
 my %Default_Plugins = (
-    client      => [ 'Search::Elasticsearch::Client',       '7_0::Direct' ],
+    client      => [ 'Search::Elasticsearch::Client',       '8_0::Direct' ],
     cxn_factory => [ 'Search::Elasticsearch::Cxn::Factory', '' ],
     cxn_pool    => [ 'Search::Elasticsearch::CxnPool',      'Static' ],
     logger      => [ 'Search::Elasticsearch::Logger',       'LogAny' ],

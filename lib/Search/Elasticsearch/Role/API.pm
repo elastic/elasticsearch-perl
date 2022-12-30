@@ -34,9 +34,11 @@ our %Handler = (
     enum    => \&_list,
     number  => \&_num,
     int     => \&_num,
+    integer => \&_num,
     float   => \&_num,
     double  => \&_num,
     "number|string" => \&_numOrString,
+    "boolean|long"  => \&_booleanOrLong
 );
 
 #===================================
@@ -87,6 +89,16 @@ sub _numOrString {
         return _num($_[0]);
     }
     return _string($_[0]);
+}
+
+#===================================
+sub _booleanOrLong {
+#===================================
+    if (looks_like_number($_[0])) {
+        return _num($_[0]);
+    }
+    my $val = _detect_bool(@_);
+    return ( $val && $val ne 'false' ) ? 'true' : 'false';
 }
 
 #===================================
