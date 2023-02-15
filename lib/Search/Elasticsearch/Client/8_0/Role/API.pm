@@ -63,7 +63,7 @@ sub api {
             'lang'                   => 'lang',
             'require_alias'          => 'require_alias',
             'refresh'                => 'refresh',
-            'retry_on_conflict'      => 'retru_on_conflict',
+            'retry_on_conflict'      => 'retry_on_conflict',
             'wait_for_active_shards' => 'wait_for_active_shards',
             '_source'                => '_source',
             '_source_excludes'       => '_source_excludes',
