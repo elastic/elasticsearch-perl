@@ -23,6 +23,7 @@ use Search::Elasticsearch::Util qw(parse_params load_plugin);
 use namespace::clean;
 
 our $VERSION = '8.00';
+our $API_VERSION; # Major version of client API
 
 my %Default_Plugins = (
     client      => [ 'Search::Elasticsearch::Client',       '8_0::Direct' ],
@@ -64,6 +65,9 @@ sub new {
         $plugin_class->_init_plugin($params);
     }
 
+    # Get major version of client API
+    $Search::Elasticsearch::API_VERSION = substr($params->{client}->{api_version}, 0, index($params->{client}->{api_version}, '_'));
+   
     return $params->{client};
 }
 

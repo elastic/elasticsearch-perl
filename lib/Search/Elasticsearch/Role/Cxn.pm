@@ -360,8 +360,8 @@ sub process_response {
 #===================================
     my ( $self, $params, $code, $msg, $body, $headers ) = @_;
 
-    # Product check
-    if ( $code >= 200 and $code < 300 ) {
+    # Product check only for 8+ client API version
+    if ( $Search::Elasticsearch::API_VERSION >= 8 and $code >= 200 and $code < 300 ) {
         my $product = $headers->{$PRODUCT_CHECK_HEADER} // '';
         if ($product ne $PRODUCT_CHECK_VALUE) {
             throw( "ProductCheck", "The client noticed that the server is not Elasticsearch and we do not support this unknown product" );
