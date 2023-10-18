@@ -35,7 +35,7 @@ use Net::IP;
 
 requires qw(perform_request error_from_text handle);
 
-has 'client_version'        => ( is => 'ro', required => 1 );
+has 'client_version'        => ( is => 'ro', required => 1, default => $Search::Elasticsearch::VERSION );
 has 'host'                  => ( is => 'ro', required => 1 );
 has 'port'                  => ( is => 'ro', required => 1 );
 has 'uri'                   => ( is => 'ro', required => 1 );
@@ -185,7 +185,9 @@ sub BUILDARGS {
     $params->{uri}             = URI->new("$scheme://$host:$port$path");
     $params->{default_headers} = \%default_headers;
     # Add the client version
-    $params->{client_version} = substr($params->{client}, 0, index($params->{client}, '_'));
+    if (defined $params->{client}) {
+        $params->{client_version} = substr($params->{client}, 0, index($params->{client}, '_'));
+    }
 
     return $params;
 }
