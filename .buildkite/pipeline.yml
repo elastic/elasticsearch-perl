@@ -1,0 +1,22 @@
+steps:
+  - label: ":elasticsearch: :dromedary_camel: ES Perl ({{ matrix.perl }}) Test Suite: {{ matrix.suite }}"
+    agents:
+      provider: "gcp"
+    env:
+      PERL_VERSION: "{{ matrix.perl }}"
+      TEST_SUITE: "{{ matrix.suite }}"
+      STACK_VERSION: 8.8-SNAPSHOT
+      CLIENT_VER: 8_0
+    matrix:
+      setup:
+        suite:
+          - "free"
+          - "platinum"
+        perl:
+          - "5.36"
+          - "5.34"
+          - "5.32"
+          - "5.30"
+          - "5.28"
+    command: ./.buildkite/run-tests
+    artifact_paths: "*.xml"
