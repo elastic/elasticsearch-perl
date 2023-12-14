@@ -160,6 +160,14 @@ install one of the following packages:
 
 =item *
 
+L<Search::Elasticsearch::Client::6_0>
+
+=item *
+
+L<Search::Elasticsearch::Client::5_0>
+
+=item *
+
 L<Search::Elasticsearch::Client::2_0>
 
 =item *
