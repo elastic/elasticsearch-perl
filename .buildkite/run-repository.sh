@@ -35,6 +35,7 @@ docker build \
   --file $script_path/Dockerfile \
   --tag elastic/elasticsearch-perl \
   --build-arg PERL_VERSION=${PERL_VERSION} \
+  --progress=plain \
   .
 
 echo -e "\033[1m>>>>> Run test:integration >>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[0m"
