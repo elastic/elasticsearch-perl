@@ -16,6 +16,7 @@ PERL_VERSION=${PERL_VERSION-5.32}
 ELASTICSEARCH_URL=${ELASTICSEARCH_URL-"$elasticsearch_url"}
 CLIENT_VER=${CLIENT_VER-8_0}
 
+echo "--- Configuration summary"
 echo -e "\033[34;1mINFO:\033[0m VERSION: ${STACK_VERSION}\033[0m"
 echo -e "\033[34;1mINFO:\033[0m TEST_SUITE: ${TEST_SUITE}\033[0m"
 echo -e "\033[34;1mINFO:\033[0m URL ${ELASTICSEARCH_URL}\033[0m"
@@ -23,12 +24,13 @@ echo -e "\033[34;1mINFO:\033[0m RUNSCRIPTS: ${RUNSCRIPTS}\033[0m"
 echo -e "\033[34;1mINFO:\033[0m PERL_VERSION ${PERL_VERSION}\033[0m"
 echo -e "\033[34;1mINFO:\033[0m CLIENT_VER ${CLIENT_VER}\033[0m"
 
+echo "--- Starting Elasticsearch"
 echo -e "\033[34;1mINFO:\033[0m pinging Elasticsearch ..\033[0m"
 curl --insecure --fail $external_elasticsearch_url/_cluster/health?pretty
 
 echo -e "\033[32;1mSUCCESS:\033[0m successfully started the ${STACK_VERSION} stack.\033[0m"
 
-echo -e "\033[1m>>>>> Build docker container >>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[0m"
+echo "--- Build docker container"
 
 docker build \
   --no-cache \
@@ -38,7 +40,7 @@ docker build \
   --progress=plain \
   .
 
-echo -e "\033[1m>>>>> Run test:integration >>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[0m"
+echo "--- Run test:integration"
 
 repo=$(realpath $(dirname $(realpath -s $0))/../)
 
