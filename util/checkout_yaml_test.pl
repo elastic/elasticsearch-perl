@@ -41,6 +41,7 @@ my $tempFilePath = sprintf("%s/%s.zip", get_tempdir(), $hash);
 unless (-e $tempFilePath) {
     # Download of Elasticsearch rest-api artifacts
     my $json = get "https://artifacts-api.elastic.co/v1/versions/$version";
+
     if ($json eq "") {
         printf "ERROR: I cannot download the artifcats from https://artifacts-api.elastic.co/v1/versions/%s\n", $version;
         exit 1;

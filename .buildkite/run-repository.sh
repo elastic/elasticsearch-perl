@@ -40,8 +40,6 @@ docker build \
   --progress=plain \
   .
 
-echo "--- Run test:integration"
-
 repo=$(realpath $(dirname $(realpath -s $0))/../)
 
 docker run \

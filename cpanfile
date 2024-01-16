@@ -19,6 +19,7 @@ requires "IO::Uncompress::Gunzip" => "0";
 requires "IO::Uncompress::Inflate" => "0";
 requires "JSON::MaybeXS" => "1.002002";
 requires "JSON::PP" => "0";
+requires "LWP::Protocol::https" => 0;
 requires "LWP::UserAgent" => "0";
 requires "List::Util" => "0";
 requires "Log::Any" => "1.02";
