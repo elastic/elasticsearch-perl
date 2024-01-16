@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
+use lib qw(lib t/lib);
 use Search::Elasticsearch;
 use Test::More;
 use strict;

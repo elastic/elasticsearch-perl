@@ -19,6 +19,7 @@
 use EV;
 use AE;
 
+use lib qw(lib t/lib);
 use Promises backend => ['EV'];
 use Search::Elasticsearch::Async;
 use Test::More;
