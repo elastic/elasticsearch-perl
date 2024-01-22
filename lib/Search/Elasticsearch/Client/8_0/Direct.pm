@@ -18,14 +18,17 @@ has 'autoscaling'          => ( is => 'lazy', init_arg => undef );
 has 'cat'                  => ( is => 'lazy', init_arg => undef );
 has 'ccr'                  => ( is => 'lazy', init_arg => undef );
 has 'cluster'              => ( is => 'lazy', init_arg => undef );
+has 'connector'            => ( is => 'lazy', init_arg => undef );
 has 'dangling_indices'     => ( is => 'lazy', init_arg => undef );
 has 'enrich'               => ( is => 'lazy', init_arg => undef );
 has 'eql'                  => ( is => 'lazy', init_arg => undef );
+has 'esql'                 => ( is => 'lazy', init_arg => undef );
 has 'features'             => ( is => 'lazy', init_arg => undef );
 has 'fleet'                => ( is => 'lazy', init_arg => undef );
 has 'graph'                => ( is => 'lazy', init_arg => undef );
 has 'ilm'                  => ( is => 'lazy', init_arg => undef );
 has 'indices'              => ( is => 'lazy', init_arg => undef );
+has 'inference'            => ( is => 'lazy', init_arg => undef );
 has 'ingest'               => ( is => 'lazy', init_arg => undef );
 has 'license'              => ( is => 'lazy', init_arg => undef );
 has 'logstash'             => ( is => 'lazy', init_arg => undef );
@@ -33,15 +36,21 @@ has 'migration'            => ( is => 'lazy', init_arg => undef );
 has 'ml'                   => ( is => 'lazy', init_arg => undef );
 has 'monitoring'           => ( is => 'lazy', init_arg => undef );
 has 'nodes'                => ( is => 'lazy', init_arg => undef );
+has 'profiling'            => ( is => 'lazy', init_arg => undef );
+has 'query_ruleset'        => ( is => 'lazy', init_arg => undef );
 has 'rollup'               => ( is => 'lazy', init_arg => undef );
 has 'searchable_snapshots' => ( is => 'lazy', init_arg => undef );
+has 'search_application'   => ( is => 'lazy', init_arg => undef );
 has 'security'             => ( is => 'lazy', init_arg => undef );
 has 'shutdown'             => ( is => 'lazy', init_arg => undef );
+has 'simulate'             => ( is => 'lazy', init_arg => undef );
 has 'snapshot'             => ( is => 'lazy', init_arg => undef );
 has 'slm'                  => ( is => 'lazy', init_arg => undef );
 has 'sql'                  => ( is => 'lazy', init_arg => undef );
 has 'ssl'                  => ( is => 'lazy', init_arg => undef );
+has 'synonyms'             => ( is => 'lazy', init_arg => undef );
 has 'tasks'                => ( is => 'lazy', init_arg => undef );
+has 'text_structure'       => ( is => 'lazy', init_arg => undef );
 has 'transform'            => ( is => 'lazy', init_arg => undef );
 has 'watcher'              => ( is => 'lazy', init_arg => undef );
 has 'xpack'                => ( is => 'lazy', init_arg => undef );
@@ -90,14 +99,17 @@ sub _build_async_search         { shift->_build_namespace('AsyncSearch') }
 sub _build_cat                  { shift->_build_namespace('Cat') }
 sub _build_ccr                  { shift->_build_namespace('CCR') }
 sub _build_cluster              { shift->_build_namespace('Cluster') }
+sub _build_connector            { shift->_build_namespace('Connector') }
 sub _build_dangling_indices     { shift->_build_namespace('DanglingIndices') }
 sub _build_enrich               { shift->_build_namespace('Enrich') }
 sub _build_eql                  { shift->_build_namespace('Eql') }
+sub _build_esql                 { shift->_build_namespace('Esql') }
 sub _build_features             { shift->_build_namespace('Features') }
 sub _build_fleet                { shift->_build_namespace('Fleet') }
 sub _build_graph                { shift->_build_namespace('Graph') }
 sub _build_ilm                  { shift->_build_namespace('ILM') }
 sub _build_indices              { shift->_build_namespace('Indices') }
+sub _build_inference            { shift->_build_namespace('Inference') }
 sub _build_ingest               { shift->_build_namespace('Ingest') }
 sub _build_license              { shift->_build_namespace('License') }
 sub _build_logstash             { shift->_build_namespace('Logstash') }
@@ -105,15 +117,21 @@ sub _build_migration            { shift->_build_namespace('Migration') }
 sub _build_ml                   { shift->_build_namespace('ML') }
 sub _build_monitoring           { shift->_build_namespace('Monitoring') }
 sub _build_nodes                { shift->_build_namespace('Nodes') }
+sub _build_profiling            { shift->_build_namespace('Profiling') }
+sub _build_query_ruleset        { shift->_build_namespace('QueryRuleset') }
 sub _build_rollup               { shift->_build_namespace('Rollup') }
 sub _build_searchable_snapshots { shift->_build_namespace('SearchableSnapshots') }
+sub _build_search_application   { shift->_build_namespace('SearchApplication') }
 sub _build_security             { shift->_build_namespace('Security') }
 sub _build_shutdown             { shift->_build_namespace('Shutdown') }
+sub _build_simulate             { shift->_build_namespace('Simulate') }
 sub _build_snapshot             { shift->_build_namespace('Snapshot') }
 sub _build_slm                  { shift->_build_namespace('Slm') }
 sub _build_sql                  { shift->_build_namespace('SQL') }
 sub _build_ssl                  { shift->_build_namespace('SSL') }
+sub _build_synonyms             { shift->_build_namespace('Synonyms') }
 sub _build_tasks                { shift->_build_namespace('Tasks') }
+sub _build_text_structure       { shift->_build_namespace('TextStructure') }
 sub _build_transform            { shift->_build_namespace('Transform') }
 sub _build_watcher              { shift->_build_namespace('Watcher') }
 sub _build_xpack                { shift->_build_namespace('XPack') }

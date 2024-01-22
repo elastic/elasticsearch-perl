@@ -17,8 +17,8 @@
 
 package Search::Elasticsearch::Client::8_0::Async;
 
-our $VERSION='8.00';
-use Search::Elasticsearch::Client::8_0 8.00 ();
+our $VERSION='8.12';
+use Search::Elasticsearch::Client::8_0 8.12 ();
 
 1;
 

@@ -208,3 +208,18 @@
     - tile/10_basic.yml
     - xpack/20_info.yml
     
+8.12.0:
+    - aggregations/bucket_script.yml
+    - aggregations/bucket_selector.yml
+    - aggregations/cumulative_sum.yml
+    - aggregations/max_bucket.yml
+    - aggregations/min_bucket.yml
+    - aggregations/percentiles_bucket.yml
+    - aggregations/sum_bucket.yml
+    - cat.segments/10_basic.yml
+    - field_caps/40_time_series.yml
+    - search/150_rewrite_on_coordinator.yml
+    - search/220_total_hits_object.yml
+    - search.highlight/10_unified.yml
+    - search.vectors/90_sparse_vector.yml
+    - tsdb/*
