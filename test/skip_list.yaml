@@ -208,7 +208,7 @@
     - tile/10_basic.yml
     - xpack/20_info.yml
     
-8.12.0:
+8.12-SNAPSHOT:
     - aggregations/bucket_script.yml
     - aggregations/bucket_selector.yml
     - aggregations/cumulative_sum.yml

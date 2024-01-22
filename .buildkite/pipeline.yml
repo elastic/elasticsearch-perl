@@ -5,7 +5,7 @@ steps:
     env:
       PERL_VERSION: "{{ matrix.perl }}"
       TEST_SUITE: "{{ matrix.suite }}"
-      STACK_VERSION: 8.11-SNAPSHOT
+      STACK_VERSION: 8.12-SNAPSHOT
       CLIENT_VER: "8_0"
     matrix:
       setup:
