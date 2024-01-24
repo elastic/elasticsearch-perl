@@ -19,6 +19,7 @@ has 'cat'                  => ( is => 'lazy', init_arg => undef );
 has 'ccr'                  => ( is => 'lazy', init_arg => undef );
 has 'cluster'              => ( is => 'lazy', init_arg => undef );
 has 'connector'            => ( is => 'lazy', init_arg => undef );
+has 'connector_sync_job'   => ( is => 'lazy', init_arg => undef );
 has 'dangling_indices'     => ( is => 'lazy', init_arg => undef );
 has 'enrich'               => ( is => 'lazy', init_arg => undef );
 has 'eql'                  => ( is => 'lazy', init_arg => undef );
@@ -100,6 +101,7 @@ sub _build_cat                  { shift->_build_namespace('Cat') }
 sub _build_ccr                  { shift->_build_namespace('CCR') }
 sub _build_cluster              { shift->_build_namespace('Cluster') }
 sub _build_connector            { shift->_build_namespace('Connector') }
+sub _build_connector_sync_job   { shift->_build_namespace('ConnectorSyncJob') }
 sub _build_dangling_indices     { shift->_build_namespace('DanglingIndices') }
 sub _build_enrich               { shift->_build_namespace('Enrich') }
 sub _build_eql                  { shift->_build_namespace('Eql') }

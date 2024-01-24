@@ -216,10 +216,33 @@
     - aggregations/min_bucket.yml
     - aggregations/percentiles_bucket.yml
     - aggregations/sum_bucket.yml
+    - analytics/top_metrics.yml
+    - analytics/cumulative_cardinality.yml
     - cat.segments/10_basic.yml
+    - eql/10_basic.yml
     - field_caps/40_time_series.yml
+    - ml/calendar_crud.yml
+    - ml/data_frame_analytics_crud.yml
+    - ml/evaluate_data_frame.yml
+    - ml/explain_data_frame_analytics.yml
+    - ml/forecast.yml
+    - ml/jobs_crud.yml
+    - ml/preview_datafeed.yml
+    - ml/start_data_frame_analytics.yml
+    - ml/stop_data_frame_analytics.yml
+    - rules/10_pinned_query.yml
     - search/150_rewrite_on_coordinator.yml
     - search/220_total_hits_object.yml
     - search.highlight/10_unified.yml
     - search.vectors/90_sparse_vector.yml
+    - spatial/100_geo_grid_ingest.yml
+    - spatial/130_geo_shape_runtime.yml
+    - sql/sql.yml
+    - ssl/10_basic.yml
+    - transform/transforms_crud.yml
+    - transform/transforms_start_stop.yml
+    - transform/transforms_stats.yml
+    - transform/transforms_stats_continuous.yml
+    - transform/transforms_update.yml
+    - transform/transforms_upgrade.yml
     - tsdb/*

@@ -44,26 +44,29 @@ my @plugins  = split /,/, ( $ENV{ES_PLUGINS} || '' );
 our %Auth;
 
 my $es;
-if ( $ENV{ES} ) {
-    eval {
-        $es = Search::Elasticsearch->new(
-            nodes            => $ENV{ES},
-            trace_to         => $trace,
-            cxn              => $cxn,
-            cxn_pool         => $cxn_pool,
-            client           => $api,
-            send_get_body_as => $body,
-            request_timeout  => $timeout,
-            plugins          => \@plugins,
-            %Auth
-        );
-        $es->ping unless $ENV{ES_SKIP_PING};
-        1;
-    } || do {
-        diag $@;
-        undef $es;
-    };
-}
+
+$ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'https://elastic:changeme@localhost:9200';
+$ENV{PERL_HTTP_TINY_SSL_INSECURE_BY_DEFAULT} = 1;
+
+eval {
+    $es = Search::Elasticsearch->new(
+        nodes            => [ $ENV{ES} ],
+        trace_to         => $trace,
+        cxn              => $cxn,
+        cxn_pool         => $cxn_pool,
+        client           => $api,
+        send_get_body_as => $body,
+        request_timeout  => $timeout,
+        plugins          => \@plugins,
+        %Auth
+    );
+    $es->ping unless $ENV{ES_SKIP_PING};
+    1;
+} || do {
+    diag $@;
+    undef $es;
+};
+
 
 unless ( $ENV{ES_SKIP_PING} ) {
     my $version = $es->info->{version}{number};

@@ -25,7 +25,7 @@ sub get_elasticsearch_info {
 #===================================
     $ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'https://elastic:changeme@localhost:9200';
 
-    my $response = HTTP::Tiny->new->get($ENV{ES}) or die "The server $ENV{ES} is not running!";
+    my $response = HTTP::Tiny->new(verify_SSL => 0)->get($ENV{ES}) or die "The server $ENV{ES} is not running!";
     unless ($response->{success}) {
         die "ERROR: The server $ENV{ES} is not running!\n";
     }

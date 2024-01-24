@@ -26,6 +26,8 @@ use Test::More;
 use strict;
 use warnings;
 
+$ENV{ES} = $ENV{ELASTICSEARCH_URL} || 'https://elastic:changeme@localhost:9200';
+
 my $trace
     = !$ENV{TRACE}       ? undef
     : $ENV{TRACE} eq '1' ? 'Stderr'
@@ -67,11 +69,13 @@ if ( $cxn eq 'Mojo' && !eval { require Mojo::UserAgent; 1 } ) {
     }
 }
 
+$ENV{PERL_HTTP_TINY_SSL_INSECURE_BY_DEFAULT} = 1;
+
 my $es;
 if ( $ENV{ES} ) {
     eval {
         $es = Search::Elasticsearch::Async->new(
-            nodes            => $ENV{ES},
+            nodes            => [ $ENV{ES} ],
             trace_to         => $trace,
             cxn              => $cxn,
             cxn_pool         => $cxn_pool,
