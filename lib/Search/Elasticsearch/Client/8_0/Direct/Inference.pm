@@ -29,7 +29,7 @@ __PACKAGE__->_install_api('inference');
 __END__
 
 # ABSTRACT: The inference APIs enable you to use certain services,
-such as ELSER, OpenAI, or Hugging Face, in your cluster. 
+such as ELSER, OpenAI, or Hugging Face, in your cluster.
 
 =head2 DESCRIPTION
 

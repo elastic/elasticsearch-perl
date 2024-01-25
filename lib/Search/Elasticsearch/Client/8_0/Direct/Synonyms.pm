@@ -29,8 +29,8 @@ __PACKAGE__->_install_api('synonyms');
 __END__
 
 # ABSTRACT: The synonyms management API provides a convenient way
-to define and manage synonyms in an internal system index. 
-Related synonyms can be grouped in a "synonyms set". 
+to define and manage synonyms in an internal system index.
+Related synonyms can be grouped in a "synonyms set".
 Create as many synonym sets as you need.
 
 =head2 DESCRIPTION

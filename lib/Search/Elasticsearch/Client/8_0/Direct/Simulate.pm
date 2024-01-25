@@ -29,8 +29,8 @@ __PACKAGE__->_install_api('simulate');
 __END__
 
 # ABSTRACT: Executes ingest pipelines against a set of provided
-documents, optionally with substitute pipeline definitions. 
-This API is meant to be used for troubleshooting or pipeline 
+documents, optionally with substitute pipeline definitions.
+This API is meant to be used for troubleshooting or pipeline
 development, as it does not actually index any data into Elasticsearch.
 
 =head2 DESCRIPTION

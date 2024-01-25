@@ -29,9 +29,9 @@ __PACKAGE__->_install_api('esql');
 __END__
 
 # ABSTRACT: The Elasticsearch Query Language (ES|QL) provides a
-powerful way to filter, transform, and analyze data stored in 
-Elasticsearch, and in the future in other runtimes. 
-It is designed to be easy to learn and use, by end users, 
+powerful way to filter, transform, and analyze data stored in
+Elasticsearch, and in the future in other runtimes.
+It is designed to be easy to learn and use, by end users,
 SRE teams, application developers, and administrators.
 
 =head2 DESCRIPTION

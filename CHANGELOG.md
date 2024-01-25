@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [8.12.0] - 2024-01-25
+
+- New APIs for Elasticsearch 8.12.0, including the [ES|QL](https://www.elastic.co/guide/en/elasticsearch/reference/current/esql.html) support 
+- Fixed issue [#227](https://github.com/elastic/elasticsearch-perl/issues/227) for the `x-elastic-product` check on 7.x instances
+- Fixed issue [#211](https://github.com/elastic/elasticsearch-perl/issues/211) for the SSL verification in HTTP::Tiny
 
 ## [8.0.0] - 2022-12-29
 

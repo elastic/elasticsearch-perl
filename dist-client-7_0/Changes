@@ -1,5 +1,8 @@
 Revision history for Search::Elasticsearch::Client::7_0
 
+8.12    2024-01-25
+        Stable release for Elasticsearch 8.12
+        
 8.00    2022-12-29
         Stable release for Elasticsearch 8.5
         

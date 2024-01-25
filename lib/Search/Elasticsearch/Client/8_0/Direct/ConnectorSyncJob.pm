@@ -34,7 +34,7 @@ The sync jobs API provides a convenient way to create
 and manage Elastic sync jobs in an internal index.
 
 This API provides an alternative to relying solely on Kibana UI
-for sync job management. 
+for sync job management.
 
 The full documentation for Sync job feature is available here:
 L<https://www.elastic.co/guide/en/elasticsearch/reference/8.12/connector-apis.html#sync-job-apis>

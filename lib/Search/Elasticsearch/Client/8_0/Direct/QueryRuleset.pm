@@ -29,7 +29,7 @@ __PACKAGE__->_install_api('query_ruleset');
 __END__
 
 # ABSTRACT: Query rules allow you to configure per-query rules that
-are applied at query time to queries that match the specific rule. 
+are applied at query time to queries that match the specific rule.
 
 =head2 DESCRIPTION
 

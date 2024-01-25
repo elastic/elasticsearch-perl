@@ -35,7 +35,7 @@ and manage Elastic connectors and sync jobs in an internal index.
 
 This API provides an alternative to relying solely on Kibana UI
 for connector and sync job management. The API comes with a set of
-validations and assertions to ensure that the state representation 
+validations and assertions to ensure that the state representation
 in the internal index remains valid.
 
 The full documentation for Eql feature is available here:
@@ -52,7 +52,7 @@ It does L<Search::Elasticsearch::Role::Client::Direct>.
         body => {
             index_name => "search-google-drive",
             name => "My Connector",
-            service_type => "google_drive" 
+            service_type => "google_drive"
         }
     );
 
