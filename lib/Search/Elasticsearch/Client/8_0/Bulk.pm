@@ -300,7 +300,7 @@ then you can do so as follows:
         on_error    => undef
     );
 
-    $bulk->add_actions(....);
+    $bulk->add_action($_) for (@actions);
     $response = $bulk->flush;
 
 =head1 CREATE, INDEX, UPDATE, DELETE
